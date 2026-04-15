@@ -1,6 +1,11 @@
 # MkDocs build output
 site/
 
+# API regeneration intermediates (see tools/split_api.py)
+api.md
+doxygen-out/
+plugin-src/
+
 # Python
 __pycache__/
 *.pyc

@@ -1,0 +1,203 @@
+
+# UComposableCameraMixingCameraNode { #ucomposablecameramixingcameranode }
+
+```cpp
+#include <ComposableCameraMixingCameraNode.h>
+```
+
+> **Inherits:** [`UComposableCameraCameraNodeBase`](../uobjects-other/UComposableCameraCameraNodeBase.md#ucomposablecameracameranodebase)
+
+Node for mixing multiple cameras. <br/>
+This node will instantiate new camera instances specified by parameter Cameras. <br/>
+During runtime, you should pass in a UpdateWeight function that provides weights for these cameras. Make sure all weights are greater than zero. <br/>
+If one camera instance is not valid, its weight will be set to zero, then a squared normalization will be applied to normalize all weights.
+
+### Public Attributes
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `EComposableCameraMixingCameraMode` | [`MixMode`](#mixmode)  |  |
+| `EComposableCameraMixingCameraWeightNormalizationMethod` | [`WeightNormalizationMethod`](#weightnormalizationmethod)  |  |
+| `EComposableCameraMixingCameraRotationMethod` | [`MixRotationMethod`](#mixrotationmethod)  |  |
+| `float` | [`CircularInterpEpsilon`](#circularinterpepsilon)  |  |
+| `TArray< FComposableCameraMixingCameraNodeCameraDefinition >` | [`Cameras`](#cameras-1)  |  |
+| `FOnReceiveMixingCameraWeights` | [`OnReceiveMixingCameraWeights`](#onreceivemixingcameraweights)  |  |
+
+---
+
+#### MixMode { #mixmode }
+
+```cpp
+EComposableCameraMixingCameraMode MixMode {  }
+```
+
+---
+
+#### WeightNormalizationMethod { #weightnormalizationmethod }
+
+```cpp
+EComposableCameraMixingCameraWeightNormalizationMethod WeightNormalizationMethod {  }
+```
+
+---
+
+#### MixRotationMethod { #mixrotationmethod }
+
+```cpp
+EComposableCameraMixingCameraRotationMethod MixRotationMethod {  }
+```
+
+---
+
+#### CircularInterpEpsilon { #circularinterpepsilon }
+
+```cpp
+float CircularInterpEpsilon { 0.25f }
+```
+
+---
+
+#### Cameras { #cameras-1 }
+
+```cpp
+TArray< FComposableCameraMixingCameraNodeCameraDefinition > Cameras
+```
+
+---
+
+#### OnReceiveMixingCameraWeights { #onreceivemixingcameraweights }
+
+```cpp
+FOnReceiveMixingCameraWeights OnReceiveMixingCameraWeights
+```
+
+### Public Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-5) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-8) `virtual` |  |
+| `void` | [`BeginDestroy`](#begindestroy) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-8) `virtual` `const` |  |
+| `void` | [`SetUpdateWeights`](#setupdateweights)  |  |
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-5 }
+
+`virtual`
+
+```cpp
+virtual void OnInitialize_Implementation()
+```
+
+---
+
+#### OnTickNode_Implementation { #onticknode_implementation-8 }
+
+`virtual`
+
+```cpp
+virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraPose & CurrentCameraPose, FComposableCameraPose & OutCameraPose)
+```
+
+---
+
+#### BeginDestroy { #begindestroy }
+
+`virtual`
+
+```cpp
+virtual void BeginDestroy()
+```
+
+---
+
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-8 }
+
+`virtual` `const`
+
+```cpp
+virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinDeclaration > & OutPins) const
+```
+
+---
+
+#### SetUpdateWeights { #setupdateweights }
+
+```cpp
+void SetUpdateWeights(FOnReceiveMixingCameraWeights OnUpdateMixingCameraWeights)
+```
+
+### Private Attributes
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `TArray< TObjectPtr< AComposableCameraCameraBase > >` | [`CameraInstances`](#camerainstances)  |  |
+| `FVector4` | [`InitialEigenVector`](#initialeigenvector)  |  |
+
+---
+
+#### CameraInstances { #camerainstances }
+
+```cpp
+TArray< TObjectPtr< AComposableCameraCameraBase > > CameraInstances
+```
+
+---
+
+#### InitialEigenVector { #initialeigenvector }
+
+```cpp
+FVector4 InitialEigenVector { 0, 0, 0, 1 }
+```
+
+### Private Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `void` | [`NormalizeWeights`](#normalizeweights)  |  |
+| `void` | [`TickCameras`](#tickcameras)  |  |
+| `FVector` | [`GetMixedPosition`](#getmixedposition)  |  |
+| `FRotator` | [`GetMixedRotation`](#getmixedrotation)  |  |
+| `double` | [`GetMixedFieldOfView`](#getmixedfieldofview)  |  |
+
+---
+
+#### NormalizeWeights { #normalizeweights }
+
+```cpp
+void NormalizeWeights(TArray< float > & Array)
+```
+
+---
+
+#### TickCameras { #tickcameras }
+
+```cpp
+void TickCameras(TArray< FComposableCameraPose > & Poses, float DeltaTime)
+```
+
+---
+
+#### GetMixedPosition { #getmixedposition }
+
+```cpp
+FVector GetMixedPosition(const TArray< FComposableCameraPose > & Poses, const TArray< float > & Weights)
+```
+
+---
+
+#### GetMixedRotation { #getmixedrotation }
+
+```cpp
+FRotator GetMixedRotation(const TArray< FComposableCameraPose > & Poses, const TArray< float > & Weights)
+```
+
+---
+
+#### GetMixedFieldOfView { #getmixedfieldofview }
+
+```cpp
+double GetMixedFieldOfView(const TArray< FComposableCameraPose > & Poses, const TArray< float > & Weights)
+```

@@ -1,0 +1,146 @@
+# Doxygen config for ComposableCameraSystem auto-generated API docs
+# Tuned for UE 5.x reflection macros
+
+PROJECT_NAME           = "ComposableCameraSystem"
+PROJECT_BRIEF          = "C++ API Reference"
+OUTPUT_DIRECTORY       = doxygen-out
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = English
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+ALWAYS_DETAILED_SEC    = NO
+INLINE_INHERITED_MEMB  = NO
+FULL_PATH_NAMES        = NO
+SHORT_NAMES            = NO
+INHERIT_DOCS           = YES
+SEPARATE_MEMBER_PAGES  = NO
+TAB_SIZE               = 4
+OPTIMIZE_OUTPUT_FOR_C  = NO
+BUILTIN_STL_SUPPORT    = YES
+CPP_CLI_SUPPORT        = NO
+SIP_SUPPORT            = NO
+IDL_PROPERTY_SUPPORT   = NO
+DISTRIBUTE_GROUP_DOC   = NO
+GROUP_NESTED_COMPOUNDS = NO
+SUBGROUPING            = YES
+INLINE_GROUPED_CLASSES = NO
+INLINE_SIMPLE_STRUCTS  = NO
+TYPEDEF_HIDES_STRUCT   = NO
+LOOKUP_CACHE_SIZE      = 0
+NUM_PROC_THREADS       = 0
+
+# What to document
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_PRIV_VIRTUAL   = NO
+EXTRACT_PACKAGE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = NO
+EXTRACT_LOCAL_METHODS  = NO
+EXTRACT_ANON_NSPACES   = NO
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+HIDE_FRIEND_COMPOUNDS  = YES
+HIDE_IN_BODY_DOCS      = NO
+INTERNAL_DOCS          = NO
+CASE_SENSE_NAMES       = YES
+HIDE_SCOPE_NAMES       = NO
+HIDE_COMPOUND_REFERENCE = NO
+SHOW_INCLUDE_FILES     = YES
+SHOW_GROUPED_MEMB_INC  = NO
+FORCE_LOCAL_INCLUDES   = NO
+INLINE_INFO            = YES
+SORT_MEMBER_DOCS       = YES
+SORT_BRIEF_DOCS        = NO
+SORT_MEMBERS_CTORS_1ST = NO
+SORT_GROUP_NAMES       = NO
+SORT_BY_SCOPE_NAME     = NO
+
+# Warnings
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+WARN_IF_INCOMPLETE_DOC = YES
+WARN_NO_PARAMDOC       = NO
+WARN_AS_ERROR          = NO
+WARN_FORMAT            = "$file:$line: $text"
+
+# Input
+INPUT                  = Source/ComposableCameraSystem/Public
+FILE_PATTERNS          = *.h *.hpp
+RECURSIVE              = YES
+EXCLUDE                =
+EXCLUDE_SYMLINKS       = NO
+EXCLUDE_PATTERNS       = */Tests/*
+EXAMPLE_PATTERNS       = *
+FILTER_SOURCE_FILES    = NO
+
+# Source browsing
+SOURCE_BROWSER         = NO
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = YES
+REFERENCED_BY_RELATION = NO
+REFERENCES_RELATION    = NO
+REFERENCES_LINK_SOURCE = NO
+USE_HTAGS              = NO
+VERBATIM_HEADERS       = NO
+
+# Alphabetical index
+ALPHABETICAL_INDEX     = YES
+
+# HTML / LaTeX off (we only want XML for moxygen)
+GENERATE_HTML          = NO
+GENERATE_LATEX         = NO
+GENERATE_RTF           = NO
+GENERATE_MAN           = NO
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+XML_PROGRAMLISTING     = NO
+GENERATE_DOCBOOK       = NO
+GENERATE_AUTOGEN_DEF   = NO
+GENERATE_PERLMOD       = NO
+
+# Preprocessor — critical for UE macros
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+SEARCH_INCLUDES        = NO
+INCLUDE_PATH           =
+PREDEFINED             = UCLASS(...)= \
+                         USTRUCT(...)= \
+                         UENUM(...)= \
+                         UFUNCTION(...)= \
+                         UPROPERTY(...)= \
+                         UINTERFACE(...)= \
+                         UPARAM(...)= \
+                         UDELEGATE(...)= \
+                         UMETA(...)= \
+                         GENERATED_BODY()= \
+                         GENERATED_UCLASS_BODY()= \
+                         GENERATED_USTRUCT_BODY()= \
+                         GENERATED_IINTERFACE_BODY()= \
+                         COMPOSABLECAMERASYSTEM_API= \
+                         COMPOSABLECAMERASYSTEMEDITOR_API= \
+                         COMPOSABLECAMERASYSTEMUNCOOKEDONLY_API= \
+                         ENGINE_API= \
+                         CORE_API= \
+                         UMG_API= \
+                         UNREALED_API= \
+                         SLATE_API= \
+                         FORCEINLINE=inline \
+                         FORCEINLINE_DEBUGGABLE=inline \
+                         FORCENOINLINE= \
+                         DEPRECATED(x,y)= \
+                         UE_DEPRECATED(x,y)= \
+                         UE_NODISCARD= \
+                         RESTRICT= \
+                         CHECK_CONCURRENT_ACCESS(...)= \
+                         PRAGMA_DISABLE_DEPRECATION_WARNINGS= \
+                         PRAGMA_ENABLE_DEPRECATION_WARNINGS=
+EXPAND_AS_DEFINED      =
+SKIP_FUNCTION_MACROS   = YES
+
+# Dot / graphs — off (keeps output fast + small)
+HAVE_DOT               = NO
+CLASS_DIAGRAMS         = NO
