@@ -6,21 +6,20 @@ The camera type asset editor is a bespoke `UEdGraph` — it looks like Unreal's 
 
 Opening a `UComposableCameraTypeAsset` lands you in a three-pane layout:
 
-```
-┌──────────────────────────────────┬──────────────────────────────┐
-│  Node Graph                       │  Details                     │
-│                                   │                              │
-│  (canvas — drag nodes here,       │  (shows the selected node's   │
-│   wire exec pins, wire data pins) │   properties; when nothing is │
-│                                   │   selected, shows the type    │
-│                                   │   asset — exposed parameters, │
-│                                   │   internal variables, exposed │
-│                                   │   variables, default          │
-│                                   │   transition)                 │
-├──────────────────────────────────┴──────────────────────────────┤
-│  Build Messages                                                  │
-│  (validation warnings / errors from the most recent build)       │
-└──────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Top[" "]
+        direction LR
+        Graph["<b>Node Graph</b><br/><br/>Canvas — drag nodes here,<br/>wire exec pins, wire data pins"]
+        Details["<b>Details</b><br/><br/>Selected node's properties.<br/>When nothing is selected, shows<br/>the type asset — exposed parameters,<br/>internal variables, exposed variables,<br/>default transition."]
+    end
+    Build["<b>Build Messages</b><br/>Validation warnings / errors from the most recent build"]
+    Top --- Build
+    classDef pane fill:#f5f7fa,stroke:#4a69bb,stroke-width:1.5px;
+    classDef buildpane fill:#fff4e6,stroke:#d97706;
+    class Graph,Details pane;
+    class Build buildpane;
+    style Top fill:none,stroke:none
 ```
 
 There is intentionally no separate **Parameters** tab. Exposed parameters, internal variables, and the default transition all live on the type asset, so they're editable directly in the Details panel whenever graph selection is empty. Clicking any node overwrites that view with the selected node's properties; clicking the empty canvas brings the asset view back.

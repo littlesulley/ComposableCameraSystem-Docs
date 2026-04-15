@@ -24,23 +24,30 @@ The two are not interchangeable and don't interact.
 
 ## Architecture at a glance
 
-```
-UComposableCameraModifierBase (abstract, Blueprintable)
-  - NodeClass:      TSubclassOf<UComposableCameraCameraNodeBase>   (CDO-level)
-  - ApplyModifier(Node): Blueprint-implementable override
-
-UComposableCameraNodeModifierDataAsset  (the Content-Browser wrapper)
-  - Modifiers:                 TArray<UComposableCameraModifierBase*>   (instanced)
-  - Priority:                  int32                                    (≥ 0)
-  - CameraTags:                FGameplayTagContainer
-  - OverrideEnterTransition:   UComposableCameraTransitionBase*         (instanced)
-  - OverrideExitTransition:    UComposableCameraTransitionBase*         (instanced)
-
-UComposableCameraModifierManager  (owned by the PCM)
-  - AddModifier(DataAsset) / RemoveModifier(DataAsset)
-  - Maintains the set of all active modifier groups, indexed by camera tag
-  - Computes the effective modifier per (camera, node class)
-  - Triggers reactivation when the effective set changes
+```mermaid
+classDiagram
+    direction LR
+    class UComposableCameraModifierBase {
+        <<abstract, Blueprintable>>
+        +NodeClass : TSubclassOf~UComposableCameraCameraNodeBase~
+        +ApplyModifier(Node) void
+    }
+    class UComposableCameraNodeModifierDataAsset {
+        <<Content Browser wrapper>>
+        +Modifiers : TArray~UComposableCameraModifierBase~
+        +Priority : int32
+        +CameraTags : FGameplayTagContainer
+        +OverrideEnterTransition : UComposableCameraTransitionBase
+        +OverrideExitTransition : UComposableCameraTransitionBase
+    }
+    class UComposableCameraModifierManager {
+        <<owned by PCM>>
+        +AddModifier(DataAsset) void
+        +RemoveModifier(DataAsset) void
+        +UpdateEffectiveModifiers() (bChanged, Transition)
+    }
+    UComposableCameraNodeModifierDataAsset "1" o-- "*" UComposableCameraModifierBase : groups
+    UComposableCameraModifierManager "1" o-- "*" UComposableCameraNodeModifierDataAsset : indexed by tag
 ```
 
 - **`UComposableCameraModifierBase`** is an abstract, `Blueprintable` class. You subclass it (C++ or Blueprint), set `NodeClass` on the **Class Default Object**, and implement `ApplyModifier` to mutate that node's parameters. The base class has no `Priority` field and no camera-scoping metadata — those live on the wrapper.

@@ -73,16 +73,17 @@ The effect is a "right grows, left collapses" pattern. The rightmost path always
 
 A leaf's `Evaluate()` calls `Camera->TickCamera(DeltaTime)`, which walks the camera's node list:
 
-```
-TickCamera(DeltaTime)
-├─ Save LastFrameCameraPose = CameraPose
-├─ If transient: decrement RemainingLifeTime
-├─ Fire OnPreTick delegates
-├─ For each node in execution order:
-│     Node->TickNode(DeltaTime, CurrentPose, OutPose)
-│     CurrentPose = OutPose    // chain output → next node's input
-├─ Fire OnPostTick delegates
-└─ CameraPose = final pose; return it
+```mermaid
+flowchart TB
+    Start(["<b>TickCamera</b>(DeltaTime)"])
+    Start --> Save["LastFrameCameraPose = CameraPose"]
+    Save --> Life{"Transient?"}
+    Life -- yes --> Dec["Decrement RemainingLifeTime"]
+    Life -- no  --> Pre
+    Dec --> Pre["Fire <b>OnPreTick</b> delegates"]
+    Pre --> Loop["For each node in execution order:<br/>Node.TickNode(Dt, CurrentPose, OutPose)<br/>CurrentPose = OutPose"]
+    Loop --> Post["Fire <b>OnPostTick</b> delegates"]
+    Post --> Out(["CameraPose = final pose · return"])
 ```
 
 Nodes are sequential: each one reads the pose produced by the previous, applies its logic, and writes a modified pose. They also communicate through a typed pin system (`GetInputPinValue<T>` / `SetOutputPinValue<T>`) routed through the camera's flat `RuntimeDataBlock` — so one node can publish "the pivot position this frame" and a downstream node can read it, without either node knowing about the other's existence.

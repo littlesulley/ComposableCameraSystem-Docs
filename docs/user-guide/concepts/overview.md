@@ -4,35 +4,33 @@ Every frame, your player sees the output of one logical camera — a single pose
 
 ## The layered picture
 
-```
-┌───────────────────────────────────────────────────────────────┐
-│   AComposableCameraPlayerCameraManager  (replaces APCM)       │
-│                                                               │
-│   ┌─────────────────────────┐  ┌──────────────────────────┐   │
-│   │   ModifierManager       │  │   Camera Actions (TSet)   │   │
-│   └─────────────────────────┘  └──────────────────────────┘   │
-│                                                               │
-│   ┌───────────────────────────────────────────────────────┐   │
-│   │   Context Stack    (Tier 1 — macro mode switching)    │   │
-│   │                                                       │   │
-│   │    [ Base ]  [ Cutscene ]  [ Active (top) ] ← evaluated│  │
-│   │                                                       │   │
-│   │  Each entry owns a Director.                          │   │
-│   └───────────────────────────────────────────────────────┘   │
-│                                                               │
-│   ┌───────────────────────────────────────────────────────┐   │
-│   │   Director (per-context)                              │   │
-│   │                                                       │   │
-│   │   ┌───────────────────────────────────────────────┐   │   │
-│   │   │   Evaluation Tree   (Tier 2 — blending)        │  │   │
-│   │   │                                               │   │   │
-│   │   │          [Inner: Transition]                  │   │   │
-│   │   │           /               \                   │   │   │
-│   │   │     [Leaf: CamA]     [Leaf: CamB] ← target    │   │   │
-│   │   │     (source)         (running)                │   │   │
-│   │   └───────────────────────────────────────────────┘   │   │
-│   └───────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph PCM["<b>AComposableCameraPlayerCameraManager</b> — replaces APlayerCameraManager"]
+        direction TB
+        MM[ModifierManager]
+        CA["Camera Actions (TSet)"]
+        subgraph CS["<b>Context Stack</b> — Tier 1 · macro mode switching"]
+            direction LR
+            Base["[ Base ]"] --- Cut["[ Cutscene ]"] --- Top["[ Active&nbsp;(top) ]<br/><i>evaluated</i>"]
+        end
+        subgraph DIR["<b>Director</b> — one per context · owns the running camera"]
+            direction TB
+            subgraph ET["<b>Evaluation Tree</b> — Tier 2 · per-context blending"]
+                direction TB
+                Inner(["Inner: Transition"])
+                Inner --> LeafA["Leaf: CamA<br/>(source)"]
+                Inner --> LeafB["Leaf: CamB<br/>(target / running)"]
+            end
+        end
+        CS -.->|"each entry owns"| DIR
+    end
+    classDef pcm fill:#eef3ff,stroke:#4a69bb,stroke-width:1.5px;
+    classDef stack fill:#fff4e6,stroke:#d97706;
+    classDef tree fill:#e8f7ee,stroke:#0e9f6e;
+    class PCM pcm;
+    class CS stack;
+    class ET tree;
 ```
 
 Read it top-down:
@@ -50,20 +48,25 @@ Read it top-down:
 
 Once per frame, `AComposableCameraPlayerCameraManager::DoUpdateCamera(DeltaTime)` drives this sequence:
 
-```
-DoUpdateCamera(DeltaTime)
-├─ ContextStack->Evaluate(DeltaTime)
-│   ├─ Auto-pop if the active context's camera is transient and finished
-│   └─ ActiveDirector->Evaluate(DeltaTime)
-│       ├─ EvaluationTree->Evaluate(DeltaTime)
-│       │   ├─ Recursive walk:
-│       │   │    Leaf    → Camera->TickCamera()       → pose
-│       │   │    RefLeaf → OtherDirector->Evaluate()  → pose
-│       │   │    Inner   → blend(left, right)         → pose
-│       │   └─ CollapseFinishedTransitions(RootNode)
-│       └─ Update LastEvaluatedPose / PreviousEvaluatedPose
-├─ Update actions, running camera, current context
-└─ Convert pose → FMinimalViewInfo → viewport
+```mermaid
+flowchart TB
+    Start(["<b>DoUpdateCamera</b>(DeltaTime)"])
+    Start --> CSE["ContextStack · Evaluate"]
+    CSE --> AP{"Transient&nbsp;&amp;&nbsp;finished?"}
+    AP -- yes --> Pop["Auto-pop active context"]
+    AP -- no  --> DE
+    Pop --> DE["ActiveDirector · Evaluate"]
+    DE --> ETE["EvaluationTree · Evaluate"]
+    ETE --> Walk{"Recursive walk"}
+    Walk --> Leaf["<b>Leaf</b><br/>Camera.TickCamera() → pose"]
+    Walk --> Ref["<b>RefLeaf</b><br/>OtherDirector.Evaluate() → pose"]
+    Walk --> In["<b>Inner</b><br/>blend(left, right) → pose"]
+    Leaf --> Col["CollapseFinishedTransitions"]
+    Ref  --> Col
+    In   --> Col
+    Col --> Upd["Update Last / Previous EvaluatedPose"]
+    Upd --> Post["Update actions, running camera, current context"]
+    Post --> Final["Convert pose → FMinimalViewInfo → viewport"]
 ```
 
 The recursive tree walk is the heart of the system. A leaf produces a pose by ticking its camera (which itself walks its ordered node list). An inner node produces a pose by blending its two children. A reference leaf produces a pose by evaluating a different Director entirely — that's how a gameplay camera keeps animating live while a cutscene is blending in on top.

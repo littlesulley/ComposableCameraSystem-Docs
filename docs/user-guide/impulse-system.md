@@ -12,18 +12,20 @@ The system is intentionally small: two shape actors, one resolution node, one in
 
 ## Architecture
 
-```
-AComposableCameraImpulseSphere  ─┐
-AComposableCameraImpulseBox     ─┤  (both implement IComposableCameraImpulseShapeInterface)
-                                 │
-                                 ▼
-                       OnComponentBeginOverlap / EndOverlap
-                                 │
-                                 ▼ (routes to node on the overlapping camera)
-             UComposableCameraImpulseResolutionNode
-                                 │
-                                 ▼ (per frame)
-                   accumulated force → velocity → camera offset
+```mermaid
+flowchart TB
+    subgraph Shapes["Shape actors (implement <b>IComposableCameraImpulseShapeInterface</b>)"]
+        direction LR
+        Sphere[AComposableCameraImpulseSphere]
+        Box[AComposableCameraImpulseBox]
+    end
+    Shapes --> Overlap["OnComponentBeginOverlap / EndOverlap"]
+    Overlap -->|"routes to node on overlapping camera"| Node["<b>UComposableCameraImpulseResolutionNode</b>"]
+    Node -->|"per frame"| Result["accumulated force → velocity → camera offset"]
+    classDef acc fill:#fff4e6,stroke:#d97706;
+    classDef node fill:#e8f7ee,stroke:#0e9f6e;
+    class Overlap acc;
+    class Node node;
 ```
 
 The three pieces cooperate like this:
