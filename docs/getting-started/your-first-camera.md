@@ -31,24 +31,26 @@ A follow camera needs to know **who** to follow. ComposableCameraSystem exposes 
 
 The parameter now appears as a named node in the graph palette; drag it onto the canvas. This will drive downstream nodes.
 
-## 3. Drop a FollowNode and a LookAtNode
+## 3. Wire up the minimal node chain
 
-The **Nodes** palette (left side) is grouped by category. For this camera we'll use two:
+For a minimal follow camera we need to answer three questions every frame: *what point is the camera tracking*, *where does the camera sit relative to that point*, and *where is the camera looking*. Three shipped nodes cover those one-to-one, plus a fourth to author the lens:
 
-| Category | Node | What it does |
-|---|---|---|
-| Movement | **Follow Node** | Places the camera at a configurable offset behind / around a target actor. |
-| Rotation | **Look At Node** | Rotates the camera to aim at a target point. |
+| Node | Role |
+|---|---|
+| **ReceivePivotActor** | Reads `FollowTarget`'s world position and publishes it as the pivot. |
+| **CameraOffset** | Moves the camera to a fixed offset from the pivot. |
+| **LookAt** | Rotates the camera to face `FollowTarget`. |
+| **FieldOfView** | Authors the final lens FOV. |
 
-1. Drag a **Follow Node** onto the canvas.
-2. Connect the `FollowTarget` parameter to the Follow Node's **Target** pin.
-3. Configure the Follow Node in the Details panel: set **Offset** to something like `(0, -400, 200)` for a standard over-the-shoulder view.
-4. Drag a **Look At Node** onto the canvas, downstream of the Follow Node.
-5. Connect `FollowTarget` to its **Target** pin as well.
-6. Connect the Follow Node's **Pose Out** pin to the Look At Node's **Pose In** pin.
-7. Connect the Look At Node's **Pose Out** pin to the **Camera Output** node.
+1. Drag a **ReceivePivotActor** node onto the canvas. Wire the `FollowTarget` parameter into its **Actor** input.
+2. Drop a **CameraOffset** node after it. In Details, set **OffsetSpace** to **Camera Space** and **Offset** to `(-400, 0, 100)` — 4m behind the pivot, slightly above. Wire the previous node's pose output into its pose input.
+3. Drop a **LookAt** node next. Set **LookAtType** to **By Actor** and wire `FollowTarget` into its **TargetActor** pin. Set **ConstraintType** to **Hard** so the camera always tracks the target. Wire the previous pose into its input.
+4. Drop a **FieldOfView** node. Set **FieldOfView** to `70`. Wire the previous pose into its input, and its output into the **Camera Output** node's **Pose** pin.
 
-Save the asset (Ctrl+S). The asset header should show a green checkmark; if it shows a red error, hover over it to read what's wrong — typically a missing pin connection or a parameter type mismatch.
+Save the asset (`Ctrl+S`). The asset header should show a green checkmark; if it shows a red error, hover over it to read what's wrong — typically a missing pin connection or a parameter type mismatch.
+
+!!! tip "This is the bare minimum — real cameras do more"
+    The [Follow Camera tutorial](../tutorials/follow-camera.md) expands this into a production-grade chain with pivot damping, stick-driven orbit input, rotation clamping, and collision pushback. Come back to it after you've got this minimal version running.
 
 ## 4. Activate the camera from a Blueprint
 
@@ -75,7 +77,7 @@ Press **Play**. Your camera should snap to the configured offset behind the targ
 ## Common issues
 
 - **"No camera is active" in the debug overlay** — the Activate node never ran. Common causes: `BeginPlay` fires before your follow target spawns (wire the node to a later event), or the PlayerController class in the GameMode doesn't use `AComposableCameraPlayerCameraManager` (revisit [Enabling the Plugin](enabling-plugin.md)).
-- **Camera is at world origin, not behind the target** — the Follow Node's Target pin isn't wired, or the actor you're passing in is `None`. Print-string the target before the activation call.
+- **Camera is at world origin, not behind the target** — the `ReceivePivotActor` node's **Actor** pin isn't wired, or the actor you're passing in is `None`. Print-string the target before the activation call.
 - **Camera pops to the new position with no blend** — that's expected for a first activation. Blending is driven by **transitions**, which are covered in [Transitions & Blending](../user-guide/transitions-and-blending.md) in the User Guide.
 
 ## Where next

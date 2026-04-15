@@ -22,7 +22,7 @@ The recommended way is to set it **on your default PlayerController class**, so 
 
 1. Open your project's PlayerController Blueprint (often `BP_PlayerController` or similar — check **Project Settings → Maps & Modes → Default Modes → Selected GameMode → Player Controller Class**).
 2. In the Class Defaults, find the **Camera** category.
-3. Set **Player Camera Manager Class** to `ComposableCameraPlayerCameraManager`.
+3. Set **Player Camera Manager Class** to `AComposableCameraPlayerCameraManager`.
 4. Compile and save.
 
 ### If you're using a C++ PlayerController
