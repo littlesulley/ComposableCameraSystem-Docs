@@ -98,10 +98,10 @@ UComposableCameraTransitionBase * FindTransition(const UComposableCameraTypeAsse
 
 Look up the transition for an exact (Source, Target) pair.
 
-#### Parameters
+**Parameters**
 * `Source` The currently-active camera's type asset. Returns nullptr if null. 
 
 * `Target` The camera type asset being activated. Returns nullptr if null. 
 
-#### Returns
+**Returns**
 The matched transition, or nullptr if no entry matches.
