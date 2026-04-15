@@ -18,7 +18,7 @@ OnFinished()                     — once, when RemainingTime ≤ 0
 - **`TransitionEnabled(InitParams)`** fires the moment the transition is first wired into a tree inner node (see [Evaluation Tree](evaluation-tree.md#how-the-tree-grows-when-you-activate-a-camera)). It receives a small struct describing the world state *at the instant the transition was created*, not at the first frame it evaluates.
 - **`OnBeginPlay()`** fires just before the first `OnEvaluate()`. Transitions use it to set up internal state that depends on the live source/target cameras — spline control points derived from both poses, polynomial coefficients for inertialization, and so on.
 - **`OnEvaluate()`** fires every subsequent frame. It receives the *live* source and target poses (re-evaluated every frame) and the current `Percentage` (0 → 1 over `TransitionDuration`), and returns the blended pose.
-- **`OnFinished()`** fires once when `RemainingTime` drops to zero. The inner node that owns this transition will be collapsed on the same frame (see [Evaluation Tree → collapse rule](evaluation-tree.md#the-collapse-rule--why-trees-stay-small)).
+- **`OnFinished()`** fires once when `RemainingTime` drops to zero. The inner node that owns this transition will be collapsed on the same frame (see [Evaluation Tree → collapse rule](evaluation-tree.md#the-collapse-rule-why-trees-stay-small)).
 
 ## InitParams — why velocity matters
 
