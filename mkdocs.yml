@@ -8,6 +8,7 @@ edit_uri: edit/main/docs/
 
 theme:
   name: shadcn
+  custom_dir: overrides
   show_stargazers: true
   show_title: true
   pygments_style:
