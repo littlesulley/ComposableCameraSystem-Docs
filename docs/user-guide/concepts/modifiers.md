@@ -28,12 +28,12 @@ The two are not interchangeable and don't interact.
 classDiagram
     direction LR
     class UComposableCameraModifierBase {
-        <<abstract, Blueprintable>>
+        &lt;&lt;abstract, Blueprintable&gt;&gt;
         +NodeClass : TSubclassOf~UComposableCameraCameraNodeBase~
         +ApplyModifier(Node) void
     }
     class UComposableCameraNodeModifierDataAsset {
-        <<Content Browser wrapper>>
+        &lt;&lt;Content Browser wrapper&gt;&gt;
         +Modifiers : TArray~UComposableCameraModifierBase~
         +Priority : int32
         +CameraTags : FGameplayTagContainer
@@ -41,7 +41,7 @@ classDiagram
         +OverrideExitTransition : UComposableCameraTransitionBase
     }
     class UComposableCameraModifierManager {
-        <<owned by PCM>>
+        &lt;&lt;owned by PCM&gt;&gt;
         +AddModifier(DataAsset) void
         +RemoveModifier(DataAsset) void
         +UpdateEffectiveModifiers() (bChanged, Transition)
