@@ -90,7 +90,7 @@ void RemoveModifier(UComposableCameraNodeModifierDataAsset* ModifierAsset);
 
 Both funnel through `UpdateEffectiveModifiers`, which returns a `(bChanged, Transition*)` pair. If `bChanged` is true, the PCM triggers a reactivation using the returned transition.
 
-Gameplay code should always go through `UComposableCameraBlueprintLibrary::AddModifier` / `RemoveModifier` rather than poking the manager directly — the library takes the world-context object and the player index and resolves the correct PCM for you.
+Gameplay code should always go through `UComposableCameraBlueprintLibrary::AddModifier` / `RemoveModifier` rather than poking the manager directly — the library takes the world-context object and a resolved `AComposableCameraPlayerCameraManager*` (fetch it once via `GetComposableCameraPlayerCameraManager`) and forwards to the right manager.
 
 ---
 

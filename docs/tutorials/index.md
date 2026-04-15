@@ -26,7 +26,7 @@ Build a classic third-person follow camera — pivot on the player, camera offse
 
 Push a cutscene context during a scripted sequence, hand control to a cinematic camera, and blend cleanly back to gameplay on pop — with the gameplay camera *live* under the cutscene the whole time, so the blend back is seamless.
 
-*Concepts covered:* [Context Stack](../user-guide/concepts/context-stack.md), [reference-based inter-context blending](../user-guide/concepts/evaluation-tree.md), transition resolution across a context pop, `UComposableCameraBlueprintLibrary::PushCameraContext` / `PopCameraContext`.
+*Concepts covered:* [Context Stack](../user-guide/concepts/context-stack.md), [reference-based inter-context blending](../user-guide/concepts/evaluation-tree.md), transition resolution across a context pop, `Activate Composable Camera` with a Context Name (implicit push), `TerminateCurrentCamera` / `PopCameraContext`.
 
 *Time to complete:* 20–30 minutes.
 

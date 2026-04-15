@@ -55,7 +55,7 @@ For most users, contexts are an implementation detail exposed through the `Conte
 - **Leave it empty** to activate in the current top context. This is the common case.
 - **Set it to a declared name** to push (or move-to-top) that context as part of the activation.
 
-Explicit pop calls are rare — transient cameras auto-pop, and `TerminateCurrentCamera` handles the "end this cutscene now" case. Power users can also call `PopCameraContext(Name)` to pop a specific context that isn't the top (it's removed immediately with no transition, since there's no transition needed — it wasn't the active one).
+Explicit pop calls are rare — transient cameras auto-pop, and `TerminateCurrentCamera` handles the "end this cutscene now" case. Power users can also call `PopCameraContext(Name)` to target a specific context by name: if it's the active top, the previous context resumes with the same optional transition as `Terminate`; if it's buried below the top, it's removed immediately with no transition (there was no blend to perform — it wasn't the one the player was seeing).
 
 ## In summary
 

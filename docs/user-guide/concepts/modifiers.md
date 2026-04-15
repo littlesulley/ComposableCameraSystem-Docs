@@ -77,14 +77,16 @@ The reactivation path shares the same infrastructure as all other type-asset act
 
 Modifier groups are added and removed as `UComposableCameraNodeModifierDataAsset`s, not as raw modifier instances. The wrapper is the unit of management — individual modifier instances inside a group are never directly registered with the manager.
 
-From Blueprint, use the `Add Modifier` and `Remove Modifier` nodes on `UComposableCameraBlueprintLibrary`. Both take a world-context object, a player index, and the `UComposableCameraNodeModifierDataAsset` to add or remove.
+From Blueprint, use the `Add Modifier` and `Remove Modifier` nodes on `UComposableCameraBlueprintLibrary`. Both take a world-context object, a resolved `AComposableCameraPlayerCameraManager*`, and the `UComposableCameraNodeModifierDataAsset` to add or remove.
 
-From C++, prefer the Blueprint library over poking the manager directly — it handles world-context resolution and PCM lookup for you:
+From C++, prefer the Blueprint library over poking the manager directly — you still need to resolve the PCM yourself:
 
 ```cpp
-UComposableCameraBlueprintLibrary::AddModifier(WorldContext, PlayerIndex, SprintModifierAsset);
+AComposableCameraPlayerCameraManager* PCM =
+    UComposableCameraBlueprintLibrary::GetComposableCameraPlayerCameraManager(WorldContext, /*PlayerIndex*/ 0);
+UComposableCameraBlueprintLibrary::AddModifier(WorldContext, PCM, SprintModifierAsset);
 // later...
-UComposableCameraBlueprintLibrary::RemoveModifier(WorldContext, PlayerIndex, SprintModifierAsset);
+UComposableCameraBlueprintLibrary::RemoveModifier(WorldContext, PCM, SprintModifierAsset);
 ```
 
 If you already have a PCM reference and want to bypass the library:

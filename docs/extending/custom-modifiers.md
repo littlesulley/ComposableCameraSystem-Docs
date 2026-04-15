@@ -63,9 +63,11 @@ In the asset:
 From gameplay Blueprint or C++:
 
 ```cpp
-UComposableCameraBlueprintLibrary::AddModifier(WorldContext, PlayerIndex, SprintModifierAsset);
+AComposableCameraPlayerCameraManager* PCM =
+    UComposableCameraBlueprintLibrary::GetComposableCameraPlayerCameraManager(WorldContext, /*PlayerIndex*/ 0);
+UComposableCameraBlueprintLibrary::AddModifier(WorldContext, PCM, SprintModifierAsset);
 // ... later:
-UComposableCameraBlueprintLibrary::RemoveModifier(WorldContext, PlayerIndex, SprintModifierAsset);
+UComposableCameraBlueprintLibrary::RemoveModifier(WorldContext, PCM, SprintModifierAsset);
 ```
 
 The PCM's `UComposableCameraModifierManager` handles tag matching, priority resolution, and any reactivation blend.
