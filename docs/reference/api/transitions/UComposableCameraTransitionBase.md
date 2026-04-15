@@ -205,7 +205,9 @@ void OnBeginPlay(float DeltaTime, const FComposableCameraPose & CurrentSourcePos
 
 Begin Play event. Called on the first frame of the transition, before the first OnEvaluate. <br/>
 Use this to construct or initialize internal parameters specialized for this type of transition. <br/>
+
 **Parameters**
+
 * `DeltaTime` World delta time. <br/>
 
 * `CurrentSourcePose` Current source camera pose. <br/>
@@ -231,7 +233,9 @@ FComposableCameraPose OnEvaluate(float DeltaTime, const FComposableCameraPose & 
 ```
 
 Event to customize the evaluation function for each tick. When calling this function, RemainingTime has already been decremented, and assured to not go below 0. <br/>
+
 **Parameters**
+
 * `DeltaTime` World delta time. <br/>
 
 * `CurrentSourcePose` Current source camera pose. <br/>
@@ -239,6 +243,7 @@ Event to customize the evaluation function for each tick. When calling this func
 * `CurrentTargetPose` Current target camera pose. <br/>
 
 **Returns**
+
 Returns the new blended camera pose.
 
 ---

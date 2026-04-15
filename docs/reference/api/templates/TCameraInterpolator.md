@@ -1,8 +1,6 @@
 
 # TCameraInterpolator { #tcamerainterpolator }
 
-
-
 ## TCameraInterpolator< TValueTypeWrapper< ValueType > > { #tcamerainterpolatortvaluetypewrappervaluetype }
 
 ```cpp

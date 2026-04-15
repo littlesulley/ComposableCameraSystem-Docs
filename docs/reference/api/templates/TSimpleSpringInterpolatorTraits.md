@@ -5,8 +5,6 @@
 #include <ComposableCameraSimpleSpringInterpolator.h>
 ```
 
-
-
 ## TSimpleSpringInterpolatorTraits< FQuat > { #tsimplespringinterpolatortraitsfquat }
 
 ```cpp
@@ -28,8 +26,6 @@
 ```cpp
 static inline FQuat Damp(const FQuat & CurrentValue, const FQuat & TargetValue, float DeltaTime, float DampTime)
 ```
-
-
 
 ## TSimpleSpringInterpolatorTraits< double > { #tsimplespringinterpolatortraitsdouble }
 
@@ -53,8 +49,6 @@ static inline FQuat Damp(const FQuat & CurrentValue, const FQuat & TargetValue, 
 static inline double Damp(double CurrentValue, double TargetValue, float DeltaTime, float DampTime)
 ```
 
-
-
 ## TSimpleSpringInterpolatorTraits< FRotator > { #tsimplespringinterpolatortraitsfrotator }
 
 ```cpp
@@ -77,8 +71,6 @@ static inline double Damp(double CurrentValue, double TargetValue, float DeltaTi
 static inline FRotator Damp(const FRotator & CurrentValue, const FRotator & TargetValue, float DeltaTime, float DampTime)
 ```
 
-
-
 ## TSimpleSpringInterpolatorTraits< FVector2d > { #tsimplespringinterpolatortraitsfvector2d }
 
 ```cpp
@@ -100,8 +92,6 @@ static inline FRotator Damp(const FRotator & CurrentValue, const FRotator & Targ
 ```cpp
 static inline FVector2d Damp(const FVector2d & CurrentValue, const FVector2d & TargetValue, float DeltaTime, float DampTime)
 ```
-
-
 
 ## TSimpleSpringInterpolatorTraits< FVector3d > { #tsimplespringinterpolatortraitsfvector3d }
 

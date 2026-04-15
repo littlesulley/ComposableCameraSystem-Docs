@@ -53,8 +53,6 @@ std::pair< bool, UComposableCameraTransitionBase * > UpdateEffectiveModifiers(AC
 inline T_NodeModifier & GetEffectiveModifiers()
 ```
 
-
-
 ## FComposableCameraModifierData { #fcomposablecameramodifierdata }
 
 ```cpp

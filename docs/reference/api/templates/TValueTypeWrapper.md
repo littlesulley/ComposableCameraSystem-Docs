@@ -112,8 +112,6 @@ inline TValueTypeWrapper operator*(double Multiplier) const
 inline TValueTypeWrapper operator/(double Multiplier) const
 ```
 
-
-
 ## TValueTypeWrapper< FQuat > { #tvaluetypewrapperfquat }
 
 ```cpp
@@ -204,8 +202,6 @@ inline TValueTypeWrapper & operator*=(double Multiplier)
 ```cpp
 inline TValueTypeWrapper operator*(double Multiplier) const
 ```
-
-
 
 ## TValueTypeWrapper< FRotator > { #tvaluetypewrapperfrotator }
 

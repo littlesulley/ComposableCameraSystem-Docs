@@ -46,8 +46,6 @@ static inline TValueTypeWrapper< ValueType > & ConvertFrom(TValueTypeWrapper< Va
 ValueType IntermediateValueType()
 ```
 
-
-
 ## TSpringDamperInterpolatorTraits< FQuat > { #tspringdamperinterpolatortraitsfquat }
 
 ```cpp
@@ -94,8 +92,6 @@ static inline TValueTypeWrapper< FQuat > ConvertFrom(TValueTypeWrapper< FVector 
 ```cpp
 FVector IntermediateValueType()
 ```
-
-
 
 ## TSpringDamperInterpolatorTraits< FRotator > { #tspringdamperinterpolatortraitsfrotator }
 

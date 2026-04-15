@@ -207,6 +207,7 @@ AComposableCameraCameraBase * ActivateNewCameraFromTypeAsset(UComposableCameraTy
 Activate a new camera from a Camera Type Asset (data-driven workflow). Creates a default [AComposableCameraCameraBase](AComposableCameraCameraBase.md#acomposablecameracamerabase), duplicates node templates from the type asset, wires the RuntimeDataBlock, and applies caller-provided parameter values.
 
 **Parameters**
+
 * `CameraTypeAsset` The type asset defining the camera's node composition and parameters. 
 
 * `TransitionOverride` Optional transition override. If nullptr, uses the type asset's DefaultTransition. 
@@ -218,6 +219,7 @@ Activate a new camera from a Camera Type Asset (data-driven workflow). Creates a
 * `ContextName` Context to activate in (NAME_None = current active context). 
 
 **Returns**
+
 The activated camera instance, or nullptr on failure.
 
 ---
@@ -327,6 +329,7 @@ void PopCameraContext(FName ContextName, UComposableCameraTransitionDataAsset * 
 Pop a specific camera context by name. If this is the active context, the previous context resumes with an optional transition. Cannot pop the base context if it is the last one remaining.
 
 **Parameters**
+
 * `ContextName` The name identifying which context to pop. 
 
 * `TransitionOverride` Optional transition. If nullptr, falls back to the resume camera's DefaultTransition. 
@@ -344,6 +347,7 @@ void TerminateCurrentCamera(UComposableCameraTransitionDataAsset * TransitionOve
 Terminate the current camera context — pops the active (top) context off the stack. The previous context resumes with an optional transition. Cannot pop the base context. This is the explicit way to end a context. Transient cameras trigger this automatically.
 
 **Parameters**
+
 * `TransitionOverride` Optional transition. If nullptr, falls back to the resume camera's DefaultTransition. 
 
 * `ActivationParams` Optional activation params for the resume camera.
@@ -417,6 +421,7 @@ Resolve which transition to use when switching from one type-asset camera to ano
 The table (tier 2) performs exact-match only — no wildcards. Per-camera ExitTransition and EnterTransition (tiers 3/4) serve as the per-camera fallbacks when no explicit pair is defined in the table.
 
 **Parameters**
+
 * `SourceTypeAsset` The type asset of the currently-running camera (may be nullptr). 
 
 * `TargetTypeAsset` The type asset being activated (may be nullptr). 
@@ -424,6 +429,7 @@ The table (tier 2) performs exact-match only — no wildcards. Per-camera ExitTr
 * `CallerOverride` Explicit caller transition — if non-null, wins unconditionally. 
 
 **Returns**
+
 The resolved transition instance (owned by the type asset or table entry), or nullptr for a hard cut. Caller must DuplicateObject before mutating.
 
 ---

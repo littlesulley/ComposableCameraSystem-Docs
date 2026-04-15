@@ -77,6 +77,7 @@ void OnActivateNewCameraWithReferenceSource(AComposableCameraCameraBase * NewCam
 Activate a new camera with a reference to another context's Director as the transition source. Used for inter-context transitions: the reference leaf evaluates the source context live (not frozen), producing smooth blending between contexts.
 
 **Parameters**
+
 * `NewCamera` The new camera to activate in this context. 
 
 * `Transition` The transition to blend from the referenced Director's output to NewCamera. 
@@ -194,6 +195,7 @@ When an inner node's transition is finished (or its source is destroyed), the no
 Transient cameras are not managed here — they live in separate contexts and their lifecycle is handled by the context stack's auto-pop mechanism.
 
 **Returns**
+
 The node that should replace the input node in the tree.
 
 ---

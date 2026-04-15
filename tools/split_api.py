@@ -199,13 +199,17 @@ for slug, items in file_groups.items():
     # Demote moxygen's per-method `#### Parameters` and `#### Returns` subheadings
     # to bold labels — they share the `####` level with method names, which causes
     # them to interleave in the page TOC. Bolding keeps the visual affordance but
-    # removes the noise from the TOC.
+    # removes the noise from the TOC. Also force surrounding blank lines: heading
+    # syntax doesn't need them, bold text does, otherwise the label collapses into
+    # the previous paragraph.
     combined = re.sub(
-        r"^#### (Parameters|Returns)\s*$",
-        r"**\1**",
+        r"^#### (Parameters|Returns)[ \t]*\n",
+        r"\n**\1**\n\n",
         combined,
         flags=re.MULTILINE,
     )
+    # Collapse any runs of 3+ newlines we just introduced back to 2.
+    combined = re.sub(r"\n{3,}", "\n\n", combined)
     out_path = cat_dir / f"{slug}.md"
     out_path.write_text(combined, encoding="utf-8")
     cat_to_files[cat].append((primary_title, slug))

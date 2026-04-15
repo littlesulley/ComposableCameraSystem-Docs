@@ -62,6 +62,7 @@ The type asset defines the node composition, exposed parameters, internal variab
  This function is hidden from the Blueprint palette because designers should author activation calls through UK2Node_ActivateComposableCamera instead — that K2 node generates a typed pin per exposed parameter and expands into this call at compile time. Exposing the raw [FComposableCameraParameterBlock](../structs/FComposableCameraParameterBlock.md#fcomposablecameraparameterblock) form in the BP menu would create a second, untyped, strictly worse workflow alongside the K2 node.
 
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerIndex` Player index (0 for single player). <br/>
@@ -77,6 +78,7 @@ The type asset defines the node composition, exposed parameters, internal variab
 * `ActivationParams` Parameters to define transient, lifetime, and pose preservation behavior. <br/>
 
 **Returns**
+
 The activated camera instance.
 
 ---
@@ -96,6 +98,7 @@ The row is expected to be of type [FComposableCameraParameterTableRow](../struct
 This function is hidden from the Blueprint palette because designers should author DataTable-driven activation calls through UK2Node_ActivateComposableCameraFromDataTable instead — that K2 node provides a row-struct-filtered DataTable asset picker and a live row-name dropdown, and expands into this call at compile time.
 
 **Parameters**
+
 * `WorldContextObject` World context object. 
 
 * `PlayerIndex` Player index (0 for single player). 
@@ -105,6 +108,7 @@ This function is hidden from the Blueprint palette because designers should auth
 * `RowName` Name of the row to activate. The row's ActivationParams struct is used directly. 
 
 **Returns**
+
 The activated camera instance, or nullptr on failure.
 
 ---
@@ -118,7 +122,9 @@ static void TerminateCurrentCamera(const UObject * WorldContextObject, AComposab
 ```
 
 Terminate the current camera — pops the active (top) context off the stack. The previous context resumes with an optional transition. Cannot pop the base context. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
@@ -138,7 +144,9 @@ static void PopCameraContext(const UObject * WorldContextObject, AComposableCame
 ```
 
 Pop a specific camera context by name. If this is the active context, the previous context resumes with an optional transition. Cannot pop the base context if it is the last one remaining. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
@@ -160,12 +168,15 @@ static int32 GetCameraContextStackDepth(const UObject * WorldContextObject, ACom
 ```
 
 Get the current depth of the camera context stack. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
 
 **Returns**
+
 The number of contexts on the stack (1 = base context only).
 
 ---
@@ -179,12 +190,15 @@ static FName GetActiveContextName(const UObject * WorldContextObject, AComposabl
 ```
 
 Get the name of the currently active (top) context. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
 
 **Returns**
+
 The active context's name.
 
 ---
@@ -198,7 +212,9 @@ static void AddModifier(const UObject * WorldContextObject, AComposableCameraPla
 ```
 
 Add a modifier data asset. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
@@ -216,7 +232,9 @@ static void RemoveModifier(const UObject * WorldContextObject, AComposableCamera
 ```
 
 Remove a modifier data asset. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
@@ -234,7 +252,9 @@ static UComposableCameraActionBase * AddAction(const UObject * WorldContextObjec
 ```
 
 Add a camera action. Multiple actions of the same class are not allowed. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
@@ -254,7 +274,9 @@ static void ExpireAction(const UObject * WorldContextObject, AComposableCameraPl
 ```
 
 Expire a camera action. 
+
 **Parameters**
+
 * `WorldContextObject` World context object. <br/>
 
 * `PlayerCameraManager` The player camera manager, must be a ComposableCameraPlayerCameraManager. <br/>
@@ -272,7 +294,9 @@ static AComposableCameraPlayerCameraManager * GetComposableCameraPlayerCameraMan
 ```
 
 Get player camera manager and cast it to ComposableCameraPlayerCameraManager. Can be null if it's not the type. 
+
 **Parameters**
+
 * `Index` Player index.
 
 ---
@@ -286,7 +310,9 @@ static void SetParameterBlockValue(FComposableCameraParameterBlock & ParameterBl
 ```
 
 Custom thunk function for setting a single value in a ParameterBlock. Used internally by UK2Node_ActivateComposableCamera to fill the parameter block at compile time. 
+
 **Parameters**
+
 * `ParameterBlock` The parameter block to modify. 
 
 * `ParameterName` The parameter name key. 

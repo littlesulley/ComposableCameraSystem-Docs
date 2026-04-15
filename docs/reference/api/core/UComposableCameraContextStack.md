@@ -58,11 +58,13 @@ UComposableCameraDirector * EnsureContext(AComposableCameraPlayerCameraManager *
 Ensure a context with the given name exists on the stack. If already present, returns its Director. If not, pushes a new context on top (LIFO) and returns its Director.
 
 **Parameters**
+
 * `PlayerCameraManager` The owning player camera manager. 
 
 * `ContextName` The name identifying which context to ensure (must be in project settings). 
 
 **Returns**
+
 The Director for the context. Returns nullptr if the name is not registered.
 
 ---
@@ -76,6 +78,7 @@ void PopContext(FName ContextName, AComposableCameraPlayerCameraManager * Player
 Pop a specific context by name. If the context is the active (top) context and a transition is available, the pop is animated: the previous context resumes with a transition from the popped context's Director. If the context is not the active one, it is removed immediately. Cannot pop the base (bottom) context if it is the last one remaining.
 
 **Parameters**
+
 * `ContextName` The name of the context to pop. 
 
 * `PlayerCameraManager` The owning player camera manager (needed for camera creation during transition). 
@@ -95,6 +98,7 @@ void PopActiveContext(AComposableCameraPlayerCameraManager * PlayerCameraManager
 Pop the active (top) context. Used by TerminateCurrentCamera. Cannot pop the base context if it is the last one remaining.
 
 **Parameters**
+
 * `PlayerCameraManager` The owning player camera manager. 
 
 * `TransitionOverride` Optional transition data asset override. 
@@ -172,6 +176,7 @@ FComposableCameraPose Evaluate(float DeltaTime)
 Evaluate the active context for this frame. Only the top context is ticked (unless a lower context is referenced by a reference leaf in the active context's tree, in which case it ticks through the reference). If the active context's running camera is transient and finished, auto-pops the context.
 
 **Returns**
+
 The final camera pose for this frame.
 
 ---

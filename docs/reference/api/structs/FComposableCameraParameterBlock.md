@@ -211,6 +211,7 @@ Supported types: Bool, Int32, Float, Double — LexFromString Vector2D/3D/4, Rot
 Unsupported (returns false, writes OutError): Actor — actors are world-scoped and cannot be resolved from a DataTable asset. Use Object with a soft path to a CDO/archetype instead if you need a class reference.
 
 **Parameters**
+
 * `OutBlock` Parameter block to write into. 
 
 * `ParameterName` Key the entry is stored under in OutBlock.Values. 
@@ -224,4 +225,5 @@ Unsupported (returns false, writes OutError): Actor — actors are world-scoped 
 * `OutError` Optional human-readable error written on failure. 
 
 **Returns**
+
 true on success, false otherwise. On failure the OutBlock is left untouched for this key.

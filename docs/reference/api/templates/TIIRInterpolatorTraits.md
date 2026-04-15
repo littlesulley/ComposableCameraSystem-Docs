@@ -5,8 +5,6 @@
 #include <ComposableCameraIIRInterpolator.h>
 ```
 
-
-
 ## TIIRInterpolatorTraits< FQuat > { #tiirinterpolatortraitsfquat }
 
 ```cpp
@@ -28,8 +26,6 @@
 ```cpp
 static inline FQuat InterpTo(const FQuat & CurrentValue, const FQuat & TargetValue, float DeltaTime, double Speed)
 ```
-
-
 
 ## TIIRInterpolatorTraits< double > { #tiirinterpolatortraitsdouble }
 
@@ -53,8 +49,6 @@ static inline FQuat InterpTo(const FQuat & CurrentValue, const FQuat & TargetVal
 static inline double InterpTo(double CurrentValue, double TargetValue, float DeltaTime, double Speed)
 ```
 
-
-
 ## TIIRInterpolatorTraits< FRotator > { #tiirinterpolatortraitsfrotator }
 
 ```cpp
@@ -77,8 +71,6 @@ static inline double InterpTo(double CurrentValue, double TargetValue, float Del
 static inline FRotator InterpTo(const FRotator & CurrentValue, const FRotator & TargetValue, float DeltaTime, double Speed)
 ```
 
-
-
 ## TIIRInterpolatorTraits< FVector2d > { #tiirinterpolatortraitsfvector2d }
 
 ```cpp
@@ -100,8 +92,6 @@ static inline FRotator InterpTo(const FRotator & CurrentValue, const FRotator & 
 ```cpp
 static inline FVector2d InterpTo(const FVector2d & CurrentValue, const FVector2d & TargetValue, float DeltaTime, double Speed)
 ```
-
-
 
 ## TIIRInterpolatorTraits< FVector3d > { #tiirinterpolatortraitsfvector3d }
 
