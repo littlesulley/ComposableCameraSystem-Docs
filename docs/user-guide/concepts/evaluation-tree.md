@@ -30,31 +30,45 @@ When you call `Activate Composable Camera` on an already-active context, the tre
 
 **With a transition** (the common case):
 
-```
-Before:          After:
- [CamA]          [Inner: Transition]
-                  /              \
-              [CamA]           [CamB]
-              (source)         (target)
+```mermaid
+flowchart LR
+    subgraph Before
+        direction TB
+        A1["Leaf: CamA"]
+    end
+    subgraph After
+        direction TB
+        Inner(["Inner: Transition"])
+        Inner --> A2["Leaf: CamA<br/>(source)"]
+        Inner --> B1["Leaf: CamB<br/>(target)"]
+    end
 ```
 
 The old tree becomes the left subtree. A new leaf wrapping the target camera becomes the right subtree. A new inner node (holding the resolved transition) becomes the root. Future activations during an in-progress transition keep grafting onto the left — the old tree slides further left as new cameras arrive on the right.
 
 **Without a transition** (hard cut):
 
-```
-Before:          After:
- [anything]      [CamB]
+```mermaid
+flowchart LR
+    subgraph Before
+        direction TB
+        X["anything"]
+    end
+    subgraph After
+        direction TB
+        B["Leaf: CamB"]
+    end
 ```
 
 The entire old tree is destroyed and replaced with a single leaf for the new camera.
 
 **With a reference source** (the inter-context case):
 
-```
- [Inner: Transition]
-  /              \
-[RefLeaf: OldDir]  [CamB]
+```mermaid
+flowchart TB
+    Inner(["Inner: Transition"])
+    Inner --> Ref["RefLeaf: OldDir"]
+    Inner --> B["Leaf: CamB"]
 ```
 
 The left child is a reference leaf pointing at the Director that just got popped; the right is the resumed camera. The transition runs just like any other transition — it doesn't know or care that its left input comes from a different context.
