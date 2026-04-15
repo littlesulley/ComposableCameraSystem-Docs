@@ -1,3 +1,7 @@
+---
+title: Getting Started
+---
+
 # Getting Started
 
 This section walks you through the three steps from a fresh UE 5.6 project to a working ComposableCameraSystem camera:

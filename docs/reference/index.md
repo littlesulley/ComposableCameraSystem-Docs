@@ -1,3 +1,7 @@
+---
+title: Reference
+---
+
 # Reference
 
 Structured catalog of everything shipped with the plugin.

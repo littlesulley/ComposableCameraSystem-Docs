@@ -1,3 +1,7 @@
+---
+title: Concepts
+---
+
 # Concepts
 
 This section explains **how ComposableCameraSystem works** — enough that you can predict what will happen when you activate a camera, push a cutscene context, add a modifier, or wire up a transition. It is not a walkthrough of the editor (that's [Authoring Camera Types](../authoring-camera-types.md)) and it is not a catalog of shipped nodes (that's [Reference](../../reference/index.md)).

@@ -4,7 +4,7 @@
    render as a flex row with title-as-link + chevron-as-toggle. #}
 {% set ns = namespace(index_child=none) %}
 {% for child in sidebar_item.children %}
-{% if child.is_page and child.title == "Index" %}
+{% if child.is_page and child.file and child.file.name == "index" %}
 {% set ns.index_child = child %}
 {% endif %}
 {% endfor %}
@@ -55,7 +55,7 @@
             class="overflow-hidden ml-3.5 flex flex-col gap-0.5 border-l border-sidebar-border pl-2.5">
 
             {% for sub_item in sidebar_item.children|selectattr("is_page") %}
-            {% if sub_item.title == "Index" %}
+            {% if sub_item.file and sub_item.file.name == "index" %}
             {# skip — already promoted to the sub-section header #}
             {% else %}
             {% with sidebar_item=sub_item %}

@@ -1,3 +1,7 @@
+---
+title: Tutorials
+---
+
 # Tutorials
 
 End-to-end walkthroughs that take a realistic goal and build it from an empty project slot. Each tutorial picks one concrete outcome, names the nodes or classes involved, and shows the full wiring — graph, Blueprint calls, and any C++ when required. The intent is to connect the vocabulary from the [Concepts](../user-guide/concepts/index.md) tour and the cataloged behavior from [Reference](../reference/index.md) into something that *runs*.

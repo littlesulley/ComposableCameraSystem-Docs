@@ -1,3 +1,7 @@
+---
+title: User Guide
+---
+
 # User Guide
 
 The concepts section covered how the runtime thinks about cameras. This section is about how you actually get work done in the plugin day-to-day: authoring camera types, driving them from Blueprint, picking transitions, and working inside the graph editor.

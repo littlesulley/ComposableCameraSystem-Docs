@@ -1,3 +1,7 @@
+---
+title: Extending
+---
+
 # Extending the Plugin
 
 The plugin ships with ~27 camera nodes, 9 transitions, and a modifier system, but gameplay needs are endless. When the shipped set doesn't cover your case, you extend — write your own node, transition, or modifier in C++. This section is the authoring guide.

@@ -35,7 +35,7 @@
 {# Detect a child titled "Index" — promote it to the section header link #}
 {% set ns = namespace(index_child=none) %}
 {% for child in section.children %}
-{% if child.is_page and child.title == "Index" %}
+{% if child.is_page and child.file and child.file.name == "index" %}
 {% set ns.index_child = child %}
 {% endif %}
 {% endfor %}
@@ -54,7 +54,7 @@
     <div data-slot="sidebar-group-content" data-sidebar="group-content" class="w-full text-sm">
         <ul data-slot="sidebar-menu" data-sidebar="menu" class="flex w-full min-w-0 flex-col gap-0.5">
             {% for sidebar_item in section.children %}
-            {% if sidebar_item.is_page and sidebar_item.title == "Index" %}
+            {% if sidebar_item.is_page and sidebar_item.file and sidebar_item.file.name == "index" %}
             {# skip — already promoted to the section header #}
             {% elif sidebar_item.children %}
             {% include "components/sidebar_section.html" %}
