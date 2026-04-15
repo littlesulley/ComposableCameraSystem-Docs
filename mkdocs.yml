@@ -6,46 +6,15 @@ repo_name: littlesulley/ComposableCameraSystem-Docs
 edit_uri: edit/main/docs/
 
 theme:
-  name: material
-  features:
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - navigation.sections
-    - navigation.top
-    - navigation.instant
-    - navigation.tracking
-    - navigation.indexes
-    - toc.follow
-    - search.suggest
-    - search.highlight
-    - search.share
-    - content.code.copy
-    - content.code.annotate
-    - content.tabs.link
-    - content.tooltips
-  palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/weather-night
-        name: Switch to light mode
-  font:
-    text: Inter
-    code: JetBrains Mono
-  icon:
-    repo: fontawesome/brands/github
+  name: shadcn
+  show_stargazers: true
+  show_title: true
+  pygments_style:
+    light: shadcn-light
+    dark: github-dark
+  katex_options: {}
 
 markdown_extensions:
-  - abbr
   - admonition
   - attr_list
   - def_list
@@ -55,16 +24,13 @@ markdown_extensions:
   - toc:
       permalink: true
       permalink_title: Anchor link to this section
+  - codehilite:
+      guess_lang: false
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.betterem
   - pymdownx.caret
   - pymdownx.details
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.smartsymbols
@@ -73,23 +39,17 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+          format: !!python/name:mermaid2.fence_mermaid_custom
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
 
-extra_javascript:
-  - https://unpkg.com/katex@0/dist/katex.min.js
-  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
-  - javascripts/katex.js
-
-extra_css:
-  - https://unpkg.com/katex@0/dist/katex.min.css
-
 plugins:
   - search
+  - mermaid2:
+      version: 10.9.1
 
 nav:
   - Home: index.md
@@ -272,6 +232,3 @@ nav:
               - Enumerations: reference/api/enumerations/Enumerations.md
           - Free Functions:
               - Functions: reference/api/free-functions/Functions.md
-
-extra:
-  generator: false
