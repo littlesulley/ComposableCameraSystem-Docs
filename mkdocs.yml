@@ -111,6 +111,7 @@ nav:
       - Authoring Camera Types: user-guide/authoring-camera-types.md
       - Blueprint API: user-guide/blueprint-api.md
       - Transitions & Blending: user-guide/transitions-and-blending.md
+      - Impulse System: user-guide/impulse-system.md
   - Tutorials:
       - tutorials/index.md
       - Follow Camera: tutorials/follow-camera.md
@@ -129,6 +130,8 @@ nav:
       - Node Catalog: reference/nodes.md
       - Transition Catalog: reference/transitions.md
       - Modifier Catalog: reference/modifiers.md
+      - Project Settings: reference/project-settings.md
+      - showdebug composablecamera: reference/showdebug.md
       - C++ API Reference:
           - Overview: reference/api/index.md
           - Core Runtime:
