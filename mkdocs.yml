@@ -123,6 +123,7 @@ nav:
       - Custom Modifiers: extending/custom-modifiers.md
       - Editor Hooks: extending/editor-hooks.md
   - FAQ: faq/index.md
+  - Changelog: changelog.md
   - Reference:
       - reference/index.md
       - Node Catalog: reference/nodes.md
