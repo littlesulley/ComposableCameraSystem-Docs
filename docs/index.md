@@ -1,8 +1,5 @@
 # ComposableCameraSystem
 
-!!! note "Documentation under construction"
-    Full content is being authored. The table of contents below reflects the final shape of the site.
-
 ComposableCameraSystem is a modular, data-driven camera framework for Unreal Engine 5.6. It replaces the monolithic `APlayerCameraManager` pattern with a layered architecture built around composable nodes, pose-only transitions, and a two-tier context / evaluation-tree model.
 
 ## Where to start
