@@ -1,6 +1,126 @@
 # Tutorial: Follow Camera
 
-!!! info "Under construction"
-    This page is being written.
+Build a standard third-person follow camera — pivot locked to a target actor, camera offset behind and slightly above, stick-driven yaw/pitch, soft collision pushback. By the end you'll have a single `UComposableCameraTypeAsset` that runs on any character and activates from a one-line Blueprint call.
 
-Build a classic third-person follow camera with a dead zone, smoothing, and collision avoidance.
+The chain we're building:
+
+```
+ReceivePivotActorNode        reads FollowTarget, publishes PivotPosition
+  → PivotOffsetNode          shoulder-height lift
+  → PivotDampingNode         smooths pivot snaps (optional but recommended)
+  → CameraOffsetNode         pushes the camera behind the pivot
+  → ControlRotateNode        right-stick yaw + pitch input
+  → RotationConstraints      pitch clamp
+  → CollisionPushNode        trace + self-collision pushback
+  → LookAtNode               face the pivot
+  → FieldOfViewNode          author FOV
+```
+
+Each of these is a shipped node documented in the [Node Catalog](../reference/nodes.md). The tutorial steps through authoring the asset, exposing parameters, wiring input, and activating it.
+
+## 1. Create the type asset
+
+Content Browser → right-click → **Composable Camera System → Camera Type Asset**. Name it `CT_ThirdPersonFollow`. Double-click to open the graph editor.
+
+The canvas starts empty with a single **Output** node on the right — that's where the final pose ends up each frame.
+
+## 2. Declare a `FollowTarget` parameter
+
+A follow camera needs to know which actor to follow. We expose that as a **context parameter** so callers can pass it in on activation.
+
+1. Open the **Parameters** panel (right side of the editor).
+2. Click **+ Add Parameter**.
+3. Set **Name** to `FollowTarget`, **Type** to `Actor Reference`.
+
+This parameter now appears as a variable node in the palette and — crucially — it will become a pin on the `Activate Composable Camera` K2 node in Blueprint.
+
+## 3. The pivot chain
+
+Drop these three nodes onto the canvas, left to right:
+
+- **ReceivePivotActor** — wire `FollowTarget` into its `Actor` input.
+- **PivotOffset** — set `OffsetSpace` to **Actor Space**, `Offset` to `(0, 0, 80)` for shoulder height. Wire the receive node's `PivotPosition` output into the offset node's `PivotPosition` input.
+- **PivotDamping** — add an Instanced `SpringDamperInterpolator` in its `Interpolator` slot, `Speed = 8`, `DampTime = 0.2`. Wire the previous node's output in.
+
+The first three nodes handle *what point the camera is tracking*. They don't touch camera position or rotation yet.
+
+## 4. Camera offset
+
+Drop a **CameraOffset** node. Set:
+
+- `OffsetSpace` = **Camera Space**
+- `Offset` = `(-400, 50, 100)` — 4m behind, slightly right, slightly above the pivot.
+
+Wire the previous node's output pose into its input. The camera now sits at a fixed offset from the pivot, but still points at wherever it was pointed when the tree was built (usually world origin).
+
+## 5. Stick-driven orbit
+
+Drop a **ControlRotate** node. Wire `FollowTarget` into its `RotationInputActor` pin (the actor owning the `EnhancedInputComponent`). In Details:
+
+- `RotateAction` — your `IA_Look` asset (or whatever you use for right-stick look input). This must be an `UInputAction` with `Axis2D` value type.
+- `HorizontalSpeed` / `VerticalSpeed` — `120` / `90` degrees per second are reasonable starting values.
+- `HorizontalDamping` = `(0.05, 0.1)` — a short acceleration, slightly longer deceleration.
+- `VerticalDamping` = `(0.05, 0.1)`.
+- `bInvertPitch` — toggle to taste.
+
+!!! note "Enhanced Input dependency"
+    `ControlRotateNode` reads input via the Enhanced Input system. If `EnhancedInput` isn't already in your project's module dependencies, add it to your `Build.cs` — otherwise the node compiles but reads no input at runtime.
+
+Now drop a **RotationConstraints** node after it. Set `PitchRange` to `(-70, 70)` so the player can't look straight up or down into the floor.
+
+## 6. Collision
+
+Drop a **CollisionPush** node. This is the largest single node in the shipped set — it handles two collision modes simultaneously:
+
+- **Trace collision** — a line/sphere trace from pivot to camera each frame; if something blocks it, the camera is pushed toward the pivot along the trace direction.
+- **Self collision** — a sphere around the camera; if something overlaps it, the camera is pushed to the *far side* via a reverse sphere sweep from beyond the camera back toward the pivot.
+
+Starting values:
+
+- `bEnableTraceCollision` = true, trace type = `Sphere`, `TraceRadius` = `12`.
+- `bEnableSelfCollision` = true, `SelfCollisionRadius` = `20`.
+- `TraceChannel` = `Camera` (or `Visibility`, depending on your project).
+- `IgnoredActors` — add `FollowTarget` (the character itself shouldn't occlude its own camera).
+- For both modes, the push/pull interpolators default to `SimpleSpringInterpolator`. Set `PushInterpolator.Speed = 20` and `PullInterpolator.Speed = 6` — fast push on occlusion, slow return so the camera doesn't bounce.
+
+## 7. Face the pivot + author FOV
+
+Drop a **LookAt** node. Set:
+
+- `LookAtType` = **By Actor**, `TargetActor` wired from `FollowTarget`.
+- `ConstraintType` = **Soft**, `SoftLookAtRange = 15`, `SoftLookAtWeight = 0.15`. This gives the player stick control within a 15° cone and softly re-centers outside it.
+- Add a `SpringDamperInterpolator` to `SoftLookAtInterpolator` for the re-center curve.
+
+Finally, drop a **FieldOfView** node. Set `FieldOfView` = `70`. Wire its output into the Output node's `Pose` input.
+
+## 8. Save and build
+
+`Ctrl+S`. The asset header should show a green checkmark. If it's red, hover for the error — typically an unconnected exec pin or a dangling parameter reference.
+
+The final graph looks like a straight pipeline: parameter → 8 nodes → Output.
+
+## 9. Activate from Blueprint
+
+Open your character Blueprint. On `BeginPlay`:
+
+1. Right-click → search **Activate Composable Camera**. Place the node.
+2. Set **Camera Type Asset** = `CT_ThirdPersonFollow`. The node rebuilds its pins — you'll see a `Follow Target` pin appear (generated from your parameter).
+3. Wire the character's `Self` into `Follow Target`, and `Player Index` = `0`.
+4. Connect the exec pin from `BeginPlay`.
+
+That's the entire activation path. Compile, play, and the camera snaps to your character with stick-driven orbit and collision-aware pushback.
+
+## Tuning notes
+
+A few things to nudge once you see it running:
+
+- **Camera feels "sticky" behind the character** — increase `HorizontalDamping.Y` (deceleration time) on `ControlRotateNode`, or lower `SoftLookAtWeight` on `LookAtNode`.
+- **Camera snaps through thin walls** — you're relying on trace collision only. Enable self collision and increase `SelfCollisionRadius` until the camera stops poking through.
+- **Pitch feels sluggish near the clamps** — `RotationConstraints` is a hard clamp; if you want softer approach, author a custom node that smoothstops near the range endpoints, or set a wider pitch range and let content design the limit.
+- **Camera jitters while the character is on a moving platform** — add a second `PivotDamping` after the offset, and lower the spring damp time to `~0.08`. The source of the jitter is usually high-frequency root-bone motion during animation blends.
+
+## Where next
+
+- [Transitions & Blending](../user-guide/transitions-and-blending.md) — author an `EnterTransition` on `CT_ThirdPersonFollow` so activation blends in rather than snaps.
+- [Modifiers](../user-guide/concepts/modifiers.md) — add a sprint-FOV-bump modifier that targets `FieldOfViewNode` on this camera's tag set.
+- [Cutscene Context](cutscene-context.md) — the next tutorial, which pushes a cutscene over this camera and blends back to it cleanly.
