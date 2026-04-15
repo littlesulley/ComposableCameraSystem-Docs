@@ -98,15 +98,15 @@ nav:
       - Installation: getting-started/installation.md
       - Enabling the Plugin: getting-started/enabling-plugin.md
       - Your First Camera: getting-started/your-first-camera.md
-  - Concepts:
-      - concepts/index.md
-      - Architecture Overview: concepts/overview.md
-      - Context Stack: concepts/context-stack.md
-      - Evaluation Tree: concepts/evaluation-tree.md
-      - Transitions: concepts/transitions.md
-      - Modifiers: concepts/modifiers.md
   - User Guide:
       - user-guide/index.md
+      - Concepts:
+          - user-guide/concepts/index.md
+          - Architecture Overview: user-guide/concepts/overview.md
+          - Context Stack: user-guide/concepts/context-stack.md
+          - Evaluation Tree: user-guide/concepts/evaluation-tree.md
+          - Transitions: user-guide/concepts/transitions.md
+          - Modifiers: user-guide/concepts/modifiers.md
       - The Graph Editor: user-guide/graph-editor.md
       - Authoring Camera Types: user-guide/authoring-camera-types.md
       - Blueprint API: user-guide/blueprint-api.md
@@ -122,6 +122,7 @@ nav:
       - Custom Transitions: extending/custom-transitions.md
       - Custom Modifiers: extending/custom-modifiers.md
       - Editor Hooks: extending/editor-hooks.md
+  - FAQ: faq/index.md
   - Reference:
       - reference/index.md
       - Node Catalog: reference/nodes.md

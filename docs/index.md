@@ -8,8 +8,8 @@ ComposableCameraSystem is a modular, data-driven camera framework for Unreal Eng
 ## Where to start
 
 - **[Getting Started](getting-started/index.md)** — install the plugin, enable it in your project, and build your first camera.
-- **[Concepts](concepts/index.md)** — the architecture in plain terms, for non-coders and coders alike.
-- **[User Guide](user-guide/index.md)** — how to author camera types in the graph editor and drive them from Blueprint.
+- **[User Guide](user-guide/index.md)** — starts with [Concepts](user-guide/concepts/index.md) (architecture in plain terms), then covers the graph editor, camera authoring, the Blueprint API, and blending.
 - **[Tutorials](tutorials/index.md)** — worked, end-to-end examples.
 - **[Extending](extending/index.md)** — writing custom nodes, transitions, and modifiers in C++.
+- **[FAQ](faq/index.md)** — common questions about installation, behavior, performance, and extending.
 - **[Reference](reference/index.md)** — catalog of shipped nodes, transitions, modifiers, and Blueprint API.
