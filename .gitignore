@@ -1,0 +1,22 @@
+# MkDocs build output
+site/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Auth tokens — NEVER commit
+.gh-token
+*.token
+*.pat
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.obsidian/
+.vscode/
+.idea/

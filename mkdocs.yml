@@ -1,0 +1,133 @@
+site_name: ComposableCameraSystem
+site_description: A composable, data-driven camera framework for Unreal Engine 5.6
+site_author: Sulley (littlesulley)
+repo_url: https://github.com/littlesulley/ComposableCameraSystem-Docs
+repo_name: littlesulley/ComposableCameraSystem-Docs
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.instant
+    - navigation.tracking
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: Anchor link to this section
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+  - javascripts/katex.js
+
+extra_css:
+  - https://unpkg.com/katex@0/dist/katex.min.css
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Enabling the Plugin: getting-started/enabling-plugin.md
+      - Your First Camera: getting-started/your-first-camera.md
+  - Concepts:
+      - concepts/index.md
+      - Architecture Overview: concepts/overview.md
+      - Context Stack: concepts/context-stack.md
+      - Evaluation Tree: concepts/evaluation-tree.md
+      - Transitions: concepts/transitions.md
+      - Modifiers: concepts/modifiers.md
+  - User Guide:
+      - user-guide/index.md
+      - The Graph Editor: user-guide/graph-editor.md
+      - Authoring Camera Types: user-guide/authoring-camera-types.md
+      - Blueprint API: user-guide/blueprint-api.md
+      - Transitions & Blending: user-guide/transitions-and-blending.md
+  - Tutorials:
+      - tutorials/index.md
+      - Follow Camera: tutorials/follow-camera.md
+      - Cutscene Context: tutorials/cutscene-context.md
+      - Custom Transition: tutorials/custom-transition.md
+  - Extending:
+      - extending/index.md
+      - Custom Nodes: extending/custom-nodes.md
+      - Custom Transitions: extending/custom-transitions.md
+      - Custom Modifiers: extending/custom-modifiers.md
+      - Editor Hooks: extending/editor-hooks.md
+  - Reference:
+      - reference/index.md
+      - Node Catalog: reference/nodes.md
+      - Transition Catalog: reference/transitions.md
+      - Modifier Catalog: reference/modifiers.md
+      - Blueprint API Reference: reference/api.md
+
+extra:
+  generator: false
