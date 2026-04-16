@@ -88,6 +88,7 @@ nav:
           - Evaluation Tree: user-guide/concepts/evaluation-tree.md
           - Transitions: user-guide/concepts/transitions.md
           - Modifiers: user-guide/concepts/modifiers.md
+          - Actions: user-guide/concepts/actions.md
       - The Graph Editor: user-guide/graph-editor.md
       - Authoring Camera Types: user-guide/authoring-camera-types.md
       - Blueprint API: user-guide/blueprint-api.md

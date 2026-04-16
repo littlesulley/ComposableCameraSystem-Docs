@@ -114,7 +114,7 @@ Modifier groups are scoped to cameras by **gameplay tags**, not by context or ca
 
 Gameplay code still manages lifetime: you add the group when the condition starts (sprint begins, stun effect lands, aim held) and remove it when the condition ends. The tag system decides *which cameras* the group affects; gameplay decides *when* it's active.
 
-For one-shot, camera-scoped overrides (e.g. "only while this camera is running"), prefer [Actions](../../reference/api/actions/UComposableCameraActionBase.md) instead, which expire automatically when a camera transitions away.
+For one-shot, camera-scoped overrides (e.g. "only while this camera is running"), prefer [Actions](actions.md) instead, which expire automatically when a camera transitions away.
 
 ## In summary
 
@@ -125,7 +125,11 @@ For one-shot, camera-scoped overrides (e.g. "only while this camera is running")
 - Modifiers are skipped for transient cameras — clear `bIsTransient` if a cinematic needs to be modifier-aware.
 - They sit below the PCM's final output, affecting node parameters before evaluation — unrelated to Unreal's built-in `UCameraModifier`.
 
-This concludes the concepts tour. From here:
+Next: [lightweight, self-expiring per-frame behaviors via Actions](actions.md).
+
+## Further reading
+
+From here:
 
 - If you want to start authoring, jump to [Authoring Camera Types](../authoring-camera-types.md).
 - If you want the full catalog of shipped nodes/transitions/modifiers, see [Reference](../../reference/index.md).

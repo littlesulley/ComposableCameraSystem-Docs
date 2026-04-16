@@ -13,6 +13,7 @@ This section explains **how ComposableCameraSystem works** — enough that you c
 3. **[Evaluation Tree](evaluation-tree.md)** — Tier 2. Per-context camera blending, frame by frame.
 4. **[Transitions](transitions.md)** — pose-only blenders, and the five-tier resolution chain that decides which transition runs between any two cameras.
 5. **[Modifiers](modifiers.md)** — post-evaluation tweaks and runtime re-tuning of nodes.
+6. **[Actions](actions.md)** — lightweight, self-expiring per-frame behaviors that run alongside the node chain.
 
 ## The two ideas to internalize
 
