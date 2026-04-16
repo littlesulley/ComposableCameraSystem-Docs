@@ -80,5 +80,3 @@ After the pose comes out, `CollapseFinishedTransitions` walks the tree one more 
 - Tree shape, activation rewrites, reference leaves, the collapse rule → [Evaluation Tree](evaluation-tree.md).
 - Lifecycle (`TransitionEnabled → OnBeginPlay → OnEvaluate → OnFinished`), velocity-aware inertialization, the five-tier resolution chain → [Transitions](transitions.md).
 - Priority-per-node-class, reactivation with transition, the difference from UE's built-in `UCameraModifier` → [Modifiers](modifiers.md).
-
-If you want the full internal reference — invariants, node lifecycle in detail, the `RuntimeDataBlock` pin system, subobject pin exposure, inertialization polynomials — that lives in the plugin's [DesignDoc](https://github.com/littlesulley/ComposableCameraSystem/blob/dev-v1/Docs/DesignDoc.md). This user-facing section is the shorter, non-internals version.

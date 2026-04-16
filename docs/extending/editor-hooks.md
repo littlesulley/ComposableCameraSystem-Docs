@@ -139,7 +139,3 @@ Without the tag you get `LNK2019` at link time when the editor module tries to r
 ## Gameplay-tags, category strings, and palette ordering
 
 Node and transition classes are discovered via reflection walks, not via a central registry. The editor's palette groups them by `UCLASS(ClassGroup = ComposableCameraSystem)` and sub-categorizes by `meta = (Category = "Offset")` on the class or per-property. Use these consistently — a misspelled category creates a one-member group in the palette that's easy to miss.
-
----
-
-*See also:* [Design Doc → Editor Architecture](../user-guide/concepts/overview.md) for the graph schema and sync/rebuild model; the plugin's `EditorDesignDoc.md` for deep editor-internal details (graph schema, node types, pin rules, serialization).

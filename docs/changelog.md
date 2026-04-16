@@ -24,7 +24,6 @@ Entries are written automatically; feel free to edit them if you want to reword 
 
 ---
 
-
 ## 2026-04-15 — initial baseline at plugin `775fc66`
 
 Documentation site and auto-update pipeline established. The C++ API reference under `reference/api/` reflects plugin `dev-v1` at commit `775fc66` ("Refactor everything with AI."). Subsequent changes will appear above this entry.

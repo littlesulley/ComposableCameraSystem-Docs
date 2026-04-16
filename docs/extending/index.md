@@ -24,7 +24,7 @@ You should be comfortable with:
 
 - UE's reflection system (`UCLASS`, `USTRUCT`, `UPROPERTY`, `UFUNCTION`, their metadata specifiers).
 - Instanced UObject subobjects and how `DefaultToInstanced` interacts with `EditInlineNew`.
-- The plugin's three-module layout (`ComposableCameraSystem` runtime, `ComposableCameraSystemEditor`, `ComposableCameraSystemUncookedOnly`) — see `Plugins/ComposableCameraSystem/Docs/DesignDoc.md §17 Module Structure`.
+- The plugin's three-module layout (`ComposableCameraSystem` runtime, `ComposableCameraSystemEditor`, `ComposableCameraSystemUncookedOnly`).
 
 If you're extending the editor (slate widgets, K2 node customizations, graph schema rules), you should also be comfortable with `FAssetEditorToolkit`, `IDetailCustomization`, and UE's `UEdGraph` APIs.
 

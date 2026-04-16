@@ -102,8 +102,6 @@ flowchart TB
 
 Nodes are sequential: each one reads the pose produced by the previous, applies its logic, and writes a modified pose. They also communicate through a typed pin system (`GetInputPinValue<T>` / `SetOutputPinValue<T>`) routed through the camera's flat `RuntimeDataBlock` — so one node can publish "the pivot position this frame" and a downstream node can read it, without either node knowing about the other's existence.
 
-For the full node lifecycle — per-activation `OnInitialize` hooks, compute nodes that run once at `BeginPlay`, subobject pin exposure — see the [DesignDoc](https://github.com/littlesulley/ComposableCameraSystem/blob/dev-v1/Docs/DesignDoc.md) §7.
-
 ## GC and ownership
 
 Tree nodes are held by `TSharedPtr`, but the UObjects inside them (cameras, transitions) are exposed to Unreal's garbage collector through the tree's `AddReferencedObjects` walker. Cameras that get orphaned when a transition finishes are explicitly `DestroyActor`ed — the tree does not rely on GC for timely cleanup of camera actors.
