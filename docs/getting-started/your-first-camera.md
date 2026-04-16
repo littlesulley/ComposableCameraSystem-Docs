@@ -81,7 +81,7 @@ Press **Play**. Your camera should snap to the configured offset behind the targ
 - Context Stack: `Gameplay`
 - Active Camera: `CT_ThirdPersonFollow` (or whatever you named the instance)
 - Evaluation Tree: a single leaf
-
+![[assets/images/YourFirstCamera.gif]]
 ## Common issues
 
 - **"No camera is active" in the debug overlay** — the Activate node never ran. Common causes: `BeginPlay` fires before your follow target spawns (wire the node to a later event), or the PlayerController class in the GameMode doesn't use `AComposableCameraPlayerCameraManager` (revisit [Enabling the Plugin](enabling-plugin.md)).
