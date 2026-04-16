@@ -36,7 +36,7 @@ Transitions that don't care about velocity (linear, cubic, smooth) can ignore In
 
 When the PCM is asked to switch from camera A (built from `SourceTypeAsset`) to camera B (built from `TargetTypeAsset`), it needs to pick **which transition to run**. `AComposableCameraPlayerCameraManager::ResolveTransition` walks a five-tier priority chain; the first tier that produces a non-null transition wins.
 
-1. **Caller-supplied override** — whatever you passed to `TransitionOverride` on the activation call (`ActivateComposableCameraFromTypeAsset`, `PopCameraContext`, `TerminateCurrentCamera`). Always wins. Use this when a specific gameplay event needs a specific blend regardless of the cameras involved.
+1. **Caller-supplied override** — whatever you passed to `TransitionOverride` on the activation call (`ActivateCamera`, `ActivateComposableCameraFromTypeAsset`, `PopCameraContext`, `TerminateCurrentCamera`). Always wins. Use this when a specific gameplay event needs a specific blend regardless of the cameras involved.
 2. **Transition table lookup** — the project-wide `UComposableCameraTransitionTableDataAsset` declared in *Project Settings → ComposableCameraSystem → TransitionTable*. Holds an array of `(SourceTypeAsset, TargetTypeAsset, Transition)` triples. Performs **exact-match only** on the pair; first matching entry in declaration order wins. There are intentionally no wildcards.
 3. **Source's `ExitTransition`** — declared on `SourceTypeAsset`. "Whenever this camera leaves, blend out like this, regardless of target."
 4. **Target's `EnterTransition`** — declared on `TargetTypeAsset`. "Whenever this camera is activated, blend in like this, regardless of source."

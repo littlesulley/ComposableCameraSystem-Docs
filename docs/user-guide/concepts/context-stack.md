@@ -50,7 +50,7 @@ The consequence is that any transition type — `LinearTransition`, `Inertialize
 
 ## When you actually interact with the stack
 
-For most users, contexts are an implementation detail exposed through the `Context Name` pin on `Activate Composable Camera`:
+For most users, contexts are an implementation detail exposed through the `Context Name` pin on `Activate Camera`:
 
 - **Leave it empty** to activate in the current top context. This is the common case.
 - **Set it to a declared name** to push (or move-to-top) that context as part of the activation.

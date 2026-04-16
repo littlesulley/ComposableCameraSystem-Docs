@@ -38,7 +38,7 @@ Four authoring surfaces produce transitions:
 1. **Per-camera `EnterTransition`** — the default on the camera type asset. "Whenever this camera is activated, blend in like this."
 2. **Per-camera `ExitTransition`** — also on the type asset. "Whenever this camera leaves, blend out like this."
 3. **Project-wide transition table** — a `UComposableCameraTransitionTableDataAsset` referenced from *Project Settings → ComposableCameraSystem → TransitionTable*. Holds pair-specific routing: "when going from A to B specifically, use this transition."
-4. **Caller-supplied override** — the `TransitionOverride` pin on `Activate Composable Camera`, `TerminateCurrentCamera`, and `PopCameraContext`.
+4. **Caller-supplied override** — the `TransitionOverride` pin on `Activate Camera`, `TerminateCurrentCamera`, and `PopCameraContext`.
 
 At activation, the PCM walks these in priority order — caller override first, then table, then source's `ExitTransition`, then target's `EnterTransition`. The first non-null result wins. If none produces a transition, the activation is a hard cut.
 

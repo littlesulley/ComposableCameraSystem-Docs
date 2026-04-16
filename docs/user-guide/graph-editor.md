@@ -139,5 +139,3 @@ The type asset stores two kinds of data:
 `SyncToTypeAsset` writes from the graph into the durable fields whenever the graph changes. `RebuildFromTypeAsset` reconstructs the graph from the durable fields on editor open. The invariant is that any graph state that isn't captured in the durable fields will not survive a close-and-reopen — so if you find yourself asking "where is this stored?", the answer is always "somewhere in the durable fields, or it's ephemeral".
 
 The practical effect: edits inside the editor are safe to experiment with (the graph is the live working copy), saves flush into the asset, and reopening reconstructs the graph from the asset. Collaborators working from version control see the serialized asset — no `.uasset` merge pain from graph layout.
-
-For the full mechanics (sync phases, rebuild phases, the `DefaultToInstanced` gotcha, re-entrancy safeguards), see `Docs/EditorDesignDoc.md` §8 in the plugin repository.

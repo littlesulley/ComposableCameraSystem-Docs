@@ -32,7 +32,7 @@ A follow camera needs to know which actor to follow. We expose that as a **conte
 2. Click **+ Add Parameter**.
 3. Set **Name** to `FollowTarget`, **Type** to `Actor Reference`.
 
-This parameter now appears as a variable node in the palette and — crucially — it will become a pin on the `Activate Composable Camera` K2 node in Blueprint.
+This parameter now appears as a variable node in the palette and — crucially — it will become a pin on the `Activate Camera` K2 node in Blueprint.
 
 ## 3. The pivot chain
 
@@ -103,7 +103,7 @@ The final graph looks like a straight pipeline: parameter → 8 nodes → Output
 
 Open your character Blueprint. On `BeginPlay`:
 
-1. Right-click → search **Activate Composable Camera**. Place the node.
+1. Right-click → search **Activate Camera**. Place the node.
 2. Set **Camera Type Asset** = `CT_ThirdPersonFollow`. The node rebuilds its pins — you'll see a `Follow Target` pin appear (generated from your parameter).
 3. Wire the character's `Self` into `Follow Target`, and `Player Index` = `0`.
 4. Connect the exec pin from `BeginPlay`.

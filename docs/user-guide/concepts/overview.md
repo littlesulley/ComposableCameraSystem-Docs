@@ -36,13 +36,14 @@ flowchart TB
 Read it top-down:
 
 - **Player Camera Manager (PCM)** sits where Unreal's `APlayerCameraManager` would — it's a subclass (`AComposableCameraPlayerCameraManager`) that every interested PlayerController points at via `PlayerCameraManagerClass` (see [Enabling the Plugin](../../getting-started/enabling-plugin.md)). It owns everything below it and drives the per-frame loop.
-- **Context Stack** is a LIFO stack of named contexts (`Gameplay`, `Cutscene`, `UI`, …). Only the top context is evaluated each frame. Pushing a new context suspends everything below without tearing it down. Context names are registered in `UComposableCameraProjectSettings::ContextNames`; the first entry is the base context and is initialized before any actor's `BeginPlay`.
-- **Director** is per-context. It owns an Evaluation Tree, tracks the currently-running camera, and remembers the last two evaluated poses — which transitions use for velocity calculations (see [Transitions](transitions.md)).
-- **Evaluation Tree** is a binary tree of leaves (wrapping a Camera) and inner nodes (wrapping a Transition). Leaves produce poses; inner nodes blend two poses into one.
-- **Camera** is an `AComposableCameraCameraBase` actor that owns an ordered array of Camera Nodes. It's data-driven: the actor is a container, not a subclass hierarchy.
-- **Camera Node** is a single-responsibility operator. It reads the input pose, applies its logic, and writes an output pose. Nodes also talk to each other through a typed pin system routed by a flat `RuntimeDataBlock`.
-- **Transition** is a pose-only blender. Each frame it receives two input poses (source and target) and outputs one blended pose. It never references the source/target cameras directly.
-- **Modifier** targets a specific *node class* and overrides its parameters at runtime. Highest priority wins; changes may trigger a seamless camera reactivation.
+- **Context Stack** is a LIFO stack of named contexts (`Gameplay`, `Cutscene`, `UI`, …). Only the top context is evaluated each frame. Pushing a new context suspends everything below without tearing it down. Context names are registered in `UComposableCameraProjectSettings::ContextNames`; the first entry is the base context and is initialized before any actor's `BeginPlay`. See [Context Stack](context-stack.md).
+- **Director** is per-context. It owns an Evaluation Tree, tracks the currently-running camera, and remembers the last two evaluated poses — which transitions use for velocity calculations. See [Evaluation Tree](evaluation-tree.md).
+- **Evaluation Tree** is a binary tree of leaves (wrapping a Camera) and inner nodes (wrapping a Transition). Leaves produce poses; inner nodes blend two poses into one. See [Evaluation Tree](evaluation-tree.md).
+- **Camera** is an `AComposableCameraCameraBase` actor that owns an ordered array of Camera Nodes. It's data-driven: the actor is a container, not a subclass hierarchy. See [Authoring Camera Types](../authoring-camera-types.md).
+- **Camera Node** is a single-responsibility operator. It reads the input pose, applies its logic, and writes an output pose. Nodes also talk to each other through a typed pin system routed by a flat `RuntimeDataBlock`. See [Node Catalog](../../reference/nodes.md).
+- **Transition** is a pose-only blender. Each frame it receives two input poses (source and target) and outputs one blended pose. It never references the source/target cameras directly. See [Transitions](transitions.md).
+- **Modifier** targets a specific *node class* and overrides its parameters at runtime. Highest priority wins; changes may trigger a seamless camera reactivation. See [Modifiers](modifiers.md).
+- **Action** is a lightweight, fire-and-forget behavior that hooks into the camera's pre- or post-tick. Actions don't transform the pose through the node chain — they run alongside it, with built-in expiration (instant, duration, manual, or condition-based). Camera-scoped actions auto-expire on camera switch; persistent ones survive. See [Camera Actions](../camera-actions.md).
 
 ## What happens on one frame
 
@@ -79,5 +80,3 @@ After the pose comes out, `CollapseFinishedTransitions` walks the tree one more 
 - Tree shape, activation rewrites, reference leaves, the collapse rule → [Evaluation Tree](evaluation-tree.md).
 - Lifecycle (`TransitionEnabled → OnBeginPlay → OnEvaluate → OnFinished`), velocity-aware inertialization, the five-tier resolution chain → [Transitions](transitions.md).
 - Priority-per-node-class, reactivation with transition, the difference from UE's built-in `UCameraModifier` → [Modifiers](modifiers.md).
-
-If you want the full internal reference — invariants, node lifecycle in detail, the `RuntimeDataBlock` pin system, subobject pin exposure, inertialization polynomials — that lives in the plugin's [DesignDoc](https://github.com/littlesulley/ComposableCameraSystem/blob/dev-v1/Docs/DesignDoc.md). This user-facing section is the shorter, non-internals version.
