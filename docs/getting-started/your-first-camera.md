@@ -6,7 +6,7 @@ By the end of this page you'll have:
 - a small **graph** inside it that makes the camera follow a target and look at it, and
 - a **Blueprint call** that activates the camera at runtime.
 
-It assumes you've finished [Enabling the Plugin](enabling-plugin.md) and that `showdebug composablecamera` prints an overlay in PIE.
+It assumes you've finished [Enabling the Plugin](enabling-plugin.md) and that `showdebug camera` prints an overlay in PIE.
 
 !!! info "Heads up"
     The screenshots and graph editor details here describe the **dev-v1** iteration of the editor. The editor is still evolving; minor UI changes may be out of sync. File an issue on GitHub if anything is drastically different from what you see.
@@ -21,33 +21,40 @@ In the Content Browser:
 
 You'll see an empty graph canvas with a single output node on the right labeled **Camera Output**. This is where the camera's final pose comes from each frame.
 
-## 2. Add a target input
+## 2. Add a target pivot actor
 
-A follow camera needs to know **who** to follow. ComposableCameraSystem exposes this via **parameters** on the type asset — these become pins on the Blueprint activation node.
+A follow camera needs to know **who** to follow. ComposableCameraSystem exposes this via **Exposed Variables** on the type asset — these become pins on the Blueprint activation node.
 
-1. In the **Parameters** panel (usually on the right), click **+ Add Parameter**.
-2. Set its **Name** to `FollowTarget`.
-3. Set its **Type** to `Actor Reference`.
+1. In the **Exposed Variables** panel (usually on the right), click **+ Add**.
+2. Set its **Name** to `ExposedPivotActor`.
+3. Set its **Type** to `Actor`.
 
-The parameter now appears as a named node in the graph palette; drag it onto the canvas. This will drive downstream nodes.
+![[assets/images/Pasted image 20260416132203.png]]
+
+The variable now can appear as a named node in the graph palette; right-click and find it under **Variables->Get/Set->Exposed**, drag it onto the canvas. This will drive downstream nodes.
+![[assets/images/Pasted image 20260416132231.png]]
 
 ## 3. Wire up the minimal node chain
 
 For a minimal follow camera we need to answer three questions every frame: *what point is the camera tracking*, *where does the camera sit relative to that point*, and *where is the camera looking*. Three shipped nodes cover those one-to-one, plus a fourth to author the lens:
 
-| Node | Role |
-|---|---|
+| Node                  | Role                                                                 |
+| --------------------- | -------------------------------------------------------------------- |
 | **ReceivePivotActor** | Reads `FollowTarget`'s world position and publishes it as the pivot. |
-| **CameraOffset** | Moves the camera to a fixed offset from the pivot. |
-| **LookAt** | Rotates the camera to face `FollowTarget`. |
-| **FieldOfView** | Authors the final lens FOV. |
+| **CameraOffset**      | Moves the camera to a fixed offset from the pivot.                   |
+| **ControlRotate**     | Rotates the camera according to player input.                        |
+| **FieldOfView**       | Authors the final lens FOV.                                          |
 
-1. Drag a **ReceivePivotActor** node onto the canvas. Wire the `FollowTarget` parameter into its **Actor** input.
-2. Drop a **CameraOffset** node after it. In Details, set **OffsetSpace** to **Camera Space** and **Offset** to `(-400, 0, 100)` — 4m behind the pivot, slightly above. Wire the previous node's pose output into its pose input.
-3. Drop a **LookAt** node next. Set **LookAtType** to **By Actor** and wire `FollowTarget` into its **TargetActor** pin. Set **ConstraintType** to **Hard** so the camera always tracks the target. Wire the previous pose into its input.
-4. Drop a **FieldOfView** node. Set **FieldOfView** to `70`. Wire the previous pose into its input, and its output into the **Camera Output** node's **Pose** pin.
+1. Drag a **ControlRotate** node onto the canvas. Wire the `ExposedPivotActor` variable into its **Rotation Input Actor** input pin. Also set up the **Rotate Action** node parameter to the one that reads mouse input.
+	![[assets/images/Pasted image 20260416132656.png]]
+2. Drag a **FieldOfView** node and set its **Field Of View** value.
+3. Drag a **ReceivePivotActor** node onto the canvas. Wire the `ExposedPivotActor` variable into its **PivotActor** pin.
+	![[assets/images/Pasted image 20260416132843.png]]
+4. Drop a **CameraOffset** node after it. In Details, set **CameraOffset**  to `(-500, 0, 50)` — 5m behind the pivot, slightly above. Wire the previous node's pose output into its pose input.
+5. Wire the **CameraOffset** node to the **Output** node, completing our setup.
+	![[assets/images/Pasted image 20260416133133.png]]
 
-Save the asset (`Ctrl+S`). The asset header should show a green checkmark; if it shows a red error, hover over it to read what's wrong — typically a missing pin connection or a parameter type mismatch.
+Save the asset (`Ctrl+S`). The asset‘s **Build Messages** window should show a green message "Build Succeeded"; any errors will also be shown in the window.
 
 !!! tip "This is the bare minimum — real cameras do more"
     The [Follow Camera tutorial](../tutorials/follow-camera.md) expands this into a production-grade chain with pivot damping, stick-driven orbit input, rotation clamping, and collision pushback. Come back to it after you've got this minimal version running.
@@ -56,19 +63,20 @@ Save the asset (`Ctrl+S`). The asset header should show a green checkmark; if it
 
 Open your player character or player controller Blueprint and find a convenient place — for example, the `BeginPlay` event.
 
-1. Right-click the graph, search for **Activate Composable Camera**, and place the node.
+1. Right-click the graph, search for **Activate Camera**, and place the node.
 2. The node has two *static* pins:
     - **Camera Type Asset** — set this to your new `CT_ThirdPersonFollow`.
     - **Player Index** — `0` for single-player.
-3. Once the type asset is set, the node **rebuilds its pins** to match the parameters you defined. You'll see a new input pin named `Follow Target` (generated from your `FollowTarget` parameter). Wire your character actor (or `Get Player Pawn`) into it.
+3. Once the type asset is set, the node **rebuilds its pins** to match the variables you defined. Right-click the node, find **Add Override Pin**, select `ExposedPivotActor`, then the pin will show in the node. Wire your character actor (or `Get Player Pawn`) into it.
 4. Connect the execution pin from `BeginPlay` into the node.
+	![[assets/images/Pasted image 20260416133732.png]]
 
 !!! note "Custom K2 node"
-    `Activate Composable Camera` is a custom K2 node (`UK2Node_ActivateComposableCamera`). It introspects the selected type asset and builds matching pins for each exposed parameter. If you change the parameters on the type asset, right-click the K2 node and pick **Refresh Node** to pull in the updated pin list.
+    `Activate Camera` is a custom K2 node (`UK2Node_ActivateComposableCamera`). It introspects the selected type asset and builds matching pins for each exposed variable. If you change the variables on the type asset, right-click the K2 node and pick **Refresh Node** to pull in the updated pin list.
 
 ## 5. Play
 
-Press **Play**. Your camera should snap to the configured offset behind the target and track it as it moves. If `showdebug composablecamera` is still active from the previous page, the overlay will show:
+Press **Play**. Your camera should snap to the configured offset behind the target and track it as it moves. If `showdebug camera` is still active from the previous page, the overlay will show:
 
 - Context Stack: `Gameplay`
 - Active Camera: `CT_ThirdPersonFollow` (or whatever you named the instance)

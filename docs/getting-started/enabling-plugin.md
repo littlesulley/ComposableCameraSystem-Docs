@@ -59,14 +59,14 @@ You'll need a custom one for this setup. The quickest path is to create a small 
 3. Open the console (backtick `` ` ``) and type:
 
     ```
-    showdebug composablecamera
+    showdebug camera
     ```
 
     You should see an on-screen debug overlay showing the active camera context stack, the current camera, and the current evaluation tree.
 
 If the overlay doesn't appear:
 
-- **Nothing at all on screen** — the `showdebug` command is typo-sensitive. Make sure you typed `composablecamera` with no spaces.
+- **Nothing at all on screen** — the `showdebug` command is typo-sensitive. Make sure you typed `camera` with no spaces.
 - **Debug says "No Composable Camera PCM"** — your PlayerController is still using the default `APlayerCameraManager`. Re-check step 2 and confirm that the PlayerController you set the class on is actually the one your GameMode spawns.
 - **Editor crashes or fails to PIE** — check the output log for `LogComposableCameraSystem` errors. The most common cause is a missing transitive engine plugin dependency; re-enable `EngineCameras`, `EnhancedInput`, and `ActorSequence`.
 
