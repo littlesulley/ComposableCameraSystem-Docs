@@ -1,9 +1,13 @@
 /**
- * Mermaid diagram lightbox — click any rendered mermaid diagram to view
- * it fullscreen in an overlay. Click the overlay (or press Escape) to close.
+ * Diagram lightbox — click any rendered mermaid diagram to view it
+ * fullscreen in an overlay. Click the overlay (or press Escape) to close.
  *
- * Waits for mermaid to finish rendering (MutationObserver on <svg> insertion)
- * before attaching click handlers.
+ * NOTE: This file must NOT have "mermaid" in its filename, because
+ * mkdocs-mermaid2-plugin scans extra_javascript for filenames containing
+ * "mermaid" and, if found, skips CDN injection of the real library.
+ *
+ * Waits for diagrams to finish rendering (MutationObserver on <svg>
+ * insertion) before attaching click handlers.
  */
 (function () {
   "use strict";

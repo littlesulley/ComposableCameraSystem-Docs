@@ -20,7 +20,7 @@ extra_css:
   - assets/css/custom.css
 
 extra_javascript:
-  - assets/js/mermaid-lightbox.js
+  - assets/js/diagram-lightbox.js
 
 markdown_extensions:
   - admonition
