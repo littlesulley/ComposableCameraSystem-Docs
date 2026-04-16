@@ -38,6 +38,8 @@ Type-erased parameter storage, keyed by parameter name.
 | `void` | [`SetTransform`](#settransform) `inline` | Set a Transform parameter. |
 | `void` | [`SetActor`](#setactor) `inline` | Set an Actor pointer parameter. |
 | `void` | [`SetObject`](#setobject) `inline` | Set a UObject pointer parameter. |
+| `void` | [`SetName`](#setname) `inline` | Set an FName parameter. FName is POD (NAME_INDEX + NAME_NUMBER, 8 bytes) and is memcpy-safe in the type-erased data storage. |
+| `void` | [`SetEnum`](#setenum) `inline` | Set an enum parameter. Enums are always normalized to int64 in the data storage, regardless of the backing property's actual underlying width. The narrow-cast into the final storage happens at resolve time, where the owning FProperty is known (see WriteEnumInt64ToProperty). |
 | `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name. |
 | `bool` | [`Get`](#get) `const` `inline` | Try to get a typed value. Returns false if not found or type mismatch. |
 | `int32` | [`CopyRawTo`](#copyrawto) `const` `inline` | Copy a parameter's raw bytes into a destination buffer. Returns the number of bytes copied, or 0 if not found. |
@@ -152,6 +154,30 @@ Set a UObject pointer parameter.
 
 ---
 
+#### SetName { #setname }
+
+`inline`
+
+```cpp
+inline void SetName(FName Name, FName Value)
+```
+
+Set an FName parameter. FName is POD (NAME_INDEX + NAME_NUMBER, 8 bytes) and is memcpy-safe in the type-erased data storage.
+
+---
+
+#### SetEnum { #setenum }
+
+`inline`
+
+```cpp
+inline void SetEnum(FName Name, int64 Value)
+```
+
+Set an enum parameter. Enums are always normalized to int64 in the data storage, regardless of the backing property's actual underlying width. The narrow-cast into the final storage happens at resolve time, where the owning FProperty is known (see WriteEnumInt64ToProperty).
+
+---
+
 #### HasValue { #hasvalue }
 
 `const` `inline`
@@ -199,14 +225,14 @@ Copy a parameter's raw bytes into a destination buffer. Returns the number of by
 `static`
 
 ```cpp
-static bool ApplyStringValue(FComposableCameraParameterBlock & OutBlock, FName ParameterName, EComposableCameraPinType PinType, UScriptStruct * StructType, const FString & ValueString, FString * OutError)
+static bool ApplyStringValue(FComposableCameraParameterBlock & OutBlock, FName ParameterName, EComposableCameraPinType PinType, UScriptStruct * StructType, UEnum * EnumType, const FString & ValueString, FString * OutError)
 ```
 
 Parse a serialized string into a typed entry and store it under ParameterName.
 
 This is the single string→typed-value entry point shared by the DataTable activation path and the DataTable row property-type customization. The two sides must round-trip through the same parser so that anything you can type in the editor is accepted identically at runtime.
 
-Supported types: Bool, Int32, Float, Double — LexFromString Vector2D/3D/4, Rotator, Transform — ImportText on the matching core struct Struct — ImportText on the provided StructType Object — resolved via FSoftObjectPath and sync-loaded
+Supported types: Bool, Int32, Float, Double — LexFromString Vector2D/3D/4, Rotator, Transform — ImportText on the matching core struct Struct — ImportText on the provided StructType Object — resolved via FSoftObjectPath and sync-loaded Name — FName::FromString (no Unicode canonicalization) Enum — UEnum::GetValueByNameString, stored as int64
 
 Unsupported (returns false, writes OutError): Actor — actors are world-scoped and cannot be resolved from a DataTable asset. Use Object with a soft path to a CDO/archetype instead if you need a class reference.
 
@@ -219,6 +245,8 @@ Unsupported (returns false, writes OutError): Actor — actors are world-scoped 
 * `PinType` Target pin type — dispatches the parse branch. 
 
 * `StructType` Only read when PinType == Struct; ignored otherwise. 
+
+* `EnumType` Only read when PinType == Enum; ignored otherwise. Used to parse the display / authored name back to an int64 value (UEnum::GetValueByNameString). 
 
 * `ValueString` The serialized value. Empty input is treated as a parse failure so callers can decide whether to fall back to the node pin's authored default. 
 

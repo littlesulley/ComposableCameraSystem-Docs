@@ -18,9 +18,18 @@ This node runs every tick.
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `FVector` | [`PivotPosition`](#pivotposition)  |  |
 | `ECameraPivotOffset` | [`PivotOffsetType`](#pivotoffsettype)  |  |
 | `TSoftObjectPtr< AActor >` | [`ActorForLocalSpace`](#actorforlocalspace)  |  |
 | `FVector` | [`PivotOffset`](#pivotoffset)  |  |
+
+---
+
+#### PivotPosition { #pivotposition }
+
+```cpp
+FVector PivotPosition { FVector::ZeroVector }
+```
 
 ---
 
@@ -51,8 +60,8 @@ FVector PivotOffset = FVector::ZeroVector
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-4) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-6) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-6) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-7) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-7) `virtual` `const` |  |
 
 ---
 
@@ -66,7 +75,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-6 }
+#### OnTickNode_Implementation { #onticknode_implementation-7 }
 
 `virtual`
 
@@ -76,7 +85,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-6 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-7 }
 
 `virtual` `const`
 
@@ -95,5 +104,5 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 #### UpdatePivotOffset { #updatepivotoffset }
 
 ```cpp
-void UpdatePivotOffset(const FComposableCameraPose & CurrentCameraPose)
+void UpdatePivotOffset(const FVector & InPivot, const FComposableCameraPose & CurrentCameraPose)
 ```

@@ -17,6 +17,7 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor)  |  |
 | `TEnumAsByte< ETraceTypeQuery >` | [`TraceCollisionChannel`](#tracecollisionchannel)  |  |
 | `bool` | [`bTraceUseSphere`](#btraceusesphere)  |  |
 | `double` | [`TraceSphereRadius`](#tracesphereradius)  |  |
@@ -26,11 +27,19 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 | `double` | [`SelfSphereDistanceOffsetFromCenter`](#selfspheredistanceoffsetfromcenter)  |  |
 | `TArray< TSoftClassPtr< AActor > >` | [`ActorTypesToIgnore`](#actortypestoignore)  |  |
 | `double` | [`ExtraPushDistance`](#extrapushdistance)  |  |
-| `UComposableCameraInterpolatorBase *` | [`PushInterpolator`](#pushinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`PullInterpolator`](#pullinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`PushInterpolator`](#pushinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`PullInterpolator`](#pullinterpolator)  |  |
 | `double` | [`PivotZOffset`](#pivotzoffset)  |  |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection)  |  |
 | `FName` | [`BoneName`](#bonename)  |  |
+
+---
+
+#### PivotActor { #pivotactor }
+
+```cpp
+TObjectPtr< AActor > PivotActor
+```
 
 ---
 
@@ -109,7 +118,7 @@ double ExtraPushDistance { 5. }
 #### PushInterpolator { #pushinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * PushInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > PushInterpolator
 ```
 
 ---
@@ -117,7 +126,7 @@ UComposableCameraInterpolatorBase * PushInterpolator
 #### PullInterpolator { #pullinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * PullInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > PullInterpolator
 ```
 
 ---
@@ -149,9 +158,9 @@ FName BoneName
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-7) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-10) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-12) `virtual` |  |
 | `void` | [`OnPreTick`](#onpretick-2) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-10) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-12) `virtual` `const` |  |
 
 ---
 
@@ -165,7 +174,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-10 }
+#### OnTickNode_Implementation { #onticknode_implementation-12 }
 
 `virtual`
 
@@ -185,7 +194,7 @@ virtual void OnPreTick(float DeltaTime, const FComposableCameraPose & CurrentCam
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-10 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-12 }
 
 `virtual` `const`
 

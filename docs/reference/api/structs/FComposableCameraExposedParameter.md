@@ -13,8 +13,9 @@ Describes a parameter exposed to callers from a camera type asset. Created when 
 |--------|------|-------------|
 | `FName` | [`ParameterName`](#parametername)  | Unique name of the parameter (used in K2Node pins, DataTable columns, and ParameterBlock keys). |
 | `FText` | [`DisplayName`](#displayname)  | Display name shown in the editor and K2Node. |
-| `EComposableCameraPinType` | [`PinType`](#pintype-1)  | The data type of this parameter (mirrors the source node pin's type). |
-| `UScriptStruct *` | [`StructType`](#structtype)  | For Struct types: the specific USTRUCT. |
+| `EComposableCameraPinType` | [`PinType`](#pintype-2)  | The data type of this parameter (mirrors the source node pin's type). |
+| `TObjectPtr< UScriptStruct >` | [`StructType`](#structtype-1)  | For Struct types: the specific USTRUCT. |
+| `TObjectPtr< UEnum >` | [`EnumType`](#enumtype-1)  | For Enum types: the specific UEnum. Mirrors the source node pin's EnumType. |
 | `int32` | [`TargetNodeIndex`](#targetnodeindex-1)  | Which node this parameter feeds into (index in NodeTemplates). |
 | `FName` | [`TargetPinName`](#targetpinname-1)  | Which input pin on the target node this parameter feeds into. |
 | `bool` | [`bRequired`](#brequired)  | Whether the caller is required to provide this parameter. |
@@ -44,7 +45,7 @@ Display name shown in the editor and K2Node.
 
 ---
 
-#### PinType { #pintype-1 }
+#### PinType { #pintype-2 }
 
 ```cpp
 EComposableCameraPinType PinType = 
@@ -54,13 +55,23 @@ The data type of this parameter (mirrors the source node pin's type).
 
 ---
 
-#### StructType { #structtype }
+#### StructType { #structtype-1 }
 
 ```cpp
-UScriptStruct * StructType = nullptr
+TObjectPtr< UScriptStruct > StructType = nullptr
 ```
 
 For Struct types: the specific USTRUCT.
+
+---
+
+#### EnumType { #enumtype-1 }
+
+```cpp
+TObjectPtr< UEnum > EnumType = nullptr
+```
+
+For Enum types: the specific UEnum. Mirrors the source node pin's EnumType.
 
 ---
 

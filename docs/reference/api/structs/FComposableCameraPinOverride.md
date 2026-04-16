@@ -13,7 +13,7 @@ Pin declarations come from C++ (GetPinDeclarations) and define the *shape* of a 
 
 1. A **per-instance toggle** for whether a pin should be exposed as a wire in the graph at all. When bAsPin is false, the pin is Details-only (a constant set once, at author time) and does not appear on the graph node. When true, the pin renders on the graph node and can be wired or exposed as an ExposedParameter.
 
-Overrides are stored per-(node-instance, pin-name). Pins that never get an override use the C++ declaration's defaults for both fields (bAsPin = true, DefaultValueString = the class-level default). Storing overrides as a sparse array indexed by PinName means adding a new pin declaration in C++ doesn't require any asset migration — the new pin simply defaults to (visible, class default).
+Overrides are stored per-(node-instance, pin-name). Pins that never get an override use the C++ declaration's defaults for both fields (bAsPin = Decl.bDefaultAsPin, DefaultValueString = the class-level default). Storing overrides as a sparse array indexed by PinName means adding a new pin declaration in C++ doesn't require any asset migration — the new pin simply defaults to (Decl.bDefaultAsPin, class default).
 
 The source of truth lives on [UComposableCameraTypeAsset::NodePinOverrides](../data-assets/UComposableCameraTypeAsset.md#nodepinoverrides) (parallel array to NodeTemplates). The editor graph node also caches the overrides in a Transient field for fast read during AllocateDefaultPins / Details customization; the round-trip is handled in the same sync/rebuild phases that handle ExposedParameters.
 
@@ -21,7 +21,7 @@ The source of truth lives on [UComposableCameraTypeAsset::NodePinOverrides](../d
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `FName` | [`PinName`](#pinname-1)  | Which declared pin this override applies to. Matches [FComposableCameraNodePinDeclaration::PinName](FComposableCameraNodePinDeclaration.md#pinname-3) on the node class. |
+| `FName` | [`PinName`](#pinname-1)  | Which declared pin this override applies to. Matches [FComposableCameraNodePinDeclaration::PinName](FComposableCameraNodePinDeclaration.md#pinname-4) on the node class. |
 | `bool` | [`bAsPin`](#baspin)  | Whether this pin is exposed as a wire on the graph node. When false, the pin is Details-only and does not appear on the graph — it cannot be wired, and it cannot be exposed as a camera parameter. The Details panel still shows the editable default value, which is used directly as the constant input at runtime. |
 | `bool` | [`bHasDefaultOverride`](#bhasdefaultoverride)  | True when DefaultValueOverride below should be used in place of the C++ declaration's class-level default. A separate flag (rather than sniffing "DefaultValueOverride is empty") is required to distinguish "user |
 | `FString` | [`DefaultValueOverride`](#defaultvalueoverride)  | Per-asset override of the pin's default value. Serialized as a string in the same format as [FComposableCameraNodePinDeclaration::DefaultValueString](FComposableCameraNodePinDeclaration.md#defaultvaluestring), so the same parser can be used at runtime. Ignored when bHasDefaultOverride is false. |
@@ -34,7 +34,7 @@ The source of truth lives on [UComposableCameraTypeAsset::NodePinOverrides](../d
 FName PinName
 ```
 
-Which declared pin this override applies to. Matches [FComposableCameraNodePinDeclaration::PinName](FComposableCameraNodePinDeclaration.md#pinname-3) on the node class.
+Which declared pin this override applies to. Matches [FComposableCameraNodePinDeclaration::PinName](FComposableCameraNodePinDeclaration.md#pinname-4) on the node class.
 
 ---
 

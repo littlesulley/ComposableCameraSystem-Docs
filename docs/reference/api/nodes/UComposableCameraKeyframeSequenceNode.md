@@ -16,10 +16,10 @@ Only transform and FOV are used. Other parameters bound in the level sequence wi
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `ULevelSequence *` | [`CameraSequence`](#camerasequence)  |  |
+| `TObjectPtr< ULevelSequence >` | [`CameraSequence`](#camerasequence)  |  |
 | `EComposableCameraRelativeFixedPoseMethod` | [`Method`](#method)  |  |
 | `FTransform` | [`RelativeTransform`](#relativetransform)  |  |
-| `AActor *` | [`RelativeActor`](#relativeactor)  |  |
+| `TObjectPtr< AActor >` | [`RelativeActor`](#relativeactor)  |  |
 | `FName` | [`RelativeSocket`](#relativesocket)  |  |
 | `float` | [`StayAtLastFrameTime`](#stayatlastframetime)  |  |
 
@@ -28,7 +28,7 @@ Only transform and FOV are used. Other parameters bound in the level sequence wi
 #### CameraSequence { #camerasequence }
 
 ```cpp
-ULevelSequence * CameraSequence { nullptr }
+TObjectPtr< ULevelSequence > CameraSequence { nullptr }
 ```
 
 ---
@@ -52,7 +52,7 @@ FTransform RelativeTransform
 #### RelativeActor { #relativeactor }
 
 ```cpp
-AActor * RelativeActor
+TObjectPtr< AActor > RelativeActor
 ```
 
 ---
@@ -76,8 +76,8 @@ float StayAtLastFrameTime { 0.0f }
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-9) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-13) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-13) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-15) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-15) `virtual` `const` |  |
 
 ---
 
@@ -91,7 +91,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-13 }
+#### OnTickNode_Implementation { #onticknode_implementation-15 }
 
 `virtual`
 
@@ -101,7 +101,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-13 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-15 }
 
 `virtual` `const`
 

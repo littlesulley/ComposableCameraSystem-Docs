@@ -6,7 +6,7 @@
 ```
 
 > **Inherits:** [`UComposableCameraCameraNodeBase`](UComposableCameraCameraNodeBase.md#ucomposablecameracameranodebase)
-> **Subclassed by:** [`UComposableCameraComputeDistanceToActorNode`](../nodes/UComposableCameraComputeDistanceToActorNode.md#ucomposablecameracomputedistancetoactornode), [`UComposableCameraComputeRandomOffsetNode`](../nodes/UComposableCameraComputeRandomOffsetNode.md#ucomposablecameracomputerandomoffsetnode)
+> **Subclassed by:** [`UComposableCameraComputeDistanceToActorNode`](../nodes/UComposableCameraComputeDistanceToActorNode.md#ucomposablecameracomputedistancetoactornode)
 
 Base class for one-shot compute nodes that run on the BeginPlay chain.
 

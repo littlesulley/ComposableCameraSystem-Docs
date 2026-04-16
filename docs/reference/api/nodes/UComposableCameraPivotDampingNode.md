@@ -20,13 +20,22 @@ Node for damping (interpolating) the pivot position. This is done in the space p
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `FVector` | [`PivotPosition`](#pivotposition-2)  |  |
 | `bool` | [`bMaintainCameraSpacePivotPosition`](#bmaintaincameraspacepivotposition)  |  |
-| `UComposableCameraInterpolatorBase *` | [`UpwardInterpolator`](#upwardinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`DownwardInterpolator`](#downwardinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`LeftwardInterpolator`](#leftwardinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`RightwardInterpolator`](#rightwardinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`ForwardInterpolator`](#forwardinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`BackwardInterpolator`](#backwardinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`UpwardInterpolator`](#upwardinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`DownwardInterpolator`](#downwardinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`LeftwardInterpolator`](#leftwardinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`RightwardInterpolator`](#rightwardinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`ForwardInterpolator`](#forwardinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`BackwardInterpolator`](#backwardinterpolator)  |  |
+
+---
+
+#### PivotPosition { #pivotposition-2 }
+
+```cpp
+FVector PivotPosition { FVector::ZeroVector }
+```
 
 ---
 
@@ -41,7 +50,7 @@ bool bMaintainCameraSpacePivotPosition { true }
 #### UpwardInterpolator { #upwardinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * UpwardInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > UpwardInterpolator
 ```
 
 ---
@@ -49,7 +58,7 @@ UComposableCameraInterpolatorBase * UpwardInterpolator
 #### DownwardInterpolator { #downwardinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * DownwardInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > DownwardInterpolator
 ```
 
 ---
@@ -57,7 +66,7 @@ UComposableCameraInterpolatorBase * DownwardInterpolator
 #### LeftwardInterpolator { #leftwardinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * LeftwardInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > LeftwardInterpolator
 ```
 
 ---
@@ -65,7 +74,7 @@ UComposableCameraInterpolatorBase * LeftwardInterpolator
 #### RightwardInterpolator { #rightwardinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * RightwardInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > RightwardInterpolator
 ```
 
 ---
@@ -73,7 +82,7 @@ UComposableCameraInterpolatorBase * RightwardInterpolator
 #### ForwardInterpolator { #forwardinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * ForwardInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > ForwardInterpolator
 ```
 
 ---
@@ -81,7 +90,7 @@ UComposableCameraInterpolatorBase * ForwardInterpolator
 #### BackwardInterpolator { #backwardinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * BackwardInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > BackwardInterpolator
 ```
 
 ### Public Methods
@@ -89,8 +98,8 @@ UComposableCameraInterpolatorBase * BackwardInterpolator
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-6) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-9) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-9) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-11) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-11) `virtual` `const` |  |
 
 ---
 
@@ -104,7 +113,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-9 }
+#### OnTickNode_Implementation { #onticknode_implementation-11 }
 
 `virtual`
 
@@ -114,7 +123,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-9 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-11 }
 
 `virtual` `const`
 

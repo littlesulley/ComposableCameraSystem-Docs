@@ -13,11 +13,11 @@ Blueprint library.
 
 | Return | Name | Description |
 |--------|------|-------------|
-|  | [`DECLARE_FUNCTION`](#declare_function) `inline` |  |
+|  | [`DECLARE_FUNCTION`](#declare_function-4) `inline` |  |
 
 ---
 
-#### DECLARE_FUNCTION { #declare_function }
+#### DECLARE_FUNCTION { #declare_function-4 }
 
 `inline`
 

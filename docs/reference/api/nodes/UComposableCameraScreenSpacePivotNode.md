@@ -13,12 +13,48 @@ Node for positioning the given pivot point in the given screen space.
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraScreenSpacePivotSource` | [`PivotSource`](#pivotsource)  |  |
+| `FVector` | [`PivotWorldPosition`](#pivotworldposition)  |  |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-1)  |  |
+| `float` | [`PivotWorldUpOffset`](#pivotworldupoffset)  |  |
 | `EComposableCameraScreenSpaceMethod` | [`Method`](#method-1)  |  |
 | `FComposableCameraScreenSpaceTranslationParams` | [`TranslationParams`](#translationparams)  |  |
 | `FComposableCameraScreenSpaceRotationParams` | [`RotationParams`](#rotationparams)  |  |
 | `FVector2D` | [`SafeZoneCenter`](#safezonecenter)  |  |
 | `FVector2D` | [`SafeZoneWidth`](#safezonewidth)  |  |
 | `FVector2D` | [`SafeZoneHeight`](#safezoneheight)  |  |
+
+---
+
+#### PivotSource { #pivotsource }
+
+```cpp
+EComposableCameraScreenSpacePivotSource PivotSource {  }
+```
+
+---
+
+#### PivotWorldPosition { #pivotworldposition }
+
+```cpp
+FVector PivotWorldPosition { FVector::ZeroVector }
+```
+
+---
+
+#### PivotActor { #pivotactor-1 }
+
+```cpp
+TObjectPtr< AActor > PivotActor
+```
+
+---
+
+#### PivotWorldUpOffset { #pivotworldupoffset }
+
+```cpp
+float PivotWorldUpOffset { 0.f }
+```
 
 ---
 
@@ -73,9 +109,9 @@ FVector2D SafeZoneHeight { -0.1, 0.1 }
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-14) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-16) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy-1) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-14) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
 
 ---
 
@@ -89,7 +125,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-14 }
+#### OnTickNode_Implementation { #onticknode_implementation-16 }
 
 `virtual`
 
@@ -109,7 +145,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-14 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-16 }
 
 `virtual` `const`
 

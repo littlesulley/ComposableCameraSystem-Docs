@@ -11,12 +11,12 @@ A single parameter value in a ParameterBlock. Type-erased storage using a byte a
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `EComposableCameraPinType` | [`PinType`](#pintype)  | The pin type of this value. |
+| `EComposableCameraPinType` | [`PinType`](#pintype-1)  | The pin type of this value. |
 | `TArray< uint8 >` | [`Data`](#data)  | Raw bytes holding the value. Size depends on PinType. |
 
 ---
 
-#### PinType { #pintype }
+#### PinType { #pintype-1 }
 
 ```cpp
 EComposableCameraPinType PinType = 

@@ -19,19 +19,28 @@ Node for receiving user input and applying it to camera rotation. <br/>
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `class UInputAction *` | [`RotateAction`](#rotateaction-2)  |  |
+| `TObjectPtr< AActor >` | [`RotationInputActor`](#rotationinputactor)  |  |
+| `TObjectPtr< class UInputAction >` | [`RotateAction`](#rotateaction-2)  |  |
 | `float` | [`HorizontalSpeed`](#horizontalspeed)  |  |
 | `float` | [`VerticalSpeed`](#verticalspeed)  |  |
-| `FVector2f` | [`HorizontalDamping`](#horizontaldamping)  |  |
-| `FVector2f` | [`VerticalDamping`](#verticaldamping)  |  |
+| `FVector2D` | [`HorizontalDamping`](#horizontaldamping)  |  |
+| `FVector2D` | [`VerticalDamping`](#verticaldamping)  |  |
 | `bool` | [`bInvertPitch`](#binvertpitch)  |  |
+
+---
+
+#### RotationInputActor { #rotationinputactor }
+
+```cpp
+TObjectPtr< AActor > RotationInputActor
+```
 
 ---
 
 #### RotateAction { #rotateaction-2 }
 
 ```cpp
-class UInputAction * RotateAction
+TObjectPtr< class UInputAction > RotateAction
 ```
 
 ---
@@ -55,7 +64,7 @@ float VerticalSpeed { 1.f }
 #### HorizontalDamping { #horizontaldamping }
 
 ```cpp
-FVector2f HorizontalDamping { .5f }
+FVector2D HorizontalDamping { 0.5, 0.5 }
 ```
 
 ---
@@ -63,7 +72,7 @@ FVector2f HorizontalDamping { .5f }
 #### VerticalDamping { #verticaldamping }
 
 ```cpp
-FVector2f VerticalDamping { .5f }
+FVector2D VerticalDamping { 0.5, 0.5 }
 ```
 
 ---
@@ -79,8 +88,8 @@ bool bInvertPitch { true }
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-8) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-11) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-11) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-13) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-13) `virtual` `const` |  |
 
 ---
 
@@ -94,7 +103,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-11 }
+#### OnTickNode_Implementation { #onticknode_implementation-13 }
 
 `virtual`
 
@@ -104,7 +113,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-11 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-13 }
 
 `virtual` `const`
 
@@ -155,5 +164,5 @@ FVector2D LastFrameCameraRotationInput
 #### ApplyAcceleration { #applyacceleration }
 
 ```cpp
-void ApplyAcceleration(float DeltaTime, FVector2f Damping, double & ThisFrameRotationInput, const double & LastFrameRotationInput)
+void ApplyAcceleration(float DeltaTime, const FVector2D & Damping, double & ThisFrameRotationInput, const double & LastFrameRotationInput)
 ```

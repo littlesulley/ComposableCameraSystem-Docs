@@ -20,7 +20,7 @@ Node for placing the camera on a given spline.
 | `TObjectPtr< UCurveFloat >` | [`AutomaticMoveCurve`](#automaticmovecurve)  |  |
 | `float` | [`Duration`](#duration-3)  |  |
 | `bool` | [`bLoop`](#bloop)  |  |
-| `UComposableCameraInterpolatorBase *` | [`MoveInterpolator`](#moveinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`MoveInterpolator`](#moveinterpolator)  |  |
 | `float` | [`MoveOffset`](#moveoffset)  |  |
 | `bool` | [`bLockOrientationOnSpline`](#blockorientationonspline)  |  |
 
@@ -85,7 +85,7 @@ bool bLoop { false }
 #### MoveInterpolator { #moveinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * MoveInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > MoveInterpolator
 ```
 
 ---
@@ -109,8 +109,8 @@ bool bLockOrientationOnSpline { false }
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-1) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-1) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-1) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-2) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-2) `virtual` `const` |  |
 
 ---
 
@@ -124,7 +124,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-1 }
+#### OnTickNode_Implementation { #onticknode_implementation-2 }
 
 `virtual`
 
@@ -134,7 +134,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-1 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-2 }
 
 `virtual` `const`
 

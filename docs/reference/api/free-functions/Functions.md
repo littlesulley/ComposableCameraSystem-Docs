@@ -81,12 +81,14 @@ DECLARE_LOG_CATEGORY_EXTERN(LogComposableCameraSystem, Log, All)
 #### TryMapPropertyToPinType { #trymappropertytopintype }
 
 ```cpp
-inline bool TryMapPropertyToPinType(const FProperty * Property, EComposableCameraPinType & OutPinType, UScriptStruct *& OutStructType)
+inline bool TryMapPropertyToPinType(const FProperty * Property, EComposableCameraPinType & OutPinType, UScriptStruct *& OutStructType, UEnum *& OutEnumType)
 ```
 
 Attempt to map an FProperty (from UClass reflection) to an EComposableCameraPinType.
 
-Returns true if the property type has a direct pin-type mapping. Returns false for unsupported types (arrays, maps, sets, Instanced object properties, etc.).
+Returns true if the property type has a direct pin-type mapping. Returns false for unsupported types (arrays, maps, sets, Instanced object properties, FString, etc.).
+
+For Enum-typed properties (`FEnumProperty` for `enum class`, or `FByteProperty` whose IntPropertyEnum is set), OutEnumType receives the backing UEnum*. For Struct-typed properties that aren't one of the hard-coded math types, OutStructType receives the specific UScriptStruct*. Both are cleared on entry.
 
 Used by DeclareSubobjectPins to auto-discover exposable sub-properties of an Instanced UObject, and by ApplySubobjectPinValues to dispatch typed reads.
 
@@ -106,19 +108,13 @@ inline int32 GetPinTypeAlignment(EComposableCameraPinType PinType, UScriptStruct
 
 Returns the alignment requirement of a given pin type.
 
-#### DECLARE_DYNAMIC_DELEGATE_RetVal { #declare_dynamic_delegate_retval }
-
-```cpp
-DECLARE_DYNAMIC_DELEGATE_RetVal(FVector, FOnReceiveAutoRotateMainDirection)
-```
-
 #### DECLARE_MULTICAST_DELEGATE { #declare_multicast_delegate }
 
 ```cpp
 DECLARE_MULTICAST_DELEGATE(FOnTransitionFinishes)
 ```
 
-#### DECLARE_DYNAMIC_DELEGATE_RetVal { #declare_dynamic_delegate_retval-1 }
+#### DECLARE_DYNAMIC_DELEGATE_RetVal { #declare_dynamic_delegate_retval }
 
 ```cpp
 DECLARE_DYNAMIC_DELEGATE_RetVal(TArray< float >, FOnReceiveMixingCameraWeights)
@@ -138,7 +134,7 @@ All functions allocate FStrings — they are intended for debug display, not hot
 | `FString` | [`FormatVector`](#formatvector) `inline` | Format an FVector to a compact display string. |
 | `FString` | [`FormatRotator`](#formatrotator) `inline` | Format an FRotator to a compact display string. |
 | `FString` | [`FormatTransform`](#formattransform) `inline` | Format an FTransform to a compact display string. |
-| `FString` | [`FormatTypedValue`](#formattypedvalue) `inline` | Read a typed value at a known byte offset from the data block and format as string. |
+| `FString` | [`FormatTypedValue`](#formattypedvalue) `inline` | Read a typed value at a known byte offset from the data block and format as string. EnumType is consulted only when PinType == Enum; when supplied, the int64 slot is formatted as the corresponding entry name (e.g. "EMyEnum::Alpha"). When omitted for an Enum slot the raw int64 value is printed instead — debug-only fallback. |
 | `FString` | [`FormatOutputPinValue`](#formatoutputpinvalue) `inline` | Read a typed output pin value from the data block and format as string. |
 
 ---
@@ -196,10 +192,10 @@ Format an FTransform to a compact display string.
 `inline`
 
 ```cpp
-inline FString FormatTypedValue(const FComposableCameraRuntimeDataBlock & DataBlock, int32 Offset, EComposableCameraPinType PinType)
+inline FString FormatTypedValue(const FComposableCameraRuntimeDataBlock & DataBlock, int32 Offset, EComposableCameraPinType PinType, const UEnum * EnumType)
 ```
 
-Read a typed value at a known byte offset from the data block and format as string.
+Read a typed value at a known byte offset from the data block and format as string. EnumType is consulted only when PinType == Enum; when supplied, the int64 slot is formatted as the corresponding entry name (e.g. "EMyEnum::Alpha"). When omitted for an Enum slot the raw int64 value is printed instead — debug-only fallback.
 
 ---
 
@@ -208,7 +204,7 @@ Read a typed value at a known byte offset from the data block and format as stri
 `inline`
 
 ```cpp
-inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & DataBlock, int32 NodeIndex, FName PinName, EComposableCameraPinType PinType)
+inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & DataBlock, int32 NodeIndex, FName PinName, EComposableCameraPinType PinType, const UEnum * EnumType)
 ```
 
 Read a typed output pin value from the data block and format as string.

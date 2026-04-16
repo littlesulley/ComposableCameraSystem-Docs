@@ -64,8 +64,8 @@ FTransform TargetTransform
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-13) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-17) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-17) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-19) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-19) `virtual` `const` |  |
 
 ---
 
@@ -79,7 +79,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-17 }
+#### OnTickNode_Implementation { #onticknode_implementation-19 }
 
 `virtual`
 
@@ -89,7 +89,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-17 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-19 }
 
 `virtual` `const`
 

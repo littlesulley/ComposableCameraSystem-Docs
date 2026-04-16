@@ -13,7 +13,16 @@ Applies a positional offset to the camera in camera-local space.
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `FVector` | [`PivotPosition`](#pivotposition-1)  |  |
 | `FVector` | [`CameraOffset`](#cameraoffset)  |  |
+
+---
+
+#### PivotPosition { #pivotposition-1 }
+
+```cpp
+FVector PivotPosition { FVector::ZeroVector }
+```
 
 ---
 
@@ -27,12 +36,12 @@ FVector CameraOffset
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-7) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-7) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-8) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-8) `virtual` `const` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-7 }
+#### OnTickNode_Implementation { #onticknode_implementation-8 }
 
 `virtual`
 
@@ -42,7 +51,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-7 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-8 }
 
 `virtual` `const`
 

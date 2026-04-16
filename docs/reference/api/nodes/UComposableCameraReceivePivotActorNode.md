@@ -13,8 +13,17 @@ Reads a pivot actor's location and publishes it as the pivot position for downst
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-2)  |  |
 | `bool` | [`bUseBoneForPivot`](#buseboneforpivot)  |  |
 | `FName` | [`BoneName`](#bonename-1)  |  |
+
+---
+
+#### PivotActor { #pivotactor-2 }
+
+```cpp
+TObjectPtr< AActor > PivotActor
+```
 
 ---
 
@@ -37,8 +46,8 @@ FName BoneName
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-12) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-16) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-18) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-18) `virtual` `const` |  |
 
 ---
 
@@ -52,7 +61,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-16 }
+#### OnTickNode_Implementation { #onticknode_implementation-18 }
 
 `virtual`
 
@@ -62,7 +71,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-16 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-18 }
 
 `virtual` `const`
 

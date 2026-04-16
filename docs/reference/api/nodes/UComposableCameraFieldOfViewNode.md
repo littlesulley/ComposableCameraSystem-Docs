@@ -14,12 +14,12 @@ Node for adjusting field of view. This FOV is directly set to the CameraPose eac
 | Return | Name | Description |
 |--------|------|-------------|
 | `float` | [`FieldOfView`](#fieldofview-1)  |  |
-| `bool` | [`bDynamicFoV`](#bdynamicfov)  |  |
+| `bool` | [`bDynamicFov`](#bdynamicfov)  |  |
 | `float` | [`MinFoV`](#minfov)  |  |
 | `float` | [`MaxFoV`](#maxfov)  |  |
 | `float` | [`FoVDamping`](#fovdamping)  |  |
 | `float` | [`DesiredTargetViewportSize`](#desiredtargetviewportsize)  |  |
-| `TArray< AActor * >` | [`ActorsForDynamicFoV`](#actorsfordynamicfov)  |  |
+| `TArray< TObjectPtr< AActor > >` | [`ActorsForDynamicFoV`](#actorsfordynamicfov)  |  |
 
 ---
 
@@ -31,10 +31,10 @@ float FieldOfView { 79.f }
 
 ---
 
-#### bDynamicFoV { #bdynamicfov }
+#### bDynamicFov { #bdynamicfov }
 
 ```cpp
-bool bDynamicFoV { false }
+bool bDynamicFov { false }
 ```
 
 ---
@@ -74,19 +74,19 @@ float DesiredTargetViewportSize { 40.f }
 #### ActorsForDynamicFoV { #actorsfordynamicfov }
 
 ```cpp
-TArray< AActor * > ActorsForDynamicFoV
+TArray< TObjectPtr< AActor > > ActorsForDynamicFoV
 ```
 
 ### Public Methods
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-5) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-5) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-6) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-6) `virtual` `const` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-5 }
+#### OnTickNode_Implementation { #onticknode_implementation-6 }
 
 `virtual`
 
@@ -96,7 +96,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-5 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-6 }
 
 `virtual` `const`
 

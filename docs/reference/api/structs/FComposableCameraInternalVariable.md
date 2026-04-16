@@ -22,7 +22,8 @@ All fields apply to both usages; none are ignored in either case.
 | `FGuid` | [`VariableGuid`](#variableguid-1)  | Stable identifier for this variable, independent of VariableName. |
 | `FName` | [`VariableName`](#variablename-1)  | Name of this variable. |
 | `EComposableCameraPinType` | [`VariableType`](#variabletype)  |  |
-| `UScriptStruct *` | [`StructType`](#structtype-1)  |  |
+| `TObjectPtr< UScriptStruct >` | [`StructType`](#structtype-2)  |  |
+| `TObjectPtr< UEnum >` | [`EnumType`](#enumtype-2)  | For VariableType == Enum: the specific UEnum this variable represents. Stored internally as a normalized int64 (matching Enum pin behavior). |
 | `FString` | [`InitialValueString`](#initialvaluestring)  | Initial value at camera instantiation (serialized string). |
 | `bool` | [`bResetEveryFrame`](#breseteveryframe)  | If true, the variable resets to InitialValue at the start of every frame (before node execution). If false, the variable persists across frames. |
 | `FText` | [`Tooltip`](#tooltip-1)  |  |
@@ -63,11 +64,21 @@ EComposableCameraPinType VariableType =
 
 ---
 
-#### StructType { #structtype-1 }
+#### StructType { #structtype-2 }
 
 ```cpp
-UScriptStruct * StructType = nullptr
+TObjectPtr< UScriptStruct > StructType = nullptr
 ```
+
+---
+
+#### EnumType { #enumtype-2 }
+
+```cpp
+TObjectPtr< UEnum > EnumType = nullptr
+```
+
+For VariableType == Enum: the specific UEnum this variable represents. Stored internally as a normalized int64 (matching Enum pin behavior).
 
 ---
 

@@ -7,21 +7,38 @@
 
 > **Inherits:** [`UComposableCameraCameraNodeBase`](../uobjects-other/UComposableCameraCameraNodeBase.md#ucomposablecameracameranodebase)
 
-Node for auto-rotating around a given "main direction." The main direction should be provided each frame through a custom function.
+Node for auto-rotating around a given "main direction." The main direction is supplied through the MainDirection input pin, typically wired from an upstream node (e.g. a compute node that reads character forward vector) or set as a context parameter override.
 
 ### Public Attributes
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `FVector` | [`MainDirection`](#maindirection)  |  |
+| `FVector2D` | [`CameraRotationInput`](#camerarotationinput)  |  |
 | `FVector2D` | [`YawRange`](#yawrange)  |  |
 | `FVector2D` | [`PitchRange`](#pitchrange)  |  |
 | `bool` | [`bYawOnly`](#byawonly)  |  |
 | `float` | [`BeyondValidRangeCooldown`](#beyondvalidrangecooldown)  |  |
 | `float` | [`InputInterruptCooldown`](#inputinterruptcooldown)  |  |
 | `int32` | [`MaxCountAfterInputInterrupt`](#maxcountafterinputinterrupt)  |  |
-| `UComposableCameraInterpolatorBase *` | [`RotateInterpolatorForYaw`](#rotateinterpolatorforyaw)  |  |
-| `UComposableCameraInterpolatorBase *` | [`RotateInterpolatorForPitch`](#rotateinterpolatorforpitch)  |  |
-| `FOnReceiveAutoRotateMainDirection` | [`OnReceiveAutoRotateMainDirection`](#onreceiveautorotatemaindirection)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`RotateInterpolatorForYaw`](#rotateinterpolatorforyaw)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`RotateInterpolatorForPitch`](#rotateinterpolatorforpitch)  |  |
+
+---
+
+#### MainDirection { #maindirection }
+
+```cpp
+FVector MainDirection { FVector::ForwardVector }
+```
+
+---
+
+#### CameraRotationInput { #camerarotationinput }
+
+```cpp
+FVector2D CameraRotationInput { 0.f, 0.f }
+```
 
 ---
 
@@ -76,7 +93,7 @@ int32 MaxCountAfterInputInterrupt { -1 }
 #### RotateInterpolatorForYaw { #rotateinterpolatorforyaw }
 
 ```cpp
-UComposableCameraInterpolatorBase * RotateInterpolatorForYaw
+TObjectPtr< UComposableCameraInterpolatorBase > RotateInterpolatorForYaw
 ```
 
 ---
@@ -84,15 +101,7 @@ UComposableCameraInterpolatorBase * RotateInterpolatorForYaw
 #### RotateInterpolatorForPitch { #rotateinterpolatorforpitch }
 
 ```cpp
-UComposableCameraInterpolatorBase * RotateInterpolatorForPitch
-```
-
----
-
-#### OnReceiveAutoRotateMainDirection { #onreceiveautorotatemaindirection }
-
-```cpp
-FOnReceiveAutoRotateMainDirection OnReceiveAutoRotateMainDirection
+TObjectPtr< UComposableCameraInterpolatorBase > RotateInterpolatorForPitch
 ```
 
 ### Public Methods
@@ -100,9 +109,8 @@ FOnReceiveAutoRotateMainDirection OnReceiveAutoRotateMainDirection
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-2) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-3) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-3) `virtual` `const` |  |
-| `void` | [`SetAutoRotateMainDirectionFunction`](#setautorotatemaindirectionfunction)  |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-4) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-4) `virtual` `const` |  |
 
 ---
 
@@ -116,7 +124,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-3 }
+#### OnTickNode_Implementation { #onticknode_implementation-4 }
 
 `virtual`
 
@@ -126,20 +134,12 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-3 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-4 }
 
 `virtual` `const`
 
 ```cpp
 virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinDeclaration > & OutPins) const
-```
-
----
-
-#### SetAutoRotateMainDirectionFunction { #setautorotatemaindirectionfunction }
-
-```cpp
-void SetAutoRotateMainDirectionFunction(FOnReceiveAutoRotateMainDirection OnUpdateAutoRotateMainDirection)
 ```
 
 ### Private Attributes

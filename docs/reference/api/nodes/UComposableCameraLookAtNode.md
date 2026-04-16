@@ -15,7 +15,7 @@ Node for looking at some target position.
 |--------|------|-------------|
 | `EComposableCameraLookAtType` | [`LookAtType`](#lookattype)  |  |
 | `FVector` | [`LookAtPosition`](#lookatposition)  |  |
-| `AActor *` | [`LookAtActor`](#lookatactor)  |  |
+| `TObjectPtr< AActor >` | [`LookAtActor`](#lookatactor)  |  |
 | `FName` | [`LookAtSocket`](#lookatsocket)  |  |
 | `EComposableCameraLookAtConstraintType` | [`LookAtConstraintType`](#lookatconstrainttype)  |  |
 | `float` | [`SoftLookAtRange`](#softlookatrange)  |  |
@@ -43,7 +43,7 @@ FVector LookAtPosition
 #### LookAtActor { #lookatactor }
 
 ```cpp
-AActor * LookAtActor
+TObjectPtr< AActor > LookAtActor
 ```
 
 ---
@@ -91,8 +91,8 @@ UComposableCameraInterpolatorBase * SoftLookAtInterpolator { nullptr }
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-1) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-1) `virtual` `const` |  |
 
 ---
 
@@ -106,7 +106,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation }
+#### OnTickNode_Implementation { #onticknode_implementation-1 }
 
 `virtual`
 
@@ -116,7 +116,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-1 }
 
 `virtual` `const`
 

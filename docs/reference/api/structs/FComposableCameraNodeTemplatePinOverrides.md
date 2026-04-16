@@ -11,7 +11,7 @@ Per-node-template container for pin overrides, forming a parallel array to [UCom
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TArray< FComposableCameraPinOverride >` | [`Overrides`](#overrides)  | Sparse list of pin overrides for this node instance. Pins without an entry here use their C++ declaration defaults (bAsPin = true, DefaultValueString from the class). |
+| `TArray< FComposableCameraPinOverride >` | [`Overrides`](#overrides)  | Sparse list of pin overrides for this node instance. Pins without an entry here use their C++ declaration defaults (bAsPin = Decl.bDefaultAsPin, DefaultValueString from the class). |
 
 ---
 
@@ -21,4 +21,4 @@ Per-node-template container for pin overrides, forming a parallel array to [UCom
 TArray< FComposableCameraPinOverride > Overrides
 ```
 
-Sparse list of pin overrides for this node instance. Pins without an entry here use their C++ declaration defaults (bAsPin = true, DefaultValueString from the class).
+Sparse list of pin overrides for this node instance. Pins without an entry here use their C++ declaration defaults (bAsPin = Decl.bDefaultAsPin, DefaultValueString from the class).

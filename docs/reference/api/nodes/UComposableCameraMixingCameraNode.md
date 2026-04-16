@@ -76,9 +76,9 @@ FOnReceiveMixingCameraWeights OnReceiveMixingCameraWeights
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-5) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-8) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-9) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-8) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-9) `virtual` `const` |  |
 | `void` | [`SetUpdateWeights`](#setupdateweights)  |  |
 
 ---
@@ -93,7 +93,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-8 }
+#### OnTickNode_Implementation { #onticknode_implementation-9 }
 
 `virtual`
 
@@ -113,7 +113,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-8 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-9 }
 
 `virtual` `const`
 
