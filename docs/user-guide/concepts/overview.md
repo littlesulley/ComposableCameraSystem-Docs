@@ -43,6 +43,7 @@ Read it top-down:
 - **Camera Node** is a single-responsibility operator. It reads the input pose, applies its logic, and writes an output pose. Nodes also talk to each other through a typed pin system routed by a flat `RuntimeDataBlock`.
 - **Transition** is a pose-only blender. Each frame it receives two input poses (source and target) and outputs one blended pose. It never references the source/target cameras directly.
 - **Modifier** targets a specific *node class* and overrides its parameters at runtime. Highest priority wins; changes may trigger a seamless camera reactivation.
+- **Action** is a lightweight, fire-and-forget behavior that hooks into the camera's pre- or post-tick. Actions don't transform the pose through the node chain — they run alongside it, with built-in expiration (instant, duration, manual, or condition-based). Camera-scoped actions auto-expire on camera switch; persistent ones survive. See [Camera Actions](../camera-actions.md).
 
 ## What happens on one frame
 
