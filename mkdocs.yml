@@ -49,6 +49,9 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
+hooks:
+  - hooks/obsidian_images.py
+
 plugins:
   - search
   - mermaid2:
