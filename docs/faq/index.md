@@ -20,7 +20,7 @@ UE 5.6 only. The plugin uses APIs that don't exist in 5.5 and earlier, and no ba
 
 Set the `PlayerCameraManagerClass` on your `APlayerController` subclass (or its Blueprint equivalent) to `AComposableCameraPlayerCameraManager`. The full walkthrough is in [Enabling the Plugin](../getting-started/enabling-plugin.md).
 
-### `Activate Composable Camera` has no parameter pins. Where did they go?
+### `Activate Camera` has no parameter pins. Where did they go?
 
 The K2 node introspects the selected type asset and builds pins for each exposed parameter. If the pins are missing:
 
@@ -101,7 +101,7 @@ Check:
 
 ### Right-click on a pin says "Refresh", but my pins don't change.
 
-For K2 nodes (like `Activate Composable Camera`), **Refresh Node** re-runs pin generation against the currently-selected type asset. If the type asset's parameters haven't changed, refresh is a no-op. If you expected a refresh to pick up a schema change, save the type asset first — some schemas only propagate on save.
+For K2 nodes (like `Activate Camera`), **Refresh Node** re-runs pin generation against the currently-selected type asset. If the type asset's parameters haven't changed, refresh is a no-op. If you expected a refresh to pick up a schema change, save the type asset first — some schemas only propagate on save.
 
 ## Extending
 

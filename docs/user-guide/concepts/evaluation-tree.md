@@ -26,7 +26,7 @@ A brand-new Director has a tree of just one leaf (the initial camera). That sing
 
 ## How the tree grows when you activate a camera
 
-When you call `Activate Composable Camera` on an already-active context, the tree is rewritten in place. The exact rewrite depends on whether a transition is resolved for the pair (see [Transitions](transitions.md#the-five-tier-resolution-chain)).
+When you call `Activate Camera` on an already-active context, the tree is rewritten in place. The exact rewrite depends on whether a transition is resolved for the pair (see [Transitions](transitions.md#the-five-tier-resolution-chain)).
 
 **With a transition** (the common case):
 
@@ -42,6 +42,7 @@ flowchart LR
         Inner --> A2["Leaf: CamA<br/>(source)"]
         Inner --> B1["Leaf: CamB<br/>(target)"]
     end
+    Before ~~~ After
 ```
 
 The old tree becomes the left subtree. A new leaf wrapping the target camera becomes the right subtree. A new inner node (holding the resolved transition) becomes the root. Future activations during an in-progress transition keep grafting onto the left — the old tree slides further left as new cameras arrive on the right.
@@ -58,6 +59,7 @@ flowchart LR
         direction TB
         B["Leaf: CamB"]
     end
+    Before ~~~ After
 ```
 
 The entire old tree is destroyed and replaced with a single leaf for the new camera.

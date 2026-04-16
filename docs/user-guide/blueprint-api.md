@@ -1,10 +1,10 @@
 # Blueprint API
 
-Everything you can do at runtime — activate cameras, pop contexts, switch between type assets, add and remove modifiers, attach actions — is reachable from Blueprint. Most of it goes through either the custom **Activate Composable Camera** K2 node or through `UComposableCameraBlueprintLibrary`.
+Everything you can do at runtime — activate cameras, pop contexts, switch between type assets, add and remove modifiers, attach actions — is reachable from Blueprint. Most of it goes through either the custom **Activate Camera** K2 node or through `UComposableCameraBlueprintLibrary`.
 
-## Activate Composable Camera (K2 node)
+## Activate Camera (K2 node)
 
-This is the primary way gameplay code starts a camera. Right-click in any Blueprint graph and search **Activate Composable Camera** — the node is registered under *ComposableCameraSystem*.
+This is the primary way gameplay code starts a camera. Right-click in any Blueprint graph and search **Activate Camera** — the node is registered under *ComposableCameraSystem*.
 
 At compile time this K2 node expands into a call to `UComposableCameraBlueprintLibrary::ActivateComposableCameraFromTypeAsset`. The library entry point itself is hidden from the palette (`BlueprintInternalUseOnly`) because the K2 node provides a strictly better, typed-parameter-pin authoring experience.
 
@@ -47,7 +47,7 @@ If you edit the underlying type asset (add a new exposed parameter, flip one to 
 
 ## Activate from DataTable
 
-For data-driven camera configuration — AI selection tables, preset-driven cinematic triggers, designer-tunable camera libraries without Blueprint edits — the plugin ships a second K2 node: **Activate Composable Camera From Data Table**.
+For data-driven camera configuration — AI selection tables, preset-driven cinematic triggers, designer-tunable camera libraries without Blueprint edits — the plugin ships a second K2 node: **Activate Camera From Data Table**.
 
 Each DataTable row is a `FComposableCameraParameterTableRow` carrying:
 
@@ -87,7 +87,7 @@ Returns `nullptr` if the player index is out of range or the PCM isn't a `ACompo
 | `GetCameraContextStackDepth` | `(WorldContextObject, PCM) → int32` | Current depth of the stack (`1` = base only). |
 | `GetActiveContextName` | `(WorldContextObject, PCM) → FName` | Name of the top context. |
 
-There is no separate **Push Camera Context** function — pushes happen implicitly through `Activate Composable Camera` when you pass a `ContextName` that isn't currently on the stack.
+There is no separate **Push Camera Context** function — pushes happen implicitly through `Activate Camera` when you pass a `ContextName` that isn't currently on the stack.
 
 ### Modifiers
 
@@ -109,7 +109,7 @@ Built-in actions include `MoveToAction`, `RotateToAction`, and `ResetPitchAction
 
 ### Context name dropdowns
 
-The `ContextName` pin on the `Activate Composable Camera` K2 node and the `ContextName` parameter on `PopCameraContext` use `UPARAM(meta=(GetOptions="ComposableCameraSystem.ComposableCameraProjectSettings.GetContextNames"))` — Blueprint's dropdown is sourced live from **Project Settings → ComposableCameraSystem → Context Names**. Adding a new context in project settings makes it available in the dropdown without recompiling anything.
+The `ContextName` pin on the `Activate Camera` K2 node and the `ContextName` parameter on `PopCameraContext` use `UPARAM(meta=(GetOptions="ComposableCameraSystem.ComposableCameraProjectSettings.GetContextNames"))` — Blueprint's dropdown is sourced live from **Project Settings → ComposableCameraSystem → Context Names**. Adding a new context in project settings makes it available in the dropdown without recompiling anything.
 
 ## Typical patterns
 
@@ -117,7 +117,7 @@ The `ContextName` pin on the `Activate Composable Camera` K2 node and the `Conte
 
 ```
 Event BeginPlay
-  └─> Activate Composable Camera
+  └─> Activate Camera
         Player Index: 0
         Camera Type:  CT_ThirdPersonFollow
         Context Name: None                (activates in base context)
@@ -130,7 +130,7 @@ Because the base context (index 0 in **Project Settings → Context Names**) is 
 
 ```
 On Trigger Entered
-  └─> Activate Composable Camera
+  └─> Activate Camera
         Player Index:        0
         Camera Type:         CT_Cinematic_HeroIntro
         Context Name:        Cutscene                 (a declared context)

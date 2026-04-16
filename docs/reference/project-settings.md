@@ -41,7 +41,7 @@ The list has two constraints:
 1. **The first entry is the base context.** It is initialized automatically before any actor's `BeginPlay`, and it cannot be popped. By convention this is `Gameplay`, but the name itself is not special — whatever sits at index 0 is treated as the base.
 2. **All names must be unique.** Duplicate entries are ignored silently; prefer to validate in the editor.
 
-The static helper `GetContextNames()` exposes this list for editor UI — specifically, the `Context Name` pin on the `Activate Composable Camera` node uses `meta=(GetOptions=...)` to show a dropdown sourced from this array, preventing typos at the Blueprint authoring site.
+The static helper `GetContextNames()` exposes this list for editor UI — specifically, the `Context Name` pin on the `Activate Camera` node uses `meta=(GetOptions=...)` to show a dropdown sourced from this array, preventing typos at the Blueprint authoring site.
 
 !!! warning "Changing context names is a schema change"
     Renaming an entry in `ContextNames` does **not** rename references in Blueprint graphs or C++ call sites. If you rename `Gameplay` → `World`, every BP node that activated into `Gameplay` will fail its runtime lookup until you update the pin value. Treat this list like an enum declaration: add freely, but rename with care.

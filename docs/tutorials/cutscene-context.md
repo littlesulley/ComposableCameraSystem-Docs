@@ -11,7 +11,7 @@ From the player's perspective: they walk up to a door trigger, the world fades i
 From the system's perspective:
 
 1. At `BeginPlay`, the PCM creates a `Gameplay` context and activates the follow camera in it.
-2. The trigger calls `Activate Composable Camera` with `Context Name = Cutscene`. Because `Cutscene` isn't on the stack yet, activation **auto-pushes** it onto the top — there is no separate `PushCameraContext` function, pushing is implicit in activation.
+2. The trigger calls `Activate Camera` with `Context Name = Cutscene`. Because `Cutscene` isn't on the stack yet, activation **auto-pushes** it onto the top — there is no separate `PushCameraContext` function, pushing is implicit in activation.
 3. The PCM installs a **reference leaf node** pointing at the gameplay context's director inside the `Cutscene` director's evaluation tree. That means while the cutscene is running, the gameplay tree is still being evaluated live on each frame.
 4. A timer fires `TerminateCurrentCamera` (or `PopCameraContext("Cutscene")`), which triggers an [inter-context transition](../user-guide/concepts/context-stack.md#inter-context-transitions-why-the-old-context-keeps-evaluating) back to gameplay.
 
@@ -64,7 +64,7 @@ This is a Blueprint call. Find or create a trigger actor with a `BoxComponent` f
 
 1. Cast the overlapping actor to your player character; bail if the cast fails.
 2. Get the statue actor reference (level-placed `BP_Statue`).
-3. Drop an **Activate Composable Camera** node from the palette. Wire:
+3. Drop an **Activate Camera** node from the palette. Wire:
     - `Player Index` = `0`
     - `Camera Type` = `CT_StatueOrbit`
     - `Context Name` = `Cutscene` (dropdown — sourced from Project Settings)
@@ -79,7 +79,7 @@ That's it — there is no separate "Push Camera Context" node. The PCM handles t
 
 ## 5. Trigger the pop
 
-For this tutorial, just fire the pop on a timer three seconds in. In the same trigger Blueprint, right after the `Activate Composable Camera` call:
+For this tutorial, just fire the pop on a timer three seconds in. In the same trigger Blueprint, right after the `Activate Camera` call:
 
 1. Drop a **Delay** node. `Duration` = `3.0`.
 2. Drop a **Get Composable Camera Player Camera Manager** node. `Index` = `0`. Store its return value.
@@ -113,7 +113,7 @@ The in-game overlay (`showdebug composablecamera`) during the cutscene should sh
 ## Common pitfalls
 
 - **Context name not found** — you forgot step 1. The push silently no-ops (or errors to `LogComposableCameraSystem`, depending on project settings). Double-check **Project Settings → Context Names** contains `Cutscene`.
-- **Cutscene snaps in, no blend** — `CT_StatueOrbit.EnterTransition` is null, and nothing else supplied a transition. Either set the enter transition as in step 3, or pass a caller override via the `Transition Override` pin on `Activate Composable Camera`.
+- **Cutscene snaps in, no blend** — `CT_StatueOrbit.EnterTransition` is null, and nothing else supplied a transition. Either set the enter transition as in step 3, or pass a caller override via the `Transition Override` pin on `Activate Camera`.
 - **Pop-back snaps to a stale gameplay pose** — this should not happen with the shipped system, because the gameplay tree is kept live. If it does, you're probably pausing ticks on the gameplay camera somewhere (e.g. `SetActorTickEnabled(false)` on the player during cutscene). Let it tick.
 - **Player input still rotates the cutscene camera** — `LookAtNode.ConstraintType` is **Soft**, which lets the player override the look direction. Set it to **Hard** for cutscene use, or remove `ControlRotateNode` from the cutscene camera entirely.
 - **Cutscene activates but doesn't auto-pop** — transient cameras auto-pop on termination (see [Context Stack → transient cameras](../user-guide/concepts/context-stack.md)), but your cutscene camera isn't transient. Either set `bIsTransient = true` on the activation params (losing modifier support in exchange), or call `PopCameraContext` explicitly as we did.

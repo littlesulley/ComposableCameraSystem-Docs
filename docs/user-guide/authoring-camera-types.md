@@ -131,4 +131,4 @@ Open the type asset, select the empty canvas (so the Details panel shows the typ
 
 Saves are standard `Ctrl+S`. On save, the editor runs a **Build** pass that validates the graph: checks for missing exec wires, type mismatches on data pins, orphaned exposed-parameter entries, and so on. The **Build Messages** tab at the bottom of the editor shows results. A warning here doesn't block the save, but a red error does — fix the error before relying on the asset at runtime.
 
-Once the asset compiles cleanly, it's ready to be referenced from a K2 `Activate Composable Camera` node, a DataTable row, or C++ — see [Blueprint API](blueprint-api.md) for the activation side.
+Once the asset compiles cleanly, it's ready to be referenced from a K2 `Activate Camera` node, a DataTable row, or C++ — see [Blueprint API](blueprint-api.md) for the activation side.

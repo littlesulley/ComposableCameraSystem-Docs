@@ -8,7 +8,7 @@ A **context** is a named slot — typically something like `Gameplay`, `Cutscene
 
 Context names are `FName`s and must be declared in **Project Settings → ComposableCameraSystem → Context Names**. The first entry in that list is the **base context** — typically `Gameplay` — and is initialized automatically before any actor's `BeginPlay`.
 
-Using a name that isn't in the list at runtime is an error. In Blueprint, the `Activate Composable Camera` node and related helpers show a dropdown sourced from this list to prevent typos.
+Using a name that isn't in the list at runtime is an error. In Blueprint, the `Activate Camera` node and related helpers show a dropdown sourced from this list to prevent typos.
 
 ## Push, pop, and "ensure"
 
@@ -50,7 +50,7 @@ The consequence is that any transition type — `LinearTransition`, `Inertialize
 
 ## When you actually interact with the stack
 
-For most users, contexts are an implementation detail exposed through the `Context Name` pin on `Activate Composable Camera`:
+For most users, contexts are an implementation detail exposed through the `Context Name` pin on `Activate Camera`:
 
 - **Leave it empty** to activate in the current top context. This is the common case.
 - **Set it to a declared name** to push (or move-to-top) that context as part of the activation.
