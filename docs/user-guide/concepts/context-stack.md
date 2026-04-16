@@ -7,9 +7,9 @@ A **context** is a named slot — typically something like `Gameplay`, `Cutscene
 ## Context names are configured, not free-form
 
 Context names are `FName`s and must be declared in **Project Settings → ComposableCameraSystem → Context Names**. The first entry in that list is the **base context** — typically `Gameplay` — and is initialized automatically before any actor's `BeginPlay`.
-
-Using a name that isn't in the list at runtime is an error. In Blueprint, the `Activate Composable Camera` node and related helpers show a dropdown sourced from this list to prevent typos.
-
+![[assets/images/Pasted image 20260416170548.png]]
+Using a name that isn't in the list at runtime is an error. In Blueprint, the `Activate Camera` node and related helpers show a dropdown sourced from this list to prevent typos.
+![[assets/images/Pasted image 20260416170621.png]]
 ## Push, pop, and "ensure"
 
 Contexts are manipulated by the system, not by user code directly. When gameplay code activates a camera in a named context (via the K2 node's `Context Name` pin), the PCM internally calls `EnsureContext(ContextName)`:
@@ -22,7 +22,7 @@ Contexts are manipulated by the system, not by user code directly. When gameplay
     A surprisingly common bug is assuming that *"the context exists"* is the same as *"the context is active"*. In this system it isn't — the stack's position is load-bearing. `EnsureContext` specifically includes the move-to-top step so that issuing a gameplay camera activation while a cutscene is on top doesn't silently queue behind the cutscene.
 
 Popping works through `TerminateCurrentCamera`, `PopCameraContext(Name)`, or automatic pop (below). When the popped context is the current top, the PCM doesn't immediately throw it away — it sets up an **inter-context transition** first, described below.
-
+![[assets/images/Pasted image 20260416170800.png]]
 The **base context is protected**: it cannot be popped. This guarantees there is always a camera to fall back to.
 
 ## Transient cameras auto-pop
