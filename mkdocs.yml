@@ -16,6 +16,9 @@ theme:
     dark: github-dark
   katex_options: {}
 
+extra_css:
+  - assets/css/custom.css
+
 markdown_extensions:
   - admonition
   - attr_list

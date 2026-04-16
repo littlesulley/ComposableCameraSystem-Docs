@@ -1,0 +1,28 @@
+/* Fix code block overflow — ensure horizontal scroll instead of page overflow */
+.codehilite {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.codehilite pre {
+  overflow-x: auto;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.codehilite code {
+  white-space: pre;
+  word-wrap: normal;
+}
+
+/* Also handle fenced code blocks that may not have .codehilite wrapper */
+pre {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+pre > code {
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+}
