@@ -80,3 +80,4 @@ After the pose comes out, `CollapseFinishedTransitions` walks the tree one more 
 - Tree shape, activation rewrites, reference leaves, the collapse rule → [Evaluation Tree](evaluation-tree.md).
 - Lifecycle (`TransitionEnabled → OnBeginPlay → OnEvaluate → OnFinished`), velocity-aware inertialization, the five-tier resolution chain → [Transitions](transitions.md).
 - Priority-per-node-class, reactivation with transition, the difference from UE's built-in `UCameraModifier` → [Modifiers](modifiers.md).
+- Temporary per-frame behaviors with built-in expiration, camera-scoped vs. persistent → [Actions](actions.md).
