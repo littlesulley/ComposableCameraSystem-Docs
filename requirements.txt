@@ -2,3 +2,4 @@ mkdocs>=1.5,<2
 mkdocs-shadcn>=0.10,<1
 mkdocs-mermaid2-plugin>=1.2,<2
 pymdown-extensions>=10.0
+mkdocs-glightbox>=0.4,<1

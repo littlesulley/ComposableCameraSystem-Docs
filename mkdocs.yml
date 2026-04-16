@@ -19,6 +19,9 @@ theme:
 extra_css:
   - assets/css/custom.css
 
+extra_javascript:
+  - assets/js/mermaid-lightbox.js
+
 markdown_extensions:
   - admonition
   - attr_list
@@ -57,6 +60,15 @@ hooks:
 
 plugins:
   - search
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: "100%"
+      height: auto
+      zoomable: true
+      draggable: true
   - mermaid2:
       version: 10.9.1
 

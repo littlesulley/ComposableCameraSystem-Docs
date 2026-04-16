@@ -26,3 +26,36 @@ pre > code {
   word-wrap: normal;
   overflow-wrap: normal;
 }
+
+/* ── Mermaid diagram lightbox ── */
+div.mermaid {
+  cursor: zoom-in;
+}
+
+/* Fullscreen overlay for mermaid diagrams */
+.mermaid-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: zoom-out;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  padding: 2rem;
+}
+
+.mermaid-lightbox-overlay.active {
+  opacity: 1;
+}
+
+.mermaid-lightbox-overlay svg {
+  max-width: 95vw;
+  max-height: 90vh;
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
