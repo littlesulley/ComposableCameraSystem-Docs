@@ -18,7 +18,8 @@ Every action is a `UComposableCameraActionBase` subclass (Blueprintable). It exp
 - **`OnExecute(DeltaTime, CurrentPose, OutPose)`** — the main logic. Reads the current camera pose, does its work, and writes `OutPose`. Called every frame the action is alive.
 
 Both are `BlueprintNativeEvent`s, so you can implement them in C++ or Blueprint.
-
+![[assets/images/Pasted image 20260416231056.png]]
+![[assets/images/Pasted image 20260416231135.png]]
 ## Execution timing
 
 Each action declares when it runs relative to the camera tick via `ExecutionType`:
@@ -68,7 +69,7 @@ The plugin ships three concrete actions:
 | `MoveToAction` | Smoothly moves the camera to a target world position over the action's duration |
 | `RotateToAction` | Smoothly rotates the camera to a target rotation over the action's duration |
 | `ResetPitchAction` | Smoothly resets the camera's pitch to zero over the action's duration |
-
+![[assets/images/Pasted image 20260416231359.png]]
 All three are `PostCameraTick` by default — they apply their effect after the node chain, so they layer on top of whatever the camera normally does.
 
 ## Writing a custom action

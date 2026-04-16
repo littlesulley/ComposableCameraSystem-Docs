@@ -7,9 +7,10 @@ This page walks through authoring one from scratch.
 ## Creating the asset
 
 In the Content Browser, right-click → **Composable Camera System → Camera Type Asset** (or use **Add → Composable Camera System → Camera Type Asset**). Name it with a consistent prefix so assets are easy to find — the conventions in the shipped content use `CT_` for *Camera Type* (e.g. `CT_ThirdPersonFollow`, `CT_OrbitAim`, `CT_TopDown`).
+![[assets/images/Pasted image 20260416222549.png]]
 
 Double-click the new asset to open the camera type editor. You'll see an empty graph with two sentinel nodes pre-placed: a **Start** node and an **Output** node. The Start node has no inputs; the Output node has a single exec input and represents the pose handed back to the director at the end of the frame. Every camera's per-frame execution chain begins at Start and ends at Output.
-
+![[assets/images/Pasted image 20260416222625.png]]
 ## Placing nodes
 
 Right-click on the empty canvas to open the context menu. Under **Camera Nodes** you'll find every non-abstract `UComposableCameraCameraNodeBase` subclass the engine knows about — built-in nodes like `ReceivePivotActor`, `PivotOffset`, `CameraOffset`, `LookAt`, `FieldOfView`, plus any Blueprint-authored nodes in the project.
@@ -23,12 +24,12 @@ Start
   → CameraOffsetNode           offsets the camera behind and to the side
   → ControlRotateNode          orbits the camera with player input
   → CollisionPushNode          pushes in on wall collisions
-  → LookAtNode (soft)          softly faces the pivot
   → FieldOfViewNode            sets FOV in degrees
 Output
 ```
 
 Drop nodes in roughly the order above and drag the exec pin from Start → first node → next → … → Output. The exec wire is the per-frame execution chain; each node reads the pose produced by its predecessor and writes a modified pose forward.
+![[assets/images/Pasted image 20260416222822.png]]
 
 !!! tip "Exec order matters"
     Nodes run in strict exec-wire order. A `LookAtNode` that runs before `CollisionPushNode` makes the camera face the target *before* being pushed by a wall; reversing the order makes the camera face the target *after* being pushed. Neither is wrong — they give different feels. If a node's behavior surprises you, the first thing to check is where it sits on the exec chain.
@@ -54,15 +55,15 @@ To expose an input pin:
 
 1. Right-click the pin.
 2. Select **Expose as Camera Parameter**.
-
+![[assets/images/Pasted image 20260416222938.png]]![[assets/images/Pasted image 20260416223028.png]]
 Three things happen:
 
 - Any existing wire to the pin is removed (exposing and wiring are mutually exclusive — a pin is either driven by a wire, exposed to callers, or left at its authored default).
 - A new entry appears in the type asset's **Exposed Parameters** list (visible in the Details panel when no node is selected).
 - The pin renders in grey with an `(Exposed)` suffix, marking it as no longer wireable.
-
+![[assets/images/Pasted image 20260416223104.png]]
 The exposed parameter inherits its display name, tooltip, and `bRequired` flag from the C++ pin declaration on first exposure — from that point on, per-asset values are the source of truth. You can edit display name, tooltip, and required-ness in the Details panel without touching the underlying node.
-
+![[assets/images/Pasted image 20260416223311.png]]
 !!! warning "Parameter names are identity"
     `ParameterName` is the lookup key every consumer uses: K2 node pins, DataTable rows, parameter blocks, the row editor's orphan detection. Renaming a parameter via the Details panel is deliberately forbidden — if you need a different name, unexpose the pin and re-expose under the new name. Every caller that referenced the old name will then surface as a broken pin or an orphan entry, which is exactly what you want (silent name drift is worse than a visible break).
 
@@ -117,7 +118,6 @@ ReceivePivotActor
   → PivotOffset (tighter shoulder)
   → CameraOffset (shorter boom)
   → ControlRotateNode (slower input rate — use a modifier on top)
-  → LookAt (hard)
   → FieldOfView (zoomed)
 ```
 
@@ -126,7 +126,7 @@ The aim camera is typically pushed onto a `Aim` context (see [Context Stack](con
 ## Setting the default transition
 
 Open the type asset, select the empty canvas (so the Details panel shows the type asset itself), and find the **Transition** section. Populate `EnterTransition` with an instanced transition object — `InertializedTransition` is a good default for most gameplay cameras, with `TransitionDuration` around 0.3–0.6 seconds. See [Transitions & Blending](transitions-and-blending.md) for how this interacts with the rest of the resolution chain.
-
+![[assets/images/Pasted image 20260416223540.png]]
 ## Saving and building
 
 Saves are standard `Ctrl+S`. On save, the editor runs a **Build** pass that validates the graph: checks for missing exec wires, type mismatches on data pins, orphaned exposed-parameter entries, and so on. The **Build Messages** tab at the bottom of the editor shows results. A warning here doesn't block the save, but a red error does — fix the error before relying on the asset at runtime.

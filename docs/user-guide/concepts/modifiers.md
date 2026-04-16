@@ -51,9 +51,12 @@ classDiagram
 ```
 
 - **`UComposableCameraModifierBase`** is an abstract, `Blueprintable` class. You subclass it (C++ or Blueprint), set `NodeClass` on the **Class Default Object**, and implement `ApplyModifier` to mutate that node's parameters. The base class has no `Priority` field and no camera-scoping metadata — those live on the wrapper.
+	![[assets/images/Pasted image 20260416215332.png]]
+	![[assets/images/Pasted image 20260416220927.png]]
 - **`UComposableCameraNodeModifierDataAsset`** is the Content-Browser-resident wrapper. It groups one or more modifier instances together and attaches routing metadata: priority (higher wins), camera tags (which cameras this group applies to), and optional enter/exit transition overrides for the reactivation blend. Registered with a purple color + custom thumbnail under "Composable Camera System".
+	![[assets/images/Pasted image 20260416221011.png]]
 - **`UComposableCameraModifierManager`** is created by the PCM and is the single source of truth for which modifier groups are active. It indexes them by gameplay tag, computes the effective modifier per `(camera, node class)` pair, and drives reactivation when the effective set changes.
-
+![[assets/images/Modifier.gif]]
 !!! warning "Non-transient cameras only"
     Modifier resolution is skipped for transient cameras (activated with `bIsTransient = true` on `FComposableCameraActivationParams`). Cinematic intros and short-lived overlays are typical transient cameras — if you need them modifier-aware, clear `bIsTransient`.
 
@@ -85,6 +88,7 @@ The reactivation path shares the same infrastructure as all other type-asset act
 Modifier groups are added and removed as `UComposableCameraNodeModifierDataAsset`s, not as raw modifier instances. The wrapper is the unit of management — individual modifier instances inside a group are never directly registered with the manager.
 
 From Blueprint, use the `Add Modifier` and `Remove Modifier` nodes on `UComposableCameraBlueprintLibrary`. Both take a world-context object, a resolved `AComposableCameraPlayerCameraManager*`, and the `UComposableCameraNodeModifierDataAsset` to add or remove.
+![[assets/images/Pasted image 20260416221905.png]]
 
 From C++, prefer the Blueprint library over poking the manager directly — you still need to resolve the PCM yourself:
 
@@ -111,7 +115,7 @@ Modifier groups are scoped to cameras by **gameplay tags**, not by context or ca
 
 - Matching is `FGameplayTagContainer::HasAny`, not `HasAll` — a group tagged `Gameplay.ThirdPerson` applies to any camera that carries `Gameplay.ThirdPerson`, even if the camera carries additional tags.
 - Empty `CameraTags` means "applies to all cameras". Use sparingly — it's an easy way to accidentally tweak a cutscene camera.
-
+![[assets/images/Pasted image 20260416222021.png]]
 Gameplay code still manages lifetime: you add the group when the condition starts (sprint begins, stun effect lands, aim held) and remove it when the condition ends. The tag system decides *which cameras* the group affects; gameplay decides *when* it's active.
 
 For one-shot, camera-scoped overrides (e.g. "only while this camera is running"), prefer [Actions](../../reference/api/actions/UComposableCameraActionBase.md) instead, which expire automatically when a camera transitions away.

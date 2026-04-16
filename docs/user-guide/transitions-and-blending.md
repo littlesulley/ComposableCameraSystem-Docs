@@ -38,6 +38,7 @@ Four authoring surfaces produce transitions:
 1. **Per-camera `EnterTransition`** — the default on the camera type asset. "Whenever this camera is activated, blend in like this."
 2. **Per-camera `ExitTransition`** — also on the type asset. "Whenever this camera leaves, blend out like this."
 3. **Project-wide transition table** — a `UComposableCameraTransitionTableDataAsset` referenced from *Project Settings → ComposableCameraSystem → TransitionTable*. Holds pair-specific routing: "when going from A to B specifically, use this transition."
+	![[assets/images/Pasted image 20260416230341.png]]
 4. **Caller-supplied override** — the `TransitionOverride` pin on `Activate Camera`, `TerminateCurrentCamera`, and `PopCameraContext`.
 
 At activation, the PCM walks these in priority order — caller override first, then table, then source's `ExitTransition`, then target's `EnterTransition`. The first non-null result wins. If none produces a transition, the activation is a hard cut.
@@ -73,13 +74,13 @@ The design intent: **each tier is for a narrower scope than the one below it.** 
 ## Authoring the transition table
 
 The transition table is a single `UComposableCameraTransitionTableDataAsset`. Create one via Content Browser → right-click → **Composable Camera System → Transition Table**.
-
+![[assets/images/Pasted image 20260416230439.png]]
 Open it. The Details panel shows a single `Entries` array. Each entry is a `(SourceTypeAsset, TargetTypeAsset, Transition)` triple:
 
 - **SourceTypeAsset** (soft ref, required) — the camera being left.
 - **TargetTypeAsset** (soft ref, required) — the camera being entered.
 - **Transition** (instanced) — the transition object to use for that exact pair.
-
+![[assets/images/Pasted image 20260416230453.png]]
 Entries are exact-match — both source and target must match for the entry to fire. No wildcards, no globbing. First matching entry in declaration order wins, so if you add two entries for the same pair, only the first one is used.
 
 After populating the table, wire it into **Project Settings → ComposableCameraSystem → TransitionTable**. The setting is a soft reference; the PCM loads the table on boot and uses it for every subsequent activation.
@@ -89,11 +90,11 @@ The table's editor runs a validation pass on save: null source or target emits a
 ## Transitions as standalone data assets
 
 Sometimes you want to reference a configured transition from multiple places — a `TransitionOverride` wired to three different BP nodes, or a transition used both in a table entry and on a type asset's `EnterTransition`. Rather than duplicating the configured transition at each site, wrap it in a **Transition Data Asset**:
-
-1. Content Browser → right-click → **Composable Camera System → Transition Data Asset**.
-2. Set its inner `Transition` to an instanced transition of the desired class (e.g. `InertializedTransition` with `TransitionDuration = 0.8`).
+![[assets/images/Pasted image 20260416230540.png]]
+1. Content Browser → right-click → **Composable Camera System → Camera Transition.
+2. Set its inner `Transition` to an instanced transition of the desired class (e.g. `InertializedTransition` with `Transition Time = 0.8`).
 3. Reference the data asset wherever a transition is expected.
-
+![[assets/images/Pasted image 20260416230601.png]]
 The K2 node's `Transition Override` pin accepts a `UComposableCameraTransitionDataAsset*`; the transition table's entries can also hold data asset wrappers. This keeps configuration in one place — tune the asset once, and every referencing site updates.
 
 ## Multi-camera blends

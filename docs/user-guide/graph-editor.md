@@ -23,7 +23,7 @@ flowchart TB
 ```
 
 There is intentionally no separate **Parameters** tab. Exposed parameters, internal variables, and the default transition all live on the type asset, so they're editable directly in the Details panel whenever graph selection is empty. Clicking any node overwrites that view with the selected node's properties; clicking the empty canvas brings the asset view back.
-
+![[assets/images/Pasted image 20260416222204.png]]
 ## The two exec chains
 
 Every camera graph has **two** execution chains, each rooted at its own sentinel:
@@ -74,7 +74,7 @@ Right-click on the canvas to open the context menu. Entries are grouped:
 - **Compute Nodes** — the BeginPlay chain counterparts. Built-ins include `ComputeRandomOffsetNode` and `ComputeDistanceToActorNode`.
 - **Variables → Get → Internal / Exposed → {var}** — one entry per declared variable.
 - **Variables → Set → Internal / Exposed → {var}** — one entry per declared variable, with the additional exec pins Set nodes carry.
-
+![[assets/images/Pasted image 20260416222309.png]]
 If the context menu was opened by dragging off a pin, the menu filters to only nodes that can accept (or produce) a compatible wire, and auto-wires the new node to the dragged pin on placement.
 
 ## Wiring rules

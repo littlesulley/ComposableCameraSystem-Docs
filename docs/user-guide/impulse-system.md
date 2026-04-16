@@ -1,4 +1,4 @@
-# Impulse System
+# Impulse System (In Progress)
 
 The **impulse system** lets level-placed volumes push the camera around. Drop a `AComposableCameraImpulseSphere` or `AComposableCameraImpulseBox` in the world, give it a force curve, and any camera whose node chain contains a `UComposableCameraImpulseResolutionNode` will be nudged by the volume's force field while it's inside the bounds.
 

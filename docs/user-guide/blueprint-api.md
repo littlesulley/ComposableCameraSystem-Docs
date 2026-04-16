@@ -5,7 +5,7 @@ Everything you can do at runtime — activate cameras, pop contexts, switch betw
 ## Activate Camera (K2 node)
 
 This is the primary way gameplay code starts a camera. Right-click in any Blueprint graph and search **Activate Camera** — the node is registered under *ComposableCameraSystem*.
-
+![[assets/images/Pasted image 20260416223700.png]]
 At compile time this K2 node expands into a call to `UComposableCameraBlueprintLibrary::ActivateComposableCameraFromTypeAsset`. The library entry point itself is hidden from the palette (`BlueprintInternalUseOnly`) because the K2 node provides a strictly better, typed-parameter-pin authoring experience.
 
 ### Pin layout
@@ -30,11 +30,11 @@ The dynamic-pin set works on an *opt-in* model:
 
 - **Required exposed parameters** (`bRequired == true` on the asset) are always present. You cannot remove them — missing a required parameter is a fatal activation error.
 - **Non-required parameters and exposed variables** are hidden by default. You opt in per-name via the node's right-click context menu → **Add Override Pin → {name}**. Each opted-in pin appears under an *Overrides* advanced-pin section.
-
+![[assets/images/Pasted image 20260416223743.png]]
 This means a camera type with 15 exposed knobs doesn't spam your Blueprint graph with 15 pins. You surface only the ones you actually want to set; the rest fall back to the asset's authored default.
 
 Opted-in pins can be removed at any time via right-click on the pin → **Remove Override Pin**. Required pins don't offer that option.
-
+![[assets/images/Pasted image 20260416223815.png]]
 ### Pin value resolution at activation
 
 For each dynamic pin, the K2 node's compiled output reads the pin's current value (connected wire or unconnected default), writes it into the `FComposableCameraParameterBlock`, and passes the block to the runtime. The runtime then walks `ExposedParameters` → `InternalVariables` → `ExposedVariables` in order and applies each value to the right slot.
@@ -48,7 +48,7 @@ If you edit the underlying type asset (add a new exposed parameter, flip one to 
 ## Activate from DataTable
 
 For data-driven camera configuration — AI selection tables, preset-driven cinematic triggers, designer-tunable camera libraries without Blueprint edits — the plugin ships a second K2 node: **Activate Camera From Data Table**.
-
+![[assets/images/Pasted image 20260416225108.png]]
 Each DataTable row is a `FComposableCameraParameterTableRow` carrying:
 
 - `CameraType` — soft reference to the type asset to activate.
@@ -56,7 +56,7 @@ Each DataTable row is a `FComposableCameraParameterTableRow` carrying:
 - `TransitionOverride` — optional `UComposableCameraTransitionDataAsset`.
 - `ActivationParams` — pose preservation, transient flag, lifetime.
 - `ParameterValues` — a `TMap<FName, FString>` of serialized values covering both exposed parameters and exposed variables, using each field's own default (`DefaultValueString` / `InitialValueString`) as the row-omission fallback.
-
+![[assets/images/Pasted image 20260416225348.png]]
 The K2 node takes a DataTable and a row name (both driven by specialized pin widgets — the DataTable picker filters to row structs of type `FComposableCameraParameterTableRow`, and the row-name pin refreshes live as you edit the selected DataTable). At compile, it calls through to `ActivateComposableCameraFromDataTable` on the library.
 
 Designers can edit rows inline in the DataTable editor with a typed per-parameter UI — each row renders with typed value widgets for every exposed parameter *and* every exposed variable of the selected camera type, so you get numeric spinners, vector field rows, checkboxes, and struct detail views rather than a raw string map.
@@ -69,7 +69,7 @@ Designers can edit rows inline in the DataTable editor with a typed per-paramete
     The activation K2 node takes a `Player Index` and resolves the PCM internally. The functions below instead take a resolved `AComposableCameraPlayerCameraManager*`. Fetch it once via `GetComposableCameraPlayerCameraManager(WorldContextObject, PlayerIndex)` and cache it on your gameplay object — cheaper than resolving the PCM per call, and explicit about which player you're driving.
 
 ### Resolving the PCM
-
+![[assets/images/Pasted image 20260416225500.png]]
 ```cpp
 AComposableCameraPlayerCameraManager* PCM =
     UComposableCameraBlueprintLibrary::GetComposableCameraPlayerCameraManager(
@@ -79,6 +79,7 @@ AComposableCameraPlayerCameraManager* PCM =
 Returns `nullptr` if the player index is out of range or the PCM isn't a `AComposableCameraPlayerCameraManager` (the plugin wasn't [enabled correctly](../getting-started/enabling-plugin.md) on the GameMode/PlayerController).
 
 ### Context control
+![[assets/images/Pasted image 20260416225756.png]]
 
 | Function | Signature | Purpose |
 |---|---|---|
@@ -90,6 +91,7 @@ Returns `nullptr` if the player index is out of range or the PCM isn't a `ACompo
 There is no separate **Push Camera Context** function — pushes happen implicitly through `Activate Camera` when you pass a `ContextName` that isn't currently on the stack.
 
 ### Modifiers
+![[assets/images/Pasted image 20260416225819.png]]
 
 | Function | Signature | Purpose |
 |---|---|---|
@@ -99,6 +101,7 @@ There is no separate **Push Camera Context** function — pushes happen implicit
 Modifiers target a node class — see [Concepts → Modifiers](concepts/modifiers.md) for the full semantics, including priority and tag scoping.
 
 ### Actions
+![[assets/images/Pasted image 20260416225855.png]]
 
 | Function | Signature | Purpose |
 |---|---|---|
@@ -108,7 +111,7 @@ Modifiers target a node class — see [Concepts → Modifiers](concepts/modifier
 Built-in actions include `MoveToAction`, `RotateToAction`, and `ResetPitchAction`. Only one instance of a given action class can be active at a time.
 
 ### Context name dropdowns
-
+![[assets/images/Pasted image 20260416225927.png]]
 The `ContextName` pin on the `Activate Camera` K2 node and the `ContextName` parameter on `PopCameraContext` use `UPARAM(meta=(GetOptions="ComposableCameraSystem.ComposableCameraProjectSettings.GetContextNames"))` — Blueprint's dropdown is sourced live from **Project Settings → ComposableCameraSystem → Context Names**. Adding a new context in project settings makes it available in the dropdown without recompiling anything.
 
 ## Typical patterns
