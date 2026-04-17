@@ -19,7 +19,7 @@ From the system's perspective:
 
 If you already have a suitable level sequence, skip to step 2. Otherwise:
 
-1. Content Browser → right-click → **Animation → Level Sequence**. Name it `LS_HeroIntro`.
+1. Content Browser → right-click → **Cinematics → Level Sequence**. Name it `LS_HeroIntro`.
 2. Open it in Sequencer. Click the **camera icon** ("Create a new camera and set it as the current cut") — this creates a `CineCameraActor` binding with transform and camera component tracks.
 3. Keyframe the camera's transform over your desired duration. For this tutorial, a simple 3-second dolly from left to right works fine. Add FOV keyframes on the `CameraComponent` track if you want the FOV to change during the shot.
 4. Save and close Sequencer.

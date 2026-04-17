@@ -30,6 +30,8 @@ Context Names
 
 Context names must be declared up front — you cannot push a context whose name isn't in this list.
 
+![[assets/images/Pasted image 20260417153622.png]]
+
 ## 2. Author the aim camera type asset
 
 Content Browser → right-click → **Composable Camera System → Camera Type Asset**. Name it `CT_AimDownSights`.
@@ -44,21 +46,22 @@ ReceivePivotActorNode     reads FollowTarget, publishes PivotPosition
   → CameraOffsetNode      shorter boom
   → ControlRotateNode     same input, but slower sensitivity
   → CollisionPushNode     collision still needed
-  → LookAtNode            face the pivot
   → FieldOfViewNode       zoomed FOV
 ```
 
 Drop these nodes in the graph editor and wire the exec chain from Start through to Output.
 
+![[assets/images/Pasted image 20260417154731.png]]
+
 ### Parameter values
 
-| Node | Property | Gameplay camera | Aim camera | Why |
-|---|---|---|---|---|
-| PivotOffset | `Offset` | `(0, 0, 80)` | `(0, 40, 65)` | Tighter to the right shoulder — the "over-the-shoulder" ADS feel |
-| CameraOffset | `Offset` | `(-400, 50, 100)` | `(-200, 30, 50)` | Shorter boom — closer to the character |
-| ControlRotate | `HorizontalSpeed` | `180` | `90` | Slower yaw during aim — precision aiming |
-| ControlRotate | `VerticalSpeed` | `120` | `60` | Slower pitch too |
-| FieldOfView | `FieldOfView` | `70` | `50` | Zoomed in — the "scope" feel |
+| Node          | Property          | Gameplay camera   | Aim camera     | Why                                                              |
+| ------------- | ----------------- | ----------------- | -------------- | ---------------------------------------------------------------- |
+| PivotOffset   | `Offset`          | `(0, 0, 80)`      | `(0, 0, 70)`   | Tighter to the right shoulder — the "over-the-shoulder" ADS feel |
+| CameraOffset  | `Offset`          | `(-400, 50, 100)` | `(-80, 20, 0)` | Shorter boom — closer to the character                           |
+| ControlRotate | `HorizontalSpeed` | `1`               | `0.75`         | Slower yaw during aim — precision aiming                         |
+| ControlRotate | `VerticalSpeed`   | `1`               | `0.75`         | Slower pitch too                                                 |
+| FieldOfView   | `FieldOfView`     | `79`              | `65`           | Zoomed in — the "scope" feel                                     |
 
 Adjust these to taste. The key design principle is that the aim camera is the same structural composition as the gameplay camera but with tighter, slower, more focused parameters.
 
@@ -76,8 +79,7 @@ In the type asset's Details panel (click empty canvas to deselect all nodes), se
 
 The exit transition (used when popping back to gameplay) falls back to the gameplay camera's own `EnterTransition` via the [five-tier resolution chain](../user-guide/concepts/transitions.md#the-five-tier-resolution-chain). If you want a different duration for the pop-out, set `ExitTransition` on `CT_AimDownSights` as well (this is tier 3 in the chain and takes precedence over the gameplay camera's enter).
 
-!!! tip "Why inertialized, not linear?"
-    The gameplay camera is *moving* when the player hits aim — they're presumably walking or strafing. An inertialized transition matches the source camera's velocity at `t=0`, avoiding the visible kink that a linear blend produces when the source is in motion. See [Transitions → InitParams](../user-guide/concepts/transitions.md#initparams-why-velocity-matters).
+![[assets/images/Pasted image 20260417155611.png]]
 
 ### Tag the camera
 
@@ -126,7 +128,10 @@ Enter PIE. Aim. You should see:
 2. The aim camera holds for as long as the button is held — tighter offset, slower sensitivity, zoomed FOV.
 3. On release, a smooth blend back to the gameplay camera — which has been tracking the character the whole time, so the return position is correct.
 
-Open `showdebug composablecamera`. During ADS, the context stack should show:
+![[assets/images/ADS.gif]]
+
+
+Open `showdebug camera`. During ADS, the context stack should show:
 
 ```
 Context Stack (depth 2)

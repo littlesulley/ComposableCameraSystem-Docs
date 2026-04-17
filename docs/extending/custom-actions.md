@@ -209,7 +209,7 @@ For project-side actions, mirror the `Public/Actions` / `Private/Actions` layout
 
 ## Verifying with showdebug
 
-Open `showdebug composablecamera` during PIE while the action is active. Under **Camera Actions**, you should see:
+Open `showdebug camera` during PIE while the action is active. Under **Camera Actions**, you should see:
 
 ```
 Camera Actions

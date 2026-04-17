@@ -33,7 +33,7 @@ Content Browser → right-click → Blueprint Class → search for `ComposableCa
 
 **Step 2: set `NodeClass` on the Class Default Object.**
 
-Open the BP, find `NodeClass` in the Details panel, set it to the node class you want to target (e.g. `FieldOfViewNode`). This is a **CDO-level** configuration — not something you set per-instance.
+Open the BP, find `NodeClass` in the Details panel, set it to the node class you want to target (e.g. `FieldOfViewNode`). This is a **CDO-level** configuration — not something you set per-instance. Also create an editable float variable `FieldOfView` as the new value.
 
 **Step 3: implement `ApplyModifier` as a BP event.**
 
@@ -42,10 +42,12 @@ The event gets a `Node` reference typed as `UComposableCameraCameraNodeBase`. Ca
 ```
 Event ApplyModifier (Node)
     → Cast to FieldOfViewNode
-        → Set FieldOfView (Target: Cast result, New Value: 95.0)
+        → Set FieldOfView (Target: Cast result, Wire the pin of FieldOfView variable)
 ```
 
 That's the entire modifier. Compile and save.
+
+![[assets/images/Pasted image 20260417181332.png]]
 
 **Step 4: create the data asset wrapper.**
 
@@ -54,9 +56,12 @@ Content Browser → right-click → Miscellaneous → Data Asset → pick `Compo
 In the asset:
 
 - Add your `BP_SprintFOVBump` modifier to the `Modifiers` array.
+- Set `FieldOfView` value (e.g. 100).
 - Set `Priority` (higher wins when two groups target the same node class on the same camera).
 - Set `CameraTags` (e.g. `Gameplay.ThirdPerson` — the modifier applies to any camera whose type asset carries this tag).
 - Optionally set `OverrideEnterTransition` / `OverrideExitTransition` for the reactivation blend when the modifier is added/removed.
+
+![[assets/images/Pasted image 20260417181434.png]]
 
 **Step 5: add and remove at runtime.**
 
@@ -71,6 +76,8 @@ UComposableCameraBlueprintLibrary::RemoveModifier(WorldContext, PCM, SprintModif
 ```
 
 The PCM's `UComposableCameraModifierManager` handles tag matching, priority resolution, and any reactivation blend.
+
+![[assets/images/CustomModifiers.gif]]
 
 ## C++ authoring — when to reach for it
 
@@ -187,61 +194,6 @@ Open `showdebug composablecamera` during PIE while the modifier is active. Under
 ```
 
 When the modifier is removed, the entry disappears. This is the quickest way to confirm tag matching and priority resolution are working as expected.
-
-## Worked example: sprint FOV bump
-
-This section walks through the full end-to-end modifier authoring flow — a sprint FOV bump that widens the active gameplay camera's field of view to 95° when the player sprints, blending smoothly in both directions.
-
-### Prerequisites
-
-You need a gameplay camera with a `FieldOfViewNode` in its chain (the [Follow Camera](../tutorials/follow-camera.md) tutorial produces one). The camera's type asset must carry a `CameraTag` of `Gameplay.ThirdPerson`.
-
-### Step 1 — create the modifier class (Blueprint)
-
-Content Browser → right-click → **Blueprint Class** → search for `ComposableCameraModifierBase`. Name it `BP_SprintFOVBump`.
-
-Open it. In the **Class Defaults** panel, set `NodeClass` to `ComposableCameraFieldOfViewNode`. Override **Apply Modifier** in the Event Graph:
-
-```
-Event ApplyModifier (Node)
-  → Cast to ComposableCameraFieldOfViewNode
-      → Set FieldOfView = 95.0
-```
-
-Compile and save.
-
-!!! tip "Parameterize the FOV"
-    For a more reusable modifier, add a `UPROPERTY(EditAnywhere)` variable `SprintFOV` (default `95.0`) on the Blueprint and use it instead of a hardcoded value. Then each data asset that references the modifier can set a different sprint FOV without duplicating the class.
-
-### Step 2 — create the data asset wrapper
-
-Content Browser → right-click → **Composable Camera System → Node Modifier Data Asset**. Name it `DA_SprintFOVModifier`.
-
-| Field | Value | Why |
-|---|---|---|
-| **Modifiers** | One entry: `BP_SprintFOVBump` | The modifier class from step 1 |
-| **Priority** | `10` | Wins over any lower-priority group also targeting `FieldOfViewNode`. Typical gameplay modifiers live in the 1–20 range. |
-| **CameraTags** | `Gameplay.ThirdPerson` | Only applies to cameras whose type asset carries this tag. Keeps cutscene cameras unaffected. |
-| **OverrideEnterTransition** | (optional) An `InertializedTransition` with `TransitionDuration = 0.25` | A quick blend in when the modifier activates. |
-| **OverrideExitTransition** | (optional) An `InertializedTransition` with `TransitionDuration = 0.35` | A slightly longer blend out — the return to normal FOV feels smoother if it's slower than the snap in. |
-
-### Step 3 — wire up sprint input
-
-Open your character (or player controller) Blueprint:
-
-```
-On Sprint Started
-  └─> Get Composable Camera Player Camera Manager (Index 0) ─┐
-  └─> Add Modifier (PCM: ↑, Modifier Asset: DA_SprintFOVModifier)
-
-On Sprint Ended
-  └─> Get Composable Camera Player Camera Manager (Index 0) ─┐
-  └─> Remove Modifier (PCM: ↑, Modifier Asset: DA_SprintFOVModifier)
-```
-
-### Step 4 — play and verify
-
-Enter PIE and sprint. You should see a smooth inertialized blend from the default FOV to 95° as the modifier kicks in, the wider FOV hold for the duration of the sprint, and a smooth blend back when sprint ends.
 
 ## Common pitfalls
 

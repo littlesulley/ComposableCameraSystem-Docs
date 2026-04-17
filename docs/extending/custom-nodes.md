@@ -66,11 +66,13 @@ void UMyOffsetNode::OnTickNode_Implementation(
 
 That's a working node. Drop it into a camera type asset, wire the pin (`Offset` auto-exposes because it's a `UPROPERTY`), and it participates in the chain.
 
+You can do this in blueprint following the same process above.
+
 ## Pins — what gets exposed, and how
 
 Pins are how a node talks to the rest of the graph. There are two kinds of pin sources:
 
-**Reflection-driven pins.** Every `UPROPERTY` on the node becomes an input pin whose type is derived from the `UProperty` via `TryMapPropertyToPinType`. Supported types: `bool`, `int32`, `float`, `double`, `FVector2D`, `FVector`, `FVector4`, `FRotator`, `FTransform`, `AActor*`, `UObject*`, and authored `USTRUCT`s. This is the path for 95% of pins — you don't write any pin declaration code.
+**Reflection-driven pins.** Every `UPROPERTY` on the node becomes an input pin whose type is derived from the `UProperty` via `TryMapPropertyToPinType`. Supported types: `bool`, `int32`, `float`, `double`, `FVector2D`, `FVector`, `FVector4`, `FRotator`, `FTransform`, `AActor*`, `UObject*`, and authored `USTRUCT`s and `Delegate`s. This is the path for 95% of pins — you don't write any pin declaration code.
 
 **Custom output pins (via `GetPinDeclarations`).** If your node produces values other nodes consume (a computed pivot position, a resolved aim direction), declare them with `GetPinDeclarations_Implementation`:
 
@@ -123,7 +125,7 @@ Preallocate in `OnInitialize_Implementation`. If you need a scratch buffer, stor
 A pin's actual value at tick time is resolved through a chain:
 
 1. If the pin is wired to another node's output in the graph, that wins.
-2. Otherwise, if the pin is bound to a camera *context parameter* (e.g. `PlayerPawn` flowing through the whole chain), the context value wins.
+2. Otherwise, if the pin is bound to a camera *context variable* (e.g. `PlayerPawn` flowing through the whole chain), the context value wins.
 3. Otherwise, the pin's authored default value (from the node's Details panel) is used.
 4. If none of the above, the pin holds the `UPROPERTY`'s C++ default.
 

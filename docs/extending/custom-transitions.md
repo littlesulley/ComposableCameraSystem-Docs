@@ -62,6 +62,8 @@ FComposableCameraPose UMyEaseTransition::OnEvaluate_Implementation(
 
 That's the whole transition. No hooks into the PCM, no director awareness, no context-stack plumbing. The base class drives lifecycle; you contribute the math.
 
+All C++ code can be translated into blueprint implementation.
+
 ## Working with `InitParams` — velocity and source snapshots
 
 The base class exposes a `UPROPERTY FComposableCameraTransitionInitParams InitParams` populated in `TransitionEnabled`. It carries:
