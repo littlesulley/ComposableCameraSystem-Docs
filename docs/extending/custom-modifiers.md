@@ -177,6 +177,80 @@ For project-side modifiers, mirror the `Public/Modifiers` / `Private/Modifiers` 
 
 For C++ modifiers, also write a unit-style test that constructs the modifier, constructs the target node, calls `ApplyModifier` directly, and asserts on the mutated fields. No PCM required for that path.
 
+### Verifying with showdebug
+
+Open `showdebug composablecamera` during PIE while the modifier is active. Under **Effective Modifiers**, you should see your modifier listed:
+
+```
+[Camera Node] ComposableCameraFieldOfViewNode:
+    [Modifier] BP_SprintFOVBump_C from [Asset] DA_SprintFOVModifier with priority 10
+```
+
+When the modifier is removed, the entry disappears. This is the quickest way to confirm tag matching and priority resolution are working as expected.
+
+## Worked example: sprint FOV bump
+
+This section walks through the full end-to-end modifier authoring flow — a sprint FOV bump that widens the active gameplay camera's field of view to 95° when the player sprints, blending smoothly in both directions.
+
+### Prerequisites
+
+You need a gameplay camera with a `FieldOfViewNode` in its chain (the [Follow Camera](../tutorials/follow-camera.md) tutorial produces one). The camera's type asset must carry a `CameraTag` of `Gameplay.ThirdPerson`.
+
+### Step 1 — create the modifier class (Blueprint)
+
+Content Browser → right-click → **Blueprint Class** → search for `ComposableCameraModifierBase`. Name it `BP_SprintFOVBump`.
+
+Open it. In the **Class Defaults** panel, set `NodeClass` to `ComposableCameraFieldOfViewNode`. Override **Apply Modifier** in the Event Graph:
+
+```
+Event ApplyModifier (Node)
+  → Cast to ComposableCameraFieldOfViewNode
+      → Set FieldOfView = 95.0
+```
+
+Compile and save.
+
+!!! tip "Parameterize the FOV"
+    For a more reusable modifier, add a `UPROPERTY(EditAnywhere)` variable `SprintFOV` (default `95.0`) on the Blueprint and use it instead of a hardcoded value. Then each data asset that references the modifier can set a different sprint FOV without duplicating the class.
+
+### Step 2 — create the data asset wrapper
+
+Content Browser → right-click → **Composable Camera System → Node Modifier Data Asset**. Name it `DA_SprintFOVModifier`.
+
+| Field | Value | Why |
+|---|---|---|
+| **Modifiers** | One entry: `BP_SprintFOVBump` | The modifier class from step 1 |
+| **Priority** | `10` | Wins over any lower-priority group also targeting `FieldOfViewNode`. Typical gameplay modifiers live in the 1–20 range. |
+| **CameraTags** | `Gameplay.ThirdPerson` | Only applies to cameras whose type asset carries this tag. Keeps cutscene cameras unaffected. |
+| **OverrideEnterTransition** | (optional) An `InertializedTransition` with `TransitionDuration = 0.25` | A quick blend in when the modifier activates. |
+| **OverrideExitTransition** | (optional) An `InertializedTransition` with `TransitionDuration = 0.35` | A slightly longer blend out — the return to normal FOV feels smoother if it's slower than the snap in. |
+
+### Step 3 — wire up sprint input
+
+Open your character (or player controller) Blueprint:
+
+```
+On Sprint Started
+  └─> Get Composable Camera Player Camera Manager (Index 0) ─┐
+  └─> Add Modifier (PCM: ↑, Modifier Asset: DA_SprintFOVModifier)
+
+On Sprint Ended
+  └─> Get Composable Camera Player Camera Manager (Index 0) ─┐
+  └─> Remove Modifier (PCM: ↑, Modifier Asset: DA_SprintFOVModifier)
+```
+
+### Step 4 — play and verify
+
+Enter PIE and sprint. You should see a smooth inertialized blend from the default FOV to 95° as the modifier kicks in, the wider FOV hold for the duration of the sprint, and a smooth blend back when sprint ends.
+
+## Common pitfalls
+
+- **Modifier doesn't apply — camera has no matching tag.** Check `CameraTag` on the type asset and `CameraTags` on the data asset. Empty `CameraTags` means "all cameras" (risky); a specific tag means the camera must carry it.
+- **Modifier applies but snaps instead of blends.** The camera's `EnterTransition` is null, and the data asset's `OverrideEnterTransition` is also null — so the reactivation is a hard cut. Set one of them.
+- **Two modifiers fight — wrong one wins.** Higher `Priority` wins per `(camera, node class)`. There is no stacking. If you need additive effects on the same node class, compose them inside a single `ApplyModifier`.
+- **Modifier applies to the cutscene camera.** `CameraTags` is empty, so it matches everything. Set it to a specific gameplay tag.
+- **Transient camera ignores the modifier.** Transient cameras skip modifier resolution entirely. Clear `bIsTransient` on the activation params if the camera needs to be modifier-aware.
+
 ---
 
 *See also:* [Modifiers Catalog](../reference/modifiers.md) for the exact field semantics; [Concepts → Modifiers](../user-guide/concepts/modifiers.md) for the full lifecycle and resolution model; [Custom Nodes](custom-nodes.md) if the effect needs per-frame work rather than a parameter tweak.

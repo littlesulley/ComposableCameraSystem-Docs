@@ -76,4 +76,4 @@ All three are `PostCameraTick` by default — they apply their effect after the 
 
 Subclass `UComposableCameraActionBase` in C++ or Blueprint. Set `ExecutionType` and `ExpirationType` as defaults, override `OnExecute`, and optionally override `CanExecute` if you're using condition-based expiration. The action receives the PCM reference (`PlayerCameraManager`) automatically when added.
 
-See the [Actions API reference](../reference/api/actions/UComposableCameraActionBase.md) for the full class interface, and [Custom Modifiers](../extending/custom-modifiers.md) if you decide the behavior is better expressed as a parameter override on an existing node.
+See [Custom Actions](../extending/custom-actions.md) for the full authoring recipe with a worked look-at-target example, and the [Actions API reference](../reference/api/actions/UComposableCameraActionBase.md) for the class interface. If you decide the behavior is better expressed as a parameter override on an existing node, see [Custom Modifiers](../extending/custom-modifiers.md) instead.
