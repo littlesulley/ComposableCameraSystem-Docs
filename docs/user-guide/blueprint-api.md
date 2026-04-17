@@ -61,6 +61,21 @@ The K2 node takes a DataTable and a row name (both driven by specialized pin wid
 
 Designers can edit rows inline in the DataTable editor with a typed per-parameter UI — each row renders with typed value widgets for every exposed parameter *and* every exposed variable of the selected camera type, so you get numeric spinners, vector field rows, checkboxes, and struct detail views rather than a raw string map.
 
+### Override pins — per-call-site adjustments
+
+The DataTable K2 node supports the same **opt-in override pin** model as the regular `Activate Camera` node. The DataTable row provides the base configuration, and override pins on the K2 node let you adjust individual values at each call site without modifying the row.
+
+- **Required exposed parameters** (`bRequired == true` on the type asset) are always present as pins on the node — just like the regular activation node.
+- **Non-required parameters and exposed variables** are hidden by default. Opt in per-name via the node's right-click context menu → **Add Override Pin → {name}**. Each opted-in pin appears under an *Overrides* advanced-pin section.
+- **Override values take precedence over row values.** If you connect a value to an override pin, that value replaces the row's string-map entry for that parameter entirely. If you don't override a parameter, the row's authored value is used as-is.
+- **Opted-in pins can be removed** at any time via right-click on the pin → **Remove Override Pin**. Required pins don't offer that option.
+
+This is useful when a DataTable defines the base camera preset (camera type, context, transition, default parameters) but one particular call site needs a tweak — for example, a specific trigger that activates the same cinematic row but with a different `FocusActor` or a tighter `FieldOfView`. Rather than duplicating the row, add an override pin for just that parameter.
+
+### Auto-refresh when the asset changes
+
+If you edit the underlying type asset (add a new exposed parameter, flip one to required, rename an entry) while the Blueprint that references it is open, the DataTable K2 node reconstructs itself live — just like the regular activation node. Override names that no longer exist on the asset are automatically cleaned up. You can also manually trigger this via right-click → **Clean Up Orphan Overrides**.
+
 ## Blueprint function library
 
 `UComposableCameraBlueprintLibrary` collects the rest of the runtime API. All functions are `static` with a `WorldContextObject` parameter — callable from anywhere you have a world context (Actor, Component, GameMode, etc.).
