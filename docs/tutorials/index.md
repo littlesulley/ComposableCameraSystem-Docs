@@ -8,7 +8,7 @@ End-to-end walkthroughs that take a realistic goal and build it from an empty pr
 
 ## Prerequisites
 
-All three tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
+All five tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
 
 - The plugin is installed and compiled into a C++ project.
 - `AComposableCameraPlayerCameraManager` is your `GameMode`'s PCM class (or your `PlayerController`'s override).
@@ -16,7 +16,7 @@ All three tutorials assume you've finished [Getting Started](../getting-started/
 
 You do not need to have read the full User Guide. Each tutorial links back to the concepts it leans on so you can drill down as needed.
 
-## The three walkthroughs
+## The five walkthroughs
 
 ### [Follow Camera](follow-camera.md)
 
@@ -42,11 +42,27 @@ Author a C++ transition that implements a specific blend shape (a bounce-and-set
 
 *Time to complete:* 30–45 minutes, plus IDE compile time.
 
+### [Writing a Custom Modifier](custom-modifier.md)
+
+Add a sprint FOV bump — when the player sprints, the active gameplay camera's field of view widens to 95° and blends back on release. Covers the full modifier authoring model: modifier class, data asset wrapper, priority, camera tags, and the reactivation blend.
+
+*Concepts covered:* [Modifiers](../user-guide/concepts/modifiers.md), [Custom Modifiers](../extending/custom-modifiers.md) authoring recipe, tag-based camera scoping, reactivation transition overrides.
+
+*Time to complete:* 15–20 minutes.
+
+### [Writing a Custom Action](custom-action.md)
+
+Author a look-at-target action that smoothly rotates the camera toward a world position over a configurable duration, expiring early if the angle tolerance is reached. Covers action lifecycle, execution timing, and combined `Duration | Condition` expiration.
+
+*Concepts covered:* [Actions](../user-guide/concepts/actions.md), [Camera Actions](../user-guide/camera-actions.md) authoring guide, `PostCameraTick` execution, condition-based expiration, camera-scoped lifetime.
+
+*Time to complete:* 20–30 minutes, plus IDE compile time.
+
 ---
 
 ## What's *not* a tutorial
 
-Tutorials focus on realistic end-to-end flows. Three things that might *sound* like tutorials but live elsewhere:
+Tutorials focus on realistic end-to-end flows. A few things that might *sound* like tutorials but live elsewhere:
 
 - **A walkthrough of the graph editor UI.** That's [The Graph Editor](../user-guide/graph-editor.md) in the User Guide — a UI tour rather than a build-this-thing recipe.
 - **Reference for every node's parameters.** That's the [Node Catalog](../reference/nodes.md) plus the per-class [C++ API Reference](../reference/api/index.md).
