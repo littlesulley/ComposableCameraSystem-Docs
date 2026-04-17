@@ -132,6 +132,6 @@ The in-game overlay (`showdebug composablecamera`) during the cutscene should sh
 
 ## Where next
 
-- [Writing a Custom Transition](custom-transition.md) — the next tutorial, authoring a bespoke blend shape and wiring it into the transition table for a specific `(gameplay, cutscene)` pair.
+- [Custom Transitions](../extending/custom-transitions.md) — authoring a bespoke blend shape (includes a worked bounce-and-settle example) and wiring it into the transition table for a specific `(gameplay, cutscene)` pair.
 - [Transitions & Blending](../user-guide/transitions-and-blending.md) — the full authoring guide for enter/exit transitions and the transition table.
 - [Context Stack](../user-guide/concepts/context-stack.md) — the deep concept page, including the invariants around auto-pop and the stack-position semantics behind `EnsureContext`.
