@@ -1,9 +1,6 @@
 # API Reference
 
-Auto-generated C++ reference for the ComposableCameraSystem plugin runtime module.
-
-!!! info "Regeneration"
-    This section is regenerated from the plugin headers via Doxygen + moxygen. The source of truth is the code; this page mirrors it.
+C++ reference for the ComposableCameraSystem plugin runtime module.
 
 ## Core Runtime
 
