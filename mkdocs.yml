@@ -2,9 +2,9 @@ site_name: ComposableCameraSystem
 site_url: https://sulley.cc/ComposableCameraSystem-Docs/
 site_description: A composable, data-driven camera framework for Unreal Engine 5.6
 site_author: Sulley (littlesulley)
-repo_url: https://github.com/littlesulley/ComposableCameraSystem-Docs
-repo_name: littlesulley/ComposableCameraSystem-Docs
-edit_uri: edit/main/docs/
+repo_url: https://github.com/littlesulley/ComposableCameraSystem
+repo_name: littlesulley/ComposableCameraSystem
+edit_uri: ""
 
 validation:
   links:
