@@ -12,7 +12,7 @@ These numbers are a guideline, not a hard limit — your project's overall frame
 
 Before reaching for heavyweight tools, try these:
 
-### `showdebug composablecamera`
+### `showdebug camera`
 
 The in-game overlay (see [showdebug reference](../reference/showdebug.md)) shows the active camera's node chain, context stack, and modifier state in real time. It won't give you timing numbers, but it will immediately answer:
 
@@ -35,6 +35,8 @@ For detailed per-function timing, Unreal Insights is the tool. The plugin's eval
 2. Play through the scenario you want to profile (camera activation, transition, rapid-fire switches).
 3. Stop tracing and open the `.utrace` file in **Unreal Insights** (standalone app shipped with the engine).
 
+![[assets/images/Pasted image 20260417085705.png]]
+
 ### What to look for
 
 In the **Timing Insights** view, filter by `ComposableCamera` or `PlayerCameraManager` to isolate camera-related scopes:
@@ -46,11 +48,14 @@ In the **Timing Insights** view, filter by `ComposableCamera` or `PlayerCameraMa
 - Individual node ticks (**`OnTickNode`**) — visible as child scopes under `TickCamera`. The most expensive shipped node is typically `CollisionPushNode` (line/sphere traces) followed by `PivotDampingNode` (spring math).
 - **Transition `Evaluate`** — visible during active blends. Cost depends on the transition type; inertialized transitions are cheap (polynomial math), spline transitions are moderate (spline eval + possibly traces).
 
+![[assets/images/PixPin_2026-04-17_08-59-07.png]]
 ### Reading the timeline
 
 During steady-state gameplay (one camera, no transitions), you should see a thin, consistent `DoUpdateCamera` bar each frame. During a transition, the bar doubles in width because both source and target cameras evaluate. After `CollapseFinishedTransitions` fires, the bar should return to single-camera width.
 
-If the bar stays wide after a transition should have finished, a transition is stuck or a reference leaf isn't collapsing — check `showdebug composablecamera` for a `pending destroy` entry that didn't clean up.
+If the bar stays wide after a transition should have finished, a transition is stuck or a reference leaf isn't collapsing — check `showdebug camera` for a `pending destroy` entry that didn't clean up.
+
+![[assets/images/PixPin_2026-04-17_09-03-57.png]]
 
 ## Common bottlenecks
 
@@ -111,6 +116,6 @@ A quick list to run through before shipping:
 
 ## See also
 
-- [`showdebug composablecamera`](../reference/showdebug.md) — the in-game overlay for live state inspection
+- [`showdebug camera`](../reference/showdebug.md) — the in-game overlay for live state inspection
 - [Custom Nodes → Hot-Path Rule](../extending/custom-nodes.md#the-hot-path-rule-repeated-because-it-matters) — the allocation constraint and how to comply
 - [FAQ → Performance](../faq/index.md#performance) — common performance questions and answers

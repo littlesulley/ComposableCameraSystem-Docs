@@ -67,7 +67,7 @@ That's the intended behavior when a node reads an actor position and another nod
 
 ### How expensive is each camera?
 
-The per-camera cost is dominated by the node chain. With the shipped ~8-node third-person composition, one camera evaluates in ~5–15 µs on a modern desktop CPU. A blend between two cameras roughly doubles that because both trees evaluate. The `CollisionPushNode` is usually the single most expensive shipped node — its trace/sphere-sweep dominates.
+The per-camera cost is dominated by the node chain. With the shipped ~8-node third-person composition, one camera evaluates in ~50 µs on a modern desktop CPU. A blend between two cameras roughly doubles that because both trees evaluate. The `CollisionPushNode` is usually the single most expensive shipped node — its trace/sphere-sweep dominates.
 
 Measure on your target hardware with Unreal Insights; don't rely on desktop numbers for mobile budgets.
 

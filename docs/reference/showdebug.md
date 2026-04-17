@@ -1,15 +1,15 @@
-# `showdebug composablecamera`
+# ShowDebug
 
 The in-game debug overlay for the plugin. In PIE (or in a packaged build launched with a development configuration), open the console and type:
 
 ```
-showdebug composablecamera
+showdebug camera
 ```
 
 The command toggles a multi-section overlay anchored to the top-left of the viewport. Each section covers a subsystem of the PCM — camera pose, the running camera, the context stack, active actions, and modifiers. This page documents what each section prints and how to read it.
 
 The overlay is implemented by `AComposableCameraPlayerCameraManager::DisplayDebug`. Calling `showdebug` with any custom category routes through Unreal's `DebugDisplay` dispatch and that override is where all the output comes from — so if you're staring at unexpected text, the canonical reference is `ComposableCameraPlayerCameraManager.cpp`.
-
+![[assets/images/Pasted image 20260417083751.png]]
 ## Color schema
 
 The overlay uses four colors to separate structure from data:
@@ -152,10 +152,10 @@ This is the section to check when a modifier seems registered but isn't affectin
 
 ## Tips
 
-- **Toggle off with the same command.** `showdebug composablecamera` is a toggle, not a switch — typing it again hides the overlay.
+- **Toggle off with the same command.** `showdebug camera` is a toggle, not a switch — typing it again hides the overlay.
 - **It's PIE-safe but not editor-safe.** The overlay requires a live PCM; it draws nothing in the editor viewport before PIE has started. Use it during gameplay, not asset authoring.
 - **Build type matters.** `DisplayDebug` is stripped in Shipping builds. Debug, Development, and Test all print.
-- **Other engine overlays still work.** You can combine `showdebug composablecamera` with `showdebug ai`, `showdebug input`, etc. The plugin's overlay stacks below whatever engine overlay is already up.
+- **Other engine overlays still work.** You can combine `showdebug camera` with `showdebug ai`, `showdebug input`, etc. The plugin's overlay stacks below whatever engine overlay is already up.
 - **Don't parse this output.** The format is for humans. If you need programmatic access to the same data, go through the subsystem directly — `PCM->RunningCamera`, `PCM->ContextStack`, `PCM->ModifierManager->GetModifierData()`.
 
 ## See also

@@ -30,6 +30,8 @@ Context Names
 
 Context names must be declared up front — you cannot push a context whose name isn't in this list.
 
+![[assets/images/Pasted image 20260417103503.png]]
+
 ## 2. Author the cinematic camera
 
 The cinematic shot for this tutorial is a simple rail orbit — camera rides a spline around the statue, looks at the statue the whole time. We'll reuse the shipped nodes.
@@ -39,10 +41,12 @@ Content Browser → right-click → **Composable Camera System → Camera Type A
 In the graph editor:
 
 - Declare one parameter: `FocusActor` (Actor Reference) — the statue.
-- Drop a **Spline** node. In Details, set `SplineType` = **BuiltInSpline**, and assign a `USplineComponent`-carrying actor (a `BP_OrbitRail` you've placed near the statue in the level). Set `Duration` = `3.0` so it completes the orbit in 3 seconds.
+- Drop a **Spline** node. In Details, set `SplineType` = **BuiltInSpline**, and assign a `USplineComponent`-carrying actor (a `BP_OrbitRail` you've placed near the statue in the level). Or you can expose this `Rail` pin so that callers can provide a Rail actor. Set `Duration` = `3.0` so it completes the orbit in 3 seconds.
 - Drop a **LookAt** node after it. `LookAtType` = **By Actor**, wire `FocusActor` into `TargetActor`, `ConstraintType` = **Hard** (the cutscene fully owns rotation — no player input).
 - Drop a **FieldOfView** node. `FieldOfView` = `45` for a tighter cinematic lens.
 - Wire the last node's output into the Output node.
+
+![[assets/images/Pasted image 20260417113207.png]]
 
 Save.
 
@@ -50,8 +54,8 @@ Save.
 
 Open `CT_StatueOrbit` and scroll the Details panel to **Transitions**. Set:
 
-- `EnterTransition` = a new `InertializedTransition` instance (instanced subobject). `TransitionDuration` = `0.8`.
-- `ExitTransition` = another new `InertializedTransition`. `TransitionDuration` = `0.6`.
+- `EnterTransition` = a new `InertializedTransition` instance (instanced subobject). `TransitionTime` = 1
+- `ExitTransition` = another new `InertializedTransition`. `TransitionTime` = `1`.
 
 These are fallbacks — they'll be used whenever nothing else wins the [five-tier resolution chain](../user-guide/concepts/transitions.md#the-five-tier-resolution-chain). For this tutorial they're enough; in production you'd typically route specific `(Source, Target)` pairs through the transition table.
 
@@ -69,7 +73,11 @@ This is a Blueprint call. Find or create a trigger actor with a `BoxComponent` f
     - `Camera Type` = `CT_StatueOrbit`
     - `Context Name` = `Cutscene` (dropdown — sourced from Project Settings)
     - `Transition Override` = leave empty (we'll let the type asset's `EnterTransition` drive it)
+    - `Activatio Params` = `Preserve Camera Pose = true`, `IsTransient = true`, `Life Time = 3`.
+    - `Rail` = The spline on which the camera will move on.
     - `Focus Actor` = the statue reference. (This pin appears because of the context parameter you declared on the type asset.)
+
+![[assets/images/Pasted image 20260417114851.png]]
 
 That's it — there is no separate "Push Camera Context" node. The PCM handles the push implicitly:
 
@@ -88,6 +96,8 @@ For this tutorial, just fire the pop on a timer three seconds in. In the same tr
 !!! note "Terminate vs PopCameraContext"
     `TerminateCurrentCamera` always pops the current top context — clean and typical for "end this cutscene now" gameplay. `PopCameraContext(Name)` is more targeted: it pops a specific context whether it's on top or buried. If buried, it's removed with no transition (there was no blend to perform); if on top, it behaves like `Terminate`. For this tutorial either works.
 
+![[assets/images/Pasted image 20260417115019.png]]
+
 When the pop fires, the PCM:
 
 - Consults `CT_StatueOrbit.ExitTransition` (tier 3) if it's set — in this case it is (`0.6s inertialized`).
@@ -103,6 +113,8 @@ Walk your character into the trigger. You should see:
 1. A smooth inertialized blend from the follow camera into the orbit.
 2. Three seconds of rail-driven cinematic.
 3. A smooth inertialized blend back to the follow camera, *tracking your character's current position*.
+
+![[assets/images/CutsceneContext.gif]]
 
 The in-game overlay (`showdebug composablecamera`) during the cutscene should show:
 
