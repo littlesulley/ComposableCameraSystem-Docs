@@ -95,7 +95,7 @@ Activate a composable camera from a DataTable row.
 
 The row is expected to be of type [FComposableCameraParameterTableRow](../structs/FComposableCameraParameterTableRow.md#fcomposablecameraparametertablerow). The row's CameraType is sync-loaded and its Parameters.Values map is parsed via [FComposableCameraParameterBlock::ApplyStringValue](../structs/FComposableCameraParameterBlock.md#applystringvalue) using the type's exposed parameters. Parse failures are logged to LogComposableCameraSystem and fall back to the node pin's authored default so activation never refuses to proceed on a single bad cell; parameters with no valid source at all end up at the runtime data block's zero-initialized default.
 
-If `OverrideParameters` is non-empty, its entries take precedence over the row-parsed values — an override entry for a given name replaces the row value entirely. This is how the K2 node's "Add Override Pin" feature works: the row provides the base configuration, and the override block carries per-call-site adjustments authored on the K2 node's dynamic pins.
+If OverrideParameters is non-empty, its entries take precedence over the row-parsed values — an override entry for a given name replaces the row value entirely. This is how the K2 node's "Add Override Pin" feature works: the row provides the base configuration, and the override block carries per-call-site adjustments authored on the K2 node's dynamic pins.
 
 This function is hidden from the Blueprint palette because designers should author DataTable-driven activation calls through UK2Node_ActivateComposableCameraFromDataTable instead — that K2 node provides a row-struct-filtered DataTable asset picker and a live row-name dropdown, and expands into this call at compile time.
 

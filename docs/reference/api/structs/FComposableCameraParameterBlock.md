@@ -13,7 +13,8 @@ The K2Node fills this automatically from its dynamic pins. C++ callers fill it m
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TMap< FName, FComposableCameraParameterValue >` | [`Values`](#values)  | Type-erased parameter storage, keyed by parameter name. |
+| `TMap< FName, FComposableCameraParameterValue >` | [`Values`](#values)  | Type-erased parameter storage, keyed by parameter name. POD-only — delegates are stored in DelegateValues instead. |
+| `TMap< FName, FScriptDelegate >` | [`DelegateValues`](#delegatevalues)  | Parallel storage for single-cast delegate bindings. Delegates are not POD and cannot be stored in the byte-array-based [FComposableCameraParameterValue](FComposableCameraParameterValue.md#fcomposablecameraparametervalue). They are applied at activation time via ApplyDelegateBindings (on the type asset), which writes them into the target node's FDelegateProperty UPROPERTY via reflection. |
 
 ---
 
@@ -23,7 +24,17 @@ The K2Node fills this automatically from its dynamic pins. C++ callers fill it m
 TMap< FName, FComposableCameraParameterValue > Values
 ```
 
-Type-erased parameter storage, keyed by parameter name.
+Type-erased parameter storage, keyed by parameter name. POD-only — delegates are stored in DelegateValues instead.
+
+---
+
+#### DelegateValues { #delegatevalues }
+
+```cpp
+TMap< FName, FScriptDelegate > DelegateValues
+```
+
+Parallel storage for single-cast delegate bindings. Delegates are not POD and cannot be stored in the byte-array-based [FComposableCameraParameterValue](FComposableCameraParameterValue.md#fcomposablecameraparametervalue). They are applied at activation time via ApplyDelegateBindings (on the type asset), which writes them into the target node's FDelegateProperty UPROPERTY via reflection.
 
 ### Public Methods
 
@@ -40,7 +51,8 @@ Type-erased parameter storage, keyed by parameter name.
 | `void` | [`SetObject`](#setobject) `inline` | Set a UObject pointer parameter. |
 | `void` | [`SetName`](#setname) `inline` | Set an FName parameter. FName is POD (NAME_INDEX + NAME_NUMBER, 8 bytes) and is memcpy-safe in the type-erased data storage. |
 | `void` | [`SetEnum`](#setenum) `inline` | Set an enum parameter. Enums are always normalized to int64 in the data storage, regardless of the backing property's actual underlying width. The narrow-cast into the final storage happens at resolve time, where the owning FProperty is known (see WriteEnumInt64ToProperty). |
-| `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name. |
+| `void` | [`SetDelegate`](#setdelegate) `inline` | Set a single-cast delegate binding. The delegate is stored in a parallel map (not the POD byte array) and applied at activation time via ApplyDelegateBindings on the type asset. |
+| `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name (either POD or delegate). |
 | `bool` | [`Get`](#get) `const` `inline` | Try to get a typed value. Returns false if not found or type mismatch. |
 | `int32` | [`CopyRawTo`](#copyrawto) `const` `inline` | Copy a parameter's raw bytes into a destination buffer. Returns the number of bytes copied, or 0 if not found. |
 
@@ -178,6 +190,18 @@ Set an enum parameter. Enums are always normalized to int64 in the data storage,
 
 ---
 
+#### SetDelegate { #setdelegate }
+
+`inline`
+
+```cpp
+inline void SetDelegate(FName Name, const FScriptDelegate & Value)
+```
+
+Set a single-cast delegate binding. The delegate is stored in a parallel map (not the POD byte array) and applied at activation time via ApplyDelegateBindings on the type asset.
+
+---
+
 #### HasValue { #hasvalue }
 
 `const` `inline`
@@ -186,7 +210,7 @@ Set an enum parameter. Enums are always normalized to int64 in the data storage,
 inline bool HasValue(FName Name) const
 ```
 
-Check if a parameter exists by name.
+Check if a parameter exists by name (either POD or delegate).
 
 ---
 

@@ -149,16 +149,7 @@ AActor * DebugSplineActor
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`DrawDebugSplinePoints`](#drawdebugsplinepoints-1)  |  |
 | `void` | [`BuildInternalSpline`](#buildinternalspline)  |  |
-
----
-
-#### DrawDebugSplinePoints { #drawdebugsplinepoints-1 }
-
-```cpp
-void DrawDebugSplinePoints(const TArray< FVector > & SplinePoints)
-```
 
 ---
 

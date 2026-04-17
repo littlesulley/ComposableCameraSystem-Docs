@@ -154,6 +154,7 @@ enum EComposableCameraPinType
 | `Struct` | Custom USTRUCT type. When this is selected, StructType must be set. |
 | `Name` | FName value. Stored as FName in the data block (POD: NAME_INDEX + NAME_NUMBER). |
 | `Enum` | UENUM value. Stored as a normalized int64 in the data block; the owning UEnum* is carried on the declaration and used to narrow-cast into the actual property's underlying width (uint8 / int32 / int64) at write time. When this is selected, EnumType must be set. |
+| `Delegate` | Single-cast dynamic delegate (FScriptDelegate). NOT stored in the data block — delegates carry heap-owned state and cannot be memcpy'd. Instead they are stored in a parallel map on [FComposableCameraParameterBlock](../structs/FComposableCameraParameterBlock.md#fcomposablecameraparameterblock) and applied at activation time via reflection (FDelegateProperty). Per-frame auto-resolve skips this type. When this is selected, SignatureFunction must be set to the UFunction defining the delegate's parameter/return signature. |
 
 Supported data types for camera node pins.
 

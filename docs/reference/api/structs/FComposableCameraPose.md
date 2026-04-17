@@ -11,7 +11,7 @@ Field categories:
 
 * Transform (Position, Rotation) — always lerped.
 
-* FOV dual-mode (FieldOfView, FocalLength) — a pose expresses FOV either in degrees (FieldOfView > 0) or via physical optics (FocalLength > 0), never both. Use [GetEffectiveFieldOfView()](#geteffectivefieldofview) to resolve to degrees. [BlendBy()](#blendby) resolves both sides to degrees BEFORE lerping and emits a degrees-mode result (FocalLength = -1). See the FOV resolution invariant section below.
+* FOV dual-mode (FieldOfView, FocalLength) — a pose expresses FOV either in degrees (FieldOfView > 0) or via physical optics (FocalLength > 0), never both. Use [GetEffectiveFieldOfView()](#geteffectivefieldofview) to resolve to degrees. [BlendBy()](#blendby) resolves both sides to degrees BEFORE lerping and emits a degrees-mode result (FocalLength = -1). See "FOV resolution invariant" in DesignDoc.
 
 * Physical camera (SensorWidth/Height, Aperture, FocusDistance, ISO, etc.) — always lerped; only applied to post-process when PhysicalCameraBlendWeight > 0 via [ApplyPhysicalCameraSettings()](#applyphysicalcamerasettings).
 

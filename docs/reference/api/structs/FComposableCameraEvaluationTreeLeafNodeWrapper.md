@@ -12,6 +12,7 @@ Leaf node wrapper: wraps a single running camera.
 | Return | Name | Description |
 |--------|------|-------------|
 | `TObjectPtr< AComposableCameraCameraBase >` | [`RunningCamera`](#runningcamera-3)  |  |
+| `bool` | [`bFrozen`](#bfrozen)  | When true, Evaluate returns the camera's cached pose without ticking it. |
 
 ---
 
@@ -20,6 +21,16 @@ Leaf node wrapper: wraps a single running camera.
 ```cpp
 TObjectPtr< AComposableCameraCameraBase > RunningCamera { nullptr }
 ```
+
+---
+
+#### bFrozen { #bfrozen }
+
+```cpp
+bool bFrozen { false }
+```
+
+When true, Evaluate returns the camera's cached pose without ticking it.
 
 ### Public Methods
 

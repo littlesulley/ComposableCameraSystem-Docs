@@ -14,6 +14,7 @@ Parameters when activating a new camera.
 | `bool` | [`bPreserveCameraPose`](#bpreservecamerapose)  |  |
 | `FTransform` | [`InitialTransform`](#initialtransform)  |  |
 | `bool` | [`bUseInitialTransformRotation`](#buseinitialtransformrotation)  |  |
+| `bool` | [`bFreezeSourceCamera`](#bfreezesourcecamera)  |  |
 | `bool` | [`bIsTransient`](#bistransient-1)  |  |
 | `float` | [`LifeTime`](#lifetime-1)  |  |
 
@@ -39,6 +40,14 @@ FTransform InitialTransform
 
 ```cpp
 bool bUseInitialTransformRotation { false }
+```
+
+---
+
+#### bFreezeSourceCamera { #bfreezesourcecamera }
+
+```cpp
+bool bFreezeSourceCamera { false }
 ```
 
 ---

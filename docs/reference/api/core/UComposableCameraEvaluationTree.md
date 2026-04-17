@@ -61,7 +61,7 @@ Evaluate the full tree for this frame and return the final blended camera pose.
 #### OnActivateNewCamera { #onactivatenewcamera }
 
 ```cpp
-void OnActivateNewCamera(AComposableCameraCameraBase * NewCamera, UComposableCameraTransitionBase * Transition)
+void OnActivateNewCamera(AComposableCameraCameraBase * NewCamera, UComposableCameraTransitionBase * Transition, bool bFreezeSourceCamera)
 ```
 
 Called when a new camera is activated, optionally with a transition from the current state.
@@ -71,7 +71,7 @@ Called when a new camera is activated, optionally with a transition from the cur
 #### OnActivateNewCameraWithReferenceSource { #onactivatenewcamerawithreferencesource }
 
 ```cpp
-void OnActivateNewCameraWithReferenceSource(AComposableCameraCameraBase * NewCamera, UComposableCameraTransitionBase * Transition, UComposableCameraDirector * SourceDirector)
+void OnActivateNewCameraWithReferenceSource(AComposableCameraCameraBase * NewCamera, UComposableCameraTransitionBase * Transition, UComposableCameraDirector * SourceDirector, bool bFreezeSourceCamera)
 ```
 
 Activate a new camera with a reference to another context's Director as the transition source. Used for inter-context transitions: the reference leaf evaluates the source context live (not frozen), producing smooth blending between contexts.
@@ -212,8 +212,21 @@ Recursively destroy all camera actors referenced by a subtree.
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `void` | [`FreezeSubtree`](#freezesubtree) `static` | Recursively set bFrozen on all leaf and reference-leaf nodes in a subtree. Used when bFreezeSourceCamera is set on activation — the entire outgoing blend tree holds its last pose during the transition. |
 | `void` | [`BuildNodeDebugString`](#buildnodedebugstring) `static` | Recursively build a debug string for a subtree. |
 | `void` | [`AddTreeReferencedObjects`](#addtreereferencedobjects) `static` | Recursively register UObject references in the tree for garbage collection. |
+
+---
+
+#### FreezeSubtree { #freezesubtree }
+
+`static`
+
+```cpp
+static void FreezeSubtree(const TSharedPtr< FComposableCameraEvaluationTreeNode > & Node, bool bFrozen)
+```
+
+Recursively set bFrozen on all leaf and reference-leaf nodes in a subtree. Used when bFreezeSourceCamera is set on activation — the entire outgoing blend tree holds its last pose during the transition.
 
 ---
 

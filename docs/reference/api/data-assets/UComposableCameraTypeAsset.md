@@ -274,6 +274,7 @@ Editor-only records describing each Get/Set variable graph node in the visual ed
 | `FString` | [`GetExposedParameterDefaultValue`](#getexposedparameterdefaultvalue) `const` | Resolve the effective default value for an exposed parameter. |
 | `FComposableCameraRuntimeDataBlock` | [`BuildRuntimeDataLayout`](#buildruntimedatalayout) `const` | Build a RuntimeDataBlock layout from this type asset's pin declarations, connections, exposed parameters, and internal variables. |
 | `void` | [`ApplyParameterBlock`](#applyparameterblock) `const` | Fill a RuntimeDataBlock's exposed parameter slots from a ParameterBlock. Called after [BuildRuntimeDataLayout()](#buildruntimedatalayout) and before the camera starts ticking. |
+| `void` | [`ApplyDelegateBindings`](#applydelegatebindings) `const` | Apply delegate bindings from the parameter block to the camera's node UPROPERTYs. |
 | `FPrimaryAssetId` | [`GetPrimaryAssetId`](#getprimaryassetid) `virtual` `const` |  |
 
 ---
@@ -329,6 +330,22 @@ void ApplyParameterBlock(FComposableCameraRuntimeDataBlock & DataBlock, const FC
 ```
 
 Fill a RuntimeDataBlock's exposed parameter slots from a ParameterBlock. Called after [BuildRuntimeDataLayout()](#buildruntimedatalayout) and before the camera starts ticking.
+
+---
+
+#### ApplyDelegateBindings { #applydelegatebindings }
+
+`const`
+
+```cpp
+void ApplyDelegateBindings(class AComposableCameraCameraBase * Camera, const FComposableCameraParameterBlock & Parameters) const
+```
+
+Apply delegate bindings from the parameter block to the camera's node UPROPERTYs.
+
+Called after ApplyParameterBlock. Iterates exposed parameters that are Delegate-typed and, for each one that has an entry in Parameters.DelegateValues, writes the FScriptDelegate into the target node's FDelegateProperty via reflection.
+
+Delegates cannot go through the data block (they're not POD) so this is a separate pass that operates directly on node instances.
 
 ---
 

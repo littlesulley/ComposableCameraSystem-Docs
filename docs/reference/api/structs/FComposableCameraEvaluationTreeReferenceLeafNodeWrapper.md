@@ -14,6 +14,7 @@ This node does NOT own any cameras — it just forwards evaluation to the refere
 | Return | Name | Description |
 |--------|------|-------------|
 | `TObjectPtr< UComposableCameraDirector >` | [`ReferencedDirector`](#referenceddirector)  | The Director from another context that this node evaluates. |
+| `bool` | [`bFrozen`](#bfrozen-1)  | When true, Evaluate returns the Director's last evaluated pose without re-evaluating it. |
 
 ---
 
@@ -24,6 +25,16 @@ TObjectPtr< UComposableCameraDirector > ReferencedDirector { nullptr }
 ```
 
 The Director from another context that this node evaluates.
+
+---
+
+#### bFrozen { #bfrozen-1 }
+
+```cpp
+bool bFrozen { false }
+```
+
+When true, Evaluate returns the Director's last evaluated pose without re-evaluating it.
 
 ### Public Methods
 

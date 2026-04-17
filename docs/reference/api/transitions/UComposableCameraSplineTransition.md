@@ -127,7 +127,6 @@ virtual FComposableCameraPose OnEvaluate_Implementation(float DeltaTime, const F
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`DrawDebugSpline`](#drawdebugspline)  |  |
-| `void` | [`DrawDebugSplinePoints`](#drawdebugsplinepoints)  |  |
 
 ---
 
@@ -135,12 +134,4 @@ virtual FComposableCameraPose OnEvaluate_Implementation(float DeltaTime, const F
 
 ```cpp
 void DrawDebugSpline(const FComposableCameraPose & StartPose, const FComposableCameraPose & TargetPose)
-```
-
----
-
-#### DrawDebugSplinePoints { #drawdebugsplinepoints }
-
-```cpp
-void DrawDebugSplinePoints(const TArray< FVector > & SplinePoints)
 ```

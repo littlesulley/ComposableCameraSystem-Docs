@@ -81,7 +81,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogComposableCameraSystem, Log, All)
 #### TryMapPropertyToPinType { #trymappropertytopintype }
 
 ```cpp
-inline bool TryMapPropertyToPinType(const FProperty * Property, EComposableCameraPinType & OutPinType, UScriptStruct *& OutStructType, UEnum *& OutEnumType)
+inline bool TryMapPropertyToPinType(const FProperty * Property, EComposableCameraPinType & OutPinType, UScriptStruct *& OutStructType, UEnum *& OutEnumType, UFunction ** OutSignatureFunction)
 ```
 
 Attempt to map an FProperty (from UClass reflection) to an EComposableCameraPinType.

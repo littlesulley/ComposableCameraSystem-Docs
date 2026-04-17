@@ -16,6 +16,7 @@ Describes a parameter exposed to callers from a camera type asset. Created when 
 | `EComposableCameraPinType` | [`PinType`](#pintype-2)  | The data type of this parameter (mirrors the source node pin's type). |
 | `TObjectPtr< UScriptStruct >` | [`StructType`](#structtype-1)  | For Struct types: the specific USTRUCT. |
 | `TObjectPtr< UEnum >` | [`EnumType`](#enumtype-1)  | For Enum types: the specific UEnum. Mirrors the source node pin's EnumType. |
+| `TObjectPtr< UFunction >` | [`SignatureFunction`](#signaturefunction)  | For Delegate types: the UFunction defining the delegate signature. Mirrors the source node pin's SignatureFunction. Used by the editor to emit a PC_Delegate pin with the correct MemberReference. Ignored for other pin types. |
 | `int32` | [`TargetNodeIndex`](#targetnodeindex-1)  | Which node this parameter feeds into (index in NodeTemplates). |
 | `FName` | [`TargetPinName`](#targetpinname-1)  | Which input pin on the target node this parameter feeds into. |
 | `bool` | [`bRequired`](#brequired)  | Whether the caller is required to provide this parameter. |
@@ -72,6 +73,16 @@ TObjectPtr< UEnum > EnumType = nullptr
 ```
 
 For Enum types: the specific UEnum. Mirrors the source node pin's EnumType.
+
+---
+
+#### SignatureFunction { #signaturefunction }
+
+```cpp
+TObjectPtr< UFunction > SignatureFunction = nullptr
+```
+
+For Delegate types: the UFunction defining the delegate signature. Mirrors the source node pin's SignatureFunction. Used by the editor to emit a PC_Delegate pin with the correct MemberReference. Ignored for other pin types.
 
 ---
 

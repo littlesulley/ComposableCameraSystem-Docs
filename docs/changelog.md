@@ -4,6 +4,25 @@ Reverse-chronological log of documentation updates. Each entry corresponds to a 
 
 Entries are written automatically; feel free to edit them if you want to reword or add context.
 
+## 2026-04-17 — plugin `2810fd5..92c6051`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/2810fd5eac84f7ca98d8adb0bd05de0a7a18445d...92c605191bfa3856cf4f1f3f96a30bb5fb7c866c))
+
+- `92c6051` Add OverridePin for ActivateCameraFromDataTable.
+
+**C++ API pages regenerated:** 14 classes modified (0 added, 14 modified, 0 removed).
+
+- Modified: `UComposableCameraBlueprintLibrary`, `UComposableCameraEvaluationTree`, `UComposableCameraTypeAsset`, `UComposableCameraPathGuidedTransition`, `UComposableCameraSplineTransition`, `FComposableCameraActivateParams`, `FComposableCameraEvaluationTreeLeafNodeWrapper`, `FComposableCameraEvaluationTreeReferenceLeafNodeWrapper`, `FComposableCameraExposedParameter`, `FComposableCameraNodePinDeclaration`, `FComposableCameraParameterBlock`, `FComposableCameraPose`, and the shared `Enumerations` and free-`Functions` pages.
+
+**Prose drafts added:** none — no new public node, transition, or modifier headers were added in this commit range, so the catalog pages (`docs/reference/nodes.md`, `transitions.md`, `modifiers.md`) were left untouched.
+
+**Flagged for review:**
+
+- The `ActivateComposableCameraFromDataTable` K2 node gained an **override-pin** mechanism this commit (the public runtime struct `FComposableCameraActivateParams` and the `UComposableCameraBlueprintLibrary` activation helpers were updated alongside the K2 node). `docs/reference/activate-camera-from-data-table.md` was already hand-edited for this in the previous docs commit (`31e8165`), so cross-check that the documented signature still matches the regenerated `FComposableCameraActivateParams` API page.
+- No internal design docs (`Docs/DesignDoc.md`, `Docs/EditorDesignDoc.md`, `Docs/ExecutionFlowExamples.md`) changed this run, so `docs/user-guide/concepts/*.md` does not need a concepts review.
+
+---
+
 ## 2026-04-16 — plugin `775fc66..2810fd5`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/775fc660c1a132c4549daa774d137f631926c4be...2810fd5eac84f7ca98d8adb0bd05de0a7a18445d))
