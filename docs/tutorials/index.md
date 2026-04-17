@@ -12,7 +12,7 @@ All three tutorials assume you've finished [Getting Started](../getting-started/
 
 - The plugin is installed and compiled into a C++ project.
 - `AComposableCameraPlayerCameraManager` is your `GameMode`'s PCM class (or your `PlayerController`'s override).
-- `showdebug composablecamera` prints the in-game overlay during PIE.
+- `showdebug camera` prints the in-game overlay during PIE.
 
 You do not need to have read the full User Guide. Each tutorial links back to the concepts it leans on so you can drill down as needed.
 
