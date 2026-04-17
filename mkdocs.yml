@@ -121,7 +121,7 @@ nav:
       - Transition Catalog: reference/transitions.md
       - Modifier Catalog: reference/modifiers.md
       - Project Settings: reference/project-settings.md
-      - showdebug composablecamera: reference/showdebug.md
+      - ShowDebug: reference/showdebug.md
       - 'C++ API Reference':
           - 'Overview': reference/api/index.md
           - 'Core Runtime':
