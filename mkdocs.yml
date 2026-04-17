@@ -6,6 +6,10 @@ repo_url: https://github.com/littlesulley/ComposableCameraSystem-Docs
 repo_name: littlesulley/ComposableCameraSystem-Docs
 edit_uri: edit/main/docs/
 
+validation:
+  links:
+    anchors: ignore          # attr_list { #id } anchors are invisible to the validator
+
 theme:
   name: shadcn
   custom_dir: overrides
