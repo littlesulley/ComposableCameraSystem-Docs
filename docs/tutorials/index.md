@@ -8,7 +8,7 @@ End-to-end walkthroughs that take a realistic goal and build it from an empty pr
 
 ## Prerequisites
 
-All five tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
+All four tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
 
 - The plugin is installed and compiled into a C++ project.
 - `AComposableCameraPlayerCameraManager` is your `GameMode`'s PCM class (or your `PlayerController`'s override).
@@ -16,7 +16,7 @@ All five tutorials assume you've finished [Getting Started](../getting-started/i
 
 You do not need to have read the full User Guide. Each tutorial links back to the concepts it leans on so you can drill down as needed.
 
-## The five walkthroughs
+## The four walkthroughs
 
 ### [Follow Camera](follow-camera.md)
 
@@ -34,29 +34,21 @@ Push a cutscene context during a scripted sequence, hand control to a cinematic 
 
 *Time to complete:* 20–30 minutes.
 
-### [Writing a Custom Transition](custom-transition.md)
+### [ADS / Aim Camera](ads-aim-camera.md)
 
-Author a C++ transition that implements a specific blend shape (a bounce-and-settle curve), expose it to data assets, and drop it into the transition table for a specific `(Source, Target)` pair. Also covers unit-testing the transition without a PCM or a level.
+Push an aim-down-sights context on right-click, blend into a tighter camera with lower FOV and slower sensitivity, pop back to the gameplay camera on release. A practical use of context pushing driven by held input rather than a trigger overlap.
 
-*Concepts covered:* [Transitions](../user-guide/concepts/transitions.md) pose-only contract, [Custom Transitions](../extending/custom-transitions.md) authoring recipe, [five-tier resolution chain](../user-guide/concepts/transitions.md#the-five-tier-resolution-chain).
+*Concepts covered:* [Context Stack](../user-guide/concepts/context-stack.md), context push via held input, inertialized transition tuning, per-weapon modifier layering via camera tags.
 
-*Time to complete:* 30–45 minutes, plus IDE compile time.
+*Time to complete:* 15–25 minutes.
 
-### [Writing a Custom Modifier](custom-modifier.md)
+### [Level Sequence Wrapper Camera](level-sequence-camera.md)
 
-Add a sprint FOV bump — when the player sprints, the active gameplay camera's field of view widens to 95° and blends back on release. Covers the full modifier authoring model: modifier class, data asset wrapper, priority, camera tags, and the reactivation blend.
+Wrap a ULevelSequence (Sequencer-authored camera animation) as a composable camera type using `KeyframeSequenceNode`. The sequence drives position, rotation, and optionally FOV, while the composable pipeline handles context pushing, transitions, and the return blend to gameplay.
 
-*Concepts covered:* [Modifiers](../user-guide/concepts/modifiers.md), [Custom Modifiers](../extending/custom-modifiers.md) authoring recipe, tag-based camera scoping, reactivation transition overrides.
+*Concepts covered:* `KeyframeSequenceNode`, relative-to-actor playback, `StayAtLastFrameTime`, transient camera lifetime, post-sequence node chaining.
 
-*Time to complete:* 15–20 minutes.
-
-### [Writing a Custom Action](custom-action.md)
-
-Author a look-at-target action that smoothly rotates the camera toward a world position over a configurable duration, expiring early if the angle tolerance is reached. Covers action lifecycle, execution timing, and combined `Duration | Condition` expiration.
-
-*Concepts covered:* [Actions](../user-guide/concepts/actions.md), [Camera Actions](../user-guide/camera-actions.md) authoring guide, `PostCameraTick` execution, condition-based expiration, camera-scoped lifetime.
-
-*Time to complete:* 20–30 minutes, plus IDE compile time.
+*Time to complete:* 20–30 minutes.
 
 ---
 
@@ -64,6 +56,7 @@ Author a look-at-target action that smoothly rotates the camera toward a world p
 
 Tutorials focus on realistic end-to-end flows. A few things that might *sound* like tutorials but live elsewhere:
 
+- **Authoring custom nodes, transitions, modifiers, and actions.** Those are extension recipes — see [Extending](../extending/index.md).
 - **A walkthrough of the graph editor UI.** That's [The Graph Editor](../user-guide/graph-editor.md) in the User Guide — a UI tour rather than a build-this-thing recipe.
 - **Reference for every node's parameters.** That's the [Node Catalog](../reference/nodes.md) plus the per-class [C++ API Reference](../reference/api/index.md).
 - **A deep dive on the Context Stack's implementation.** That's [Concepts → Context Stack](../user-guide/concepts/context-stack.md).

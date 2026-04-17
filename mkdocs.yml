@@ -100,14 +100,14 @@ nav:
       - tutorials/index.md
       - Follow Camera: tutorials/follow-camera.md
       - Cutscene Context: tutorials/cutscene-context.md
-      - Custom Transition: tutorials/custom-transition.md
-      - Custom Modifier: tutorials/custom-modifier.md
-      - Custom Action: tutorials/custom-action.md
+      - ADS / Aim Camera: tutorials/ads-aim-camera.md
+      - Level Sequence Camera: tutorials/level-sequence-camera.md
   - Extending:
       - extending/index.md
       - Custom Nodes: extending/custom-nodes.md
       - Custom Transitions: extending/custom-transitions.md
       - Custom Modifiers: extending/custom-modifiers.md
+      - Custom Actions: extending/custom-actions.md
       - Editor Hooks: extending/editor-hooks.md
   - FAQ: faq/index.md
   - Changelog: changelog.md
