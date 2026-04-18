@@ -108,20 +108,6 @@ virtual void BeginDestroy()
 virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinDeclaration > & OutPins) const
 ```
 
-### Private Attributes
-
-| Return | Name | Description |
-|--------|------|-------------|
-| `FDelegateHandle` | [`DrawDebugHandle`](#drawdebughandle-1)  |  |
-
----
-
-#### DrawDebugHandle { #drawdebughandle-1 }
-
-```cpp
-FDelegateHandle DrawDebugHandle
-```
-
 ### Private Methods
 
 | Return | Name | Description |
@@ -131,7 +117,6 @@ FDelegateHandle DrawDebugHandle
 | `std::pair< float, float >` | [`GetTanHalfHORAndAspectRatio`](#gettanhalfhorandaspectratio-1)  |  |
 | `std::pair< float, float >` | [`CalibrateRotationOffsetNewton`](#calibraterotationoffsetnewton-1)  |  |
 | `FVector` | [`GetCurrentPivot`](#getcurrentpivot-1)  |  |
-| `void` | [`DrawDebugInfo`](#drawdebuginfo-1)  |  |
 
 ---
 
@@ -171,12 +156,4 @@ std::pair< float, float > CalibrateRotationOffsetNewton(float TanHalfHOR, float 
 
 ```cpp
 FVector GetCurrentPivot()
-```
-
----
-
-#### DrawDebugInfo { #drawdebuginfo-1 }
-
-```cpp
-void DrawDebugInfo(AHUD * HUD, UCanvas * Canvas)
 ```

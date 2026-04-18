@@ -162,7 +162,6 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`ZInterpolator_T`](#zinterpolator_t)  |  |
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`YawInterpolator_T`](#yawinterpolator_t)  |  |
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`PitchInterpolator_T`](#pitchinterpolator_t)  |  |
-| `FDelegateHandle` | [`DrawDebugHandle`](#drawdebughandle)  |  |
 
 ---
 
@@ -204,14 +203,6 @@ TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > > YawInterpolator
 TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > > PitchInterpolator_T
 ```
 
----
-
-#### DrawDebugHandle { #drawdebughandle }
-
-```cpp
-FDelegateHandle DrawDebugHandle
-```
-
 ### Private Methods
 
 | Return | Name | Description |
@@ -224,7 +215,6 @@ FDelegateHandle DrawDebugHandle
 | `std::pair< float, float >` | [`CalibrateRotationOffsetNewton`](#calibraterotationoffsetnewton)  |  |
 | `FRotator` | [`GetScreenSpaceRotateAmount`](#getscreenspacerotateamount)  |  |
 | `FVector` | [`GetCurrentPivot`](#getcurrentpivot)  |  |
-| `void` | [`DrawDebugInfo`](#drawdebuginfo)  |  |
 
 ---
 
@@ -288,12 +278,4 @@ FRotator GetScreenSpaceRotateAmount(const FVector & Pivot, const FComposableCame
 
 ```cpp
 FVector GetCurrentPivot()
-```
-
----
-
-#### DrawDebugInfo { #drawdebuginfo }
-
-```cpp
-void DrawDebugInfo(AHUD * HUD, UCanvas * Canvas)
 ```

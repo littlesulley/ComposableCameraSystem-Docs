@@ -121,17 +121,3 @@ virtual void OnBeginPlay_Implementation(float DeltaTime, const FComposableCamera
 ```cpp
 virtual FComposableCameraPose OnEvaluate_Implementation(float DeltaTime, const FComposableCameraPose & CurrentSourcePose, const FComposableCameraPose & CurrentTargetPose)
 ```
-
-### Private Methods
-
-| Return | Name | Description |
-|--------|------|-------------|
-| `void` | [`DrawDebugSpline`](#drawdebugspline)  |  |
-
----
-
-#### DrawDebugSpline { #drawdebugspline }
-
-```cpp
-void DrawDebugSpline(const FComposableCameraPose & StartPose, const FComposableCameraPose & TargetPose)
-```

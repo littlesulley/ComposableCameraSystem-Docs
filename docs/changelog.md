@@ -4,6 +4,27 @@ Reverse-chronological log of documentation updates. Each entry corresponds to a 
 
 Entries are written automatically; feel free to edit them if you want to reword or add context.
 
+## 2026-04-18 — plugin `92c6051..b4521a0`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/92c605191bfa3856cf4f1f3f96a30bb5fb7c866c...b4521a02219cfc47eefe292ff3f638a6a7507ff0))
+
+- `b4521a0` Optimize editor, support profiling.
+
+**C++ API pages regenerated:** 3 classes modified (0 added, 3 modified, 0 removed).
+
+- Modified: `UComposableCameraScreenSpaceConstraintsNode`, `UComposableCameraScreenSpacePivotNode`, `UComposableCameraSplineTransition`.
+- The `docs/reference/api/index.md` template intro was also refreshed by `split_api.py` (no class content change there).
+- Note: the upstream commit additionally touched the public headers `ComposableCameraCameraNodeBase.h` and `ComposableCameraPivotOffsetNode.h`, but those edits did not alter any doxygen-extracted symbols, so no API pages were regenerated for them.
+
+**Prose drafts added:** none — no new public node, transition, or modifier headers were added in this commit range, so the catalog pages (`docs/reference/nodes.md`, `transitions.md`, `modifiers.md`) were left untouched.
+
+**Flagged for review:**
+
+- The commit message mentions profiling support. Skim the regenerated pages for any new profiling/timing members on `ScreenSpaceConstraintsNode`, `ScreenSpacePivotNode`, and `SplineTransition`; if the project exposes a user-facing profiler toggle, consider a short note in `docs/user-guide/debugging.md` (or equivalent) — this auto-updater does not infer user-guide prose.
+- No internal design docs (`Docs/DesignDoc.md`, `Docs/EditorDesignDoc.md`, `Docs/ExecutionFlowExamples.md`) changed this run, so `docs/user-guide/concepts/*.md` does not need a concepts review.
+
+---
+
 ## 2026-04-17 — plugin `2810fd5..92c6051`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/2810fd5eac84f7ca98d8adb0bd05de0a7a18445d...92c605191bfa3856cf4f1f3f96a30bb5fb7c866c))
