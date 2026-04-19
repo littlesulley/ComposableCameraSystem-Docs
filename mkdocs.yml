@@ -105,7 +105,7 @@ nav:
       - Follow Camera: tutorials/follow-camera.md
       - Cutscene Context: tutorials/cutscene-context.md
       - ADS / Aim Camera: tutorials/ads-aim-camera.md
-      - Level Sequence Camera: tutorials/level-sequence-camera.md
+      - Level Sequence Integration: tutorials/level-sequence-camera.md
   - Extending:
       - extending/index.md
       - Custom Nodes: extending/custom-nodes.md
@@ -144,7 +144,6 @@ nav:
             - 'UComposableCameraFieldOfViewNode': reference/api/nodes/UComposableCameraFieldOfViewNode.md
             - 'UComposableCameraFilmbackNode': reference/api/nodes/UComposableCameraFilmbackNode.md
             - 'UComposableCameraImpulseResolutionNode': reference/api/nodes/UComposableCameraImpulseResolutionNode.md
-            - 'UComposableCameraKeyframeSequenceNode': reference/api/nodes/UComposableCameraKeyframeSequenceNode.md
             - 'UComposableCameraLensNode': reference/api/nodes/UComposableCameraLensNode.md
             - 'UComposableCameraLookAtNode': reference/api/nodes/UComposableCameraLookAtNode.md
             - 'UComposableCameraMixingCameraNode': reference/api/nodes/UComposableCameraMixingCameraNode.md

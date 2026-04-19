@@ -150,9 +150,8 @@ Resolves impulse forces applied via volumes — the "camera got pushed by an exp
 
 Places the camera on a spline, with multiple spline math backends: BuiltInSpline (wraps `USplineComponent`), BezierSpline, CubicHermiteSpline, BasicSpline (B-spline), NURBSpline. Useful for rail-style fixed-path cameras — boss intro flyovers, zone-entry establishing shots — where the path is authored, not derived.
 
-### `KeyframeSequenceNode`
-
-Plays a `ULevelSequence` as camera motion. Lets you author a cinematic camera move in Sequencer and drop it into the composable camera pipeline, so it still participates in transitions, modifiers, and the context stack. Useful when a scripted camera beat needs to coexist with gameplay-driven logic.
+!!! note "Level Sequence integration"
+    Sequencer-driven cinematics are now handled by the [Play Cutscene Sequence](../tutorials/level-sequence-camera.md) Blueprint node, which manages context pushing, CameraCut-driven camera switching, and cleanup automatically. See the [Level Sequence Integration](../tutorials/level-sequence-camera.md) tutorial.
 
 ---
 

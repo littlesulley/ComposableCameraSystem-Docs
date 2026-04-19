@@ -42,11 +42,11 @@ Push an aim-down-sights context on right-click, blend into a tighter camera with
 
 *Time to complete:* 15–25 minutes.
 
-### [Level Sequence Wrapper Camera](level-sequence-camera.md)
+### [Level Sequence Integration](level-sequence-camera.md)
 
-Wrap a ULevelSequence (Sequencer-authored camera animation) as a composable camera type using `KeyframeSequenceNode`. The sequence drives position, rotation, and optionally FOV, while the composable pipeline handles context pushing, transitions, and the return blend to gameplay.
+Play a ULevelSequence as a CCS-managed cutscene using the **Play Cutscene Sequence** node. The plugin handles context pushing, camera cuts, proxy camera creation, and cleanup automatically — one Blueprint node is all it takes.
 
-*Concepts covered:* `KeyframeSequenceNode`, relative-to-actor playback, `StayAtLastFrameTime`, transient camera lifetime, post-sequence node chaining.
+*Concepts covered:* [Context Stack](../user-guide/concepts/context-stack.md), `Play Cutscene Sequence` async action, inter-context transitions, CameraCut track integration, `StopCutsceneSequence` for early termination.
 
 *Time to complete:* 20–30 minutes.
 

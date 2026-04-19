@@ -106,11 +106,9 @@ SplineNode        places the camera on a rail
 ```
 This uses `SplineNode`'s built-in spline backend — see the [Node Catalog](../reference/nodes.md) for which spline types it supports (Hermite, Bezier, Catmull-Rom, or the engine's `USplineComponent`).
 
-**Cinematic keyframe camera:**
-```
-KeyframeSequenceNode    plays a level sequence as camera motion
-```
-Just the one node — the sequence drives both position and rotation. Combine with a short `InertializedTransition` as the camera type's `EnterTransition` so entering and exiting the shot respects the prior camera's velocity.
+**Cinematic level sequence camera:**
+
+For level-sequence-driven cinematics, use the [Play Cutscene Sequence](../tutorials/level-sequence-camera.md) Blueprint node instead of authoring a camera type asset. It handles context pushing, LS playback, CameraCut-driven camera switching, and cleanup in a single call — no manual camera composition needed.
 
 **Aim / zoom camera** (typically activated on a context push during ADS):
 ```

@@ -36,7 +36,6 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraFieldOfViewNode`](nodes/UComposableCameraFieldOfViewNode.md)
 - [`UComposableCameraFilmbackNode`](nodes/UComposableCameraFilmbackNode.md)
 - [`UComposableCameraImpulseResolutionNode`](nodes/UComposableCameraImpulseResolutionNode.md)
-- [`UComposableCameraKeyframeSequenceNode`](nodes/UComposableCameraKeyframeSequenceNode.md)
 - [`UComposableCameraLensNode`](nodes/UComposableCameraLensNode.md)
 - [`UComposableCameraLookAtNode`](nodes/UComposableCameraLookAtNode.md)
 - [`UComposableCameraMixingCameraNode`](nodes/UComposableCameraMixingCameraNode.md)
