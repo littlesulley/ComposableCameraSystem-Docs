@@ -134,7 +134,7 @@ Not currently supported. Transitions must be C++. The four-phase lifecycle, `Ini
 - A custom `PlayerController` overrides the PCM class elsewhere. Grep for `PlayerCameraManagerClass = ...`.
 - The K2 node never ran — drop a print-string on its exec output to confirm.
 
-### `showdebug composablecamera` shows garbage in the overlay (NaN positions, missing fields).
+### `showdebug camera` shows garbage in the overlay (NaN positions, missing fields).
 
 Something in the node chain produced a bad pose and a downstream node propagated it. Step through the chain by adding a `FixedPoseNode` between each pair and checking which swap "fixes" the output — the node *before* the bad output is the culprit. File an issue with the composition if it's a shipped node.
 

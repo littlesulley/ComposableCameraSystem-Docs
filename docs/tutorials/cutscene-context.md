@@ -116,7 +116,7 @@ Walk your character into the trigger. You should see:
 
 ![[assets/images/CutsceneContext.gif]]
 
-The in-game overlay (`showdebug composablecamera`) during the cutscene should show:
+The in-game overlay (`showdebug camera`) during the cutscene should show:
 
 - Context Stack top: `Cutscene`
 - Full stack: `Gameplay, Cutscene`

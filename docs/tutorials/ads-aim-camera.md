@@ -42,16 +42,16 @@ The aim camera follows the same structural pattern as the gameplay camera — pi
 
 ```
 ReceivePivotActorNode     reads FollowTarget, publishes PivotPosition
+  → ControlRotateNode     same input, but slower sensitivity
   → PivotOffsetNode       closer shoulder offset
   → CameraOffsetNode      shorter boom
-  → ControlRotateNode     same input, but slower sensitivity
   → CollisionPushNode     collision still needed
   → FieldOfViewNode       zoomed FOV
 ```
 
 Drop these nodes in the graph editor and wire the exec chain from Start through to Output.
 
-![[assets/images/Pasted image 20260417154731.png]]
+![[assets/images/Pasted image 20260419210936.png]]
 
 ### Parameter values
 

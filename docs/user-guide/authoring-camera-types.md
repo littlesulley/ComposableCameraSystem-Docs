@@ -19,20 +19,23 @@ The node catalog in [Reference → Nodes](../reference/nodes.md) describes each 
 
 ```
 Start
+  → ControlRotateNode          orbits the camera with player input
   → ReceivePivotActorNode      reads the follow target and publishes its position
   → PivotOffsetNode            lifts the pivot to shoulder height
   → CameraOffsetNode           offsets the camera behind and to the side
-  → ControlRotateNode          orbits the camera with player input
   → CollisionPushNode          pushes in on wall collisions
   → FieldOfViewNode            sets FOV in degrees
 Output
 ```
 
 Drop nodes in roughly the order above and drag the exec pin from Start → first node → next → … → Output. The exec wire is the per-frame execution chain; each node reads the pose produced by its predecessor and writes a modified pose forward.
-![[assets/images/Pasted image 20260416222822.png]]
+![[assets/images/Pasted image 20260419205845.png]]
 
 !!! tip "Exec order matters"
-    Nodes run in strict exec-wire order. A `LookAtNode` that runs before `CollisionPushNode` makes the camera face the target *before* being pushed by a wall; reversing the order makes the camera face the target *after* being pushed. Neither is wrong — they give different feels. If a node's behavior surprises you, the first thing to check is where it sits on the exec chain.
+    Nodes run in strict exec-wire order. For example, a `LookAtNode` that runs before `CollisionPushNode` makes the camera face the target *before* being pushed by a wall; reversing the order makes the camera face the target *after* being pushed. Neither is wrong — they give different feels. If a node's behavior surprises you, the first thing to check is where it sits on the exec chain.
+
+!!! warning "Control Rotation node always places first"
+	 The Control Rotation should almost always be placed before any other position-altering nodes, e.g., the Pivot Damping node. 
 
 ## Data pins vs exec pins
 
@@ -61,7 +64,7 @@ Three things happen:
 - Any existing wire to the pin is removed (exposing and wiring are mutually exclusive — a pin is either driven by a wire, exposed to callers, or left at its authored default).
 - A new entry appears in the type asset's **Exposed Parameters** list (visible in the Details panel when no node is selected).
 - The pin renders in grey with an `(Exposed)` suffix, marking it as no longer wireable.
-![[assets/images/Pasted image 20260416223104.png]]
+![[assets/images/Pasted image 20260419210156.png]]
 The exposed parameter inherits its display name, tooltip, and `bRequired` flag from the C++ pin declaration on first exposure — from that point on, per-asset values are the source of truth. You can edit display name, tooltip, and required-ness in the Details panel without touching the underlying node.
 ![[assets/images/Pasted image 20260416223311.png]]
 !!! warning "Parameter names are identity"
