@@ -27,6 +27,8 @@ If you already have a suitable level sequence, skip to step 2. Otherwise:
 4. Add a **CameraCut track** (if one wasn't created automatically) and assign your `CineCameraActor` to it. The CameraCut track tells the engine which camera is active at each point in the sequence — this is how CCS knows which camera to activate.
 5. Save and close Sequencer.
 
+![[assets/images/Pasted image 20260419151034.png]]
+
 !!! tip "Multi-camera sequences"
     You can have multiple CineCameraActors in one level sequence. Add CameraCut sections for each one, and the engine will fire `SetViewTarget` at each cut boundary. CCS converts each cut into a proxy camera activation with a transition — so multi-camera edited sequences work automatically.
 
@@ -48,6 +50,8 @@ On Trigger Overlap Begin
       ├─ Cutscene Action ──> (cache in a variable if you need to stop early)
       └─ On Finished ──> (fires when the sequence ends naturally)
 ```
+
+![[assets/images/Pasted image 20260419151117.png]]
 
 That's it — one node. The action:
 
@@ -77,6 +81,8 @@ If you want the camera to hold on the sequence's last frame after playback ends 
 2. The **On Finished** exec pin still fires when the sequence reaches its end — use it to show your UI.
 3. When the player dismisses the UI, call **Stop Cutscene Sequence** to tear down the cutscene context.
 
+![[assets/images/Pasted image 20260419151212.png]]
+
 With `bPauseAtEnd = true`, the sequence player pauses on the last frame and the cutscene context stays alive, so the camera holds its final pose until you explicitly stop.
 
 ## 3. Context name setup
@@ -101,6 +107,8 @@ Enter PIE. Walk into the trigger. You should see:
 2. The sequence plays — the camera follows the keyframed motion. If the sequence has multiple CameraCut sections, each cut transitions smoothly between LS cameras.
 3. When the sequence finishes, the cutscene context pops and the camera blends back to gameplay — which has been tracking the character the entire time.
 
+![[assets/images/CustomModifiers.gif]]
+
 Open `showdebug camera`. During the sequence:
 
 ```
@@ -114,6 +122,8 @@ Context Stack (depth 2)
 The **Enter Transition** pin on the K2 node controls the inter-context blend from gameplay into the cutscene. Pass a `UComposableCameraTransitionDataAsset` — an `InertializedTransition` with `TransitionDuration = 0.6` is a good default. Inertialized preserves the gameplay camera's velocity at the blend start, avoiding a visible kink.
 
 The **Exit Transition** pin on `StopCutsceneSequence` controls the blend back to gameplay when the cutscene ends. If left empty, the system falls back to the resume camera's default enter transition via the [five-tier resolution chain](../user-guide/concepts/transitions.md#the-five-tier-resolution-chain).
+
+![[assets/images/Pasted image 20260419151331.png]]
 
 For sequences that end naturally (not via `StopCutsceneSequence`), the exit transition comes from the resolution chain — typically the gameplay camera's `EnterTransition`.
 
