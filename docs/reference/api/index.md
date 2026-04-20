@@ -45,7 +45,9 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraReceivePivotActorNode`](nodes/UComposableCameraReceivePivotActorNode.md)
 - [`UComposableCameraRelativeFixedPoseNode`](nodes/UComposableCameraRelativeFixedPoseNode.md)
 - [`UComposableCameraScreenSpaceConstraintsNode`](nodes/UComposableCameraScreenSpaceConstraintsNode.md)
+- [`UComposableCameraPostProcessNode`](nodes/UComposableCameraPostProcessNode.md)
 - [`UComposableCameraScreenSpacePivotNode`](nodes/UComposableCameraScreenSpacePivotNode.md)
+- [`UComposableCameraViewTargetProxyNode`](nodes/UComposableCameraViewTargetProxyNode.md)
 
 ## Transitions
 
@@ -61,6 +63,7 @@ Pose-blending transitions (`UComposableCamera*Transition`).
 - [`UComposableCameraSmoothTransition`](transitions/UComposableCameraSmoothTransition.md)
 - [`UComposableCameraSplineTransition`](transitions/UComposableCameraSplineTransition.md)
 - [`UComposableCameraTransitionBase`](transitions/UComposableCameraTransitionBase.md)
+- [`UComposableCameraViewTargetTransition`](transitions/UComposableCameraViewTargetTransition.md)
 
 ## Modifiers
 

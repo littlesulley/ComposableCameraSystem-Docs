@@ -153,7 +153,9 @@ nav:
             - 'UComposableCameraReceivePivotActorNode': reference/api/nodes/UComposableCameraReceivePivotActorNode.md
             - 'UComposableCameraRelativeFixedPoseNode': reference/api/nodes/UComposableCameraRelativeFixedPoseNode.md
             - 'UComposableCameraScreenSpaceConstraintsNode': reference/api/nodes/UComposableCameraScreenSpaceConstraintsNode.md
+            - 'UComposableCameraPostProcessNode': reference/api/nodes/UComposableCameraPostProcessNode.md
             - 'UComposableCameraScreenSpacePivotNode': reference/api/nodes/UComposableCameraScreenSpacePivotNode.md
+            - 'UComposableCameraViewTargetProxyNode': reference/api/nodes/UComposableCameraViewTargetProxyNode.md
           - 'Transitions':
             - 'UComposableCameraCubicTransition': reference/api/transitions/UComposableCameraCubicTransition.md
             - 'UComposableCameraCylindricalTransition': reference/api/transitions/UComposableCameraCylindricalTransition.md
@@ -165,6 +167,7 @@ nav:
             - 'UComposableCameraSmoothTransition': reference/api/transitions/UComposableCameraSmoothTransition.md
             - 'UComposableCameraSplineTransition': reference/api/transitions/UComposableCameraSplineTransition.md
             - 'UComposableCameraTransitionBase': reference/api/transitions/UComposableCameraTransitionBase.md
+            - 'UComposableCameraViewTargetTransition': reference/api/transitions/UComposableCameraViewTargetTransition.md
           - 'Modifiers':
             - 'UComposableCameraModifierBase': reference/api/modifiers/UComposableCameraModifierBase.md
             - 'UComposableCameraModifierManager': reference/api/modifiers/UComposableCameraModifierManager.md

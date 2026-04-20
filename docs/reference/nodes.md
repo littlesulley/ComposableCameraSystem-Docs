@@ -117,6 +117,12 @@ Authors physical-lens parameters on the pose: `FocalLength`, `Aperture`, `FocusD
 
 Authors sensor and aspect-ratio parameters: `SensorWidth`, `SensorHeight`, `SqueezeFactor`, `Overscan`, `ConstrainAspectRatio`, `OverrideAspectRatioAxisConstraint`, `AspectRatioAxisConstraint`. Sensor dimensions feed into the pose's focal-length-mode FOV resolution, so place this alongside `LensNode` when using physical lens authoring.
 
+### `PostProcessNode`
+
+Applies post-process settings to the camera pose. Works like a `PostProcessVolume` but scoped to a single camera type — only properties whose `bOverride_*` flag is true take effect; all others pass through from the camera component's baseline or from earlier nodes.
+
+Multiple `PostProcessNode`s in the same camera stack compose in execution order: later nodes override earlier ones for the same `bOverride_*` property. No pins are declared — `FPostProcessSettings` is configured entirely through the Details panel, matching the `PostProcessVolume` workflow UE artists are already familiar with.
+
 ### `OrthographicNode`
 
 Switches the pose into orthographic projection and authors `OrthographicWidth`, `OrthoNearClipPlane`, `OrthoFarClipPlane`. For top-down, side-scrolling, or isometric cameras.
