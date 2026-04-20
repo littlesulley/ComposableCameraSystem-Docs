@@ -27,9 +27,34 @@ Each action declares when it runs relative to the camera tick via `ExecutionType
 | Value | When it runs |
 |---|---|
 | `PreCameraTick` | Before the camera's node chain evaluates |
+| `PreNodeTick` | Immediately before a specific node evaluates (see below) |
+| `PostNodeTick` | Immediately after a specific node evaluates (see below) |
 | `PostCameraTick` | After the camera's node chain evaluates |
 
-This gives you control over whether the action operates on the pose *before* or *after* the node chain has done its work.
+`PreCameraTick` and `PostCameraTick` apply to the entire camera pose. `PreNodeTick` and `PostNodeTick` are node-scoped — they bracket one specific node in the chain. This gives you surgical control: you can, for example, intercept the pose right before `PivotDampingNode` runs to inject an override, or read the post-damping pose right after it.
+
+### Node-scoped execution (`PreNodeTick` / `PostNodeTick`)
+
+When `ExecutionType` is `PreNodeTick` or `PostNodeTick`, you must also set **`TargetNodeClass`** — a `TSubclassOf<UComposableCameraCameraNodeBase>` that names which node to target. The match is **exact class** (same rule as the Modifier system): the action fires only when `Node->GetClass() == TargetNodeClass`, not for subclasses.
+
+Two things to know about registration:
+
+- **Null `TargetNodeClass` is silently ignored.** If you add a `PreNodeTick` action without setting `TargetNodeClass`, `RegisterNodeAction` discards it — the action is never fired. Always set the class.
+- **Node must exist on the camera.** If the camera's node chain contains no node of that exact class, the action is registered but never invoked. It will still expire according to its `ExpirationType`.
+
+**Pose mutation order.** Node-scoped actions receive the pose in-place — `CurrentCameraPose` and `OutCameraPose` reference the same slot. This means:
+
+- A `PreNodeTick` action's writes are visible to the node that follows it.
+- A `PostNodeTick` action sees the node's output and its writes carry forward to the next node in the chain.
+- If multiple actions target the same node and timing, they fire in registration order.
+
+**Setting `TargetNodeClass` in Blueprint.** The field is hidden in the Details panel unless `ExecutionType` is `PreNodeTick` or `PostNodeTick` (controlled by `EditConditionHides`). Switch the execution type first, then the class picker appears.
+
+**Typical use cases:**
+
+- Override a parameter mid-chain without permanently changing a node's configuration (e.g. force `FieldOfViewNode` to a specific FOV for one second after a hit).
+- Read the pose at a known point in the chain for debug overlays or game logic without modifying it.
+- Apply an additive impulse to the pivot right before `PivotDampingNode` so the damper absorbs it naturally.
 
 ## Expiration types
 
