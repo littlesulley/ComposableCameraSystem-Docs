@@ -106,6 +106,7 @@ nav:
       - Cutscene Context: tutorials/cutscene-context.md
       - ADS / Aim Camera: tutorials/ads-aim-camera.md
       - Level Sequence Integration: tutorials/level-sequence-camera.md
+      - CCS Camera in Sequencer: tutorials/level-sequence-authoring.md
   - Extending:
       - extending/index.md
       - Custom Nodes: extending/custom-nodes.md

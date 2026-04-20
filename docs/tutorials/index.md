@@ -8,7 +8,7 @@ End-to-end walkthroughs that take a realistic goal and build it from an empty pr
 
 ## Prerequisites
 
-All four tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
+All five tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
 
 - The plugin is installed and compiled into a C++ project.
 - `AComposableCameraPlayerCameraManager` is your `GameMode`'s PCM class (or your `PlayerController`'s override).
@@ -16,7 +16,7 @@ All four tutorials assume you've finished [Getting Started](../getting-started/i
 
 You do not need to have read the full User Guide. Each tutorial links back to the concepts it leans on so you can drill down as needed.
 
-## The four walkthroughs
+## The five walkthroughs
 
 ### [Follow Camera](follow-camera.md)
 
@@ -47,6 +47,16 @@ Push an aim-down-sights context on right-click, blend into a tighter camera with
 Play a ULevelSequence as a CCS-managed cutscene using the **Play Cutscene Sequence** node. The plugin handles context pushing, camera cuts, proxy camera creation, and cleanup automatically — one Blueprint node is all it takes.
 
 *Concepts covered:* [Context Stack](../user-guide/concepts/context-stack.md), `Play Cutscene Sequence` async action, inter-context transitions, CameraCut track integration, `StopCutsceneSequence` for early termination.
+
+*Time to complete:* 20–30 minutes.
+
+### [CCS Camera in Sequencer](level-sequence-authoring.md)
+
+Author a CCS camera *inside* Sequencer rather than bridging an existing LS into CCS. Bind an `AComposableCameraLevelSequenceActor` as a Spawnable, assign a TypeAsset, and keyframe its exposed parameters (distances, FOV, offsets) directly on the Sequencer timeline. The camera runs the full CCS node chain each frame — collision push, screen-space constraints, spring damping — and projects its pose through the CameraCut track as if it were a standard `CineCameraActor`.
+
+*Concepts covered:* `AComposableCameraLevelSequenceActor`, `FComposableCameraTypeAssetReference`, Sequencer Spawnable bindings, keyframeable parameter tracks, PCM-independent evaluation.
+
+*Prerequisites:* [Follow Camera](follow-camera.md) and [Level Sequence Integration](level-sequence-camera.md) completed.
 
 *Time to complete:* 20–30 minutes.
 
