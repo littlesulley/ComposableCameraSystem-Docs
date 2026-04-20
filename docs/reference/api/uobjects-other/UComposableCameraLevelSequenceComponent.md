@@ -61,10 +61,11 @@ Reference to the Actor's UCineCameraComponent used as the viewport terminal. Ass
 |--------|------|-------------|
 |  | [`UComposableCameraLevelSequenceComponent`](#ucomposablecameralevelsequencecomponent-1)  |  |
 | `void` | [`OnRegister`](#onregister) `virtual` |  |
+| `void` | [`OnUnregister`](#onunregister) `virtual` |  |
 | `void` | [`BeginPlay`](#beginplay-3) `virtual` |  |
 | `void` | [`EndPlay`](#endplay-2) `virtual` |  |
 | `void` | [`TickComponent`](#tickcomponent) `virtual` |  |
-| `void` | [`SetEvaluationEnabled`](#setevaluationenabled)  | Gate for on-demand ticking. Default: false — a future ECS parameter instantiator can flip this to true when the component is actively the Camera Cut target or a participant in a running blend. The V1.4 simplified path auto-enables from OnRegister so every spawned LS actor ticks while the Spawnable is alive; the gating hook is kept as a forward-compat surface. |
+| `void` | [`SetEvaluationEnabled`](#setevaluationenabled)  | Gate for on-demand ticking. |
 | `bool` | [`IsEvaluationEnabled`](#isevaluationenabled) `const` `inline` |  |
 | `void` | [`SetParameterValue`](#setparametervalue)  | Forward-compat hooks for a future ECS instantiator. The V1.4 simplified path doesn't route through these — Sequencer's stock property tracks write the bag directly and the per-tick ApplyParameterBlock picks it up. Left in place (as no-ops) so external integrations don't have to be re-wired when a proper instantiator is added later. |
 | `void` | [`SetVariableValue`](#setvariablevalue)  |  |
@@ -86,6 +87,16 @@ UComposableCameraLevelSequenceComponent()
 
 ```cpp
 virtual void OnRegister()
+```
+
+---
+
+#### OnUnregister { #onunregister }
+
+`virtual`
+
+```cpp
+virtual void OnUnregister()
 ```
 
 ---
@@ -126,7 +137,9 @@ virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 void SetEvaluationEnabled(bool bEnabled)
 ```
 
-Gate for on-demand ticking. Default: false — a future ECS parameter instantiator can flip this to true when the component is actively the Camera Cut target or a participant in a running blend. The V1.4 simplified path auto-enables from OnRegister so every spawned LS actor ticks while the Spawnable is alive; the gating hook is kept as a forward-compat surface.
+Gate for on-demand ticking.
+
+Default: ON. OnRegister unconditionally calls SetEvaluationEnabled(true) so every LS Actor ticks by default (same as pre-Phase-G behavior). The ECS gate (UMovieSceneComposableCameraGateInstantiator) does not "open" the gate — it CLOSES it for tracked entities that aren't currently the Camera Cut Track's target or a blend participant. Entities it cannot reach (pre-upgrade LS assets, [UE](#ue) 5.5+ custom-binding spawnables the hook doesn't see, non-Sequencer hosts) keep the default always-on behavior, which is the correct graceful degradation.
 
 Toggling to false tears down the internal camera so the Actor can go fully idle; toggling back to true respawns it lazily on the first tick.
 

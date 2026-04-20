@@ -156,7 +156,6 @@ nav:
             - 'UComposableCameraReceivePivotActorNode': reference/api/nodes/UComposableCameraReceivePivotActorNode.md
             - 'UComposableCameraRelativeFixedPoseNode': reference/api/nodes/UComposableCameraRelativeFixedPoseNode.md
             - 'UComposableCameraScreenSpaceConstraintsNode': reference/api/nodes/UComposableCameraScreenSpaceConstraintsNode.md
-            - 'UComposableCameraPostProcessNode': reference/api/nodes/UComposableCameraPostProcessNode.md
             - 'UComposableCameraScreenSpacePivotNode': reference/api/nodes/UComposableCameraScreenSpacePivotNode.md
             - 'UComposableCameraViewTargetProxyNode': reference/api/nodes/UComposableCameraViewTargetProxyNode.md
           - 'Transitions':

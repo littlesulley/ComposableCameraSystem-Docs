@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-04-20 — plugin `b3d3e0a..${SHORT_NEW}`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/b3d3e0a28d7fbf4e35f46d29919b1de34aff5a14...62ebee2245d253eab08cf193b39be1f8f6d1041c))
+
+- `62ebee2` LS Phase G: ECS gate instantiator for cut/blend-only LS component tick
+
+**C++ API pages regenerated:** 1 class modified (`UComposableCameraLevelSequenceComponent` — `OnUnregister` added, `SetEvaluationEnabled` gate semantics inverted: default is now ON; the ECS gate instantiator closes it for idle entities rather than opening it for active ones).
+
+**Prose drafts added:** none.
+
+**Flagged for review:**
+
+- `SetEvaluationEnabled` gate semantics changed. The tutorial page `docs/tutorials/level-sequence-authoring.md` describes the gate as "default false / auto-enabled from OnRegister" — update that sentence to reflect the new default-ON / ECS-closes behavior.
+
+---
+
 ## 2026-04-20 — plugin `b4521a0..b3d3e0a`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/b4521a02219cfc47eefe292ff3f638a6a7507ff0...b3d3e0a28d7fbf4e35f46d29919b1de34aff5a14))

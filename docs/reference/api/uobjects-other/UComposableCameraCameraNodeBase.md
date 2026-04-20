@@ -6,7 +6,7 @@
 ```
 
 > **Inherits:** `UObject`
-> **Subclassed by:** [`UComposableCameraAutoRotateNode`](../nodes/UComposableCameraAutoRotateNode.md#ucomposablecameraautorotatenode), [`UComposableCameraBlueprintCameraNode`](../nodes/UComposableCameraBlueprintCameraNode.md#ucomposablecamerablueprintcameranode), [`UComposableCameraCameraOffsetNode`](../nodes/UComposableCameraCameraOffsetNode.md#ucomposablecameracameraoffsetnode), [`UComposableCameraCollisionPushNode`](../nodes/UComposableCameraCollisionPushNode.md#ucomposablecameracollisionpushnode), [`UComposableCameraComputeNodeBase`](UComposableCameraComputeNodeBase.md#ucomposablecameracomputenodebase), [`UComposableCameraControlRotateNode`](../nodes/UComposableCameraControlRotateNode.md#ucomposablecameracontrolrotatenode), [`UComposableCameraFieldOfViewNode`](../nodes/UComposableCameraFieldOfViewNode.md#ucomposablecamerafieldofviewnode), [`UComposableCameraFilmbackNode`](../nodes/UComposableCameraFilmbackNode.md#ucomposablecamerafilmbacknode), [`UComposableCameraImpulseResolutionNode`](../nodes/UComposableCameraImpulseResolutionNode.md#ucomposablecameraimpulseresolutionnode), [`UComposableCameraLensNode`](../nodes/UComposableCameraLensNode.md#ucomposablecameralensnode), [`UComposableCameraLookAtNode`](../nodes/UComposableCameraLookAtNode.md#ucomposablecameralookatnode), [`UComposableCameraMixingCameraNode`](../nodes/UComposableCameraMixingCameraNode.md#ucomposablecameramixingcameranode), [`UComposableCameraOrthographicNode`](../nodes/UComposableCameraOrthographicNode.md#ucomposablecameraorthographicnode), [`UComposableCameraPivotDampingNode`](../nodes/UComposableCameraPivotDampingNode.md#ucomposablecamerapivotdampingnode), [`UComposableCameraPivotOffsetNode`](../nodes/UComposableCameraPivotOffsetNode.md#ucomposablecamerapivotoffsetnode), [`UComposableCameraReceivePivotActorNode`](../nodes/UComposableCameraReceivePivotActorNode.md#ucomposablecamerareceivepivotactornode), [`UComposableCameraRelativeFixedPoseNode`](../nodes/UComposableCameraRelativeFixedPoseNode.md#ucomposablecamerarelativefixedposenode), [`UComposableCameraRotationConstraints`](UComposableCameraRotationConstraints.md#ucomposablecamerarotationconstraints), [`UComposableCameraScreenSpaceConstraintsNode`](../nodes/UComposableCameraScreenSpaceConstraintsNode.md#ucomposablecamerascreenspaceconstraintsnode), [`UComposableCameraScreenSpacePivotNode`](../nodes/UComposableCameraScreenSpacePivotNode.md#ucomposablecamerascreenspacepivotnode), [`UComposableCameraPostProcessNode`](../nodes/UComposableCameraPostProcessNode.md#ucomposablecamerapostprocessnode), [`UComposableCameraSplineNode`](../splines/UComposableCameraSplineNode.md#ucomposablecamerasplinenode), [`UComposableCameraViewTargetProxyNode`](../nodes/UComposableCameraViewTargetProxyNode.md#ucomposablecameraviewtargetproxynode)
+> **Subclassed by:** [`UComposableCameraAutoRotateNode`](../nodes/UComposableCameraAutoRotateNode.md#ucomposablecameraautorotatenode), [`UComposableCameraBlueprintCameraNode`](../nodes/UComposableCameraBlueprintCameraNode.md#ucomposablecamerablueprintcameranode), [`UComposableCameraCameraOffsetNode`](../nodes/UComposableCameraCameraOffsetNode.md#ucomposablecameracameraoffsetnode), [`UComposableCameraCollisionPushNode`](../nodes/UComposableCameraCollisionPushNode.md#ucomposablecameracollisionpushnode), [`UComposableCameraComputeNodeBase`](UComposableCameraComputeNodeBase.md#ucomposablecameracomputenodebase), [`UComposableCameraControlRotateNode`](../nodes/UComposableCameraControlRotateNode.md#ucomposablecameracontrolrotatenode), [`UComposableCameraFieldOfViewNode`](../nodes/UComposableCameraFieldOfViewNode.md#ucomposablecamerafieldofviewnode), [`UComposableCameraFilmbackNode`](../nodes/UComposableCameraFilmbackNode.md#ucomposablecamerafilmbacknode), [`UComposableCameraImpulseResolutionNode`](../nodes/UComposableCameraImpulseResolutionNode.md#ucomposablecameraimpulseresolutionnode), [`UComposableCameraLensNode`](../nodes/UComposableCameraLensNode.md#ucomposablecameralensnode), [`UComposableCameraLookAtNode`](../nodes/UComposableCameraLookAtNode.md#ucomposablecameralookatnode), [`UComposableCameraMixingCameraNode`](../nodes/UComposableCameraMixingCameraNode.md#ucomposablecameramixingcameranode), [`UComposableCameraOrthographicNode`](../nodes/UComposableCameraOrthographicNode.md#ucomposablecameraorthographicnode), [`UComposableCameraPivotDampingNode`](../nodes/UComposableCameraPivotDampingNode.md#ucomposablecamerapivotdampingnode), [`UComposableCameraPivotOffsetNode`](../nodes/UComposableCameraPivotOffsetNode.md#ucomposablecamerapivotoffsetnode), [`UComposableCameraPostProcessNode`](../nodes/UComposableCameraPostProcessNode.md#ucomposablecamerapostprocessnode), [`UComposableCameraReceivePivotActorNode`](../nodes/UComposableCameraReceivePivotActorNode.md#ucomposablecamerareceivepivotactornode), [`UComposableCameraRelativeFixedPoseNode`](../nodes/UComposableCameraRelativeFixedPoseNode.md#ucomposablecamerarelativefixedposenode), [`UComposableCameraRotationConstraints`](UComposableCameraRotationConstraints.md#ucomposablecamerarotationconstraints), [`UComposableCameraScreenSpaceConstraintsNode`](../nodes/UComposableCameraScreenSpaceConstraintsNode.md#ucomposablecamerascreenspaceconstraintsnode), [`UComposableCameraScreenSpacePivotNode`](../nodes/UComposableCameraScreenSpacePivotNode.md#ucomposablecamerascreenspacepivotnode), [`UComposableCameraSplineNode`](../splines/UComposableCameraSplineNode.md#ucomposablecamerasplinenode), [`UComposableCameraViewTargetProxyNode`](../nodes/UComposableCameraViewTargetProxyNode.md#ucomposablecameraviewtargetproxynode)
 
 Base node for all camera nodes.
 
@@ -19,6 +19,8 @@ Base node for all camera nodes.
 | `FGameplayTag` | [`GetOwningCameraTag`](#getowningcameratag) `const` |  |
 | `AComposableCameraCameraBase *` | [`GetOwningCamera`](#getowningcamera) `const` `inline` |  |
 | `AComposableCameraPlayerCameraManager *` | [`GetOwningPlayerCameraManager`](#getowningplayercameramanager-1) `const` `inline` |  |
+| `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility`](#getlevelsequencecompatibility) `const` | Declare how this node behaves when evaluated without a PCM (Level Sequence path). Default: Compatible. Override on nodes that need the viewport / player controller / HUD, or that spawn new cameras through the PCM. See the enum comment. |
+| `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation) `virtual` `const` `inline` |  |
 | `void` | [`GetPinDeclarations`](#getpindeclarations) `const` | Declare this node's input and output data pins. Override in subclasses to define pins. The editor reads these to generate visual pins, and the runtime uses them to allocate the RuntimeDataBlock. |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-5) `virtual` `const` `inline` |  |
 | `void` | [`SetRuntimeDataBlock`](#setruntimedatablock) `inline` | Set the runtime data block for this node. Called during camera instantiation from type assets. |
@@ -110,6 +112,30 @@ inline AComposableCameraCameraBase * GetOwningCamera() const
 
 ```cpp
 inline AComposableCameraPlayerCameraManager * GetOwningPlayerCameraManager() const
+```
+
+---
+
+#### GetLevelSequenceCompatibility { #getlevelsequencecompatibility }
+
+`const`
+
+```cpp
+EComposableCameraNodeLevelSequenceCompatibility GetLevelSequenceCompatibility() const
+```
+
+Declare how this node behaves when evaluated without a PCM (Level Sequence path). Default: Compatible. Override on nodes that need the viewport / player controller / HUD, or that spawn new cameras through the PCM. See the enum comment.
+
+BlueprintNativeEvent so BP-authored camera nodes (subclasses of [UComposableCameraBlueprintCameraNode](../nodes/UComposableCameraBlueprintCameraNode.md#ucomposablecamerablueprintcameranode)) can declare their compatibility alongside native nodes. C++ overrides go on the _Implementation below; Blueprint subclasses override via a "Get Level Sequence Compatibility" BlueprintImplementableEvent node in their graph. External callers use the plain method name — the generated dispatcher routes to the BP override if present, else the _Implementation.
+
+---
+
+#### GetLevelSequenceCompatibility_Implementation { #getlevelsequencecompatibility_implementation }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline EComposableCameraNodeLevelSequenceCompatibility GetLevelSequenceCompatibility_Implementation() const
 ```
 
 ---
@@ -640,6 +666,8 @@ This node's index in the camera type asset's NodeTemplates array.
 | `bool` | [`ShouldAutoResolveInputPins`](#shouldautoresolveinputpins) `virtual` `const` `inline` | Opt-out hook for the auto-resolve-before-tick behavior. Override and return false on nodes that manage their own pin reads (e.g. nodes whose UPROPERTYs must survive across frames or are written by external actors mid-tick). |
 | `void` | [`OnInitialize`](#oninitialize)  | Per-activation one-shot initialization. Called exactly once per camera activation, after OwningCamera / OwningPlayerCameraManager / RuntimeDataBlock have all been wired. This is the hook for caching refs, instantiating internal objects, reading exposed parameters, and seeding any per-activation state the node needs before the first Tick. |
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-3) `virtual` `inline` |  |
+| `void` | [`OnFirstTickNode`](#onfirstticknode)  | Called exactly once on the first TickNode after activation, immediately after [ResolveAllInputPins()](#resolveallinputpins) and immediately before [OnTickNode()](#onticknode). |
+| `void` | [`OnFirstTickNode_Implementation`](#onfirstticknode_implementation) `virtual` `inline` |  |
 | `void` | [`OnTickNode`](#onticknode)  | Main node logic implemented here. This node can read/write pin values and/or CameraPose. |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-5) `virtual` `inline` |  |
 
@@ -671,6 +699,8 @@ Nodes that need the outgoing camera's pose (what BeginPlayNode used to receive a
 
 BlueprintNativeEvent: Blueprint subclasses can override "InitializeNode" to replace the C++ implementation. C++ subclasses override OnInitialize_Implementation and should call Super when chaining.
 
+NOTE: Input pin values are NOT yet resolved when this is called. Do not read pin-backed UPROPERTYs here to seed per-frame state — use OnFirstTickNode instead, which runs after the first [ResolveAllInputPins()](#resolveallinputpins).
+
 ---
 
 #### OnInitialize_Implementation { #oninitialize_implementation-3 }
@@ -679,6 +709,32 @@ BlueprintNativeEvent: Blueprint subclasses can override "InitializeNode" to repl
 
 ```cpp
 virtual inline void OnInitialize_Implementation()
+```
+
+---
+
+#### OnFirstTickNode { #onfirstticknode }
+
+```cpp
+void OnFirstTickNode()
+```
+
+Called exactly once on the first TickNode after activation, immediately after [ResolveAllInputPins()](#resolveallinputpins) and immediately before [OnTickNode()](#onticknode).
+
+This is the correct place to seed per-frame state that depends on live input pin values (e.g. initializing a "last position" tracker to the actual runtime position rather than the UPROPERTY default). By the time this fires, all pin-backed UPROPERTYs on this node already hold their resolved runtime values.
+
+The flag is reset in [Initialize()](#initialize-1), so re-activating the camera triggers this hook again on the new first frame.
+
+Default implementation is empty. C++ subclasses override OnFirstTickNode_Implementation. Blueprint subclasses override "FirstTickNode".
+
+---
+
+#### OnFirstTickNode_Implementation { #onfirstticknode_implementation }
+
+`virtual` `inline`
+
+```cpp
+virtual inline void OnFirstTickNode_Implementation()
 ```
 
 ---
@@ -708,6 +764,22 @@ Main node logic implemented here. This node can read/write pin values and/or Cam
 ```cpp
 virtual inline void OnTickNode_Implementation(float DeltaTime, const FComposableCameraPose & CurrentCameraPose, FComposableCameraPose & OutCameraPose)
 ```
+
+### Private Attributes
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `bool` | [`bHasHadFirstTick`](#bhashadfirsttick)  | Set to true after the first TickNode call. Cleared by [Initialize()](#initialize-1) so re-activation re-triggers OnFirstTickNode on the new first frame. |
+
+---
+
+#### bHasHadFirstTick { #bhashadfirsttick }
+
+```cpp
+bool bHasHadFirstTick = false
+```
+
+Set to true after the first TickNode call. Cleared by [Initialize()](#initialize-1) so re-activation re-triggers OnFirstTickNode on the new first frame.
 
 ### Private Methods
 
