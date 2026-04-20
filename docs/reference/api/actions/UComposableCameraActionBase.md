@@ -15,6 +15,7 @@ A camera action is a hook where you can do anything before/after a camera is eva
 | Return | Name | Description |
 |--------|------|-------------|
 | `EComposableCameraActionExecutionType` | [`ExecutionType`](#executiontype)  |  |
+| `TSubclassOf< UComposableCameraCameraNodeBase >` | [`TargetNodeClass`](#targetnodeclass)  |  |
 | `uint8` | [`ExpirationType`](#expirationtype)  |  |
 | `float` | [`Duration`](#duration-2)  |  |
 | `bool` | [`bOnlyForCurrentCamera`](#bonlyforcurrentcamera)  |  |
@@ -26,6 +27,14 @@ A camera action is a hook where you can do anything before/after a camera is eva
 
 ```cpp
 EComposableCameraActionExecutionType ExecutionType {  }
+```
+
+---
+
+#### TargetNodeClass { #targetnodeclass }
+
+```cpp
+TSubclassOf< UComposableCameraCameraNodeBase > TargetNodeClass
 ```
 
 ---

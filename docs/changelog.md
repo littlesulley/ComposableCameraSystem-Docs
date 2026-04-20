@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-04-21 — plugin `62ebee2..${SHORT_NEW}`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/62ebee2245d253eab08cf193b39be1f8f6d1041c...716769c2e4c709e9dec4677b877eebba8a8ae92c))
+
+- `716769c` Implement PreNodeTick / PostNodeTick camera actions.
+
+**C++ API pages regenerated:** 2 classes modified:
+
+- `UComposableCameraActionBase` — `PreNodeTick` and `PostNodeTick` execution types are now fully implemented (removing the `@TODO` stubs). New `TargetNodeClass` field (`TSubclassOf<UComposableCameraCameraNodeBase>`) added; only shown in the Details panel when `ExecutionType` is `PreNodeTick` or `PostNodeTick`.
+- `AComposableCameraCameraBase` — new `PreNodeTickActions` / `PostNodeTickActions` arrays (non-UPROPERTY hot-path cache) and `RegisterNodeAction` / `UnregisterNodeAction` methods for PCM-side bookkeeping.
+
+**Prose drafts added:** none.
+
+**Flagged for review:**
+
+- The [Camera Actions](../user-guide/camera-actions.md) User Guide page likely still describes `PreNodeTick` / `PostNodeTick` as "not yet implemented" — update that page to document `TargetNodeClass` usage and the exact-class-match semantics.
+
+---
+
 ## 2026-04-20 — plugin `b3d3e0a..${SHORT_NEW}`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/b3d3e0a28d7fbf4e35f46d29919b1de34aff5a14...62ebee2245d253eab08cf193b39be1f8f6d1041c))

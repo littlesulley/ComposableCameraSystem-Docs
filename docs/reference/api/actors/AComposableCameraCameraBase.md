@@ -23,6 +23,8 @@ Base camera class.
 | `FOnPostTick` | [`OnPostTick`](#onposttick)  |  |
 | `FOnActionPreTick` | [`OnActionPreTick`](#onactionpretick)  |  |
 | `FOnActionPostTick` | [`OnActionPostTick`](#onactionposttick)  |  |
+| `TArray< UComposableCameraActionBase * >` | [`PreNodeTickActions`](#prenodetickactions)  | Node-scoped actions fired around each node's TickNode. The PCM registers actions here when their ExecutionType is PreNodeTick / PostNodeTick (see [AComposableCameraPlayerCameraManager::AddCameraAction](AComposableCameraPlayerCameraManager.md#addcameraaction) / BindCameraActionsForNewCamera). Matching is by exact class (Node->GetClass() == Action->TargetNodeClass), same rule as the Modifier system. |
+| `TArray< UComposableCameraActionBase * >` | [`PostNodeTickActions`](#postnodetickactions)  |  |
 | `FComposableCameraPose` | [`CameraPose`](#camerapose)  |  |
 | `FComposableCameraPose` | [`LastFrameCameraPose`](#lastframecamerapose)  |  |
 | `bool` | [`bIsTransient`](#bistransient)  |  |
@@ -123,6 +125,26 @@ FOnActionPreTick OnActionPreTick
 
 ```cpp
 FOnActionPostTick OnActionPostTick
+```
+
+---
+
+#### PreNodeTickActions { #prenodetickactions }
+
+```cpp
+TArray< UComposableCameraActionBase * > PreNodeTickActions
+```
+
+Node-scoped actions fired around each node's TickNode. The PCM registers actions here when their ExecutionType is PreNodeTick / PostNodeTick (see [AComposableCameraPlayerCameraManager::AddCameraAction](AComposableCameraPlayerCameraManager.md#addcameraaction) / BindCameraActionsForNewCamera). Matching is by exact class (Node->GetClass() == Action->TargetNodeClass), same rule as the Modifier system.
+
+These are NOT UPROPERTY — ownership lives on the PCM's CameraActions UPROPERTY TSet, which is the GC root. This camera-local view is just a hot-path iteration cache; the PCM clears it via UnregisterNodeAction when an action expires, and EndPlay clears it defensively.
+
+---
+
+#### PostNodeTickActions { #postnodetickactions }
+
+```cpp
+TArray< UComposableCameraActionBase * > PostNodeTickActions
 ```
 
 ---
@@ -245,6 +267,8 @@ Empty for type-asset cameras activated without any parameter overrides.
 | `void` | [`ApplyModifiers`](#applymodifiers)  |  |
 | `void` | [`BeginPlayCamera`](#beginplaycamera)  | Runs the BeginPlay compute chain: walks ComputeNodes in order and calls ExecuteBeginPlay on each. Called exactly once per activation from AActor::BeginPlay, after per-node Initialize has run for every node. |
 | `FComposableCameraPose` | [`TickCamera`](#tickcamera)  |  |
+| `void` | [`RegisterNodeAction`](#registernodeaction)  |  |
+| `void` | [`UnregisterNodeAction`](#unregisternodeaction)  |  |
 | `UComposableCameraCameraNodeBase *` | [`GetNodeByClass`](#getnodebyclass)  |  |
 | `AComposableCameraPlayerCameraManager *` | [`GetOwningPlayerCameraManager`](#getowningplayercameramanager) `inline` |  |
 | `FComposableCameraPose` | [`GetCameraPose`](#getcamerapose) `const` `inline` |  |
@@ -328,6 +352,22 @@ Compute nodes that need the outgoing camera pose read it from OwningPlayerCamera
 
 ```cpp
 FComposableCameraPose TickCamera(float DeltaTime)
+```
+
+---
+
+#### RegisterNodeAction { #registernodeaction }
+
+```cpp
+void RegisterNodeAction(UComposableCameraActionBase * Action)
+```
+
+---
+
+#### UnregisterNodeAction { #unregisternodeaction }
+
+```cpp
+void UnregisterNodeAction(UComposableCameraActionBase * Action)
 ```
 
 ---
