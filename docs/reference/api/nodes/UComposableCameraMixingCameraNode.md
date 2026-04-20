@@ -76,9 +76,10 @@ FOnReceiveMixingCameraWeights OnReceiveMixingCameraWeights
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-5) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-9) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-10) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-9) `virtual` `const` |  |
+| `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation-2) `virtual` `const` `inline` |  |
 | `void` | [`SetUpdateWeights`](#setupdateweights)  |  |
 
 ---
@@ -93,7 +94,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-9 }
+#### OnTickNode_Implementation { #onticknode_implementation-10 }
 
 `virtual`
 
@@ -119,6 +120,16 @@ virtual void BeginDestroy()
 
 ```cpp
 virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinDeclaration > & OutPins) const
+```
+
+---
+
+#### GetLevelSequenceCompatibility_Implementation { #getlevelsequencecompatibility_implementation-2 }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline EComposableCameraNodeLevelSequenceCompatibility GetLevelSequenceCompatibility_Implementation() const
 ```
 
 ---

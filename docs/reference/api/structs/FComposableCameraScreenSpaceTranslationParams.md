@@ -10,9 +10,9 @@
 | Return | Name | Description |
 |--------|------|-------------|
 | `double` | [`CameraDistance`](#cameradistance)  |  |
-| `UComposableCameraInterpolatorBase *` | [`XInterpolator`](#xinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`YInterpolator`](#yinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`ZInterpolator`](#zinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`XInterpolator`](#xinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`YInterpolator`](#yinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`ZInterpolator`](#zinterpolator)  |  |
 
 ---
 
@@ -27,7 +27,7 @@ double CameraDistance { 300. }
 #### XInterpolator { #xinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * XInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > XInterpolator { nullptr }
 ```
 
 ---
@@ -35,7 +35,7 @@ UComposableCameraInterpolatorBase * XInterpolator
 #### YInterpolator { #yinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * YInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > YInterpolator { nullptr }
 ```
 
 ---
@@ -43,5 +43,5 @@ UComposableCameraInterpolatorBase * YInterpolator
 #### ZInterpolator { #zinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * ZInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > ZInterpolator { nullptr }
 ```

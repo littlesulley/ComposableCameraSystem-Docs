@@ -43,6 +43,7 @@ Compute nodes must NOT register for OnPreTick / OnPostTick and must NOT override
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`ExecuteBeginPlay`](#executebeginplay) `virtual` `inline` | Execute this compute node's one-shot work. |
+| `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation-1) `virtual` `const` `inline` |  |
 
 ---
 
@@ -61,3 +62,13 @@ Called from [AComposableCameraCameraBase::BeginPlayCamera](../actors/AComposable
 The outgoing camera pose (the pose the previous camera was evaluating before this one became active) is available via OwningPlayerCameraManager->GetCurrentCameraPose() — this is the same value AActor::BeginPlay used to pass into BeginPlayCamera as a parameter before Step 4a removed that argument.
 
 Plain virtual (not a BlueprintNativeEvent) for 4a. If Blueprint authoring of compute nodes becomes a requirement later, promote this to a BlueprintNativeEvent following the same OnFoo / OnFoo_Implementation pattern used by OnInitialize and OnTickNode on the parent class.
+
+---
+
+#### GetLevelSequenceCompatibility_Implementation { #getlevelsequencecompatibility_implementation-1 }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline EComposableCameraNodeLevelSequenceCompatibility GetLevelSequenceCompatibility_Implementation() const
+```

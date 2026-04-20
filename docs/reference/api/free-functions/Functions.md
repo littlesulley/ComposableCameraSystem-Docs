@@ -20,13 +20,19 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTickFloatCurve, float, Value)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCompleteFloatCurve)
 ```
 
+#### DECLARE_DYNAMIC_MULTICAST_DELEGATE { #declare_dynamic_multicast_delegate-1 }
+
+```cpp
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCutsceneSequenceFinished)
+```
+
 #### DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam { #declare_dynamic_multicast_delegate_oneparam-1 }
 
 ```cpp
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTickVectorCurve, FVector, Value)
 ```
 
-#### DECLARE_DYNAMIC_MULTICAST_DELEGATE { #declare_dynamic_multicast_delegate-1 }
+#### DECLARE_DYNAMIC_MULTICAST_DELEGATE { #declare_dynamic_multicast_delegate-2 }
 
 ```cpp
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCompleteVectorCurve)
@@ -455,6 +461,122 @@ inline FVector GetProjectedPoint(const FVector & A, const FVector & B)
 ```
 
 Get the point projected from B to a unit vector A.
+
+# ComposableCameras { #composablecameras }
+
+Helpers that bridge CCS's own pin-type taxonomy (EComposableCameraPinType) to the generic FInstancedPropertyBag taxonomy (EPropertyBagPropertyType).
+
+Used by [FComposableCameraTypeAssetReference](../structs/FComposableCameraTypeAssetReference.md#fcomposablecameratypeassetreference) to generate Parameters / Variables bags from a TypeAsset's ExposedParameters / ExposedVariables, and to read values back from those bags into an [FComposableCameraParameterBlock](../structs/FComposableCameraParameterBlock.md#fcomposablecameraparameterblock) at camera activation time.
+
+Delegate pin type is intentionally not supported here — delegates cannot round-trip through a property bag (they carry heap-owned bindings). Delegate exposed parameters flow through the existing [FComposableCameraParameterBlock](../structs/FComposableCameraParameterBlock.md#fcomposablecameraparameterblock) delegate path at activation time; the Level Sequence component bag covers only POD-style parameters.
+
+Viewport-size helpers for camera nodes that need to know the window / view dimensions without hard-wiring a PlayerCameraManager dereference.
+
+Background: the original ScreenSpacePivot / ScreenSpaceConstraints nodes computed aspect ratio as `PCM->GetOwningPlayerController()->GetViewportSize()`. That path works for the PCM-driven runtime but falls over in the Level Sequence component path, where there is no PCM. The PCM, however, isn't a hard requirement for the underlying question — "what are the viewport
+dimensions right now?" — because the engine already tracks that through GEngine->GameViewport in game worlds and through GEditor->GetActiveViewport() in editor worlds. This utility consolidates the resolution chain so node code can just ask and doesn't need to carry the decision tree itself.
+
+Resolution order (first source that returns a valid size wins):
+
+1. PCM → PlayerController → viewport (legacy / multiplayer-aware; honors split-screen per-player viewports).
+
+1. GEngine->GameViewport (game worlds: PIE, standalone, packaged).
+
+1. GEditor->GetActiveViewport() in WITH_EDITOR builds (editor preview of LS Spawnables, piloted actors in the level editor).
+
+1. A 1920×1080 sentinel last-resort fallback so math never divides by zero. NaNs are worse than a slightly-wrong aspect ratio.
+
+### Functions
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `void` | [`ConstructCameraFromTypeAsset`](#constructcamerafromtypeasset)  | Populate a freshly-spawned [AComposableCameraCameraBase](../actors/AComposableCameraCameraBase.md#acomposablecameracamerabase) from a type asset and a caller-provided parameter block. |
+| `bool` | [`PinTypeToPropertyBagType`](#pintypetopropertybagtype)  | Map an EComposableCameraPinType (+ struct / enum metadata) to the matching EPropertyBagPropertyType and ValueTypeObject expected by FInstancedPropertyBag::AddProperty. |
+| `bool` | [`TryGetEffectiveViewportSize`](#trygeteffectiveviewportsize)  | Get the effective viewport size in pixels. Returns true when the value came from a real source (PCM / GameViewport / editor viewport); false when OutSize is the fallback 1920×1080. Callers that need a different fallback behavior can branch on the return value. |
+| `float` | [`GetEffectiveViewportAspectRatio`](#geteffectiveviewportaspectratio)  | Convenience wrapper — returns aspect ratio (width / height) from the resolved viewport size. Always returns a finite positive number; falls back to 16:9 if no real source is available. |
+
+---
+
+#### ConstructCameraFromTypeAsset { #constructcamerafromtypeasset }
+
+```cpp
+void ConstructCameraFromTypeAsset(AComposableCameraCameraBase * Camera, UComposableCameraTypeAsset * TypeAsset, const FComposableCameraParameterBlock & ParameterBlock)
+```
+
+Populate a freshly-spawned [AComposableCameraCameraBase](../actors/AComposableCameraCameraBase.md#acomposablecameracamerabase) from a type asset and a caller-provided parameter block.
+
+Does all the work that used to live exclusively inside AComposableCameraPlayerCameraManager::OnTypeAssetCameraConstructed:
+
+* Duplicates node templates into Camera->CameraNodes / Camera->ComputeNodes (nulling out orphans — nodes not referenced by any execution chain — to preserve index correspondence with TypeAsset->NodeTemplates while saving memory and init cost).
+
+* Allocates Camera->OwnedRuntimeDataBlock via TypeAsset->BuildRuntimeDataLayout.
+
+* Applies ParameterBlock via TypeAsset->ApplyParameterBlock (POD bytes) and TypeAsset->ApplyDelegateBindings (delegate UPROPERTYs — can't live in the POD data block).
+
+* Wires the data block to each node via SetRuntimeDataBlock(..., NodeIndex). Compute nodes use the offset index space NodeIndex = TypeAsset->NodeTemplates.Num() + ComputeIdx to match the layout that BuildRuntimeDataLayout allocated.
+
+* Copies FullExecChain / ComputeFullExecChain from the asset onto the camera.
+
+* Performs the legacy ComputeNodes reorder only when ComputeFullExecChain is empty (pre-existing compatibility for assets saved before the full exec chain existed).
+
+* Calls Camera->InitializeNodes() so every populated node's OnInitialize fires exactly once, with OwningCamera / OwningPlayerCameraManager / RuntimeDataBlock all wired.
+
+* Duplicates the type asset's EnterTransition onto the camera.
+
+PCM-independent by construction: does not read or write any PCM state. The existing PCM activation path calls this from its OnTypeAssetCameraConstructed dynamic-delegate callback (a thin wrapper); the Level Sequence component path will call this directly after spawning its internal camera with a null PCM. Nodes on the camera see whatever CameraManager value was passed into Camera->Initialize earlier (nullptr is valid — see [AComposableCameraCameraBase::Initialize](../actors/AComposableCameraCameraBase.md#initialize) and individual node GetLevelSequenceCompatibility overrides).
+
+Early-returns if Camera or TypeAsset is null; does not log.
+
+**Parameters**
+
+* `Camera` Target camera actor. Expected freshly spawned with CameraNodes / ComputeNodes empty; any pre-existing entries are cleared inside. 
+
+* `TypeAsset` Source type asset. Its NodeTemplates / ComputeNodeTemplates are duplicated into Camera; the asset itself is not modified. 
+
+* `ParameterBlock` Caller-provided parameter values. Stored on Camera as SourceParameterBlock for reactivation on modifier changes.
+
+---
+
+#### PinTypeToPropertyBagType { #pintypetopropertybagtype }
+
+```cpp
+bool PinTypeToPropertyBagType(EComposableCameraPinType InPinType, const UScriptStruct * InStructType, const UEnum * InEnumType, EPropertyBagPropertyType & OutBagPropertyType, const UObject *& OutValueTypeObject)
+```
+
+Map an EComposableCameraPinType (+ struct / enum metadata) to the matching EPropertyBagPropertyType and ValueTypeObject expected by FInstancedPropertyBag::AddProperty.
+
+Returns false for unsupported pin types (currently just Delegate); callers should skip those entries rather than adding them to the bag.
+
+**Parameters**
+
+* `InPinType` Source pin type. 
+
+* `InStructType` Only read when InPinType == Struct; ignored otherwise. 
+
+* `InEnumType` Only read when InPinType == Enum; ignored otherwise. 
+
+* `OutBagPropertyType` Resulting bag property type. 
+
+* `OutValueTypeObject` Struct / class / enum object carried alongside OutBagPropertyType. nullptr for POD types.
+
+---
+
+#### TryGetEffectiveViewportSize { #trygeteffectiveviewportsize }
+
+```cpp
+bool TryGetEffectiveViewportSize(const AComposableCameraPlayerCameraManager * OptionalPCM, FIntPoint & OutSize)
+```
+
+Get the effective viewport size in pixels. Returns true when the value came from a real source (PCM / GameViewport / editor viewport); false when OutSize is the fallback 1920×1080. Callers that need a different fallback behavior can branch on the return value.
+
+---
+
+#### GetEffectiveViewportAspectRatio { #geteffectiveviewportaspectratio }
+
+```cpp
+float GetEffectiveViewportAspectRatio(const AComposableCameraPlayerCameraManager * OptionalPCM)
+```
+
+Convenience wrapper — returns aspect ratio (width / height) from the resolved viewport size. Always returns a finite positive number; falls back to 16:9 if no real source is available.
 
 # ComposableCameraModifier { #composablecameramodifier }
 

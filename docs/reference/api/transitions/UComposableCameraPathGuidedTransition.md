@@ -92,7 +92,7 @@ virtual FComposableCameraPose OnEvaluate_Implementation(float DeltaTime, const F
 |--------|------|-------------|
 | `AComposableCameraCameraBase *` | [`IntermediateCamera`](#intermediatecamera)  |  |
 | `ACameraRig_Rail *` | [`Rail`](#rail-1)  |  |
-| `UComposableCameraInertializedTransition *` | [`EnterTransition`](#entertransition-2)  |  |
+| `UComposableCameraInertializedTransition *` | [`EnterTransition`](#entertransition-3)  |  |
 | `UComposableCameraInertializedTransition *` | [`ExitTransition`](#exittransition-1)  |  |
 | `USplineComponent *` | [`InternalSpline`](#internalspline)  |  |
 | `AActor *` | [`DebugSplineActor`](#debugsplineactor)  |  |
@@ -115,7 +115,7 @@ ACameraRig_Rail * Rail
 
 ---
 
-#### EnterTransition { #entertransition-2 }
+#### EnterTransition { #entertransition-3 }
 
 ```cpp
 UComposableCameraInertializedTransition * EnterTransition { nullptr }

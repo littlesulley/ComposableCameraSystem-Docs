@@ -28,7 +28,7 @@ Outputs:
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`ExecuteBeginPlay`](#executebeginplay-1) `virtual` | Execute this compute node's one-shot work. |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-20) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-19) `virtual` `const` |  |
 
 ---
 
@@ -50,7 +50,7 @@ Plain virtual (not a BlueprintNativeEvent) for 4a. If Blueprint authoring of com
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-20 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-19 }
 
 `virtual` `const`
 

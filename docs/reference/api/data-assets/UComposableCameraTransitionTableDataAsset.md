@@ -27,7 +27,7 @@ Steps 3 and 4 are per-camera-type-asset fields; step 2 is what this table provid
 
 **See also**: [UComposableCameraProjectSettings::TransitionTable](UComposableCameraProjectSettings.md#transitiontable)
 
-**See also**: [UComposableCameraTypeAsset::EnterTransition](UComposableCameraTypeAsset.md#entertransition)
+**See also**: [UComposableCameraTypeAsset::EnterTransition](UComposableCameraTypeAsset.md#entertransition-1)
 
 **See also**: [UComposableCameraTypeAsset::ExitTransition](UComposableCameraTypeAsset.md#exittransition)
 

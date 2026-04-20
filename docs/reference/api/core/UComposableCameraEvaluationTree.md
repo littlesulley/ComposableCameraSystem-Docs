@@ -66,6 +66,12 @@ void OnActivateNewCamera(AComposableCameraCameraBase * NewCamera, UComposableCam
 
 Called when a new camera is activated, optionally with a transition from the current state.
 
+When the root is an inter-context transition (left child is a reference leaf), the activation nests under the right (target) subtree instead of wrapping the entire tree. This preserves the inter-context blend at the root while allowing intra-context camera switches to happen underneath:
+
+Before: After (nested): [InterCtx Transition] [InterCtx Transition] / \ / \ [RefLeaf] [CamB1] [RefLeaf] [IntraCtx Transition] / \ [CamB1] [CamB2]
+
+When the inter-context transition finishes (the reference leaf side collapses), only the right subtree survives — which is the intra-context blend, exactly as expected.
+
 ---
 
 #### OnActivateNewCameraWithReferenceSource { #onactivatenewcamerawithreferencesource }

@@ -17,7 +17,7 @@ Node for positioning the given pivot point in the given screen space.
 | `FVector` | [`PivotWorldPosition`](#pivotworldposition)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-1)  |  |
 | `float` | [`PivotWorldUpOffset`](#pivotworldupoffset)  |  |
-| `EComposableCameraScreenSpaceMethod` | [`Method`](#method-1)  |  |
+| `EComposableCameraScreenSpaceMethod` | [`Method`](#method)  |  |
 | `FComposableCameraScreenSpaceTranslationParams` | [`TranslationParams`](#translationparams)  |  |
 | `FComposableCameraScreenSpaceRotationParams` | [`RotationParams`](#rotationparams)  |  |
 | `FVector2D` | [`SafeZoneCenter`](#safezonecenter)  |  |
@@ -58,7 +58,7 @@ float PivotWorldUpOffset { 0.f }
 
 ---
 
-#### Method { #method-1 }
+#### Method { #method }
 
 ```cpp
 EComposableCameraScreenSpaceMethod Method
@@ -108,14 +108,14 @@ FVector2D SafeZoneHeight { -0.1, 0.1 }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-16) `virtual` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-9) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-17) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy-1) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-15) `virtual` `const` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-10 }
+#### OnInitialize_Implementation { #oninitialize_implementation-9 }
 
 `virtual`
 
@@ -125,7 +125,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-16 }
+#### OnTickNode_Implementation { #onticknode_implementation-17 }
 
 `virtual`
 
@@ -145,7 +145,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-16 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-15 }
 
 `virtual` `const`
 

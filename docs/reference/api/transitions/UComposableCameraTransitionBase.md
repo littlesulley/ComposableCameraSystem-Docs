@@ -193,7 +193,7 @@ float Percentage { 0.f }
 | `void` | [`OnBeginPlay_Implementation`](#onbeginplay_implementation) `virtual` `inline` |  |
 | `FComposableCameraPose` | [`OnEvaluate`](#onevaluate)  | Event to customize the evaluation function for each tick. When calling this function, RemainingTime has already been decremented, and assured to not go below 0. <br/> |
 | `FComposableCameraPose` | [`OnEvaluate_Implementation`](#onevaluate_implementation-1) `virtual` `inline` |  |
-| `void` | [`OnFinished`](#onfinished)  | Event when the transition finishes. The base class simply sets bFinished to true. |
+| `void` | [`OnFinished`](#onfinished-1)  | Event when the transition finishes. The base class simply sets bFinished to true. |
 
 ---
 
@@ -258,7 +258,7 @@ virtual inline FComposableCameraPose OnEvaluate_Implementation(float DeltaTime, 
 
 ---
 
-#### OnFinished { #onfinished }
+#### OnFinished { #onfinished-1 }
 
 ```cpp
 void OnFinished()

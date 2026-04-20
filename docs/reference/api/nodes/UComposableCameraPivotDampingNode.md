@@ -98,7 +98,8 @@ TObjectPtr< UComposableCameraInterpolatorBase > BackwardInterpolator
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-6) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-11) `virtual` |  |
+| `void` | [`OnFirstTickNode_Implementation`](#onfirstticknode_implementation-1) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-12) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-11) `virtual` `const` |  |
 
 ---
@@ -113,7 +114,17 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-11 }
+#### OnFirstTickNode_Implementation { #onfirstticknode_implementation-1 }
+
+`virtual`
+
+```cpp
+virtual void OnFirstTickNode_Implementation()
+```
+
+---
+
+#### OnTickNode_Implementation { #onticknode_implementation-12 }
 
 `virtual`
 

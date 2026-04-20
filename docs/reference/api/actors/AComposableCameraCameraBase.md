@@ -15,7 +15,7 @@ Base camera class.
 | Return | Name | Description |
 |--------|------|-------------|
 | `FGameplayTag` | [`CameraTag`](#cameratag-1)  | Tag for this camera. Used by modifiers to distinguish different cameras. |
-| `UComposableCameraTransitionBase *` | [`EnterTransition`](#entertransition-1)  | Enter transition. Usually used for returning back to this camera from a transient camera. |
+| `UComposableCameraTransitionBase *` | [`EnterTransition`](#entertransition-2)  | Enter transition. Usually used for returning back to this camera from a transient camera. |
 | `bool` | [`bDefaultPreserveCameraPose`](#bdefaultpreservecamerapose-1)  | Whether to preserve last camera's pose when resuming this camera. |
 | `TArray< UComposableCameraCameraNodeBase * >` | [`CameraNodes`](#cameranodes)  | Nodes for this camera. They're executed in the order they are placed in this array. Each node reads input pin values, applies its logic, and writes output pin values. Inter-node data flow is handled entirely through the pin-based RuntimeDataBlock system. |
 | `TArray< TObjectPtr< UComposableCameraComputeNodeBase > >` | [`ComputeNodes`](#computenodes)  | One-shot compute nodes that run during BeginPlayCamera, after every node (both camera nodes and compute nodes) has had [Initialize()](#initialize) run. They are walked in array order and each has ExecuteBeginPlay() called exactly once. |
@@ -47,7 +47,7 @@ Tag for this camera. Used by modifiers to distinguish different cameras.
 
 ---
 
-#### EnterTransition { #entertransition-1 }
+#### EnterTransition { #entertransition-2 }
 
 ```cpp
 UComposableCameraTransitionBase * EnterTransition

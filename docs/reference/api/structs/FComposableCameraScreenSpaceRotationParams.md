@@ -9,15 +9,15 @@
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `UComposableCameraInterpolatorBase *` | [`YawInterpolator`](#yawinterpolator)  |  |
-| `UComposableCameraInterpolatorBase *` | [`PitchInterpolator`](#pitchinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`YawInterpolator`](#yawinterpolator)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`PitchInterpolator`](#pitchinterpolator)  |  |
 
 ---
 
 #### YawInterpolator { #yawinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * YawInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > YawInterpolator { nullptr }
 ```
 
 ---
@@ -25,5 +25,5 @@ UComposableCameraInterpolatorBase * YawInterpolator
 #### PitchInterpolator { #pitchinterpolator }
 
 ```cpp
-UComposableCameraInterpolatorBase * PitchInterpolator
+TObjectPtr< UComposableCameraInterpolatorBase > PitchInterpolator { nullptr }
 ```

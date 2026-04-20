@@ -14,7 +14,7 @@ Node for constraining a pivot position in screen using either translation or rot
 | Return | Name | Description |
 |--------|------|-------------|
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-3)  |  |
-| `EComposableCameraScreenSpaceMethod` | [`Method`](#method-3)  |  |
+| `EComposableCameraScreenSpaceMethod` | [`Method`](#method-2)  |  |
 | `FVector2D` | [`SafeZoneCenter`](#safezonecenter-1)  |  |
 | `FVector2D` | [`SafeZoneWidth`](#safezonewidth-1)  |  |
 | `FVector2D` | [`SafeZoneHeight`](#safezoneheight-1)  |  |
@@ -29,7 +29,7 @@ TObjectPtr< AActor > PivotActor
 
 ---
 
-#### Method { #method-3 }
+#### Method { #method-2 }
 
 ```cpp
 EComposableCameraScreenSpaceMethod Method
@@ -63,14 +63,14 @@ FVector2D SafeZoneHeight { -0.1, 0.1 }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-14) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-20) `virtual` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-13) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-21) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy-3) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-21) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-20) `virtual` `const` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-14 }
+#### OnInitialize_Implementation { #oninitialize_implementation-13 }
 
 `virtual`
 
@@ -80,7 +80,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-20 }
+#### OnTickNode_Implementation { #onticknode_implementation-21 }
 
 `virtual`
 
@@ -100,7 +100,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-21 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-20 }
 
 `virtual` `const`
 

@@ -26,7 +26,7 @@ At runtime, Instantiate() creates an [AComposableCameraCameraBase](../actors/ACo
 | `TArray< FComposableCameraExecEntry >` | [`ComputeFullExecChain`](#computefullexecchain)  | Full BeginPlay execution chain including both compute nodes and internal-variable Set operations, in exec-wire order. Parallel to FullExecChain but for the compute chain. |
 | `FGameplayTag` | [`CameraTag`](#cameratag)  | Tag for this camera type. Propagated to spawned camera instances so modifiers can distinguish different cameras at runtime. Mirrors [AComposableCameraCameraBase::CameraTag](../actors/AComposableCameraCameraBase.md#cameratag-1) — the TypeAsset carries it so designers don't need to subclass the camera in Blueprint just to set a tag. |
 | `bool` | [`bDefaultPreserveCameraPose`](#bdefaultpreservecamerapose)  | Whether cameras of this type preserve the previous camera's pose when resumed from the context stack (e.g., after a transient camera pops). Propagated to spawned camera instances. Mirrors [AComposableCameraCameraBase::bDefaultPreserveCameraPose](../actors/AComposableCameraCameraBase.md#bdefaultpreservecamerapose-1). |
-| `TObjectPtr< UComposableCameraTransitionBase >` | [`EnterTransition`](#entertransition)  | Optional enter transition — used when this camera type becomes active. The full resolution chain is: |
+| `TObjectPtr< UComposableCameraTransitionBase >` | [`EnterTransition`](#entertransition-1)  | Optional enter transition — used when this camera type becomes active. The full resolution chain is: |
 | `TObjectPtr< UComposableCameraTransitionBase >` | [`ExitTransition`](#exittransition)  | Optional exit transition — used when leaving this camera type. Checked at priority 3 in the resolution chain (after the table, before the target's EnterTransition). Useful for cameras that must always leave with a specific transition regardless of what comes next (e.g., puzzle cameras, UI overlays). |
 | `TArray< FComposableCameraExposedParameter >` | [`ExposedParameters`](#exposedparameters)  | Parameters that callers provide when activating this camera type. |
 | `TArray< FComposableCameraInternalVariable >` | [`InternalVariables`](#internalvariables)  | Camera-level variables not exposed to callers but readable/writable by nodes. Used for cross-node communication and cross-frame state caching. |
@@ -142,7 +142,7 @@ Whether cameras of this type preserve the previous camera's pose when resumed fr
 
 ---
 
-#### EnterTransition { #entertransition }
+#### EnterTransition { #entertransition-1 }
 
 ```cpp
 TObjectPtr< UComposableCameraTransitionBase > EnterTransition

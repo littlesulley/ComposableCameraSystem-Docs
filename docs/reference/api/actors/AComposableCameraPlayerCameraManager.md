@@ -80,7 +80,7 @@ FOnCameraFinishConstructed CurrentOnPreBeginplayEvent
 | Return | Name | Description |
 |--------|------|-------------|
 |  | [`AComposableCameraPlayerCameraManager`](#acomposablecameraplayercameramanager-1)  |  |
-| `void` | [`BeginPlay`](#beginplay-1) `virtual` |  |
+| `void` | [`BeginPlay`](#beginplay-2) `virtual` |  |
 | `void` | [`InitializeFor`](#initializefor) `virtual` |  |
 | `void` | [`SetViewTarget`](#setviewtarget) `virtual` |  |
 | `void` | [`ProcessViewRotation`](#processviewrotation) `virtual` |  |
@@ -120,7 +120,7 @@ AComposableCameraPlayerCameraManager(const FObjectInitializer & ObjectInitialize
 
 ---
 
-#### BeginPlay { #beginplay-1 }
+#### BeginPlay { #beginplay-2 }
 
 `virtual`
 
@@ -480,6 +480,7 @@ virtual void DoUpdateCamera(float DeltaTime)
 | `TObjectPtr< UComposableCameraContextStack >` | [`ContextStack`](#contextstack)  |  |
 | `TObjectPtr< UComposableCameraModifierManager >` | [`ModifierManager`](#modifiermanager)  |  |
 | `FMinimalViewInfo` | [`LastDesiredView`](#lastdesiredview)  |  |
+| `bool` | [`bIsImplicitlyActivating`](#bisimplicitlyactivating)  | Guard against re-entrant SetViewTarget calls during implicit activation. When the PCM calls ActivateNewCamera internally, the Director may call Super::SetViewTarget as part of its bookkeeping — the guard prevents that from recursing back into implicit activation. |
 
 ---
 
@@ -522,6 +523,16 @@ TObjectPtr< UComposableCameraModifierManager > ModifierManager
 ```cpp
 FMinimalViewInfo LastDesiredView
 ```
+
+---
+
+#### bIsImplicitlyActivating { #bisimplicitlyactivating }
+
+```cpp
+bool bIsImplicitlyActivating { false }
+```
+
+Guard against re-entrant SetViewTarget calls during implicit activation. When the PCM calls ActivateNewCamera internally, the Director may call Super::SetViewTarget as part of its bookkeeping — the guard prevents that from recursing back into implicit activation.
 
 ### Private Methods
 

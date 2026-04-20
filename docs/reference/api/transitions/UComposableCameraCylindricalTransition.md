@@ -37,7 +37,7 @@ bool bLockToPivot { true }
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnBeginPlay_Implementation`](#onbeginplay_implementation-3) `virtual` |  |
-| `FComposableCameraPose` | [`OnEvaluate_Implementation`](#onevaluate_implementation-7) `virtual` |  |
+| `FComposableCameraPose` | [`OnEvaluate_Implementation`](#onevaluate_implementation-8) `virtual` |  |
 
 ---
 
@@ -51,7 +51,7 @@ virtual void OnBeginPlay_Implementation(float DeltaTime, const FComposableCamera
 
 ---
 
-#### OnEvaluate_Implementation { #onevaluate_implementation-7 }
+#### OnEvaluate_Implementation { #onevaluate_implementation-8 }
 
 `virtual`
 

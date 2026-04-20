@@ -45,13 +45,13 @@ FName BoneName
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-12) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-18) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-18) `virtual` `const` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-11) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-19) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-17) `virtual` `const` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-12 }
+#### OnInitialize_Implementation { #oninitialize_implementation-11 }
 
 `virtual`
 
@@ -61,7 +61,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-18 }
+#### OnTickNode_Implementation { #onticknode_implementation-19 }
 
 `virtual`
 
@@ -71,7 +71,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-18 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-17 }
 
 `virtual` `const`
 

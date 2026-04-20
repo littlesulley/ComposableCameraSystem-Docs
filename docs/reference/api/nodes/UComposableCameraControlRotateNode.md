@@ -88,7 +88,7 @@ bool bInvertPitch { true }
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-8) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-13) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-14) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-13) `virtual` `const` |  |
 
 ---
@@ -103,7 +103,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-13 }
+#### OnTickNode_Implementation { #onticknode_implementation-14 }
 
 `virtual`
 

@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-04-20 — plugin `b4521a0..b3d3e0a`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/b4521a02219cfc47eefe292ff3f638a6a7507ff0...b3d3e0a28d7fbf4e35f46d29919b1de34aff5a14))
+
+- `b3d3e0a` Add Level Sequence authoring path for composable cameras.
+- `9d841b1` Update README.md
+- `1cecf3c` Update Level Sequence wrapper.
+
+**C++ API pages regenerated:** 129 classes (actors +1 `AComposableCameraLevelSequenceActor`, nodes +2 `PostProcessNode`/`ViewTargetProxyNode`, transitions +1 `ViewTargetTransition`, other UObjects +2 `AsyncPlayCutsceneSequence`/`LevelSequenceComponent`, structs +1 `FComposableCameraTypeAssetReference`; deleted: `ComposableCameraKeyframeSequenceNode`)
+
+**Prose drafts added:**
+
+- `docs/reference/nodes.md` — entry for `UComposableCameraPostProcessNode` (please review)
+- `docs/reference/nodes.md` — entry for `UComposableCameraViewTargetProxyNode` (please review)
+- `docs/reference/transitions.md` — entry for `UComposableCameraViewTargetTransition` (please review)
+
+**Other new public API:** `AsyncPlayCutsceneSequence`, `ComposableCameraTypeAssetInstantiator`, `LevelSequence/` subsystem (4 headers: actor, component, pin-type utils, type-asset reference), `ComposableCameraViewportUtils` — changelog mention only; no catalog entry added.
+
+**Flagged for review:**
+
+- `UComposableCameraViewTargetProxyNode` and `UComposableCameraViewTargetTransition` are marked `Hidden`/`NotBlueprintable` — internal PCM bridge classes, not designer-facing.
+- `LevelSequence` subsystem adds a new public module folder; consider adding a dedicated User Guide page for the LS authoring path.
+
+---
+
 Reverse-chronological log of documentation updates. Each entry corresponds to a batch of plugin changes that the auto-updater skill (`ccs-docs-updater`) processed.
 
 Entries are written automatically; feel free to edit them if you want to reword or add context.

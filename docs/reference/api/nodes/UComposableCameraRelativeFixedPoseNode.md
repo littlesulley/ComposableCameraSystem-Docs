@@ -13,15 +13,15 @@ Node for maintaining a fixed pose relative to some given transform.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `EComposableCameraRelativeFixedPoseMethod` | [`Method`](#method-2)  |  |
-| `FTransform` | [`RelativeTransform`](#relativetransform-1)  |  |
-| `AActor *` | [`RelativeActor`](#relativeactor-1)  |  |
-| `FName` | [`RelativeSocket`](#relativesocket-1)  |  |
+| `EComposableCameraRelativeFixedPoseMethod` | [`Method`](#method-1)  |  |
+| `FTransform` | [`RelativeTransform`](#relativetransform)  |  |
+| `AActor *` | [`RelativeActor`](#relativeactor)  |  |
+| `FName` | [`RelativeSocket`](#relativesocket)  |  |
 | `FTransform` | [`TargetTransform`](#targettransform)  |  |
 
 ---
 
-#### Method { #method-2 }
+#### Method { #method-1 }
 
 ```cpp
 EComposableCameraRelativeFixedPoseMethod Method
@@ -29,7 +29,7 @@ EComposableCameraRelativeFixedPoseMethod Method
 
 ---
 
-#### RelativeTransform { #relativetransform-1 }
+#### RelativeTransform { #relativetransform }
 
 ```cpp
 FTransform RelativeTransform
@@ -37,7 +37,7 @@ FTransform RelativeTransform
 
 ---
 
-#### RelativeActor { #relativeactor-1 }
+#### RelativeActor { #relativeactor }
 
 ```cpp
 AActor * RelativeActor
@@ -45,7 +45,7 @@ AActor * RelativeActor
 
 ---
 
-#### RelativeSocket { #relativesocket-1 }
+#### RelativeSocket { #relativesocket }
 
 ```cpp
 FName RelativeSocket
@@ -63,13 +63,13 @@ FTransform TargetTransform
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-13) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-19) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-19) `virtual` `const` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-12) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-20) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-18) `virtual` `const` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-13 }
+#### OnInitialize_Implementation { #oninitialize_implementation-12 }
 
 `virtual`
 
@@ -79,7 +79,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-19 }
+#### OnTickNode_Implementation { #onticknode_implementation-20 }
 
 `virtual`
 
@@ -89,7 +89,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-19 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-18 }
 
 `virtual` `const`
 
@@ -101,11 +101,11 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `USkeletalMeshComponent *` | [`SkeletalMeshComponentForRelativeActor`](#skeletalmeshcomponentforrelativeactor-1)  |  |
+| `USkeletalMeshComponent *` | [`SkeletalMeshComponentForRelativeActor`](#skeletalmeshcomponentforrelativeactor)  |  |
 
 ---
 
-#### SkeletalMeshComponentForRelativeActor { #skeletalmeshcomponentforrelativeactor-1 }
+#### SkeletalMeshComponentForRelativeActor { #skeletalmeshcomponentforrelativeactor }
 
 ```cpp
 USkeletalMeshComponent * SkeletalMeshComponentForRelativeActor { nullptr }

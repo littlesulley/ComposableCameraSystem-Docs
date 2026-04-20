@@ -17,6 +17,8 @@ Field categories:
 
 * Projection & aspect (ProjectionMode, ConstrainAspectRatio, ...) — booleans and enums snap at 50% blend factor; numerics (OrthographicWidth etc.) lerp normally.
 
+* Post-process (PostProcessSettings) — blended via FPostProcessUtils::BlendPostProcessSettings in [BlendBy()](#blendby). Individual properties are only active when their corresponding bOverride_* flag is true; a default-constructed FPostProcessSettings (all overrides off) contributes nothing, so cameras without a PostProcess node pay no cost. At apply-time in GetCameraViewFromCameraPose, pose PP is layered on top of the camera component's PP using OverridePostProcessSettings.
+
 Sentinel semantics (<= 0 means "unset"):
 
 * FieldOfView: -1 means "use FocalLength".
@@ -48,6 +50,7 @@ Sentinel semantics (<= 0 means "unset"):
 | `float` | [`OrthographicWidth`](#orthographicwidth)  | Orthographic view width in world units (only honored when ProjectionMode = Orthographic). |
 | `float` | [`OrthoNearClipPlane`](#orthonearclipplane)  | Ortho near clip plane (only honored when ProjectionMode = Orthographic). |
 | `float` | [`OrthoFarClipPlane`](#orthofarclipplane)  | Ortho far clip plane (only honored when ProjectionMode = Orthographic). |
+| `FPostProcessSettings` | [`PostProcessSettings`](#postprocesssettings)  | Post-process settings carried by this pose. Default-constructed: all bOverride_* flags are false, meaning "no opinion". Nodes (e.g., PostProcessNode) set specific bOverride_* flags + values. |
 
 ---
 
@@ -255,6 +258,18 @@ float OrthoFarClipPlane { 10000.f }
 
 Ortho far clip plane (only honored when ProjectionMode = Orthographic).
 
+---
+
+#### PostProcessSettings { #postprocesssettings }
+
+```cpp
+FPostProcessSettings PostProcessSettings
+```
+
+Post-process settings carried by this pose. Default-constructed: all bOverride_* flags are false, meaning "no opinion". Nodes (e.g., PostProcessNode) set specific bOverride_* flags + values.
+
+[BlendBy()](#blendby) uses FPostProcessUtils::BlendPostProcessSettings to lerp all properties (including override flags). At apply-time, only properties whose bOverride_* flag is true layer on top of the camera component's designer-authored post-process via OverridePostProcessSettings.
+
 ### Public Methods
 
 | Return | Name | Description |
@@ -293,14 +308,14 @@ Set FOV in degrees, clearing the FocalLength sentinel so this pose is unambiguou
 `const`
 
 ```cpp
-bool ApplyPhysicalCameraSettings(FPostProcessSettings & PostProcessSettings, bool bOverwriteSettings) const
+bool ApplyPhysicalCameraSettings(FPostProcessSettings & InOutPostProcessSettings, bool bOverwriteSettings) const
 ```
 
 Apply physical-camera-derived settings (DoF, auto-exposure) to a post-process settings block. No-op if PhysicalCameraBlendWeight <= 0. Scales contribution by PhysicalCameraBlendWeight. Mirrors GameplayCameras' FCameraPose::ApplyPhysicalCameraSettings.
 
 **Parameters**
 
-* `PostProcessSettings` Target to modify. 
+* `InOutPostProcessSettings` Target to modify. 
 
 * `bOverwriteSettings` If true, overwrites already-set post-process entries; else only writes unset ones. 
 

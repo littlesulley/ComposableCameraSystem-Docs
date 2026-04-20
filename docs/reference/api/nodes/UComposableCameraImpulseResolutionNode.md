@@ -36,16 +36,16 @@ UComposableCameraInterpolatorBase * Interpolator
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-11) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-17) `virtual` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-18) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy-2) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-17) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
 | `void` | [`AddImpulseShape`](#addimpulseshape) `inline` |  |
 | `void` | [`RemoveImpulseShape`](#removeimpulseshape) `inline` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-11 }
+#### OnInitialize_Implementation { #oninitialize_implementation-10 }
 
 `virtual`
 
@@ -55,7 +55,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-17 }
+#### OnTickNode_Implementation { #onticknode_implementation-18 }
 
 `virtual`
 
@@ -75,7 +75,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-17 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-16 }
 
 `virtual` `const`
 

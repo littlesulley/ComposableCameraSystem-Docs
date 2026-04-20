@@ -31,6 +31,7 @@ inline DECLARE_FUNCTION(execSetParameterBlockValue)
 |--------|------|-------------|
 | `AComposableCameraCameraBase *` | [`ActivateComposableCameraFromTypeAsset`](#activatecomposablecamerafromtypeasset) `static` | Activate a composable camera from a Camera Type Asset (data-driven workflow). <br/> |
 | `AComposableCameraCameraBase *` | [`ActivateComposableCameraFromDataTable`](#activatecomposablecamerafromdatatable) `static` | Activate a composable camera from a DataTable row. |
+| `UAsyncPlayCutsceneSequence *` | [`PlayCutsceneSequence`](#playcutscenesequence) `static` | Create and register a PlayCutsceneSequence action. Does NOT call Activate(). |
 | `void` | [`TerminateCurrentCamera`](#terminatecurrentcamera) `static` | Terminate the current camera — pops the active (top) context off the stack. The previous context resumes with an optional transition. Cannot pop the base context. |
 | `void` | [`PopCameraContext`](#popcameracontext) `static` | Pop a specific camera context by name. If this is the active context, the previous context resumes with an optional transition. Cannot pop the base context if it is the last one remaining. |
 | `int32` | [`GetCameraContextStackDepth`](#getcameracontextstackdepth) `static` | Get the current depth of the camera context stack. |
@@ -46,6 +47,9 @@ inline DECLARE_FUNCTION(execSetParameterBlockValue)
 | `FVector2D` | [`MakeLiteralVector2D`](#makeliteralvector2d) `static` |  |
 | `FRotator` | [`MakeLiteralRotator`](#makeliteralrotator) `static` |  |
 | `FTransform` | [`MakeLiteralTransform`](#makeliteraltransform) `static` |  |
+| `UObject *` | [`MakeLiteralObject`](#makeliteralobject) `static` |  |
+| `FName` | [`MakeLiteralName`](#makeliteralname) `static` |  |
+| `uint8` | [`MakeLiteralByte`](#makeliteralbyte) `static` |  |
 
 ---
 
@@ -114,6 +118,22 @@ This function is hidden from the Blueprint palette because designers should auth
 **Returns**
 
 The activated camera instance, or nullptr on failure.
+
+---
+
+#### PlayCutsceneSequence { #playcutscenesequence }
+
+`static`
+
+```cpp
+static UAsyncPlayCutsceneSequence * PlayCutsceneSequence(UObject * WorldContextObject, ULevelSequence * InLevelSequence, FName ContextName, UComposableCameraTransitionDataAsset * EnterTransition, FMovieSceneSequencePlaybackSettings PlaybackSettings)
+```
+
+Create and register a PlayCutsceneSequence action. Does NOT call Activate().
+
+This is BlueprintInternalUseOnly because the Blueprint entry point is UK2Node_PlayCutsceneSequence, which calls this function in its ExpandNode and then binds delegates + calls Activate() as separate expansion steps.
+
+The factory lives here (not on [UAsyncPlayCutsceneSequence](../uobjects-other/UAsyncPlayCutsceneSequence.md#uasyncplaycutscenesequence)) to prevent UK2Node_AsyncAction from auto-registering a second, broken async node.
 
 ---
 
@@ -371,4 +391,34 @@ static FRotator MakeLiteralRotator(FRotator Value)
 
 ```cpp
 static FTransform MakeLiteralTransform(FTransform Value)
+```
+
+---
+
+#### MakeLiteralObject { #makeliteralobject }
+
+`static`
+
+```cpp
+static UObject * MakeLiteralObject(UObject * Value)
+```
+
+---
+
+#### MakeLiteralName { #makeliteralname }
+
+`static`
+
+```cpp
+static FName MakeLiteralName(FName Value)
+```
+
+---
+
+#### MakeLiteralByte { #makeliteralbyte }
+
+`static`
+
+```cpp
+static uint8 MakeLiteralByte(uint8 Value)
 ```

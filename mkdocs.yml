@@ -133,6 +133,7 @@ nav:
             - 'AComposableCameraGeneralThirdPersonCamera': reference/api/actors/AComposableCameraGeneralThirdPersonCamera.md
             - 'AComposableCameraImpulseBox': reference/api/actors/AComposableCameraImpulseBox.md
             - 'AComposableCameraImpulseSphere': reference/api/actors/AComposableCameraImpulseSphere.md
+            - 'AComposableCameraLevelSequenceActor': reference/api/actors/AComposableCameraLevelSequenceActor.md
             - 'AComposableCameraPlayerCameraManager': reference/api/actors/AComposableCameraPlayerCameraManager.md
           - 'Camera Nodes':
             - 'UComposableCameraAutoRotateNode': reference/api/nodes/UComposableCameraAutoRotateNode.md
@@ -150,6 +151,7 @@ nav:
             - 'UComposableCameraOrthographicNode': reference/api/nodes/UComposableCameraOrthographicNode.md
             - 'UComposableCameraPivotDampingNode': reference/api/nodes/UComposableCameraPivotDampingNode.md
             - 'UComposableCameraPivotOffsetNode': reference/api/nodes/UComposableCameraPivotOffsetNode.md
+            - 'UComposableCameraPostProcessNode': reference/api/nodes/UComposableCameraPostProcessNode.md
             - 'UComposableCameraReceivePivotActorNode': reference/api/nodes/UComposableCameraReceivePivotActorNode.md
             - 'UComposableCameraRelativeFixedPoseNode': reference/api/nodes/UComposableCameraRelativeFixedPoseNode.md
             - 'UComposableCameraScreenSpaceConstraintsNode': reference/api/nodes/UComposableCameraScreenSpaceConstraintsNode.md
@@ -248,14 +250,17 @@ nav:
             - 'FComposableCameraSystemModule': reference/api/structs/FComposableCameraSystemModule.md
             - 'FComposableCameraTransitionInitParams': reference/api/structs/FComposableCameraTransitionInitParams.md
             - 'FComposableCameraTransitionTableEntry': reference/api/structs/FComposableCameraTransitionTableEntry.md
+            - 'FComposableCameraTypeAssetReference': reference/api/structs/FComposableCameraTypeAssetReference.md
             - 'FComposableCameraVariableNodeRecord': reference/api/structs/FComposableCameraVariableNodeRecord.md
             - 'FComposableCameraVariablePinConnection': reference/api/structs/FComposableCameraVariablePinConnection.md
             - 'FIsSimulatingInEditor': reference/api/structs/FIsSimulatingInEditor.md
             - 'FModifierEntry': reference/api/structs/FModifierEntry.md
           - 'Other UObjects':
+            - 'UAsyncPlayCutsceneSequence': reference/api/uobjects-other/UAsyncPlayCutsceneSequence.md
             - 'UComposableCameraCameraNodeBase': reference/api/uobjects-other/UComposableCameraCameraNodeBase.md
             - 'UComposableCameraComputeNodeBase': reference/api/uobjects-other/UComposableCameraComputeNodeBase.md
             - 'UComposableCameraImpulseShapeInterface': reference/api/uobjects-other/UComposableCameraImpulseShapeInterface.md
+            - 'UComposableCameraLevelSequenceComponent': reference/api/uobjects-other/UComposableCameraLevelSequenceComponent.md
             - 'UComposableCameraRotationConstraints': reference/api/uobjects-other/UComposableCameraRotationConstraints.md
           - 'Helpers':
             - 'ComposableCameraIndependentPositionalInertializer': reference/api/helpers/ComposableCameraIndependentPositionalInertializer.md

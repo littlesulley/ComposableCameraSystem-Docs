@@ -173,6 +173,24 @@ Tag for entries in the serialized execution chain.
 
 The execution chain is a linear sequence of operations the camera runs each frame: camera nodes do the actual pose computation, and internal-variable Set operations write scratch values between camera nodes. See [FComposableCameraExecEntry](../structs/FComposableCameraExecEntry.md#fcomposablecameraexecentry).
 
+#### EComposableCameraNodeLevelSequenceCompatibility { #ecomposablecameranodelevelsequencecompatibility }
+
+```cpp
+enum EComposableCameraNodeLevelSequenceCompatibility
+```
+
+| Value | Description |
+|-------|-------------|
+| `Compatible` | Node evaluates correctly without a PCM. Safe in Level Sequence. |
+| `RequiresPCM` | Node requires a live PCM (viewport, player controller, HUD, spawn new cameras mid-init, etc.). In LS the node is a no-op and the Details panel warns. |
+| `ComputeOnly` | Node lives on the BeginPlay compute chain and is never per-frame-evaluated in LS (LS skips the compute chain). Warning is informational. |
+
+How a node class behaves when evaluated in a Level-Sequence context, where the camera is driven by a [UComposableCameraLevelSequenceComponent](../uobjects-other/UComposableCameraLevelSequenceComponent.md#ucomposablecameralevelsequencecomponent) and no UComposableCameraPlayerCameraManager is present.
+
+Queried by the LS Details-panel customization (to warn the designer) and by the LS component's tick path (to decide whether to evaluate the node at all).
+
+Default is Compatible; override in node classes that cannot run without a PCM, or on compute-chain nodes that are never evaluated in LS by design.
+
 #### ECameraPivotOffset { #ecamerapivotoffset }
 
 ```cpp

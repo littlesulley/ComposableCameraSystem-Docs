@@ -14,14 +14,14 @@
 | `float` | [`Length`](#length)  |  |
 | `float` | [`Radius`](#radius)  |  |
 | `FVector` | [`Offset`](#offset)  |  |
-| `UCurveFloat *` | [`StrengthCurve`](#strengthcurve)  |  |
+| `TObjectPtr< UCurveFloat >` | [`StrengthCurve`](#strengthcurve)  |  |
 
 ---
 
 #### Yaw { #yaw }
 
 ```cpp
-float Yaw
+float Yaw { 0.f }
 ```
 
 ---
@@ -29,7 +29,7 @@ float Yaw
 #### Pitch { #pitch }
 
 ```cpp
-float Pitch
+float Pitch { 0.f }
 ```
 
 ---
@@ -37,7 +37,7 @@ float Pitch
 #### Length { #length }
 
 ```cpp
-float Length
+float Length { 100.f }
 ```
 
 ---
@@ -45,7 +45,7 @@ float Length
 #### Radius { #radius }
 
 ```cpp
-float Radius
+float Radius { 0.f }
 ```
 
 ---
@@ -53,7 +53,7 @@ float Radius
 #### Offset { #offset }
 
 ```cpp
-FVector Offset
+FVector Offset { FVector::ZeroVector }
 ```
 
 ---
@@ -61,7 +61,7 @@ FVector Offset
 #### StrengthCurve { #strengthcurve }
 
 ```cpp
-UCurveFloat * StrengthCurve
+TObjectPtr< UCurveFloat > StrengthCurve { nullptr }
 ```
 
 ### Public Methods
