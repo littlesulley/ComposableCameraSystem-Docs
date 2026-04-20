@@ -15,7 +15,7 @@
 
 **Flagged for review:**
 
-- The [Camera Actions](../user-guide/camera-actions.md) User Guide page likely still describes `PreNodeTick` / `PostNodeTick` as "not yet implemented" — update that page to document `TargetNodeClass` usage and the exact-class-match semantics.
+- The [Camera Actions](user-guide/camera-actions.md) User Guide page likely still describes `PreNodeTick` / `PostNodeTick` as "not yet implemented" — update that page to document `TargetNodeClass` usage and the exact-class-match semantics.
 
 ---
 
