@@ -13,9 +13,13 @@ This is the struct a [UComposableCameraLevelSequenceComponent](../uobjects-other
 
 2) Designers editing the component in the Details panel need one field per exposed parameter (typed float / vector / actor picker / …), matching what the TypeAsset declared. FInstancedPropertyBag renders exactly that.
 
-Parameters vs Variables ─────────────────────── The TypeAsset's ExposedParameters and ExposedVariables arrays are kept as separate bags intentionally — they correspond to visually-distinct categories in the Sequencer "Add Track" menu ("Camera Parameters" vs "Camera Variables") and eliminate any chance of name collision between a parameter and a variable that happen to share a name at the TypeAsset level.
+**Parameters vs Variables**
 
-Lifecycle ───────── [RebuildBagsFromTypeAsset()](#rebuildbagsfromtypeasset) must be called whenever TypeAsset changes (the component calls it from PostEditChangeProperty). Values for properties whose name + type survive the rebuild are carried over; everything else is reset to the bag's default for that type.
+The TypeAsset's ExposedParameters and ExposedVariables arrays are kept as separate bags intentionally — they correspond to visually-distinct categories in the Sequencer "Add Track" menu ("Camera Parameters" vs "Camera Variables") and eliminate any chance of name collision between a parameter and a variable that happen to share a name at the TypeAsset level.
+
+**Lifecycle**
+
+[RebuildBagsFromTypeAsset()](#rebuildbagsfromtypeasset) must be called whenever TypeAsset changes (the component calls it from PostEditChangeProperty). Values for properties whose name + type survive the rebuild are carried over; everything else is reset to the bag's default for that type.
 
 At camera activation time, [BuildParameterBlock()](#buildparameterblock) walks both bags and emits a [FComposableCameraParameterBlock](FComposableCameraParameterBlock.md#fcomposablecameraparameterblock) ready to hand to [UE::ComposableCameras::ConstructCameraFromTypeAsset](../free-functions/Functions.md#constructcamerafromtypeasset).
 

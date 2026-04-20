@@ -13,7 +13,9 @@ Holds a [FComposableCameraTypeAssetReference](../structs/FComposableCameraTypeAs
 
 Pure UActorComponent — NOT a USceneComponent. The component holds no transform of its own; it is a logic-and-data driver. The owning Actor is expected to provide a UCineCameraComponent as its RootComponent (that's what [AComposableCameraLevelSequenceActor](../actors/AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor) does), and to hand us the reference via OutputCineCameraComponent during construction. If a designer adds this component to an arbitrary Actor (BlueprintSpawnableComponent), OnRegister falls back to FindComponentByClass<UCineCameraComponent>(GetOwner()) — the component will then drive whatever CineCamera is first found on the owning Actor, or be a no-op if none exists.
 
-Why ActorComponent not SceneComponent ───────────────────────────────────── Previously this was a USceneComponent whose RootComponent role doubled as a parent for the CineCamera child. That arrangement collided with [UE](#ue)'s DefaultSubobject semantics (a component creating its own CreateDefaultSubobject<UCineCameraComponent> registered the CineCamera as a sub-subobject of the component, invisible to the Actor's component tree and therefore invisible to USceneComponent::GetChildrenComponents and AActor::FindComponentByClass<UCameraComponent>). PCM::SetViewTarget's implicit-activation filter relies on that traversal and silently bailed, which manifested as "second camera never activates" for blended Camera Cut sections — see the diagnostic log that uncovered it.
+**Why ActorComponent not SceneComponent**
+
+Previously this was a USceneComponent whose RootComponent role doubled as a parent for the CineCamera child. That arrangement collided with UE's DefaultSubobject semantics (a component creating its own CreateDefaultSubobject<UCineCameraComponent> registered the CineCamera as a sub-subobject of the component, invisible to the Actor's component tree and therefore invisible to USceneComponent::GetChildrenComponents and AActor::FindComponentByClass<UCameraComponent>). PCM::SetViewTarget's implicit-activation filter relies on that traversal and silently bailed, which manifested as "second camera never activates" for blended Camera Cut sections — see the diagnostic log that uncovered it.
 
 With the CineCamera as the Actor's RootComponent and this component as a plain sibling UActorComponent, the engine's standard "find a CameraComponent
 on the actor" path trivially finds the root, PCM::SetViewTarget creates the proxy, and we go down the same fast path ACineCameraActor uses. No special-case walks needed.
@@ -139,7 +141,7 @@ void SetEvaluationEnabled(bool bEnabled)
 
 Gate for on-demand ticking.
 
-Default: ON. OnRegister unconditionally calls SetEvaluationEnabled(true) so every LS Actor ticks by default (same as pre-Phase-G behavior). The ECS gate (UMovieSceneComposableCameraGateInstantiator) does not "open" the gate — it CLOSES it for tracked entities that aren't currently the Camera Cut Track's target or a blend participant. Entities it cannot reach (pre-upgrade LS assets, [UE](#ue) 5.5+ custom-binding spawnables the hook doesn't see, non-Sequencer hosts) keep the default always-on behavior, which is the correct graceful degradation.
+Default: ON. OnRegister unconditionally calls SetEvaluationEnabled(true) so every LS Actor ticks by default (same as pre-Phase-G behavior). The ECS gate (UMovieSceneComposableCameraGateInstantiator) does not "open" the gate — it CLOSES it for tracked entities that aren't currently the Camera Cut Track's target or a blend participant. Entities it cannot reach (pre-upgrade LS assets, UE 5.5+ custom-binding spawnables the hook doesn't see, non-Sequencer hosts) keep the default always-on behavior, which is the correct graceful degradation.
 
 Toggling to false tears down the internal camera so the Actor can go fully idle; toggling back to true respawns it lazily on the first tick.
 

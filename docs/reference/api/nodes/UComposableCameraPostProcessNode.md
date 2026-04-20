@@ -13,7 +13,7 @@ Works like a PostProcessVolume but scoped to a single camera type. Only properti
 
 The settings are applied once per tick via FPostProcessUtils::OverridePostProcessSettings onto OutCameraPose.PostProcessSettings. Multiple PostProcess nodes in the same camera stack compose in execution order (later nodes override earlier ones for the same bOverride_* property).
 
-No pins are declared — FPostProcessSettings is configured entirely through the Details panel, matching the PostProcessVolume workflow [UE](#ue) artists are already familiar with.
+No pins are declared — FPostProcessSettings is configured entirely through the Details panel, matching the PostProcessVolume workflow UE artists are already familiar with.
 
 ### Public Attributes
 

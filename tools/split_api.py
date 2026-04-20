@@ -208,6 +208,34 @@ for slug, items in file_groups.items():
         combined,
         flags=re.MULTILINE,
     )
+    # ── Post-processing: fix doxygen paragraph-collapse artefacts ────────────
+    #
+    # Doxygen treats blank-line-separated doc-comment paragraphs correctly, but
+    # it collapses *within* a paragraph — so a C++ comment written as:
+    #
+    #   * Section title
+    #   * ─────────────
+    #   * Body text here...
+    #
+    # produces a single <para> whose text is:
+    #   "Section title ─────────────── Body text here..."
+    #
+    # Fix 1 — ASCII-underline headings.
+    # Pattern: "Title words ─{5,} rest of paragraph"
+    # Convert to: "**Title words**\n\nrest of paragraph"
+    combined = re.sub(
+        r"([^─\n]+?) ─{5,}\s*",
+        lambda m: f"**{m.group(1).rstrip()}**\n\n",
+        combined,
+    )
+    #
+    # Fix 2 — Spurious [UE](#ue) namespace links.
+    # Doxygen resolves "UE" in prose as a ref to namespace UE, producing
+    # [UE](#ue) in the moxygen output. The anchor is never defined in our
+    # per-page files, so it renders as a broken in-page link. Strip it to
+    # plain text.
+    combined = re.sub(r"\[UE\]\(#ue\)", "UE", combined)
+    # ──────────────────────────────────────────────────────────────────────────
     # Collapse any runs of 3+ newlines we just introduced back to 2.
     combined = re.sub(r"\n{3,}", "\n\n", combined)
     out_path = cat_dir / f"{slug}.md"

@@ -12,7 +12,7 @@ Base class for one-shot compute nodes that run on the BeginPlay chain.
 
 Compute nodes are NOT camera nodes in the per-frame-evaluated sense. They run exactly once, between per-node Initialize and the first TickCamera, and their job is to perform arbitrary math / data shaping in C++ and publish the result to camera-level internal variables (or to output pins that are then plumbed through the graph).
 
-Why a dedicated base class instead of "just use a camera node"? ──────────────────────────────────────────────────────────────
+**Why a dedicated base class instead of "just use a camera node"?**
 
 * Camera nodes are walked per-frame by TickCamera and multicast through OnPreTick / OnPostTick. A compute node must not touch any of that — it would otherwise burn hot-path time on values that never change.
 
@@ -20,13 +20,13 @@ Why a dedicated base class instead of "just use a camera node"? ─────�
 
 * The editor-side graph hosts these on a separate BeginPlay chain rooted at UComposableCameraBeginPlayStartGraphNode, parallel to how regular camera nodes wire off the main Start sentinel. The sync/rebuild phases classify a UComposableCameraNodeGraphNode as camera-chain vs compute-chain by testing IsA<UComposableCameraComputeNodeBase> on its underlying NodeTemplate, which is exactly this base class — so the runtime discriminator "this belongs on the BeginPlay chain" is the same type check the editor uses.
 
-Why a dedicated class instead of UObject? ─────────────────────────────────────────
+**Why a dedicated class instead of UObject?**
 
 * K2 math graph nodes from the BlueprintGraph module do not work in our custom UEdGraph without significant engineering. The pragmatic Option B is: author a compute node in C++, use FMath / FVector / FQuat / UKismetMathLibrary directly, publish the result to internal variables, and let downstream camera nodes consume them.
 
 * Subclasses describe their inputs and outputs with the same pin declaration system as camera nodes (GetPinDeclarations), which keeps editor palette / pin rendering / type-asset authoring uniform.
 
-Lifecycle ─────────
+**Lifecycle**
 
 1. Camera activation fires [AComposableCameraCameraBase::InitializeNodes](../actors/AComposableCameraCameraBase.md#initializenodes).
 
