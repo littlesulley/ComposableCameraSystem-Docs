@@ -12,7 +12,6 @@
 | Return | Name | Description |
 |--------|------|-------------|
 | `bool` | [`bSyncToControlRotation`](#bsynctocontrolrotation)  |  |
-| `bool` | [`bDrawDebugInformation`](#bdrawdebuginformation)  |  |
 | `FName` | [`CurrentContext`](#currentcontext)  |  |
 | `AComposableCameraCameraBase *` | [`RunningCamera`](#runningcamera-2)  |  |
 | `FComposableCameraPose` | [`CurrentCameraPose`](#currentcamerapose)  |  |
@@ -25,14 +24,6 @@
 
 ```cpp
 bool bSyncToControlRotation { false }
-```
-
----
-
-#### bDrawDebugInformation { #bdrawdebuginformation }
-
-```cpp
-bool bDrawDebugInformation { false }
 ```
 
 ---
@@ -107,6 +98,9 @@ FOnCameraFinishConstructed CurrentOnPreBeginplayEvent
 | `FName` | [`GetActiveContextName`](#getactivecontextname-2) `const` | Get the name of the currently active (top) context. |
 | `AComposableCameraCameraBase *` | [`GetRunningCamera`](#getrunningcamera-3) `const` `inline` |  |
 | `FComposableCameraPose` | [`GetCurrentCameraPose`](#getcurrentcamerapose) `const` `inline` |  |
+| `const UComposableCameraContextStack *` | [`GetContextStack`](#getcontextstack) `const` `inline` | Read-only access to the Tier-1 context stack. Intended for debug tooling ([FComposableCameraDebugPanel](../structs/FComposableCameraDebugPanel.md#fcomposablecameradebugpanel), editor inspectors, tests). Gameplay code should go through the PCM's ActivateCamera / Pop* methods — do not mutate the stack through this pointer. |
+| `const UComposableCameraModifierManager *` | [`GetModifierManager`](#getmodifiermanager) `const` `inline` | Read-only access to the modifier manager. Intended for debug tooling ([FComposableCameraDebugPanel](../structs/FComposableCameraDebugPanel.md#fcomposablecameradebugpanel)'s Modifier region). Gameplay code should go through `AddModifier` / `RemoveModifier` on the PCM, which also triggers reactivation on change. |
+| `void` | [`GetPoseHistory`](#getposehistory) `const` | Copy the per-frame pose history ring into `OutHistory`, oldest entry first. The PCM captures one entry per `DoUpdateCamera` tick after the current-frame pose is finalized; capacity caps at `PoseHistoryCapacity` frames (~2 s at 60 fps). |
 | `UComposableCameraTransitionBase *` | [`ResolveTransition`](#resolvetransition) `const` | Resolve which transition to use when switching from one type-asset camera to another. Implements the five-tier resolution chain: |
 | `FOnCameraFinishConstructed` | [`PrepareResumeCallback`](#prepareresumecallback)  | Prepare the pending type-asset state for a camera that is being resumed (e.g. after a context pop). If the camera was originally built from a type asset, this restores PendingTypeAsset / PendingParameterBlock and returns a callback bound to OnTypeAssetCameraConstructed. If not a type-asset camera, returns an empty (unbound) delegate. |
 
@@ -398,6 +392,46 @@ inline FComposableCameraPose GetCurrentCameraPose() const
 
 ---
 
+#### GetContextStack { #getcontextstack }
+
+`const` `inline`
+
+```cpp
+inline const UComposableCameraContextStack * GetContextStack() const
+```
+
+Read-only access to the Tier-1 context stack. Intended for debug tooling ([FComposableCameraDebugPanel](../structs/FComposableCameraDebugPanel.md#fcomposablecameradebugpanel), editor inspectors, tests). Gameplay code should go through the PCM's ActivateCamera / Pop* methods — do not mutate the stack through this pointer.
+
+---
+
+#### GetModifierManager { #getmodifiermanager }
+
+`const` `inline`
+
+```cpp
+inline const UComposableCameraModifierManager * GetModifierManager() const
+```
+
+Read-only access to the modifier manager. Intended for debug tooling ([FComposableCameraDebugPanel](../structs/FComposableCameraDebugPanel.md#fcomposablecameradebugpanel)'s Modifier region). Gameplay code should go through `AddModifier` / `RemoveModifier` on the PCM, which also triggers reactivation on change.
+
+---
+
+#### GetPoseHistory { #getposehistory }
+
+`const`
+
+```cpp
+void GetPoseHistory(TArray< FComposableCameraPoseHistoryEntry > & OutHistory) const
+```
+
+Copy the per-frame pose history ring into `OutHistory`, oldest entry first. The PCM captures one entry per `DoUpdateCamera` tick after the current-frame pose is finalized; capacity caps at `PoseHistoryCapacity` frames (~2 s at 60 fps).
+
+Debug-only consumer: the Pose History panel reads this every frame to render sparklines and hover tooltips. Not exposed to Blueprint — gameplay code should not depend on it.
+
+In shipping builds this is a no-op returning an empty array (the ring itself is `#if !UE_BUILD_SHIPPING`). The signature is kept in all configurations so panel code can call it unconditionally without per-config `#if` guards at every call site.
+
+---
+
 #### ResolveTransition { #resolvetransition }
 
 `const`
@@ -444,6 +478,42 @@ Prepare the pending type-asset state for a camera that is being resumed (e.g. af
 
 Called by ContextStack::PopActiveContextInternal so the resumed camera is fully reconstructed from its original type asset instead of producing an empty shell.
 
+### Public Static Attributes
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `constexpr int32` | [`PoseHistoryCapacity`](#posehistorycapacity) `static` | Fixed ring-buffer capacity. 120 frames ≈ 2 seconds at 60 fps, which is enough to catch the "what happened half a second ago?" class of debug questions without blowing memory. Per-entry footprint is ~48 bytes so total is ~6 KB per PCM. |
+
+---
+
+#### PoseHistoryCapacity { #posehistorycapacity }
+
+`static`
+
+```cpp
+constexpr int32 PoseHistoryCapacity = 120
+```
+
+Fixed ring-buffer capacity. 120 frames ≈ 2 seconds at 60 fps, which is enough to catch the "what happened half a second ago?" class of debug questions without blowing memory. Per-entry footprint is ~48 bytes so total is ~6 KB per PCM.
+
+### Public Static Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `bool` | [`IsPoseHistoryFrozen`](#isposehistoryfrozen) `static` | Whether the pose-history ring buffer is currently frozen (driven by `CCS.Debug.Panel.PoseHistory.Freeze`). Read-only accessor for the debug panel so it can render a `[FROZEN]` indicator in the title bar without having to duplicate the CVar declaration. Debug-only; not declared outside `!UE_BUILD_SHIPPING`. |
+
+---
+
+#### IsPoseHistoryFrozen { #isposehistoryfrozen }
+
+`static`
+
+```cpp
+static bool IsPoseHistoryFrozen()
+```
+
+Whether the pose-history ring buffer is currently frozen (driven by `CCS.Debug.Panel.PoseHistory.Freeze`). Read-only accessor for the debug panel so it can render a `[FROZEN]` indicator in the title bar without having to duplicate the CVar declaration. Debug-only; not declared outside `!UE_BUILD_SHIPPING`.
+
 ### Protected Methods
 
 | Return | Name | Description |
@@ -481,6 +551,9 @@ virtual void DoUpdateCamera(float DeltaTime)
 | `TObjectPtr< UComposableCameraModifierManager >` | [`ModifierManager`](#modifiermanager)  |  |
 | `FMinimalViewInfo` | [`LastDesiredView`](#lastdesiredview)  |  |
 | `bool` | [`bIsImplicitlyActivating`](#bisimplicitlyactivating)  | Guard against re-entrant SetViewTarget calls during implicit activation. When the PCM calls ActivateNewCamera internally, the Director may call Super::SetViewTarget as part of its bookkeeping — the guard prevents that from recursing back into implicit activation. |
+| `TArray< FComposableCameraPoseHistoryEntry >` | [`PoseHistoryRing`](#posehistoryring)  |  |
+| `int32` | [`PoseHistoryHead`](#posehistoryhead)  |  |
+| `int32` | [`PoseHistoryCountUsed`](#posehistorycountused)  |  |
 
 ---
 
@@ -534,6 +607,30 @@ bool bIsImplicitlyActivating { false }
 
 Guard against re-entrant SetViewTarget calls during implicit activation. When the PCM calls ActivateNewCamera internally, the Director may call Super::SetViewTarget as part of its bookkeeping — the guard prevents that from recursing back into implicit activation.
 
+---
+
+#### PoseHistoryRing { #posehistoryring }
+
+```cpp
+TArray< FComposableCameraPoseHistoryEntry > PoseHistoryRing
+```
+
+---
+
+#### PoseHistoryHead { #posehistoryhead }
+
+```cpp
+int32 PoseHistoryHead = 0
+```
+
+---
+
+#### PoseHistoryCountUsed { #posehistorycountused }
+
+```cpp
+int32 PoseHistoryCountUsed = 0
+```
+
 ### Private Methods
 
 | Return | Name | Description |
@@ -541,6 +638,7 @@ Guard against re-entrant SetViewTarget calls during implicit activation. When th
 | `void` | [`UpdateActions`](#updateactions)  |  |
 | `void` | [`BuildModifierDebugString`](#buildmodifierdebugstring)  |  |
 | `void` | [`OnTypeAssetCameraConstructed`](#ontypeassetcameraconstructed)  | Called by the dynamic delegate during type-asset-based camera activation. |
+| `void` | [`CaptureCurrentFrameToPoseHistory`](#capturecurrentframetoposehistory)  | Capture one frame into the ring. Called from `DoUpdateCamera` after `CurrentCameraPose` is finalized. |
 
 ---
 
@@ -567,3 +665,13 @@ void OnTypeAssetCameraConstructed(AComposableCameraCameraBase * Camera)
 ```
 
 Called by the dynamic delegate during type-asset-based camera activation.
+
+---
+
+#### CaptureCurrentFrameToPoseHistory { #capturecurrentframetoposehistory }
+
+```cpp
+void CaptureCurrentFrameToPoseHistory()
+```
+
+Capture one frame into the ring. Called from `DoUpdateCamera` after `CurrentCameraPose` is finalized.

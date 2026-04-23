@@ -39,7 +39,7 @@ Raw bytes holding the value. Size depends on PinType.
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`Set`](#set) `inline` | Set a typed value. |
-| `bool` | [`Get`](#get-1) `const` `inline` | Get a typed value. Returns false if types mismatch or data is empty. |
+| `bool` | [`Get`](#get-2) `const` `inline` | Get a typed value. Returns false if types mismatch or data is empty. |
 
 ---
 
@@ -55,7 +55,7 @@ Set a typed value.
 
 ---
 
-#### Get { #get-1 }
+#### Get { #get-2 }
 
 `const` `inline`
 

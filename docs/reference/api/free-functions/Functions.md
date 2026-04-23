@@ -84,6 +84,12 @@ Called when the camera finishes constructed, before BeginPlay is called.
 DECLARE_LOG_CATEGORY_EXTERN(LogComposableCameraSystem, Log, All)
 ```
 
+#### DECLARE_STATS_GROUP { #declare_stats_group }
+
+```cpp
+DECLARE_STATS_GROUP(TEXT("ComposableCamera"), STATGROUP_CCS, STATCAT_Advanced)
+```
+
 #### TryMapPropertyToPinType { #trymappropertytopintype }
 
 ```cpp
@@ -128,20 +134,126 @@ DECLARE_DYNAMIC_DELEGATE_RetVal(TArray< float >, FOnReceiveMixingCameraWeights)
 
 # ComposableCameraDebug { #composablecameradebug }
 
-Namespace for debug formatting utilities used by both the ShowDebug HUD (runtime) and the editor debug overlay (WITH_EDITOR).
+Debug formatters used by the ShowDebug HUD (runtime) and the editor debug overlay (WITH_EDITOR). Two faces per formatter:
 
-All functions allocate FStrings — they are intended for debug display, not hot-path evaluation.
+AppendX(Builder, ...) — writes into a caller-provided FStringBuilderBase. Zero-alloc as long as the builder's inline buffer is big enough (TStringBuilder<256> comfortably fits any single pin value). Use this on any hot path that produces one text line per tick.
+
+FormatX(...) — returns a freshly-allocated FString. Thin wrapper around AppendX. Kept for cold call sites (property customizations, tests, showdebug sub-headers). Do NOT introduce new hot-path uses.
 
 ### Functions
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `FString` | [`FormatFloat`](#formatfloat) `inline` | Format a float to a compact display string. |
-| `FString` | [`FormatVector`](#formatvector) `inline` | Format an FVector to a compact display string. |
-| `FString` | [`FormatRotator`](#formatrotator) `inline` | Format an FRotator to a compact display string. |
-| `FString` | [`FormatTransform`](#formattransform) `inline` | Format an FTransform to a compact display string. |
-| `FString` | [`FormatTypedValue`](#formattypedvalue) `inline` | Read a typed value at a known byte offset from the data block and format as string. EnumType is consulted only when PinType == Enum; when supplied, the int64 slot is formatted as the corresponding entry name (e.g. "EMyEnum::Alpha"). When omitted for an Enum slot the raw int64 value is printed instead — debug-only fallback. |
-| `FString` | [`FormatOutputPinValue`](#formatoutputpinvalue) `inline` | Read a typed output pin value from the data block and format as string. |
+| `void` | [`AppendFloat`](#appendfloat) `inline` | Append a float to the builder with 2-decimal precision. |
+| `void` | [`AppendVector`](#appendvector) `inline` | Append an FVector in `(X, Y, Z)` form, 1-decimal precision. |
+| `void` | [`AppendRotator`](#appendrotator) `inline` | Append an FRotator in `(P=..., Y=..., R=...)` form, 1-decimal precision. |
+| `void` | [`AppendTransform`](#appendtransform) `inline` | Append an FTransform with Loc/Rot/Scale components. |
+| `void` | [`AppendTypedValue`](#appendtypedvalue) `inline` | Read a typed value at a byte offset from the data block and append as text. EnumType is consulted only when PinType == Enum; when supplied, the int64 slot is rendered as the authored entry name. When omitted for an Enum slot, the raw int64 is printed so debug output never silently lies about the slot. |
+| `void` | [`AppendOutputPinValue`](#appendoutputpinvalue) `inline` | Read a typed output pin value from the data block and append as text. |
+| `void` | [`AppendIndent`](#appendindent) `inline` | Append `N` spaces to the builder. |
+| `void` | [`AppendTreeNodeLine`](#appendtreenodeline) `inline` | Append one tree-node snapshot as a single text line (no trailing newline). `BaseIndentCols` is the number of spaces prefixed before the per-depth indent (2 spaces per Depth level). Used by both `showdebug camera` and any future dump command that emits the tree as text. |
+| `FString` | [`FormatFloat`](#formatfloat) `inline` |  |
+| `FString` | [`FormatVector`](#formatvector) `inline` |  |
+| `FString` | [`FormatRotator`](#formatrotator) `inline` |  |
+| `FString` | [`FormatTransform`](#formattransform) `inline` |  |
+| `FString` | [`FormatTypedValue`](#formattypedvalue) `inline` |  |
+| `FString` | [`FormatOutputPinValue`](#formatoutputpinvalue) `inline` |  |
+
+---
+
+#### AppendFloat { #appendfloat }
+
+`inline`
+
+```cpp
+inline void AppendFloat(FStringBuilderBase & Builder, double Value)
+```
+
+Append a float to the builder with 2-decimal precision.
+
+---
+
+#### AppendVector { #appendvector }
+
+`inline`
+
+```cpp
+inline void AppendVector(FStringBuilderBase & Builder, const FVector & V)
+```
+
+Append an FVector in `(X, Y, Z)` form, 1-decimal precision.
+
+---
+
+#### AppendRotator { #appendrotator }
+
+`inline`
+
+```cpp
+inline void AppendRotator(FStringBuilderBase & Builder, const FRotator & R)
+```
+
+Append an FRotator in `(P=..., Y=..., R=...)` form, 1-decimal precision.
+
+---
+
+#### AppendTransform { #appendtransform }
+
+`inline`
+
+```cpp
+inline void AppendTransform(FStringBuilderBase & Builder, const FTransform & T)
+```
+
+Append an FTransform with Loc/Rot/Scale components.
+
+---
+
+#### AppendTypedValue { #appendtypedvalue }
+
+`inline`
+
+```cpp
+inline void AppendTypedValue(FStringBuilderBase & Builder, const FComposableCameraRuntimeDataBlock & DataBlock, int32 Offset, EComposableCameraPinType PinType, const UEnum * EnumType)
+```
+
+Read a typed value at a byte offset from the data block and append as text. EnumType is consulted only when PinType == Enum; when supplied, the int64 slot is rendered as the authored entry name. When omitted for an Enum slot, the raw int64 is printed so debug output never silently lies about the slot.
+
+---
+
+#### AppendOutputPinValue { #appendoutputpinvalue }
+
+`inline`
+
+```cpp
+inline void AppendOutputPinValue(FStringBuilderBase & Builder, const FComposableCameraRuntimeDataBlock & DataBlock, int32 NodeIndex, FName PinName, EComposableCameraPinType PinType, const UEnum * EnumType)
+```
+
+Read a typed output pin value from the data block and append as text.
+
+---
+
+#### AppendIndent { #appendindent }
+
+`inline`
+
+```cpp
+inline void AppendIndent(FStringBuilderBase & Builder, int32 N)
+```
+
+Append `N` spaces to the builder.
+
+---
+
+#### AppendTreeNodeLine { #appendtreenodeline }
+
+`inline`
+
+```cpp
+inline void AppendTreeNodeLine(FStringBuilderBase & Builder, const FComposableCameraTreeNodeSnapshot & Node, int32 BaseIndentCols)
+```
+
+Append one tree-node snapshot as a single text line (no trailing newline). `BaseIndentCols` is the number of spaces prefixed before the per-depth indent (2 spaces per Depth level). Used by both `showdebug camera` and any future dump command that emits the tree as text.
 
 ---
 
@@ -153,8 +265,6 @@ All functions allocate FStrings — they are intended for debug display, not hot
 inline FString FormatFloat(double Value)
 ```
 
-Format a float to a compact display string.
-
 ---
 
 #### FormatVector { #formatvector }
@@ -164,8 +274,6 @@ Format a float to a compact display string.
 ```cpp
 inline FString FormatVector(const FVector & V)
 ```
-
-Format an FVector to a compact display string.
 
 ---
 
@@ -177,8 +285,6 @@ Format an FVector to a compact display string.
 inline FString FormatRotator(const FRotator & R)
 ```
 
-Format an FRotator to a compact display string.
-
 ---
 
 #### FormatTransform { #formattransform }
@@ -188,8 +294,6 @@ Format an FRotator to a compact display string.
 ```cpp
 inline FString FormatTransform(const FTransform & T)
 ```
-
-Format an FTransform to a compact display string.
 
 ---
 
@@ -201,8 +305,6 @@ Format an FTransform to a compact display string.
 inline FString FormatTypedValue(const FComposableCameraRuntimeDataBlock & DataBlock, int32 Offset, EComposableCameraPinType PinType, const UEnum * EnumType)
 ```
 
-Read a typed value at a known byte offset from the data block and format as string. EnumType is consulted only when PinType == Enum; when supplied, the int64 slot is formatted as the corresponding entry name (e.g. "EMyEnum::Alpha"). When omitted for an Enum slot the raw int64 value is printed instead — debug-only fallback.
-
 ---
 
 #### FormatOutputPinValue { #formatoutputpinvalue }
@@ -212,8 +314,6 @@ Read a typed value at a known byte offset from the data block and format as stri
 ```cpp
 inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & DataBlock, int32 NodeIndex, FName PinName, EComposableCameraPinType PinType, const UEnum * EnumType)
 ```
-
-Read a typed output pin value from the data block and format as string.
 
 # ComposableCameraSystem { #composablecamerasystem }
 

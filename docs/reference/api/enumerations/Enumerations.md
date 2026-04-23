@@ -173,6 +173,30 @@ Tag for entries in the serialized execution chain.
 
 The execution chain is a linear sequence of operations the camera runs each frame: camera nodes do the actual pose computation, and internal-variable Set operations write scratch values between camera nodes. See [FComposableCameraExecEntry](../structs/FComposableCameraExecEntry.md#fcomposablecameraexecentry).
 
+#### EComposableCameraTreeNodeKind { #ecomposablecameratreenodekind }
+
+```cpp
+enum EComposableCameraTreeNodeKind
+```
+
+| Value | Description |
+|-------|-------------|
+| `Leaf` |  |
+| `ReferenceLeaf` |  |
+| `InnerTransition` |  |
+
+Runtime debug snapshot structures consumed by [FComposableCameraDebugPanel](../structs/FComposableCameraDebugPanel.md#fcomposablecameradebugpanel).
+
+These are distinct from the editor-side FComposableCameraDebugSnapshot ([Core/ComposableCameraDebugSnapshot.h](#composablecameradebugsnapshoth), WITH_EDITOR only). The editor one captures a SINGLE camera's per-node state for the Type Asset Editor's graph overlay. These structs capture the entire Tier-1 context stack + each context's Tier-2 evaluation tree, for the in-viewport debug panel (runtime, always available).
+
+Design:
+
+* Tree nodes are flattened DFS pre-order with a Depth field, so the renderer does not need recursion and can pick connector glyphs (vertical stem + elbow) from a single pass.
+
+* All pointer data is resolved eagerly into display strings at snapshot time — consumers never deref anything runtime-owned. This makes the snapshot safe to cache and freeze.
+
+* Progress / lifetime fields are captured as floats, not pre-formatted strings, so the renderer can draw real progress bars instead of parsing text. Kind of an evaluation-tree node. Parallels the TVariant in [FComposableCameraEvaluationTreeNode](../structs/FComposableCameraEvaluationTreeNode.md#fcomposablecameraevaluationtreenode).
+
 #### EComposableCameraNodeLevelSequenceCompatibility { #ecomposablecameranodelevelsequencecompatibility }
 
 ```cpp

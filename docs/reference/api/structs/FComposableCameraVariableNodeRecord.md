@@ -18,7 +18,7 @@ Multiple Get/Set nodes can exist for the same underlying variable — each is tr
 | `FName` | [`VariableName`](#variablename-2)  | Legacy / display fallback name of the internal variable. Authoritative identity is VariableGuid; this is kept as a debug aid and legacy fallback. |
 | `bool` | [`bIsSetter`](#bissetter)  | True for Set nodes, false for Get nodes. |
 | `bool` | [`bIsComputeChain`](#biscomputechain)  | True when this variable node lives on the BeginPlay compute chain, false when it lives on the per-frame camera chain. Determines which index space Connections[i].CameraNodeIndex references: false → NodeTemplates, true → ComputeNodeTemplates. |
-| `FVector2D` | [`Position`](#position-1)  | Serialized position on the graph canvas. |
+| `FVector2D` | [`Position`](#position-3)  | Serialized position on the graph canvas. |
 | `TArray< FComposableCameraVariablePinConnection >` | [`Connections`](#connections)  | Node endpoints this variable node is wired to. The index space of each connection's CameraNodeIndex depends on bIsComputeChain above. |
 
 ---
@@ -75,7 +75,7 @@ Defaults to false for migration safety: records saved before this field existed 
 
 ---
 
-#### Position { #position-1 }
+#### Position { #position-3 }
 
 ```cpp
 FVector2D Position = FVector2D::ZeroVector

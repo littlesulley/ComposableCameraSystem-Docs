@@ -18,13 +18,15 @@
 | `AComposableCameraCameraBase *` | [`ActivateNewCamera`](#activatenewcamera-1)  | Activate a new camera using a raw transition instance (not wrapped in a DataAsset). Used by ActivateNewCameraFromTypeAsset when the type asset provides its own DefaultTransition as an instanced UComposableCameraTransitionBase*. The transition is duplicated into the Director's context before use. |
 | `AComposableCameraCameraBase *` | [`ActivateNewCameraWithReferenceSource`](#activatenewcamerawithreferencesource)  | Activate a new camera with a reference to another Director as the transition source. Used for inter-context transitions: the reference leaf evaluates the source Director live. |
 | `AComposableCameraCameraBase *` | [`ActivateNewCameraWithReferenceSource`](#activatenewcamerawithreferencesource-1)  | Inter-context activation using a raw transition instance. Used by ActivateNewCameraFromTypeAsset when the type asset provides a DefaultTransition. |
+| `AComposableCameraCameraBase *` | [`ResumeCurrentCameraWithReferenceSource`](#resumecurrentcamerawithreferencesource)  | Resume this director's ALREADY-RUNNING camera with an inter-context transition whose source is `SourceDirector`'s output. |
 | `AComposableCameraCameraBase *` | [`ReactivateCurrentCamera`](#reactivatecurrentcamera)  |  |
 | `FComposableCameraPose` | [`Evaluate`](#evaluate)  |  |
 | `AComposableCameraCameraBase *` | [`GetRunningCamera`](#getrunningcamera) `const` `inline` | Get the currently running (target) camera in this Director's evaluation tree. |
+| `UComposableCameraEvaluationTree *` | [`GetEvaluationTree`](#getevaluationtree) `const` `inline` | Read-only access to the director's evaluation tree. Intended for debug tooling (viewport debug transition walker, snapshot builders, tests). Returns the raw pointer — do not cache it across activations, since the tree is torn down with the director. |
 | `const FComposableCameraPose &` | [`GetLastEvaluatedPose`](#getlastevaluatedpose) `const` `inline` | Get the last evaluated (blended) pose from this Director. |
 | `const FComposableCameraPose &` | [`GetPreviousEvaluatedPose`](#getpreviousevaluatedpose) `const` `inline` | Get the previous frame's evaluated (blended) pose from this Director. |
 | `void` | [`DestroyAllCameras`](#destroyallcameras)  | Destroy all cameras in this Director's evaluation tree. Called when a context is popped. |
-| `void` | [`BuildDebugString`](#builddebugstring) `const` | Build a debug string showing this Director's evaluation tree. |
+| `void` | [`BuildDebugSnapshot`](#builddebugsnapshot) `const` | Populate the context snapshot's director-owned fields: RunningCameraDisplay, LastPose, and the flattened TreeNodes (via the evaluation tree). The ContextName / active / base / pending-destroy flags are populated by the caller ([UComposableCameraContextStack::BuildDebugSnapshot](UComposableCameraContextStack.md#builddebugsnapshot-1)) since only the stack knows its own structure. |
 
 ---
 
@@ -83,10 +85,41 @@ Activate a new camera with a reference to another Director as the transition sou
 #### ActivateNewCameraWithReferenceSource { #activatenewcamerawithreferencesource-1 }
 
 ```cpp
-AComposableCameraCameraBase * ActivateNewCameraWithReferenceSource(AComposableCameraPlayerCameraManager * PlayerCameraManager, TSubclassOf< AComposableCameraCameraBase > CameraClass, UComposableCameraTransitionBase * TransitionInstance, const FComposableCameraActivateParams & ActivationParams, FOnCameraFinishConstructed OnPreBeginplayEvent, UComposableCameraDirector * SourceDirector)
+AComposableCameraCameraBase * ActivateNewCameraWithReferenceSource(AComposableCameraPlayerCameraManager * PlayerCameraManager, TSubclassOf< AComposableCameraCameraBase > CameraClass, UComposableCameraTransitionBase * TransitionInstance, const FComposableCameraActivateParams & ActivationParams, FOnCameraFinishConstructed OnPreBeginplayEvent, UComposableCameraDirector * SourceDirector, UComposableCameraTransitionBase ** OutTransition)
 ```
 
 Inter-context activation using a raw transition instance. Used by ActivateNewCameraFromTypeAsset when the type asset provides a DefaultTransition.
+
+`OutTransition` (optional): the duplicated transition instance installed in the tree's new Inner. Callers that need to bind cleanup to the activation's lifecycle (e.g. the context stack, which demotes non-top transient contexts to PendingDestroyEntries and clears them from this transition's `OnTransitionFinishesDelegate`) read it via this out-parameter.
+
+---
+
+#### ResumeCurrentCameraWithReferenceSource { #resumecurrentcamerawithreferencesource }
+
+```cpp
+AComposableCameraCameraBase * ResumeCurrentCameraWithReferenceSource(AComposableCameraPlayerCameraManager * PlayerCameraManager, UComposableCameraTransitionBase * TransitionInstance, UComposableCameraDirector * SourceDirector, bool bFreezeSourceCamera)
+```
+
+Resume this director's ALREADY-RUNNING camera with an inter-context transition whose source is `SourceDirector`'s output.
+
+Unlike `ActivateNewCameraWithReferenceSource`, this path does NOT spawn a new camera and does NOT destroy the current one — the existing `RunningCamera` stays in place and keeps all its per-node state (damping, interpolator, spline progress, etc.). The only mutation to the tree is wrapping its current `RootNode` as the right child of a new Inner node holding the pop transition + a `RefLeaf→SourceDirector` as the left child.
+
+This is the correct code path for context-stack pops: the camera that was running before the push should resume with no state reset. Treat `ActivateNewCameraWithReferenceSource` as the "switch to a
+fresh instance" path (used for pushes / new activations) and this as the "preserve existing instance" path.
+
+**Parameters**
+
+* `PlayerCameraManager` Owning PCM, used for DeltaTime on transition init. 
+
+* `TransitionInstance` Already-duplicated transition (caller owns the DuplicateObject). 
+
+* `SourceDirector` The popped director to reference as the blend source. 
+
+* `bFreezeSourceCamera` If true, the RefLeaf returns SourceDirector's cached LastEvaluatedPose every frame instead of re-evaluating — use when the source context is about to be destroyed and its live evaluation would be wasted work. 
+
+**Returns**
+
+The resumed (unchanged) camera, or nullptr if the tree had no camera to resume.
 
 ---
 
@@ -115,6 +148,18 @@ inline AComposableCameraCameraBase * GetRunningCamera() const
 ```
 
 Get the currently running (target) camera in this Director's evaluation tree.
+
+---
+
+#### GetEvaluationTree { #getevaluationtree }
+
+`const` `inline`
+
+```cpp
+inline UComposableCameraEvaluationTree * GetEvaluationTree() const
+```
+
+Read-only access to the director's evaluation tree. Intended for debug tooling (viewport debug transition walker, snapshot builders, tests). Returns the raw pointer — do not cache it across activations, since the tree is torn down with the director.
 
 ---
 
@@ -152,15 +197,15 @@ Destroy all cameras in this Director's evaluation tree. Called when a context is
 
 ---
 
-#### BuildDebugString { #builddebugstring }
+#### BuildDebugSnapshot { #builddebugsnapshot }
 
 `const`
 
 ```cpp
-void BuildDebugString(TStringBuilder< 1024 > & OutString, int32 IndentLevel) const
+void BuildDebugSnapshot(FComposableCameraContextSnapshot & OutSnapshot) const
 ```
 
-Build a debug string showing this Director's evaluation tree.
+Populate the context snapshot's director-owned fields: RunningCameraDisplay, LastPose, and the flattened TreeNodes (via the evaluation tree). The ContextName / active / base / pending-destroy flags are populated by the caller ([UComposableCameraContextStack::BuildDebugSnapshot](UComposableCameraContextStack.md#builddebugsnapshot-1)) since only the stack knows its own structure.
 
 ### Private Attributes
 

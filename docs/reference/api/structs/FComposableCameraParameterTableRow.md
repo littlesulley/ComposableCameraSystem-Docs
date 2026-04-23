@@ -16,7 +16,7 @@ Parameter values are stored as strings inside [FComposableCameraExposedParameter
 | Return | Name | Description |
 |--------|------|-------------|
 | `TSoftObjectPtr< UComposableCameraTypeAsset >` | [`CameraType`](#cameratype)  | The camera type this row activates. Soft-referenced so DataTable assets don't force-load every camera type in the project at boot. |
-| `FName` | [`ContextName`](#contextname-1)  | Context to activate into. If NAME_None, the active context is used. |
+| `FName` | [`ContextName`](#contextname-3)  | Context to activate into. If NAME_None, the active context is used. |
 | `TSoftObjectPtr< UComposableCameraTransitionDataAsset >` | [`TransitionOverride`](#transitionoverride)  | Optional transition override. If null, the type asset's default transition is used. |
 | `FComposableCameraActivateParams` | [`ActivationParams`](#activationparams)  | Activation parameters forwarded to the context stack when this row is used. Contains pose preservation, initial transform, transient settings, etc. — identical to the struct exposed on the K2 node. |
 | `FComposableCameraExposedParameterValues` | [`Parameters`](#parameters)  | Per-parameter values for this row's CameraType. The wrapper struct exists so the editor can hang an IPropertyTypeCustomization off it — customizations do not fire at the root of FStructureDetailsView, only on child struct properties. |
@@ -33,7 +33,7 @@ The camera type this row activates. Soft-referenced so DataTable assets don't fo
 
 ---
 
-#### ContextName { #contextname-1 }
+#### ContextName { #contextname-3 }
 
 ```cpp
 FName ContextName

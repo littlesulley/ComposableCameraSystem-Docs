@@ -16,6 +16,7 @@ An actor managing all camera modifiers.
 | `void` | [`AddModifier`](#addmodifier)  |  |
 | `void` | [`RemoveModifier`](#removemodifier)  |  |
 | `FComposableCameraModifierData &` | [`GetModifierData`](#getmodifierdata) `inline` |  |
+| `const FComposableCameraModifierData &` | [`GetModifierData`](#getmodifierdata-1) `const` `inline` | Const overload for read-only access (debug tooling / inspectors). Returns the same struct by const reference — callers can iterate the ModifierData / EffectiveModifiers maps but cannot mutate them. |
 
 ---
 
@@ -42,6 +43,18 @@ void RemoveModifier(UComposableCameraNodeModifierDataAsset * ModifierAsset)
 ```cpp
 inline FComposableCameraModifierData & GetModifierData()
 ```
+
+---
+
+#### GetModifierData { #getmodifierdata-1 }
+
+`const` `inline`
+
+```cpp
+inline const FComposableCameraModifierData & GetModifierData() const
+```
+
+Const overload for read-only access (debug tooling / inspectors). Returns the same struct by const reference — callers can iterate the ModifierData / EffectiveModifiers maps but cannot mutate them.
 
 ### Private Attributes
 

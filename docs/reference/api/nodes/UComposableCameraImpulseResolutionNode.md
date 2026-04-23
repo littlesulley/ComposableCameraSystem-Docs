@@ -38,7 +38,7 @@ UComposableCameraInterpolatorBase * Interpolator
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-18) `virtual` |  |
-| `void` | [`BeginDestroy`](#begindestroy-2) `virtual` |  |
+| `void` | [`BeginDestroy`](#begindestroy-1) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
 | `void` | [`AddImpulseShape`](#addimpulseshape) `inline` |  |
 | `void` | [`RemoveImpulseShape`](#removeimpulseshape) `inline` |  |
@@ -65,7 +65,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### BeginDestroy { #begindestroy-2 }
+#### BeginDestroy { #begindestroy-1 }
 
 `virtual`
 

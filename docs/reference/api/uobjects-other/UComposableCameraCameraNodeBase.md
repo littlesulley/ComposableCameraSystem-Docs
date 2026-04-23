@@ -14,7 +14,7 @@ Base node for all camera nodes.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`Initialize`](#initialize-1)  |  |
+| `void` | [`Initialize`](#initialize-3)  |  |
 | `void` | [`TickNode`](#ticknode)  |  |
 | `FGameplayTag` | [`GetOwningCameraTag`](#getowningcameratag) `const` |  |
 | `AComposableCameraCameraBase *` | [`GetOwningCamera`](#getowningcamera) `const` `inline` |  |
@@ -67,10 +67,12 @@ Base node for all camera nodes.
 |  | [`DECLARE_FUNCTION`](#declare_function-3) `inline` |  |
 | `void` | [`OnPreTick`](#onpretick-1) `virtual` |  |
 | `void` | [`OnPostTick`](#onposttick-1) `virtual` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-2) `virtual` `const` `inline` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`DrawNodeDebug2D`](#drawnodedebug2d) `virtual` `const` `inline` | 2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos). |
 
 ---
 
-#### Initialize { #initialize-1 }
+#### Initialize { #initialize-3 }
 
 ```cpp
 void Initialize(AComposableCameraCameraBase * InOwningCamera, AComposableCameraPlayerCameraManager * InPlayerCameraManager)
@@ -232,7 +234,7 @@ For each mappable EditAnywhere property on the subobject, checks if the compound
 
 Safe to call when RuntimeDataBlock is null (no-op).
 
-Prefer letting [Initialize()](#initialize-1) handle this automatically (it calls AutoApplySubobjectPinValues before OnInitialize). Direct calls are only needed for unusual subobject relationships.
+Prefer letting [Initialize()](#initialize-3) handle this automatically (it calls AutoApplySubobjectPinValues before OnInitialize). Direct calls are only needed for unusual subobject relationships.
 
 ---
 
@@ -246,7 +248,7 @@ Re-resolve every declared top-level input pin into its matching UPROPERTY field 
 
 The binding between a pin and a UPROPERTY is by exact FName match against the name declared in [GetPinDeclarations()](#getpindeclarations). Each matched UPROPERTY must map cleanly to an EComposableCameraPinType (via TryMapPropertyToPinType) — if a pin has no backing UPROPERTY or the types don't align, the pin is skipped here and subclass code must use [GetInputPinValue<T>()](#getinputpinvalue) for it.
 
-Subobject property pins ("Subobject.Field" compound names) are NOT touched by this method — they are handled once at [Initialize()](#initialize-1) via AutoApplySubobjectPinValues().
+Subobject property pins ("Subobject.Field" compound names) are NOT touched by this method — they are handled once at [Initialize()](#initialize-3) via AutoApplySubobjectPinValues().
 
 Performance: the per-class binding table is built once on first use and cached module-locally. Per-frame cost is a tight switch-dispatch loop with no reflection, one raw memory write per matched pin.
 
@@ -614,6 +616,40 @@ virtual void OnPreTick(float DeltaTime, const FComposableCameraPose & CurrentCam
 virtual void OnPostTick(float DeltaTime, const FComposableCameraPose & CurrentCameraPose, FComposableCameraPose & OutCameraPose)
 ```
 
+---
+
+#### DrawNodeDebug { #drawnodedebug-2 }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline void DrawNodeDebug(class UWorld * World, bool bViewerIsOutsideCamera) const
+```
+
+Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode.
+
+Access the owning camera via `OwningCamera` and current-frame pin values via the usual `GetInputPinValue<T>()` / member-read path — this hook fires AFTER TickNode, so pin-backed UPROPERTYs still hold the resolved values from the most recent evaluation.
+
+`bViewerIsOutsideCamera` mirrors the ticker's frustum-draw flag: true when the viewer is observing the camera from outside (F8 eject, SIE, or `CCS.Debug.Viewport.AlwaysShow`), false when the player is looking through the camera. Most gizmos (pivot spheres at distant characters, lines to look-at targets, spline polylines far in the world) can ignore this and draw unconditionally. Gizmos that sit AT the camera's own position (e.g. `CollisionPushNode`'s self-collision sphere) should gate on this bool so they don't hermetically seal the player inside the wireframe during live gameplay.
+
+Default implementation does nothing. Compiled out in shipping builds.
+
+---
+
+#### DrawNodeDebug2D { #drawnodedebug2d }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline void DrawNodeDebug2D(class UCanvas * Canvas, class APlayerController * PC) const
+```
+
+2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos).
+
+Canvas provides the 2D surface; PC is the local player controller whose view is being rendered (for ProjectWorldToScreen and aspect ratio queries). Either may be null in edge cases — always check.
+
+Default implementation does nothing. Compiled out in shipping builds.
+
 ### Protected Attributes
 
 | Return | Name | Description |
@@ -723,7 +759,7 @@ Called exactly once on the first TickNode after activation, immediately after [R
 
 This is the correct place to seed per-frame state that depends on live input pin values (e.g. initializing a "last position" tracker to the actual runtime position rather than the UPROPERTY default). By the time this fires, all pin-backed UPROPERTYs on this node already hold their resolved runtime values.
 
-The flag is reset in [Initialize()](#initialize-1), so re-activating the camera triggers this hook again on the new first frame.
+The flag is reset in [Initialize()](#initialize-3), so re-activating the camera triggers this hook again on the new first frame.
 
 Default implementation is empty. C++ subclasses override OnFirstTickNode_Implementation. Blueprint subclasses override "FirstTickNode".
 
@@ -769,7 +805,7 @@ virtual inline void OnTickNode_Implementation(float DeltaTime, const FComposable
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `bool` | [`bHasHadFirstTick`](#bhashadfirsttick)  | Set to true after the first TickNode call. Cleared by [Initialize()](#initialize-1) so re-activation re-triggers OnFirstTickNode on the new first frame. |
+| `bool` | [`bHasHadFirstTick`](#bhashadfirsttick)  | Set to true after the first TickNode call. Cleared by [Initialize()](#initialize-3) so re-activation re-triggers OnFirstTickNode on the new first frame. |
 
 ---
 
@@ -779,7 +815,7 @@ virtual inline void OnTickNode_Implementation(float DeltaTime, const FComposable
 bool bHasHadFirstTick = false
 ```
 
-Set to true after the first TickNode call. Cleared by [Initialize()](#initialize-1) so re-activation re-triggers OnFirstTickNode on the new first frame.
+Set to true after the first TickNode call. Cleared by [Initialize()](#initialize-3) so re-activation re-triggers OnFirstTickNode on the new first frame.
 
 ### Private Methods
 

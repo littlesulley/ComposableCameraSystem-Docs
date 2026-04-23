@@ -65,8 +65,9 @@ FVector2D SafeZoneHeight { -0.1, 0.1 }
 |--------|------|-------------|
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-13) `virtual` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-21) `virtual` |  |
-| `void` | [`BeginDestroy`](#begindestroy-3) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-20) `virtual` `const` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-9) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`DrawNodeDebug2D`](#drawnodedebug2d-2) `virtual` `const` | 2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos). |
 
 ---
 
@@ -90,16 +91,6 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### BeginDestroy { #begindestroy-3 }
-
-`virtual`
-
-```cpp
-virtual void BeginDestroy()
-```
-
----
-
 #### GetPinDeclarations_Implementation { #getpindeclarations_implementation-20 }
 
 `virtual` `const`
@@ -107,6 +98,40 @@ virtual void BeginDestroy()
 ```cpp
 virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinDeclaration > & OutPins) const
 ```
+
+---
+
+#### DrawNodeDebug { #drawnodedebug-9 }
+
+`virtual` `const`
+
+```cpp
+virtual void DrawNodeDebug(UWorld * World, bool bViewerIsOutsideCamera) const
+```
+
+Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode.
+
+Access the owning camera via `OwningCamera` and current-frame pin values via the usual `GetInputPinValue<T>()` / member-read path — this hook fires AFTER TickNode, so pin-backed UPROPERTYs still hold the resolved values from the most recent evaluation.
+
+`bViewerIsOutsideCamera` mirrors the ticker's frustum-draw flag: true when the viewer is observing the camera from outside (F8 eject, SIE, or `CCS.Debug.Viewport.AlwaysShow`), false when the player is looking through the camera. Most gizmos (pivot spheres at distant characters, lines to look-at targets, spline polylines far in the world) can ignore this and draw unconditionally. Gizmos that sit AT the camera's own position (e.g. `CollisionPushNode`'s self-collision sphere) should gate on this bool so they don't hermetically seal the player inside the wireframe during live gameplay.
+
+Default implementation does nothing. Compiled out in shipping builds.
+
+---
+
+#### DrawNodeDebug2D { #drawnodedebug2d-2 }
+
+`virtual` `const`
+
+```cpp
+virtual void DrawNodeDebug2D(UCanvas * Canvas, APlayerController * PC) const
+```
+
+2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos).
+
+Canvas provides the 2D surface; PC is the local player controller whose view is being rendered (for ProjectWorldToScreen and aspect ratio queries). Either may be null in edge cases — always check.
+
+Default implementation does nothing. Compiled out in shipping builds.
 
 ### Private Methods
 
@@ -116,7 +141,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 | `FRotator` | [`EnsureWithinBoundsRotation`](#ensurewithinboundsrotation-1)  |  |
 | `std::pair< float, float >` | [`GetTanHalfHORAndAspectRatio`](#gettanhalfhorandaspectratio-1)  |  |
 | `std::pair< float, float >` | [`CalibrateRotationOffsetNewton`](#calibraterotationoffsetnewton-1)  |  |
-| `FVector` | [`GetCurrentPivot`](#getcurrentpivot-1)  |  |
+| `FVector` | [`GetCurrentPivot`](#getcurrentpivot-1) `const` |  |
 
 ---
 
@@ -154,6 +179,8 @@ std::pair< float, float > CalibrateRotationOffsetNewton(float TanHalfHOR, float 
 
 #### GetCurrentPivot { #getcurrentpivot-1 }
 
+`const`
+
 ```cpp
-FVector GetCurrentPivot()
+FVector GetCurrentPivot() const
 ```
