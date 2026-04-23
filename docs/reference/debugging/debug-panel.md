@@ -21,6 +21,8 @@ Available in Debug, Development, and Test builds. Stripped entirely in Shipping 
 
 The panel paints five regions top-to-bottom. All data comes from `BuildDebugSnapshot` calls on the context stack and director — the same pipeline that backs `showdebug camera` and the dump commands.
 
+![[assets/images/Pasted image 20260423101255.png]]
+
 #### Current Pose
 
 The PCM's final output this frame.

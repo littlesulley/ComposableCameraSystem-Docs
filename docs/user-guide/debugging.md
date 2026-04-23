@@ -8,6 +8,7 @@ CCS ships four distinct debug surfaces that complement each other rather than du
 | [Debug Panel](#debug-panel-ccsdebugpanel) | Console: `CCS.Debug.Panel 1` | Always-on live readout — sparklines, tree glyph rendering, inline warnings |
 | [Viewport Debug](#viewport-debug-ccsdebugviewport) | Console: `CCS.Debug.Viewport 1` | 3D in-world gizmos — frustum, per-node overlays visible during F8 eject |
 | [Dump Commands](#dump-commands-ccsdump) | Console: `CCS.Dump.Stack` / `.Tree` / `.Camera` | One-shot text snapshots to Output Log + clipboard; ideal for bug reports and diffing |
+![[assets/images/Pasted image 20260423100456.png]]
 
 All four surfaces read from the same runtime state — snapshots produced by `BuildDebugSnapshot` on the context stack, director, and evaluation tree. They stay in lockstep automatically.
 
@@ -21,6 +22,8 @@ CCS.Debug.Panel 0      ← disable
 ```
 
 The Debug Panel is a 2D HUD overlay rendered via `UDebugDrawService`'s `"Game"` channel. It updates every frame and can be toggled without leaving PIE — it persists across camera transitions and context switches so you can watch the tree evolve in real time.
+
+![[assets/images/Pasted image 20260423100516.png]]
 
 The panel is organized into five regions, top to bottom.
 
@@ -36,6 +39,13 @@ The panel is organized into five regions, top to bottom.
 
 **Warnings** — any `Warning` or `Error` emitted by `LogComposableCameraSystem` or `LogComposableCameraSystemEditor` appears here in amber or red, with an elapsed-time label ("2s ago") and a repeat badge ("×4") when the same message fires multiple times. This surfaces silent runtime errors — a spline transition missing its rail actor, a referenced director destroyed mid-blend — that would otherwise require an open Output Log window to notice. The ring buffer holds the 16 most recent distinct entries; older entries are evicted from the front.
 
+There is also a `CCS.Debug.Panel.PoseHistory` command to preview camera pose history. This only includes camera rotation and position. This can be quite useful if you want to detect when and where the camera pops or jitters.
+
+![[assets/images/Pasted image 20260423100926.png]]
+
+Use `CCS.Debug.Panel.PoseHistory.Freeze` to freeze the history panel, and then press F8 or Shift+F1 to display the mouse the hover above graph. It will show you the concrete information of the camera pose at that timestamp.
+
+![[assets/images/Pasted image 20260423101130.png]]
 ## Viewport Debug (`CCS.Debug.Viewport`)
 
 ```
@@ -46,9 +56,13 @@ CCS.Debug.Viewport.Nodes.All 1           ← enable all node gizmos at once
 CCS.Debug.Viewport.Transitions.All 1     ← enable all transition gizmos at once
 ```
 
+![[assets/images/Pasted image 20260423100715.png]]
+
 The Viewport Debug draws into the world's line batcher via an `FTSTicker` delegate rather than `UDebugDrawService`. This matters: `UDebugDrawService`'s `"Game"` hook does not fire from the editor viewport during F8 eject, which is typically when 3D camera debug is most useful. The line batcher's output is rendered by every viewport that draws that world, so the gizmos appear both in the game viewport during possessed play and in the editor viewport during F8 eject or Simulate mode.
 
 The master switch (`CCS.Debug.Viewport 1`) enables **frustum drawing**. The frustum auto-hides while you are possessing the camera, because the near-plane frustum occludes the scene from the camera's own viewpoint. It only fires when `bIsSimulatingInEditor` is true, i.e. during F8 eject or Simulate mode. `CCS.Debug.Viewport.AlwaysShow 1` overrides this — useful in multi-viewport setups where a secondary viewport shows the camera from outside while you possess it.
+
+![[assets/images/Pasted image 20260423100734.png]]
 
 Per-node gizmos are controlled individually:
 
