@@ -161,4 +161,4 @@ A few adjustments once you see it running:
 - [Cutscene Context](cutscene-context.md) — same context-push pattern, but driven by a trigger overlap instead of a held button.
 - [Concepts → Context Stack](../user-guide/concepts/context-stack.md) — the full conceptual model for context pushing, popping, and inter-context blending.
 - [Custom Modifiers](../extending/custom-modifiers.md) — for weapon-specific FOV overrides and other gameplay-driven parameter tweaks that layer on top of the aim camera.
-- [Blueprint API](../user-guide/blueprint-api.md) — reference for `Activate Camera`, `TerminateCurrentCamera`, and `PopCameraContext`.
+- [Blueprint API](../user-guide/blueprint-api

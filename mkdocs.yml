@@ -272,6 +272,4 @@ nav:
             - 'ComposableCameraPositionalInertializer': reference/api/helpers/ComposableCameraPositionalInertializer.md
             - 'ComposableCameraRotationalInertializer': reference/api/helpers/ComposableCameraRotationalInertializer.md
           - 'Enumerations':
-            - 'Enumerations': reference/api/enumerations/Enumerations.md
-          - 'Free Functions':
-            - 'Functions': reference/api/free-functions/Functions.md
+            - 'Enu

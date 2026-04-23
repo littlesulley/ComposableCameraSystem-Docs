@@ -234,4 +234,4 @@ Alternatively, enable `CCS.Debug.Panel 1` for an always-on overlay — the **Cam
 
 ---
 
-*See also:* [Camera Actions](../user-guide/camera-actions.md) for the full user-guide walkthrough; [Actions API Reference](../reference/api/actions/UComposableCameraActionBase.md) for the class interface; [Custom Nodes](custom-nodes.md) if you need permanent per-frame work rather than a temporary overlay.
+*See also:* [Camera Actions](../user-guide/camera-actions.md) for the full user-guide walkthrough; [Actions API R

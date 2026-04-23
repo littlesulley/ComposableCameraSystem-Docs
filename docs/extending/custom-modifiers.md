@@ -205,4 +205,4 @@ You can also use `CCS.Dump.Camera` to copy the running camera's full state — i
 
 ---
 
-*See also:* [Modifiers Catalog](../reference/modifiers.md) for the exact field semantics; [Concepts → Modifiers](../user-guide/concepts/modifiers.md) for the full lifecycle and resolution model; [Custom Nodes](custom-nodes.md) if the effect needs per-frame work rather than a parameter tweak.
+*S

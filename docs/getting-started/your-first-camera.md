@@ -94,4 +94,4 @@ You now have the full end-to-end loop: plugin installed, PCM swapped, type asset
 
 - **[Concepts](../user-guide/concepts/index.md)** — understand what the Context Stack, Director, and Evaluation Tree are actually doing during that `BeginPlay` call.
 - **[Authoring Camera Types](../user-guide/authoring-camera-types.md)** — the full tour of the graph editor, parameters, variables, and subgraphs.
-- **[Reference → Nodes](../reference/nodes.md)** — catalog of every shipped node, so you know what building blocks are available.
+- **[Reference → Nodes](../reference/nodes.md)** — catalog of every shipped node

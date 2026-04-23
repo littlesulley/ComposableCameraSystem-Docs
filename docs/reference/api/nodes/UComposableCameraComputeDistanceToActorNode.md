@@ -42,7 +42,7 @@ virtual void ExecuteBeginPlay()
 
 Execute this compute node's one-shot work.
 
-Called from [AComposableCameraCameraBase::BeginPlayCamera](../actors/AComposableCameraCameraBase.md#beginplaycamera), after every node on the camera (both camera nodes and compute nodes) has already had [Initialize()](../uobjects-other/UComposableCameraCameraNodeBase.md#initialize-1) / [OnInitialize_Implementation()](../uobjects-other/UComposableCameraCameraNodeBase.md#oninitialize_implementation-3) run. By the time this fires, OwningCamera / OwningPlayerCameraManager / RuntimeDataBlock are all wired, so GetInputPinValue / SetOutputPinValue / Get/SetInternalVariable are all safe to use.
+Called from [AComposableCameraCameraBase::BeginPlayCamera](../actors/AComposableCameraCameraBase.md#beginplaycamera), after every node on the camera (both camera nodes and compute nodes) has already had [Initialize()](../uobjects-other/UComposableCameraCameraNodeBase.md#initialize-3) / [OnInitialize_Implementation()](../uobjects-other/UComposableCameraCameraNodeBase.md#oninitialize_implementation-3) run. By the time this fires, OwningCamera / OwningPlayerCameraManager / RuntimeDataBlock are all wired, so GetInputPinValue / SetOutputPinValue / Get/SetInternalVariable are all safe to use.
 
 The outgoing camera pose (the pose the previous camera was evaluating before this one became active) is available via OwningPlayerCameraManager->GetCurrentCameraPose() — this is the same value AActor::BeginPlay used to pass into BeginPlayCamera as a parameter before Step 4a removed that argument.
 

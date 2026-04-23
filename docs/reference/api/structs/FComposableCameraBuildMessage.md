@@ -12,7 +12,7 @@ A single message from the build/validation pipeline.
 | Return | Name | Description |
 |--------|------|-------------|
 | `uint8` | [`Severity`](#severity)  |  |
-| `FText` | [`Message`](#message)  |  |
+| `FText` | [`Message`](#message-1)  |  |
 | `int32` | [`NodeIndex`](#nodeindex-1)  | Which node the message relates to (-1 for asset-level). |
 | `FName` | [`PinName`](#pinname-2)  | Which pin the message relates to (None for node-level). |
 
@@ -26,7 +26,7 @@ uint8 Severity = 0
 
 ---
 
-#### Message { #message }
+#### Message { #message-1 }
 
 ```cpp
 FText Message

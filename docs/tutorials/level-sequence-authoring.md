@@ -184,4 +184,4 @@ Mechanically the distinction is the same as in the runtime activation path: para
 - [Node Catalog → PostProcessNode](../reference/nodes.md#postprocessnode) — add a `PostProcessNode` to the TypeAsset to keyframe bloom, depth-of-field, or color grading through the same parameter track mechanism.
 - [Concepts → Context Stack](../user-guide/concepts/context-stack.md) — the full model for how the cutscene context and inter-context transitions work.
 - [C++ API → AComposableCameraLevelSequenceActor](../reference/api/actors/AComposableCameraLevelSequenceActor.md) — class reference for the Spawnable actor.
-- [C++ API → UComposableCameraLevelSequenceComponent](../reference/api/uobjects-other/UComposableCameraLevelSequenceComponent.md) — component reference, including `SetEvaluationEnabled` and the forward-compat parameter/variable hooks.
+- [C++ API → UComposableCameraLevelSequenceComponent](../reference/api/uobjects-other/UComposableCameraLevelSequenceComponent.md) — component reference, including `SetEvaluationEnabled` 

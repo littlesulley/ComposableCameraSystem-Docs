@@ -30,6 +30,7 @@ Base camera class.
 | `bool` | [`bIsTransient`](#bistransient)  |  |
 | `float` | [`LifeTime`](#lifetime)  |  |
 | `float` | [`RemainingLifeTime`](#remaininglifetime)  |  |
+| `uint64` | [`LastTickedFrameCounter`](#lasttickedframecounter)  | Per-frame tick memoization. |
 | `TArray< FComposableCameraExecEntry >` | [`FullExecChain`](#fullexecchain-1)  | Full execution chain for the per-frame camera tick, including both camera-node steps and internal-variable Set operations. Copied from [UComposableCameraTypeAsset::FullExecChain](../data-assets/UComposableCameraTypeAsset.md#fullexecchain) during OnTypeAssetCameraConstructed. |
 | `TArray< FComposableCameraExecEntry >` | [`ComputeFullExecChain`](#computefullexecchain-1)  | Full execution chain for the BeginPlay compute pass, including both compute-node steps and internal-variable Set operations. Copied from [UComposableCameraTypeAsset::ComputeFullExecChain](../data-assets/UComposableCameraTypeAsset.md#computefullexecchain) during OnTypeAssetCameraConstructed. |
 | `int32` | [`TypeAssetNodeTemplateCount`](#typeassetnodetemplatecount)  | The number of entries in TypeAsset::NodeTemplates at construction time. Used as the base offset for compute-node pin keys in the RuntimeDataBlock (compute node i has pin key NodeIndex = TypeAssetNodeTemplateCount + i). |
@@ -189,6 +190,20 @@ float RemainingLifeTime { 0.f }
 
 ---
 
+#### LastTickedFrameCounter { #lasttickedframecounter }
+
+```cpp
+uint64 LastTickedFrameCounter { 0 }
+```
+
+Per-frame tick memoization.
+
+When the evaluation DAG (produced by snapshot-based RefLeaves) reaches the same camera via multiple paths in a single frame — e.g. the pop transition's target subtree AND the RefLeaf→B → push-source RefLeaf both bottom out at the same original A leaf — a second TickCamera would double-advance the camera's per-node state (damping, interpolator `bStartFrame`, spline progress, noise seeds, etc.). TickCamera compares GFrameCounter against this value: if it matches, the cached CameraPose is returned verbatim and the node chain is NOT walked again.
+
+0 is a valid sentinel: GFrameCounter starts above 0 in any real engine session, so a freshly-constructed camera (counter = 0) will always take the full-tick path on its first evaluation. Not a UPROPERTY — purely transient evaluation-time scratch.
+
+---
+
 #### FullExecChain { #fullexecchain-1 }
 
 ```cpp
@@ -274,6 +289,8 @@ Empty for type-asset cameras activated without any parameter overrides.
 | `FComposableCameraPose` | [`GetCameraPose`](#getcamerapose) `const` `inline` |  |
 | `FComposableCameraPose` | [`GetLastFrameCameraPose`](#getlastframecamerapose) `const` `inline` |  |
 | `bool` | [`IsTransient`](#istransient) `const` `inline` |  |
+| `void` | [`DrawCameraDebug`](#drawcameradebug) `const` | Draw world-space debug primitives for this camera. |
+| `void` | [`DrawCameraDebug2D`](#drawcameradebug2d) `const` | 2D counterpart to DrawCameraDebug. Walks `CameraNodes` and invokes each node's `DrawNodeDebug2D` override. Called by the viewport debug service's "Game"-channel hook (HUD pass) — fires during PIE possessed play, not during F8 eject. Each node gates its own output on its per-node CVar, same pattern as the 3D path. |
 | `float` | [`GetLifeTime`](#getlifetime) `const` `inline` |  |
 | `float` | [`GetRemainingLifeTime`](#getremaininglifetime) `const` `inline` |  |
 | `bool` | [`IsFinished`](#isfinished) `const` `inline` |  |
@@ -417,6 +434,40 @@ inline FComposableCameraPose GetLastFrameCameraPose() const
 ```cpp
 inline bool IsTransient() const
 ```
+
+---
+
+#### DrawCameraDebug { #drawcameradebug }
+
+`const`
+
+```cpp
+void DrawCameraDebug(class UWorld * World, bool bDrawFrustum) const
+```
+
+Draw world-space debug primitives for this camera.
+
+Invoked from the viewport debug ticker when `CCS.Debug.Viewport` is enabled. Two independently gated pieces:
+
+* Frustum pyramid at the camera's current pose — drawn only when `bDrawFrustum` is true. The ticker passes true only while the player is NOT viewing through the camera (F8 eject / SIE / `CCS.Debug.Viewport.AlwaysShow`), because otherwise the pyramid just occludes the near plane.
+
+* A walk over `CameraNodes` calling each node's `DrawNodeDebug`. Always invoked — each node's override checks its own per-node CVar (`CCS.Debug.Viewport.<NodeName>`) and early-outs when zero. Per-node gizmos are therefore visible in BOTH possessed play and ejected state, because they rarely occlude the viewpoint.
+
+Reads `CameraPose` (the leaf-local evaluated pose), not the PCM's blended pose — for the running camera in a steady state these are the same; during a transition, this shows the pose this camera is contributing, not the blended result.
+
+Compiled out in shipping builds.
+
+---
+
+#### DrawCameraDebug2D { #drawcameradebug2d }
+
+`const`
+
+```cpp
+void DrawCameraDebug2D(class UCanvas * Canvas, class APlayerController * PC) const
+```
+
+2D counterpart to DrawCameraDebug. Walks `CameraNodes` and invokes each node's `DrawNodeDebug2D` override. Called by the viewport debug service's "Game"-channel hook (HUD pass) — fires during PIE possessed play, not during F8 eject. Each node gates its own output on its per-node CVar, same pattern as the 3D path.
 
 ---
 

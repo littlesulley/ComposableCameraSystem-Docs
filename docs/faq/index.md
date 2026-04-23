@@ -147,7 +147,4 @@ The modifier's `NodeClass` is set to the wrong class, or was never set. Remember
 If none of the above covers your question, the short versions of the three reference spots:
 
 - **Concept question** → one of the five pages under [User Guide → Concepts](../user-guide/concepts/index.md).
-- **"What does X do?"** → [Reference](../reference/index.md) — the nodes / transitions / modifiers catalogs, or the auto-generated [C++ API](../reference/api/index.md).
-- **"How do I build X?"** → [Tutorials](../tutorials/index.md).
-
-For anything genuinely missing, open an issue on the [GitHub repository](https://github.com/littlesulley/ComposableCameraSystem-Docs/issues).
+- **"What does X do?"** → [Reference](../reference/index.md) — the nodes / transi

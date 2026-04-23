@@ -53,7 +53,7 @@ Parallel storage for single-cast delegate bindings. Delegates are not POD and ca
 | `void` | [`SetEnum`](#setenum) `inline` | Set an enum parameter. Enums are always normalized to int64 in the data storage, regardless of the backing property's actual underlying width. The narrow-cast into the final storage happens at resolve time, where the owning FProperty is known (see WriteEnumInt64ToProperty). |
 | `void` | [`SetDelegate`](#setdelegate) `inline` | Set a single-cast delegate binding. The delegate is stored in a parallel map (not the POD byte array) and applied at activation time via ApplyDelegateBindings on the type asset. |
 | `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name (either POD or delegate). |
-| `bool` | [`Get`](#get) `const` `inline` | Try to get a typed value. Returns false if not found or type mismatch. |
+| `bool` | [`Get`](#get-1) `const` `inline` | Try to get a typed value. Returns false if not found or type mismatch. |
 | `int32` | [`CopyRawTo`](#copyrawto) `const` `inline` | Copy a parameter's raw bytes into a destination buffer. Returns the number of bytes copied, or 0 if not found. |
 
 ---
@@ -214,7 +214,7 @@ Check if a parameter exists by name (either POD or delegate).
 
 ---
 
-#### Get { #get }
+#### Get { #get-1 }
 
 `const` `inline`
 

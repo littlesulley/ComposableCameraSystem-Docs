@@ -71,4 +71,4 @@ Tutorials focus on realistic end-to-end flows. A few things that might *sound* l
 - **Reference for every node's parameters.** That's the [Node Catalog](../reference/nodes.md) plus the per-class [C++ API Reference](../reference/api/index.md).
 - **A deep dive on the Context Stack's implementation.** That's [Concepts → Context Stack](../user-guide/concepts/context-stack.md).
 
-If a procedural question doesn't fit a tutorial or a concept page, it probably belongs in the [FAQ](../faq/index.md).
+If

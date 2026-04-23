@@ -134,4 +134,4 @@ The in-game overlay (`showdebug camera`) or the Debug Panel's **Context Stack & 
 
 - [Custom Transitions](../extending/custom-transitions.md) — authoring a bespoke blend shape (includes a worked bounce-and-settle example) and wiring it into the transition table for a specific `(gameplay, cutscene)` pair.
 - [Transitions & Blending](../user-guide/transitions-and-blending.md) — the full authoring guide for enter/exit transitions and the transition table.
-- [Context Stack](../user-guide/concepts/context-stack.md) — the deep concept page, including the invariants around auto-pop and the stack-position semantics behind `EnsureContext`.
+- [Context Stack](../user-guide/concepts/context-stack.md) — the deep concept page, including th

@@ -125,4 +125,4 @@ If the camera snaps instead of drifts, the interpolator stiffness is too high. I
 - [`UComposableCameraImpulseResolutionNode`](../reference/api/nodes/UComposableCameraImpulseResolutionNode.md) — auto-generated field docs
 - [`AComposableCameraImpulseSphere`](../reference/api/actors/AComposableCameraImpulseSphere.md), [`AComposableCameraImpulseBox`](../reference/api/actors/AComposableCameraImpulseBox.md)
 - [`IComposableCameraImpulseShapeInterface`](../reference/api/uobjects-other/UComposableCameraImpulseShapeInterface.md)
-- [Node Catalog](../reference/nodes.md#impulseresolutionnode) — catalog entry for the resolution node
+-

@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-04-23 — plugin `716769c..195b398`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/716769c2e4c709e9dec4677b877eebba8a8ae92c...195b3986d82aa849e03aac1a096b93ba4016f3dd))
+
+- `195b398` Add runtime debug & observability subsystem.
+
+**C++ API pages regenerated:** 138 pages (full regen — 5 new Debug headers added, 33 public headers modified across nodes, transitions, and core).
+
+**New public headers (Debug subsystem — changelog mention only):**
+
+- `FComposableCameraDebugPanel` — in-viewport HUD overlay showing pose, context stack, evaluation tree, actions, and modifiers. Toggled via `CCS.Debug.Panel 0|1`.
+- `FComposableCameraDebugPanelData` — runtime snapshot structs (`FComposableCameraTreeNodeSnapshot`, `EComposableCameraTreeNodeKind`, etc.) consumed by the debug panel. Distinct from the editor-only `FComposableCameraDebugSnapshot`.
+- `FComposableCameraLogCapture` — `FOutputDevice` ring-buffer capturing Warning/Error lines from all `LogComposableCamera*` categories for display in the debug panel's Warnings region.
+- `FComposableCameraPoseHistoryEntry` — per-frame pose snapshot (position, rotation, FOV, game time, context name) used for the debug panel's sparklines and scrub tooltip. ~48 bytes × 120-entry ring buffer per PCM.
+- `FComposableCameraViewportDebug` — 3D viewport debug draws (frustum, per-node gizmos). Master gate: `CCS.Debug.Viewport 0|1`; per-node CVars `CCS.Debug.Viewport.<NodeName>`.
+
+**Prose drafts added:** none (new headers are Debug subsystem internals, not node/transition/modifier catalog entries).
+
+**Flagged for review:**
+
+- The [ShowDebug](reference/showdebug.md) reference page predates this subsystem — consider adding a section documenting `CCS.Debug.Panel`, `CCS.Debug.Viewport`, and the per-node viewport CVar pattern.
+
+---
+
 ## 2026-04-21 — plugin `62ebee2..${SHORT_NEW}`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/62ebee2245d253eab08cf193b39be1f8f6d1041c...716769c2e4c709e9dec4677b877eebba8a8ae92c))

@@ -80,6 +80,4 @@ If the overlay doesn't appear:
 - a **Director** per context, and
 - an **Evaluation Tree** per director that blends cameras and nodes into the final pose each frame.
 
-You don't interact with those directly yet — activating a camera (the next page) handles the plumbing. For the full picture see [Concepts](../user-guide/concepts/index.md).
-
-Once the debug overlay is printing, you're ready to [author your first camera](your-first-camera.md).
+You don't interact with those directly yet — activating a camer

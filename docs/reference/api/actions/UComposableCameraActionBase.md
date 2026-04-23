@@ -79,6 +79,7 @@ AComposableCameraPlayerCameraManager * PlayerCameraManager {}
 | `void` | [`OnExecute`](#onexecute)  |  |
 | `void` | [`OnExecute_Implementation`](#onexecute_implementation) `virtual` `inline` |  |
 | `void` | [`ExpireAction`](#expireaction) `inline` |  |
+| `float` | [`GetElapsedTime`](#getelapsedtime) `const` `inline` | Time since this action began ticking, in seconds. Only meaningful when ExpirationType has the Duration bit set (Duration expiration fires when ElapsedTime >= Duration). Exposed for debug tooling (the Actions panel region); gameplay code should not poll it — use the lifecycle hooks instead. |
 
 ---
 
@@ -133,6 +134,18 @@ virtual inline void OnExecute_Implementation(float DeltaTime, const FComposableC
 ```cpp
 inline void ExpireAction()
 ```
+
+---
+
+#### GetElapsedTime { #getelapsedtime }
+
+`const` `inline`
+
+```cpp
+inline float GetElapsedTime() const
+```
+
+Time since this action began ticking, in seconds. Only meaningful when ExpirationType has the Duration bit set (Duration expiration fires when ElapsedTime >= Duration). Exposed for debug tooling (the Actions panel region); gameplay code should not poll it — use the lifecycle hooks instead.
 
 ### Private Attributes
 
