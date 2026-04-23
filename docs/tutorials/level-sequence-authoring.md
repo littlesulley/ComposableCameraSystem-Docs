@@ -51,6 +51,7 @@ In the **Exposed Parameters** panel:
 | `DollyDistance` | Vector          | Wire to `CameraOffsetNode → CameraOffset`    |
 | `FovOverride`   | Float           | Wire to `FieldOfViewNode → FieldOfView`      |
 | `FollowTarget`  | Actor Reference | Wire to `ReceivePivotActorNode → PivotActor` |
+
 ![[assets/images/Pasted image 20260421082945.png]]
 
 !!! note "Variables ... or parameters."
@@ -117,12 +118,12 @@ With the tracks added, keyframe them:
 
 | Time | DollyDistance | FovOverride |
 | ---- | ------------- | ----------- |
-| 0:00 | (-300, 0, 0)  | 70          |
-| 0:03 | (-150, 0, 0)  | 55          |
+| 0:00 | (-300, 0, 75) | 70          |
+| 0:03 | (-150, 0, 75) | 55          |
 
 A medium close-up: the camera dollies forward 150 units while the FOV tightens from 70° to 55°.
 
-To keyframe: move the playhead to `0:00`, expand the float track, right-click the value field → **Add Key**. Move to `0:03`, change the value, add another key. Set the interpolation to **Auto (cubic)** for a natural ease-in / ease-out feel.
+To keyframe: move the playhead to `0:00`, expand the float track, right-click the value field → **Add Key**. Move to `0:05`, change the value, add another key. Set the interpolation to **Auto (cubic)** for a natural ease-in / ease-out feel.
 
 ![[assets/images/Pasted image 20260421085443.png]]
 
@@ -149,6 +150,8 @@ The flow is identical to the existing tutorial:
 4. The parameter tracks animate `DollyDistance` and `FovOverride` each frame.
 5. The sequence ends → the cutscene context pops → inter-context transition back to gameplay.
 
+![[assets/images/Cutscene.gif]]
+
 ### Piloting in the editor (no Blueprint required)
 
 During authoring you can preview directly in Sequencer without wiring Blueprint:
@@ -156,6 +159,8 @@ During authoring you can preview directly in Sequencer without wiring Blueprint:
 1. Open the sequence in Sequencer.
 2. In the Sequencer toolbar, enable **Camera Lock** (the camera icon) and select the `AComposableCameraLevelSequenceActor` binding.
 3. Scrub the timeline. The viewport updates in real time — the CCS node chain runs, the TypeAsset parameters animate, and you see the final CCS pose, including any collision response or screen-space constraints baked into the TypeAsset.
+
+![[assets/images/Cutscene_preview.gif]]
 
 This is the fastest iteration loop for tuning the keyframe values.
 
@@ -167,6 +172,8 @@ The TypeAsset can expose both *Parameters* and *Variables*. In the Sequencer pat
 - **Camera Variables** tracks drive `TypeAssetReference.Variables` — these match the TypeAsset's **Exposed Variables** list.
 
 Mechanically the distinction is the same as in the runtime activation path: parameters are injected before `Initialize()` and can't be modified by nodes; variables are read-write throughout the frame and nodes can publish to them. For Sequencer use, prefer **Parameters** for authoring-time inputs (distances, angles, FOVs) and reserve **Variables** for values you want to both keyframe and read back out of the camera during evaluation.
+
+![[assets/images/Pasted image 20260424005409.png]]
 
 ## Common pitfalls
 
