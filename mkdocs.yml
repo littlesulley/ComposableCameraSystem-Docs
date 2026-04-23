@@ -258,6 +258,15 @@ nav:
             - 'FComposableCameraVariablePinConnection': reference/api/structs/FComposableCameraVariablePinConnection.md
             - 'FIsSimulatingInEditor': reference/api/structs/FIsSimulatingInEditor.md
             - 'FModifierEntry': reference/api/structs/FModifierEntry.md
+            - 'FComposableCameraContextSnapshot': reference/api/structs/FComposableCameraContextSnapshot.md
+            - 'FComposableCameraContextStackSnapshot': reference/api/structs/FComposableCameraContextStackSnapshot.md
+            - 'FComposableCameraDebugPanel': reference/api/structs/FComposableCameraDebugPanel.md
+            - 'FComposableCameraLogCapture': reference/api/structs/FComposableCameraLogCapture.md
+            - 'FComposableCameraLogEntry': reference/api/structs/FComposableCameraLogEntry.md
+            - 'FComposableCameraPoseHistoryEntry': reference/api/structs/FComposableCameraPoseHistoryEntry.md
+            - 'FComposableCameraTreeNodeSnapshot': reference/api/structs/FComposableCameraTreeNodeSnapshot.md
+            - 'FComposableCameraViewportDebug': reference/api/structs/FComposableCameraViewportDebug.md
+            - 'FTransitionDebugSnapshot': reference/api/structs/FTransitionDebugSnapshot.md
           - 'Other UObjects':
             - 'UAsyncPlayCutsceneSequence': reference/api/uobjects-other/UAsyncPlayCutsceneSequence.md
             - 'UComposableCameraCameraNodeBase': reference/api/uobjects-other/UComposableCameraCameraNodeBase.md

@@ -18,7 +18,7 @@ The overlay is implemented by `AComposableCameraPlayerCameraManager::DisplayDebu
     - **`CCS.Dump.Stack` / `CCS.Dump.Tree` / `CCS.Dump.Camera`** — one-shot plain-text dumps to Output Log and clipboard, ideal for bug reports.
 
     See the [Debug Panel & Dump Commands reference](debug-panel.md) and [User Guide → Debugging](../../user-guide/debugging.md) for full details.
-![[assets/images/Pasted image 20260417083751.png]]
+![showdebug overlay](../assets/images/Pasted image 20260417083751.png)
 ## Color schema
 
 The overlay uses four colors to separate structure from data:
@@ -121,7 +121,7 @@ Each entry shows the class name and whether `bOnlyForCurrentCamera` is true:
 
 `(none)` means the action list is empty.
 
-See the [Blueprint API → Actions](../user-guide/blueprint-api.md#actions) section for the lifetime model behind these flags.
+See the [Blueprint API → Actions](../../user-guide/blueprint-api.md#actions) section for the lifetime model behind these flags.
 
 ### Modifiers
 
