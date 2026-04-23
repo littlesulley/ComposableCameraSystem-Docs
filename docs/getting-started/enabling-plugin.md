@@ -64,6 +64,8 @@ You'll need a custom one for this setup. The quickest path is to create a small 
 
     You should see an on-screen debug overlay showing the active camera context stack, the current camera, and the current evaluation tree.
 
+    You can also type `CCS.Debug.Panel 1` to enable the always-on debug panel — it shows the same information in a richer layout and stays on across PIE restarts until you turn it off with `CCS.Debug.Panel 0`.
+
 If the overlay doesn't appear:
 
 - **Nothing at all on screen** — the `showdebug` command is typo-sensitive. Make sure you typed `camera` with no spaces.
@@ -78,6 +80,4 @@ If the overlay doesn't appear:
 - a **Director** per context, and
 - an **Evaluation Tree** per director that blends cameras and nodes into the final pose each frame.
 
-You don't interact with those directly yet — activating a camera (the next page) handles the plumbing. For the full picture see [Concepts](../user-guide/concepts/index.md).
-
-Once the debug overlay is printing, you're ready to [author your first camera](your-first-camera.md).
+You don't interact with those directly yet — activating a camer

@@ -184,16 +184,16 @@ For project-side modifiers, mirror the `Public/Modifiers` / `Private/Modifiers` 
 
 For C++ modifiers, also write a unit-style test that constructs the modifier, constructs the target node, calls `ApplyModifier` directly, and asserts on the mutated fields. No PCM required for that path.
 
-### Verifying with showdebug
+### Verifying with debug tools
 
-Open `showdebug composablecamera` during PIE while the modifier is active. Under **Effective Modifiers**, you should see your modifier listed:
+Open `showdebug camera` during PIE while the modifier is active. Under **Effective Modifiers**, you should see your modifier listed:
 
 ```
 [Camera Node] ComposableCameraFieldOfViewNode:
     [Modifier] BP_SprintFOVBump_C from [Asset] DA_SprintFOVModifier with priority 10
 ```
 
-When the modifier is removed, the entry disappears. This is the quickest way to confirm tag matching and priority resolution are working as expected.
+You can also use `CCS.Dump.Camera` to copy the running camera's full state — including all modifier-affected node parameters — to the clipboard as plain text, which is more convenient when cross-checking parameter values against expected output. When the modifier is removed, the entry disappears from both `showdebug camera` and `CCS.Dump.Camera`. This is the quickest way to confirm tag matching and priority resolution are working as expected.
 
 ## Common pitfalls
 
@@ -205,4 +205,4 @@ When the modifier is removed, the entry disappears. This is the quickest way to 
 
 ---
 
-*See also:* [Modifiers Catalog](../reference/modifiers.md) for the exact field semantics; [Concepts → Modifiers](../user-guide/concepts/modifiers.md) for the full lifecycle and resolution model; [Custom Nodes](custom-nodes.md) if the effect needs per-frame work rather than a parameter tweak.
+*S

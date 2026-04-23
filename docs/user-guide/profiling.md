@@ -12,9 +12,15 @@ These numbers are a guideline, not a hard limit — your project's overall frame
 
 Before reaching for heavyweight tools, try these:
 
-### `showdebug camera`
+### Debug overlay tools
 
-The in-game overlay (see [showdebug reference](../reference/showdebug.md)) shows the active camera's node chain, context stack, and modifier state in real time. It won't give you timing numbers, but it will immediately answer:
+CCS ships several complementary overlays for quick state inspection — none of which require stopping PIE or opening Unreal Insights. They share the same data source, so they are interchangeable for the questions below; pick the one that fits your workflow.
+
+**`showdebug camera`** (see [reference](../reference/debugging/showdebug.md)) toggles a color-coded HUD overlay anchored to the top-left of the viewport. It shows the active camera's node chain, context stack, and modifier state but does not give timing numbers.
+
+**`CCS.Debug.Panel 1`** (see [Debug Panel reference](../reference/debugging/debug-panel.md)) enables a richer always-on overlay in the top-right: a live tree rendering of the entire context stack with blend-weight sparklines, per-pin output values for every node, and a warnings region that surfaces silent runtime errors without an open Output Log. Recommended as a persistent companion during development — it costs nothing when the CVar is 0.
+
+Both overlays will immediately answer:
 
 - How many nodes are in the active camera's chain? More nodes = more per-frame cost.
 - Is a transition still running? Active transitions evaluate *both* source and target trees — double the node count.
@@ -53,7 +59,7 @@ In the **Timing Insights** view, filter by `ComposableCamera` or `PlayerCameraMa
 
 During steady-state gameplay (one camera, no transitions), you should see a thin, consistent `DoUpdateCamera` bar each frame. During a transition, the bar doubles in width because both source and target cameras evaluate. After `CollapseFinishedTransitions` fires, the bar should return to single-camera width.
 
-If the bar stays wide after a transition should have finished, a transition is stuck or a reference leaf isn't collapsing — check `showdebug camera` for a `pending destroy` entry that didn't clean up.
+If the bar stays wide after a transition should have finished, a transition is stuck or a reference leaf isn't collapsing — check `showdebug camera` or the Debug Panel's Context Stack region for a `pending destroy` entry that didn't clean up.
 
 ![[assets/images/PixPin_2026-04-17_09-03-57.png]]
 
@@ -108,14 +114,4 @@ A quick list to run through before shipping:
 
 1. **One camera, no transitions** — `DoUpdateCamera` under 50 µs on target hardware.
 2. **During a transition** — cost roughly doubles (two cameras evaluating). Confirm it returns to baseline after collapse.
-3. **Rapid-fire activations** — pile-up cost spikes but self-heals within a few frames. No stuck transitions in `showdebug`.
-4. **No allocations in tick** — verify with Insights memory trace.
-5. **No Blueprint nodes on the hot path** in shipping builds — all prototyping `BlueprintCameraNode`s ported to C++.
-6. **CollisionPushNode trace channel** set to something cheaper than `Visibility` if scene complexity is high.
-7. **Mobile budget** — re-profile on device; desktop numbers are not representative. Consider disabling self-collision or reducing trace frequency for mobile.
-
-## See also
-
-- [`showdebug camera`](../reference/showdebug.md) — the in-game overlay for live state inspection
-- [Custom Nodes → Hot-Path Rule](../extending/custom-nodes.md#the-hot-path-rule-repeated-because-it-matters) — the allocation constraint and how to comply
-- [FAQ → Performance](../faq/index.md#performance) — common performance questions and answers
+3. **Rapid-fire activations** — pile-up cost spikes but self-heals within a few frames. No stuck transitions in `showdebug camer

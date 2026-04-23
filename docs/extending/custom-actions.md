@@ -207,7 +207,7 @@ For project-side actions, mirror the `Public/Actions` / `Private/Actions` layout
 
 `CanExecute` also runs every frame when condition-based expiration is active. The same constraint applies.
 
-## Verifying with showdebug
+## Verifying with debug tools
 
 Open `showdebug camera` during PIE while the action is active. Under **Camera Actions**, you should see:
 
@@ -216,7 +216,7 @@ Camera Actions
     LookAtTargetAction (camera-scoped)
 ```
 
-When the action expires, it disappears from the list.
+Alternatively, enable `CCS.Debug.Panel 1` for an always-on overlay — the **Camera Actions** region shows the same list and updates live without toggling the command each session. Either way, when the action expires it disappears from the list.
 
 ## Tuning tips
 
@@ -234,4 +234,4 @@ When the action expires, it disappears from the list.
 
 ---
 
-*See also:* [Camera Actions](../user-guide/camera-actions.md) for the full user-guide walkthrough; [Actions API Reference](../reference/api/actions/UComposableCameraActionBase.md) for the class interface; [Custom Nodes](custom-nodes.md) if you need permanent per-frame work rather than a temporary overlay.
+*See also:* [Camera Actions](../user-guide/camera-actions.md) for the full user-guide walkthrough; [Actions API R

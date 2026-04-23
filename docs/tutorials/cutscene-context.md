@@ -116,7 +116,7 @@ Walk your character into the trigger. You should see:
 
 ![[assets/images/CutsceneContext.gif]]
 
-The in-game overlay (`showdebug camera`) during the cutscene should show:
+The in-game overlay (`showdebug camera`) or the Debug Panel's **Context Stack & Evaluation Tree** region (`CCS.Debug.Panel 1`) during the cutscene should show:
 
 - Context Stack top: `Cutscene`
 - Full stack: `Gameplay, Cutscene`
@@ -134,4 +134,4 @@ The in-game overlay (`showdebug camera`) during the cutscene should show:
 
 - [Custom Transitions](../extending/custom-transitions.md) — authoring a bespoke blend shape (includes a worked bounce-and-settle example) and wiring it into the transition table for a specific `(gameplay, cutscene)` pair.
 - [Transitions & Blending](../user-guide/transitions-and-blending.md) — the full authoring guide for enter/exit transitions and the transition table.
-- [Context Stack](../user-guide/concepts/context-stack.md) — the deep concept page, including the invariants around auto-pop and the stack-position semantics behind `EnsureContext`.
+- [Context Stack](../user-guide/concepts/context-stack.md) — the deep concept page, including th

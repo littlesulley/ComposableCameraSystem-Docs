@@ -111,7 +111,7 @@ A camera gets an impulse node through the graph editor like any other node — d
 3. **Collision setup.** Make sure the camera actor's collision is set to overlap the impulse box's collision channel. Without an overlap event, `AddImpulseShape` is never called.
 4. **Test in PIE.** Walk the character through the corridor. The camera should drift sideways while inside and decay back to neutral on exit.
 
-If the camera snaps instead of drifts, the interpolator stiffness is too high. If nothing happens, open `showdebug composablecamera` (see the [showdebug reference](../reference/showdebug.md)) and verify the impulse resolution node appears in the running camera's node list — if it does, the shape overlap is the problem; if it doesn't, the node isn't wired into the chain.
+If the camera snaps instead of drifts, the interpolator stiffness is too high. If nothing happens, open `showdebug camera` (see the [showdebug reference](../reference/debugging/showdebug.md)) or enable `CCS.Debug.Panel 1` (see the [Debug Panel reference](../reference/debugging/debug-panel.md)) and verify the impulse resolution node appears in the running camera's node list — if it does, the shape overlap is the problem; if it doesn't, the node isn't wired into the chain.
 
 ## Limits and sharp edges
 
@@ -125,4 +125,4 @@ If the camera snaps instead of drifts, the interpolator stiffness is too high. I
 - [`UComposableCameraImpulseResolutionNode`](../reference/api/nodes/UComposableCameraImpulseResolutionNode.md) — auto-generated field docs
 - [`AComposableCameraImpulseSphere`](../reference/api/actors/AComposableCameraImpulseSphere.md), [`AComposableCameraImpulseBox`](../reference/api/actors/AComposableCameraImpulseBox.md)
 - [`IComposableCameraImpulseShapeInterface`](../reference/api/uobjects-other/UComposableCameraImpulseShapeInterface.md)
-- [Node Catalog](../reference/nodes.md#impulseresolutionnode) — catalog entry for the resolution node
+-

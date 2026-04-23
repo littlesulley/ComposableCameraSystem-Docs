@@ -136,7 +136,7 @@ Not currently supported. Transitions must be C++. The four-phase lifecycle, `Ini
 
 ### `showdebug camera` shows garbage in the overlay (NaN positions, missing fields).
 
-Something in the node chain produced a bad pose and a downstream node propagated it. Step through the chain by adding a `FixedPoseNode` between each pair and checking which swap "fixes" the output — the node *before* the bad output is the culprit. File an issue with the composition if it's a shipped node.
+Something in the node chain produced a bad pose and a downstream node propagated it. Use `CCS.Debug.Panel 1` for a more detailed view — the Running Camera region shows per-pin output values for every node in execution order, so you can see exactly which node's output first becomes NaN or missing. Alternatively, run `CCS.Dump.Camera` and copy the full snapshot to a text editor. Step through the chain by adding a `FixedPoseNode` between each pair and checking which swap "fixes" the output — the node *before* the bad output is the culprit. File an issue with the composition if it's a shipped node.
 
 ### My C++ modifier fails to apply — `Cast<MyNodeClass>(Node)` returns null.
 
@@ -147,7 +147,4 @@ The modifier's `NodeClass` is set to the wrong class, or was never set. Remember
 If none of the above covers your question, the short versions of the three reference spots:
 
 - **Concept question** → one of the five pages under [User Guide → Concepts](../user-guide/concepts/index.md).
-- **"What does X do?"** → [Reference](../reference/index.md) — the nodes / transitions / modifiers catalogs, or the auto-generated [C++ API](../reference/api/index.md).
-- **"How do I build X?"** → [Tutorials](../tutorials/index.md).
-
-For anything genuinely missing, open an issue on the [GitHub repository](https://github.com/littlesulley/ComposableCameraSystem-Docs/issues).
+- **"What does X do?"** → [Reference](../reference/index.md) — the nodes / transi

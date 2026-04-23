@@ -76,7 +76,7 @@ Open your player character or player controller Blueprint and find a convenient 
 
 ## 5. Play
 
-Press **Play**. Your camera should snap to the configured offset behind the target and track it as it moves. If `showdebug camera` is still active from the previous page, the overlay will show:
+Press **Play**. Your camera should snap to the configured offset behind the target and track it as it moves. If `showdebug camera` is still active from the previous page (or `CCS.Debug.Panel 1` if you used that instead), the overlay will show:
 
 - Context Stack: `Gameplay`
 - Active Camera: `CT_ThirdPersonFollow` (or whatever you named the instance)
@@ -94,4 +94,4 @@ You now have the full end-to-end loop: plugin installed, PCM swapped, type asset
 
 - **[Concepts](../user-guide/concepts/index.md)** — understand what the Context Stack, Director, and Evaluation Tree are actually doing during that `BeginPlay` call.
 - **[Authoring Camera Types](../user-guide/authoring-camera-types.md)** — the full tour of the graph editor, parameters, variables, and subgraphs.
-- **[Reference → Nodes](../reference/nodes.md)** — catalog of every shipped node, so you know what building blocks are available.
+- **[Reference → Nodes](../reference/nodes.md)** — catalog of every shipped node

@@ -109,7 +109,7 @@ Enter PIE. Walk into the trigger. You should see:
 
 ![[assets/images/CustomModifiers.gif]]
 
-Open `showdebug camera`. During the sequence:
+Open `showdebug camera` or enable `CCS.Debug.Panel 1`. During the sequence:
 
 ```
 Context Stack (depth 2)
@@ -144,4 +144,4 @@ For sequences that should loop indefinitely (e.g. an ambient camera in a menu sc
 
 - [Cutscene Context](cutscene-context.md) — manual context pushing with a hand-authored camera type asset, for cases where you want full control over the cutscene camera's node composition.
 - [Concepts → Context Stack](../user-guide/concepts/context-stack.md) — full conceptual model for context pushing and inter-context blending.
-- [Blueprint API](../user-guide/blueprint-api.md) — reference for `Activate Camera`, `TerminateCurrentCamera`, and `PopCameraContext`.
+- [Blueprint API](../user-guide/blueprint-api.md) — reference for `Activate Camera`, `TerminateCurrentCam
