@@ -39,6 +39,8 @@ stat CCS
 
 This command activates `STATGROUP_CCS`, the plugin's own stat group. Unlike `stat game` (which gives a single camera row), `stat CCS` breaks the per-frame cost into individual subsystem counters so you can pinpoint which layer is expensive without opening Unreal Insights.
 
+![[assets/images/Pasted image 20260423133809.png]]
+
 | Counter | What it measures |
 |---|---|
 | `PCM DoUpdateCamera` | Total cost of the PCM's per-frame update — the envelope for everything below |
