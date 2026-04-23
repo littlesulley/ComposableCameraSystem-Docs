@@ -249,4 +249,4 @@ Pin values are formatted via `ComposableCameraDebug::AppendOutputPinValue`, the 
 - [User Guide → Debugging](../../user-guide/debugging.md) — workflow guide for all four debug surfaces
 - [ShowDebug reference](showdebug.md) — section-by-section breakdown of `showdebug camera`
 - [Custom Nodes](../../extending/custom-nodes.md) — how to add `DrawNodeDebug` to a new node
-- [Profiling & Performance](../../user-guide/profiling.
+- [Profiling & Performance](../../user-guide/profiling.md) — using debug tools alongside Unreal Insights
