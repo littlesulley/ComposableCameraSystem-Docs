@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-04-23 — plugin `195b398..e9af064`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/195b3986d82aa849e03aac1a096b93ba4016f3dd...e9af064c76c180dbce61109529001b7659f843fd))
+
+- `e9af064` Improve editor UX: inline node validation badges, details-rebuild coalescing, CCS.Editor.Dump.Graph, palette cleanup.
+- `4fc9d16` Fix LS gate + pose-blend edge cases; expand Debug Panel Current Pose.
+
+**C++ API pages regenerated:** 138 pages (full regen — 3 modified public headers: `ComposableCameraTypeAsset.h`, `ComposableCameraNodeGraph.h`, `SComposableCameraGraphNode.h`).
+
+**Prose drafts added:** none (no new node/transition/modifier catalog entries).
+
+**Flagged for review:**
+
+- `ComposableCameraTypeAsset.h` changed — verify the [Data Assets](reference/api/data-assets/UComposableCameraTypeAsset.md) API page reflects any new fields or methods.
+- Editor UX improvements (node validation badges, `CCS.Editor.Dump.Graph` command, palette cleanup) are not yet documented. Consider adding a section to [The Graph Editor](user-guide/graph-editor.md).
+
+---
+
+
 ## 2026-04-23 — plugin `716769c..195b398`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/716769c2e4c709e9dec4677b877eebba8a8ae92c...195b3986d82aa849e03aac1a096b93ba4016f3dd))
