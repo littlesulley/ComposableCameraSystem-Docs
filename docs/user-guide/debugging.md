@@ -2,12 +2,13 @@
 
 CCS ships four distinct debug surfaces that complement each other rather than duplicate. Understanding what each one covers helps you reach for the right tool instead of hunting through them all.
 
-| Tool | How to activate | Best for |
-|---|---|---|
-| [`showdebug camera`](../reference/debugging/showdebug.md) | Console: `showdebug camera` | Quick pose check; color-coded HUD that fires everywhere `DisplayDebug` runs |
-| [Debug Panel](#debug-panel-ccsdebugpanel) | Console: `CCS.Debug.Panel 1` | Always-on live readout — sparklines, tree glyph rendering, inline warnings |
-| [Viewport Debug](#viewport-debug-ccsdebugviewport) | Console: `CCS.Debug.Viewport 1` | 3D in-world gizmos — frustum, per-node overlays visible during F8 eject |
-| [Dump Commands](#dump-commands-ccsdump) | Console: `CCS.Dump.Stack` / `.Tree` / `.Camera` | One-shot text snapshots to Output Log + clipboard; ideal for bug reports and diffing |
+| Tool                                                      | How to activate                                 | Best for                                                                             |
+| --------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [`showdebug camera`](../reference/debugging/showdebug.md) | Console: `showdebug camera`                     | Quick pose check; color-coded HUD that fires everywhere `DisplayDebug` runs          |
+| [Debug Panel](#debug-panel-ccsdebugpanel)                 | Console: `CCS.Debug.Panel 1`                    | Always-on live readout — sparklines, tree glyph rendering, inline warnings           |
+| [Viewport Debug](#viewport-debug-ccsdebugviewport)        | Console: `CCS.Debug.Viewport 1`                 | 3D in-world gizmos — frustum, per-node overlays visible during F8 eject              |
+| [Dump Commands](#dump-commands-ccsdump)                   | Console: `CCS.Dump.Stack` / `.Tree` / `.Camera` | One-shot text snapshots to Output Log + clipboard; ideal for bug reports and diffing |
+
 ![[assets/images/Pasted image 20260423100456.png]]
 
 All four surfaces read from the same runtime state — snapshots produced by `BuildDebugSnapshot` on the context stack, director, and evaluation tree. They stay in lockstep automatically.
