@@ -43,7 +43,7 @@ Each node on the canvas carries:
 - **Exec pins** — white triangles on the top-left (in) and top-right (out). One per node, one line, no branches.
 - **Data pins** — coloured circles on the left (input) and right (output). One per pin declared by the node, coloured by type.
 - **Exposed pins** — input pins that have been exposed as camera parameters. They render with a muted grey connector, ignore hover highlights, and refuse wire connections. Right-click and pick **Unexpose Parameter** to turn them back into wireable pins.
-- **Error/warning badges** — if the most recent build produced validation issues for this node, icons appear beside the affected pins.
+- **Error/warning badges** — if the most recent build produced validation issues for this node, a warning or error icon appears in the **top-right corner** of the node title bar. Hovering the node shows the aggregated build messages as a tooltip. Badges are updated automatically after every `SyncToTypeAsset` round-trip (including the silent tail pass that runs on each graph edit), so they stay current without requiring a manual toolbar Build click.
 
 ### Pin colour legend
 

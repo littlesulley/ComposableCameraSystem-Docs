@@ -11,10 +11,19 @@
 
 **Prose drafts added:** none (no new node/transition/modifier catalog entries).
 
+**Design-doc sync:** DesignDoc.md, EditorDesignDoc.md, and TechDoc.md all confirmed updated to 2026-04-23 — in sync with the commit date.
+
+**Public-site updates applied in this commit:**
+
+- `docs/reference/debugging/debug-panel.md` — Current Pose section rewritten: two-column four-group layout (Transform / Context / Projection / Physical) + Physical group CineCamera fallback path (commit `4fc9d16`).
+- `docs/reference/debugging/debug-panel.md` — Modifiers section updated from placeholder to structured Effective + All view.
+- `docs/reference/debugging/debug-panel.md` — Camera Actions section updated to three-line-per-action view.
+- `docs/reference/debugging/debug-panel.md` — `CCS.Editor.Dump.Graph` editor dump command documented.
+- `docs/user-guide/graph-editor.md` — Inline validation-badge description corrected (top-right of node title bar, not beside pins).
+
 **Flagged for review:**
 
-- `ComposableCameraTypeAsset.h` changed — verify the [Data Assets](reference/api/data-assets/UComposableCameraTypeAsset.md) API page reflects any new fields or methods.
-- Editor UX improvements (node validation badges, `CCS.Editor.Dump.Graph` command, palette cleanup) are not yet documented. Consider adding a section to [The Graph Editor](user-guide/graph-editor.md).
+- `UComposableCameraTypeAsset` API page — header modified; verify the generated page reflects any new public fields or methods.
 
 ---
 

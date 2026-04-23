@@ -25,14 +25,24 @@ The panel paints five regions top-to-bottom. All data comes from `BuildDebugSnap
 
 #### Current Pose
 
-The PCM's final output this frame.
+The PCM's final output this frame, rendered in a **two-column, four-group** layout.
 
-| Field | Source |
+| Column | Groups |
 |---|---|
-| Position | `FComposableCameraPose::Position` |
-| Rotation | `FComposableCameraPose::Rotation` (Pitch / Yaw / Roll) |
-| FOV | `FComposableCameraPose::GetEffectiveFieldOfView()` |
-| Aspect | `CurrentPOV.AspectRatio` |
+| Left | **Transform** — Position, Rotation (P/Y/R), Forward vector<br>**Context** — active context name |
+| Right | **Projection** — Mode, FOV (annotated `(from Nmm)` when the pose is in FocalLength dual-mode), Aspect, Ortho Width / Near / Far (orthographic only)<br>**Physical** — see below |
+
+##### Physical group data sources
+
+The Physical group has three rendering modes depending on what's available:
+
+| Condition | Header | Fields shown |
+|---|---|---|
+| `PhysicalCameraBlendWeight > 0` | `-- Physical --` | Aperture, FocusDistance, ISO, ShutterSpeed, Sensor W/H read from `FComposableCameraPose` discrete slots |
+| `PhysicalCameraBlendWeight == 0` **and** a `UCineCameraComponent` is found on `PCM->GetViewTarget()` | `-- Physical (CineCamera) --` | `CurrentFocalLength`, `CurrentAperture`, `CurrentFocusDistance`, `Filmback.Sensor*`, `PostProcessSettings.CameraISO` / `CameraShutterSpeed` read directly from the CineCamera. ISO and Shutter show `auto` when their `bOverride_*` gate is false. |
+| Neither | `-- Physical --` | `Status: off` |
+
+The CineCamera fallback exists because `UComposableCameraViewTargetProxyNode` (used in the Sequencer LS path) writes only transform + FOV + PostProcess into the pose — it never populates the discrete Aperture / Focus / ISO / Shutter / Sensor slots. Without the fallback, the Physical group showed `Status: off` in LS mode even when the CineCamera had real DoF and exposure settings.
 
 Below the numeric fields: a pose-history sparkline backed by `FComposableCameraPoseHistoryEntry` ring buffer (120 entries, ~48 B each, ~6 KB total per PCM). The ring buffer records `GameTime` from `UWorld::GetTimeSeconds`, so it pauses with the game during Time Dilation / pause — the timeline stays coherent when scrubbing history during a paused PIE session. Context-switch markers are vertical lines drawn wherever `ContextName` changes between adjacent entries.
 
@@ -69,11 +79,22 @@ The active context's `Director::RunningCamera`, if any.
 
 #### Camera Actions
 
-Flat list from `PCM::ActiveActions`. Each row: class name + `(camera-scoped)` or `(persistent)` based on `bOnlyForCurrentCamera`.
+Three-line-per-action view for each entry in `PCM::ActiveActions`:
+
+| Line | Contents |
+|---|---|
+| 1 | Class name + `(camera-scoped)` or `(persistent)` |
+| 2 | Execution phase (`PreCameraTick` / `PostCameraTick` / `PreNodeTick` / `PostNodeTick`) + target node class for node-scoped phases. Shows `(null — action will be ignored)` when `TargetNodeClass` is unset on a node-scoped action. |
+| 3 | Expiration summary: Duration shows live `Elapsed / Total`; other expiration flags print as tagged words. |
 
 #### Modifiers
 
-Count summary (phase 1). Full modifier listing with priority resolution is in `showdebug camera` → [All Modifiers / Effective Modifiers](showdebug.md#modifiers).
+Structured two-section view:
+
+- **Effective (N)** — flat list of the per-node-class winning modifier for each camera node. This is the modifier that actually ran.
+- **All (M)** — grouped by `CameraTag → NodeClass → entries`, with a `[*]` marker on the entry that won priority resolution in each bucket.
+
+Use "Effective" to confirm a modifier applied at all; use "All" to diagnose why a higher-priority modifier might be losing to another entry.
 
 #### Warnings (`FComposableCameraLogCapture`)
 
@@ -241,6 +262,33 @@ Camera: ActorName
 ```
 
 Pin values are formatted via `ComposableCameraDebug::AppendOutputPinValue`, the same formatter used by the Debug Panel and `showdebug camera`. `(unresolved)` means the pin has no offset in the runtime data block — a sync issue between the type asset and the runtime.
+
+---
+
+## Editor Dump Command (`CCS.Editor.Dump.Graph`)
+
+Editor-only command (stripped in Shipping). Available in the editor Output Log console when at least one Camera Type Asset editor is open.
+
+```
+CCS.Editor.Dump.Graph
+```
+
+Iterates every currently-open Camera Type Asset editor via `UAssetEditorSubsystem::GetAllEditedAssets()` and dumps the full graph state for each asset to `LogComposableCameraSystemEditor` at Display verbosity **and** copies the output to the system clipboard.
+
+**Contents of each dump:**
+
+| Section | What is captured |
+|---|---|
+| Node templates | Class, position, `bEnabled`, pin declarations |
+| Compute templates | Class, position |
+| Pin connections | All `FComposableCameraPinConnection` entries |
+| Exec chains | `ExecutionOrder`, `FullExecChain`, `ComputeExecutionOrder`, `ComputeFullExecChain` |
+| Exposed parameters | Name, type, default value string |
+| Internal / exposed variables | Name, type, initial value |
+| Variable node records | Per-variable-node GUID mapping + wired pins |
+| Default transitions | `DefaultEnterTransition` / `DefaultExitTransition` references |
+
+Primary use case: "graph doesn't save correctly" bug reports. The before/after dump is greppable and diffable, so users can paste it into a GitHub issue without attaching the `.uasset` binary.
 
 ---
 
