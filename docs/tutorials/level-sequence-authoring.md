@@ -20,7 +20,7 @@ A three-second cinematic shot where a CCS third-person-style camera dollies forw
 
 - The [Follow Camera](follow-camera.md) tutorial done — you should be comfortable authoring a TypeAsset and wiring input parameters.
 - The [Level Sequence Integration](level-sequence-camera.md) tutorial done — you need an `AComposableCameraPlayerCameraManager` wired up and a working **Play Cutscene Sequence** trigger.
-- `showdebug camera` prints the expected overlay in PIE.
+- `showdebug camera` prints the expected overlay in PIE (or `CCS.Debug.Panel 1` for the always-on panel).
 
 ## 1. Author a TypeAsset with exposed parameters
 
@@ -38,17 +38,23 @@ ReceivePivotActorNode
   → FieldOfViewNode          (reads FovOverride)
 ```
 
+![[assets/images/Pasted image 20260421082605.png]]
+
 `ReceivePivotActorNode` requires a `FollowTarget` actor variable. In the Sequencer path the component drives the camera PCM-independently — there's no PlayerController — so `FollowTarget` should be set to the cinematic subject (e.g. the character actor) either as a level actor reference or via a parameter.
 
 ### 1b. Expose the parameters
 
 In the **Exposed Parameters** panel:
 
-| Name | Type | Notes |
-|---|---|---|
-| `DollyDistance` | Float | Wire to `CameraOffsetNode → Distance` |
-| `FovOverride` | Float | Wire to `FieldOfViewNode → FieldOfView` |
-| `FollowTarget` | Actor Reference | Wire to `ReceivePivotActorNode → PivotActor` |
+| Name            | Type            | Notes                                        |
+| --------------- | --------------- | -------------------------------------------- |
+| `DollyDistance` | Vector          | Wire to `CameraOffsetNode → CameraOffset`    |
+| `FovOverride`   | Float           | Wire to `FieldOfViewNode → FieldOfView`      |
+| `FollowTarget`  | Actor Reference | Wire to `ReceivePivotActorNode → PivotActor` |
+![[assets/images/Pasted image 20260421082945.png]]
+
+!!! note "Variables ... or parameters."
+	 Actually you can also directly expose the pins (node parameters). They are also keyframeable in Sequencer.
 
 These are what will appear as keyframeable tracks in Sequencer. `FollowTarget` can be set once in the Details panel and left un-keyframed; `DollyDistance` and `FovOverride` are the ones you'll animate.
 
@@ -61,21 +67,11 @@ Compile and save `CT_SequencerDolly`.
 
 Open or create a Level Sequence in Sequencer. To add the CCS actor:
 
-1. In the Sequencer toolbar, click **+ Track → Actor to Sequencer**.
-
-   !!! note "Why not drag from the viewport?"
-       `AComposableCameraLevelSequenceActor` is marked `NotPlaceable` — it cannot be dragged from the Place Actors panel or the Content Browser. It exists only as a Sequencer Spawnable. Use **+ Track → Actor to Sequencer**, which opens a class picker that includes non-placeable actor classes.
-
-2. In the class picker, search for **Composable Camera Level Sequence Actor** and select it. Sequencer adds the binding as a Spawnable (the actor is destroyed when the sequence section ends).
-
-3. In the Outliner, expand the new binding. You will see:
-
-   ```
-   ▼ ComposableCameraLevelSequenceActor
-       ▼ LevelSequenceComponent
-           Transform
-           (no parameter tracks yet)
-   ```
+1. Search `ComposableCameraLevelSequenceActor` in the Actors panels and drag it in the Sequencer. This automatically creates a Spawnable binding.
+	![[assets/images/Pasted image 20260421083449.png]]
+	
+2. In the Outliner, expand the new binding. You will see:
+	![[assets/images/Pasted image 20260421083743.png]]
 
 ## 3. Assign the TypeAsset
 
@@ -83,9 +79,9 @@ Click the `LevelSequenceComponent` row in the Sequencer Outliner. In the **Detai
 
 - **Type Asset Reference → Type Asset** — set to `CT_SequencerDolly`.
 
-As soon as you select the TypeAsset, the component's `PostEditChangeProperty` fires `RebuildBagsFromTypeAsset`. The two parameter bags (`Parameters` and `Variables`) are now populated with typed properties matching `DollyDistance`, `FovOverride`, and `FollowTarget`.
+![[assets/images/Pasted image 20260421084008.png]]
 
-While you still have the Details panel open, set **Follow Target** to the actor you want the camera to orbit (e.g. the player character actor placed in the level).
+As soon as you select the TypeAsset, the component's `PostEditChangeProperty` fires `RebuildBagsFromTypeAsset`. The two parameter bags (`Parameters` and `Variables`) are now populated with typed properties matching `DollyDistance`, `FovOverride`, and `FollowTarget`.
 
 ## 4. Add a CameraCut section
 
@@ -95,26 +91,40 @@ Before adding parameter tracks, wire the CameraCut:
 2. In the Camera Cut Track, click **+ Camera** and pick the `AComposableCameraLevelSequenceActor` binding.
 3. Drag the section to cover the full sequence range (or just the portion you want this camera active).
 
+![[assets/images/Pasted image 20260421084140.png]]
+
 The CameraCut track is what tells the engine — and CCS — which camera is active at each frame. When playback reaches the section start, Sequencer fires `SetViewTarget` on the PCM using the bound actor. Because `AComposableCameraLevelSequenceActor` has a `UCineCameraComponent` as its root, the PCM's `SetViewTarget` recognizes it on the same fast path as a standard `ACineCameraActor`, creates a transient proxy camera, and activates it in the CCS context.
 
 ## 5. Add and keyframe parameter tracks
 
 Now add keyframeable tracks for `DollyDistance` and `FovOverride`:
 
-1. In the Sequencer Outliner, expand the `LevelSequenceComponent` row.
-2. Click **+ Track** (the small `+` next to the component row) → **Camera Parameters → DollyDistance**. A float track appears.
-3. Repeat for **Camera Parameters → FovOverride**.
+1. Right click **+ Track** on the `ComposableCameraLevelSequenceActor` → `LevelSequenceComponent`.
+
+	![[assets/images/Pasted image 20260421084311.png]]
+
+2. In the Sequencer Outliner, expand the `LevelSequenceComponent` row.
+3. Click **+ Track** (the small `+` next to the component row) → **Camera Parameters → DollyDistance**. A float track appears.
+
+	![[assets/images/Pasted image 20260421084401.png]]
+	
+4. Repeat for **Camera Parameters → FovOverride/FollowTarget**.
+5. Bind your character to **FollowTarget**.
+
+![[assets/images/Pasted image 20260421084451.png]]
 
 With the tracks added, keyframe them:
 
 | Time | DollyDistance | FovOverride |
-|---|---|---|
-| 0:00 | 300 | 70 |
-| 0:03 | 150 | 55 |
+| ---- | ------------- | ----------- |
+| 0:00 | (-300, 0, 0)  | 70          |
+| 0:03 | (-150, 0, 0)  | 55          |
 
 A medium close-up: the camera dollies forward 150 units while the FOV tightens from 70° to 55°.
 
 To keyframe: move the playhead to `0:00`, expand the float track, right-click the value field → **Add Key**. Move to `0:03`, change the value, add another key. Set the interpolation to **Auto (cubic)** for a natural ease-in / ease-out feel.
+
+![[assets/images/Pasted image 20260421085443.png]]
 
 !!! tip "No keyframe button visible?"
     If the **Add Key** button is greyed out or absent, the parameter's pin type may not map to a Sequencer channel. Check the pin type of `DollyDistance` in the TypeAsset — only `Float` / `Double` / `Vector` / `Rotator` parameters produce keyframeable tracks. If it's a custom struct, it won't appear here.

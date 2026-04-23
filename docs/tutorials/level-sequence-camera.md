@@ -109,7 +109,7 @@ Enter PIE. Walk into the trigger. You should see:
 
 ![[assets/images/CustomModifiers.gif]]
 
-Open `showdebug camera`. During the sequence:
+Open `showdebug camera` or enable `CCS.Debug.Panel 1`. During the sequence:
 
 ```
 Context Stack (depth 2)

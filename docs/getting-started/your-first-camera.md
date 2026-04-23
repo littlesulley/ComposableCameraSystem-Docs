@@ -76,7 +76,7 @@ Open your player character or player controller Blueprint and find a convenient 
 
 ## 5. Play
 
-Press **Play**. Your camera should snap to the configured offset behind the target and track it as it moves. If `showdebug camera` is still active from the previous page, the overlay will show:
+Press **Play**. Your camera should snap to the configured offset behind the target and track it as it moves. If `showdebug camera` is still active from the previous page (or `CCS.Debug.Panel 1` if you used that instead), the overlay will show:
 
 - Context Stack: `Gameplay`
 - Active Camera: `CT_ThirdPersonFollow` (or whatever you named the instance)

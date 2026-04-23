@@ -131,7 +131,7 @@ Enter PIE. Aim. You should see:
 ![[assets/images/ADS.gif]]
 
 
-Open `showdebug camera`. During ADS, the context stack should show:
+Open `showdebug camera` or check the Debug Panel's **Context Stack & Evaluation Tree** region (`CCS.Debug.Panel 1`). During ADS, the context stack should show:
 
 ```
 Context Stack (depth 2)

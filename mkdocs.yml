@@ -100,6 +100,7 @@ nav:
       - Camera Actions: user-guide/camera-actions.md
       - Impulse System: user-guide/impulse-system.md
       - Profiling & Performance: user-guide/profiling.md
+      - Debugging: user-guide/debugging.md
   - Tutorials:
       - tutorials/index.md
       - Follow Camera: tutorials/follow-camera.md
@@ -122,7 +123,9 @@ nav:
       - Transition Catalog: reference/transitions.md
       - Modifier Catalog: reference/modifiers.md
       - Project Settings: reference/project-settings.md
-      - ShowDebug: reference/showdebug.md
+      - Debugging:
+          - ShowDebug: reference/debugging/showdebug.md
+          - 'Debug Panel & Dump Commands': reference/debugging/debug-panel.md
       - 'C++ API Reference':
           - 'Overview': reference/api/index.md
           - 'Core Runtime':
