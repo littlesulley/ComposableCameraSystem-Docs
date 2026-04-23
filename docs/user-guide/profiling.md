@@ -31,6 +31,33 @@ Both overlays will immediately answer:
 
 Unreal's built-in `stat game` shows the game thread's per-frame breakdown. Look for the `CameraSystem` or `PlayerCameraManager` rows — these capture the PCM's `DoUpdateCamera` cost. If the camera row is a small fraction of the total frame, you probably don't have a camera performance problem.
 
+### `stat CCS`
+
+```
+stat CCS
+```
+
+This command activates `STATGROUP_CCS`, the plugin's own stat group. Unlike `stat game` (which gives a single camera row), `stat CCS` breaks the per-frame cost into individual subsystem counters so you can pinpoint which layer is expensive without opening Unreal Insights.
+
+| Counter | What it measures |
+|---|---|
+| `PCM DoUpdateCamera` | Total cost of the PCM's per-frame update — the envelope for everything below |
+| `PCM UpdateActions` | Tick loop over all active camera actions |
+| `ContextStack Evaluate` | Tier 1 stack walk — normally near-zero unless a context is being pushed or popped this frame |
+| `Director Evaluate` | Per-director evaluation (one director per live context) |
+| `EvalTree Evaluate` | Full evaluation tree walk for the active director |
+| `EvalTree InnerNode Evaluate` | Per-inner-node cost during a live transition (repeats once per in-progress blend) |
+| `Camera TickCamera` | Per-camera node chain evaluation — usually the dominant cost |
+| `Node TickNode` | Individual node tick, nested under `Camera TickCamera` |
+| `Node ResolveAllInputPins` | Pin resolution pass that runs before each node tick |
+| `Transition Evaluate` | Blend evaluation for an active transition |
+| `ModifierManager UpdateEffective` | Modifier priority resolution (runs once per frame per PCM, not per camera) |
+
+A typical steady-state frame shows `Camera TickCamera` as the tallest bar. During a transition, `EvalTree InnerNode Evaluate` appears alongside it and `Transition Evaluate` shows the blend cost. If `ModifierManager UpdateEffective` is unusually high, you likely have a large number of registered modifiers forcing repeated priority sorting — review the modifier count via `showdebug camera`'s **All Modifiers** section.
+
+`stat CCS` uses the engine's standard stats infrastructure and is available in Debug, Development, and Test builds. It is compiled out in Shipping (`STATGROUP_CCS` is declared under `STATCAT_Advanced`, which the engine excludes from Shipping stat groups).
+
+
 ## Unreal Insights
 
 For detailed per-function timing, Unreal Insights is the tool. The plugin's evaluation path is instrumented with standard UE trace markers, so it shows up in Insights without any plugin-side setup.
@@ -106,6 +133,7 @@ These engine-level stat commands are useful alongside the plugin's own diagnosti
 | `stat game` | Per-frame game thread breakdown — find the camera row |
 | `stat slow` | Anything over 1 ms — useful for spotting camera spikes during transitions |
 | `stat unit` | Frame, game, draw, GPU times — confirms whether you're game-thread bound |
+| `stat CCS` | CCS-specific per-subsystem counters — PCM, context stack, director, tree, camera, node, transition, modifier |
 | `stat scenerendering` | Rendering cost — rules out GPU as the bottleneck |
 
 ## Performance checklist
