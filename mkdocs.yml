@@ -148,10 +148,13 @@ nav:
             - 'UComposableCameraControlRotateNode': reference/api/nodes/UComposableCameraControlRotateNode.md
             - 'UComposableCameraFieldOfViewNode': reference/api/nodes/UComposableCameraFieldOfViewNode.md
             - 'UComposableCameraFilmbackNode': reference/api/nodes/UComposableCameraFilmbackNode.md
+            - 'UComposableCameraFocusPullNode': reference/api/nodes/UComposableCameraFocusPullNode.md
+            - 'UComposableCameraHitchcockZoomNode': reference/api/nodes/UComposableCameraHitchcockZoomNode.md
             - 'UComposableCameraImpulseResolutionNode': reference/api/nodes/UComposableCameraImpulseResolutionNode.md
             - 'UComposableCameraLensNode': reference/api/nodes/UComposableCameraLensNode.md
             - 'UComposableCameraLookAtNode': reference/api/nodes/UComposableCameraLookAtNode.md
             - 'UComposableCameraMixingCameraNode': reference/api/nodes/UComposableCameraMixingCameraNode.md
+            - 'UComposableCameraOcclusionFadeNode': reference/api/nodes/UComposableCameraOcclusionFadeNode.md
             - 'UComposableCameraOrthographicNode': reference/api/nodes/UComposableCameraOrthographicNode.md
             - 'UComposableCameraPivotDampingNode': reference/api/nodes/UComposableCameraPivotDampingNode.md
             - 'UComposableCameraPivotOffsetNode': reference/api/nodes/UComposableCameraPivotOffsetNode.md
@@ -160,7 +163,9 @@ nav:
             - 'UComposableCameraRelativeFixedPoseNode': reference/api/nodes/UComposableCameraRelativeFixedPoseNode.md
             - 'UComposableCameraScreenSpaceConstraintsNode': reference/api/nodes/UComposableCameraScreenSpaceConstraintsNode.md
             - 'UComposableCameraScreenSpacePivotNode': reference/api/nodes/UComposableCameraScreenSpacePivotNode.md
+            - 'UComposableCameraSpiralNode': reference/api/nodes/UComposableCameraSpiralNode.md
             - 'UComposableCameraViewTargetProxyNode': reference/api/nodes/UComposableCameraViewTargetProxyNode.md
+            - 'UComposableCameraVolumeConstraintNode': reference/api/nodes/UComposableCameraVolumeConstraintNode.md
           - 'Transitions':
             - 'UComposableCameraCubicTransition': reference/api/transitions/UComposableCameraCubicTransition.md
             - 'UComposableCameraCylindricalTransition': reference/api/transitions/UComposableCameraCylindricalTransition.md
@@ -242,6 +247,7 @@ nav:
             - 'FComposableCameraNodePinBindingTable': reference/api/structs/FComposableCameraNodePinBindingTable.md
             - 'FComposableCameraNodePinDeclaration': reference/api/structs/FComposableCameraNodePinDeclaration.md
             - 'FComposableCameraNodeTemplatePinOverrides': reference/api/structs/FComposableCameraNodeTemplatePinOverrides.md
+            - 'FComposableCameraOcclusionMaterialOverride': reference/api/structs/FComposableCameraOcclusionMaterialOverride.md
             - 'FComposableCameraParameterBlock': reference/api/structs/FComposableCameraParameterBlock.md
             - 'FComposableCameraParameterTableRow': reference/api/structs/FComposableCameraParameterTableRow.md
             - 'FComposableCameraParameterValue': reference/api/structs/FComposableCameraParameterValue.md
@@ -266,6 +272,7 @@ nav:
             - 'FComposableCameraViewportDebug': reference/api/structs/FComposableCameraViewportDebug.md
             - 'FIsSimulatingInEditor': reference/api/structs/FIsSimulatingInEditor.md
             - 'FModifierEntry': reference/api/structs/FModifierEntry.md
+            - 'FResolvedVolume': reference/api/structs/FResolvedVolume.md
             - 'FTransitionDebugSnapshot': reference/api/structs/FTransitionDebugSnapshot.md
           - 'Other UObjects':
             - 'UAsyncPlayCutsceneSequence': reference/api/uobjects-other/UAsyncPlayCutsceneSequence.md

@@ -75,16 +75,16 @@ FOnReceiveMixingCameraWeights OnReceiveMixingCameraWeights
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-5) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-10) `virtual` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-7) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-12) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-9) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-11) `virtual` `const` |  |
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation-2) `virtual` `const` `inline` |  |
 | `void` | [`SetUpdateWeights`](#setupdateweights)  |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-5 }
+#### OnInitialize_Implementation { #oninitialize_implementation-7 }
 
 `virtual`
 
@@ -94,7 +94,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-10 }
+#### OnTickNode_Implementation { #onticknode_implementation-12 }
 
 `virtual`
 
@@ -114,7 +114,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-9 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-11 }
 
 `virtual` `const`
 

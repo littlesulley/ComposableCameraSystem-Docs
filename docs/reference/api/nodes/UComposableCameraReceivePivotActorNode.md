@@ -13,13 +13,13 @@ Reads a pivot actor's location and publishes it as the pivot position for downst
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-2)  |  |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-6)  |  |
 | `bool` | [`bUseBoneForPivot`](#buseboneforpivot)  |  |
-| `FName` | [`BoneName`](#bonename-1)  |  |
+| `FName` | [`BoneName`](#bonename-4)  |  |
 
 ---
 
-#### PivotActor { #pivotactor-2 }
+#### PivotActor { #pivotactor-6 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor
@@ -35,7 +35,7 @@ bool bUseBoneForPivot { false }
 
 ---
 
-#### BoneName { #bonename-1 }
+#### BoneName { #bonename-4 }
 
 ```cpp
 FName BoneName
@@ -45,14 +45,14 @@ FName BoneName
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-11) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-19) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-17) `virtual` `const` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-7) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-16) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-24) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-22) `virtual` `const` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-12) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-11 }
+#### OnInitialize_Implementation { #oninitialize_implementation-16 }
 
 `virtual`
 
@@ -62,7 +62,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-19 }
+#### OnTickNode_Implementation { #onticknode_implementation-24 }
 
 `virtual`
 
@@ -72,7 +72,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-17 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-22 }
 
 `virtual` `const`
 
@@ -82,7 +82,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ---
 
-#### DrawNodeDebug { #drawnodedebug-7 }
+#### DrawNodeDebug { #drawnodedebug-12 }
 
 `virtual` `const`
 

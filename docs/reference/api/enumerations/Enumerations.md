@@ -78,6 +78,68 @@ enum EComposableCameraLookAtConstraintType
 | `Hard` |  |
 | `Soft` |  |
 
+#### EComposableCameraSpiralPivotSourceType { #ecomposablecameraspiralpivotsourcetype }
+
+```cpp
+enum EComposableCameraSpiralPivotSourceType
+```
+
+| Value | Description |
+|-------|-------------|
+| `FromActor` |  |
+| `FromVector` |  |
+
+Source of the pivot the spiral is built around.
+
+FromActor — PivotActor->GetActorLocation() is sampled each frame. The actor's Up / Forward are also available as Spiral-Space axis sources. FromVector — PivotPosition is used directly. When this mode is active, RotationAxis = PivotActorUp and ReferenceDirection = PivotActorForward silently fall back to WorldUp / WorldX with a runtime warning — there is no actor to read from.
+
+#### EComposableCameraSpiralRotationAxis { #ecomposablecameraspiralrotationaxis }
+
+```cpp
+enum EComposableCameraSpiralRotationAxis
+```
+
+| Value | Description |
+|-------|-------------|
+| `WorldUp` |  |
+| `PivotActorUp` |  |
+| `Custom` |  |
+
+Axis around which the camera orbits. Defines Spiral Space's Up direction.
+
+#### EComposableCameraSpiralReferenceDirection { #ecomposablecameraspiralreferencedirection }
+
+```cpp
+enum EComposableCameraSpiralReferenceDirection
+```
+
+| Value | Description |
+|-------|-------------|
+| `WorldX` |  |
+| `PivotActorForward` |  |
+| `CameraInitialForward` |  |
+| `Custom` |  |
+
+Direction that anchors θ = 0 in the plane perpendicular to the rotation axis. Defines Spiral Space's Forward direction after projection. The chosen direction is projected onto the plane perpendicular to the rotation axis and renormalized — it does not need to be pre-orthogonal to the axis.
+
+CameraInitialForward captures the camera's forward vector on the first tick after activation and reuses it for the lifetime of the node, so the spiral starts seamlessly from the current camera orientation.
+
+#### EComposableCameraSpiralPlayMode { #ecomposablecameraspiralplaymode }
+
+```cpp
+enum EComposableCameraSpiralPlayMode
+```
+
+| Value | Description |
+|-------|-------------|
+| `Once` |  |
+| `Loop` |  |
+| `PingPong` |  |
+
+How the spiral evolves past Duration seconds. In every mode, θ / Radius / Height are direct curve evaluations at NormalizedTime — there is no per-frame integration and no accumulated state, so the pose at any arbitrary t is computable in O(1).
+
+Once — NormalizedTime clamps at 1 after Duration; all three curves hold their Y at X=1. The pose freezes at the terminal frame. Loop — NormalizedTime = Fmod(Elapsed, Duration) / Duration. θ visually wraps cleanly when AngleCurve's Y(1) - Y(0) is a multiple of 360 (trig periodicity absorbs the jump); non-multiples snap at the cycle seam, which is the author's explicit choice. PingPong — NormalizedTime oscillates 0 → 1 → 0 → 1 every 2 * Duration seconds. All three curves are sampled at the mirrored time, so θ / Radius / Height naturally retrace on the return half. No sign flip needed — the X mirror alone carries the symmetry.
+
 #### EComposableCameraSplineNodeSplineType { #ecomposablecamerasplinenodesplinetype }
 
 ```cpp
@@ -197,6 +259,17 @@ Design:
 
 * Progress / lifetime fields are captured as floats, not pre-formatted strings, so the renderer can draw real progress bars instead of parsing text. Kind of an evaluation-tree node. Parallels the TVariant in [FComposableCameraEvaluationTreeNode](../structs/FComposableCameraEvaluationTreeNode.md#fcomposablecameraevaluationtreenode).
 
+#### EComposableCameraAutoRotateDirectionMode { #ecomposablecameraautorotatedirectionmode }
+
+```cpp
+enum EComposableCameraAutoRotateDirectionMode
+```
+
+| Value | Description |
+|-------|-------------|
+| `Direction` |  |
+| `ActorForward` |  |
+
 #### EComposableCameraNodeLevelSequenceCompatibility { #ecomposablecameranodelevelsequencecompatibility }
 
 ```cpp
@@ -296,6 +369,23 @@ enum EComposableCameraSplineTransitionEvaluationCurveType
 | `Linear` |  |
 | `Cubic` |  |
 
+#### EComposableCameraHitchcockZoomDriver { #ecomposablecamerahitchcockzoomdriver }
+
+```cpp
+enum EComposableCameraHitchcockZoomDriver
+```
+
+| Value | Description |
+|-------|-------------|
+| `FromFOVDelta` |  |
+| `FromDistanceDelta` |  |
+
+Which authored quantity the node drives. The other is solved from the frame-zero lock constant.
+
+FromFOVDelta — author `FOVDeltaCurve`, derive camera distance. Natural when you think about the look of the effect ("background should distort to N degrees wider"). FromDistanceDelta — author `DistanceDeltaCurve`, derive FOV. Natural when you think about the physical move ("camera dollies back 3 metres").
+
+Both paths preserve the same `distance · tan(FOV/2) = LockConstant` invariant captured on the first tick, so the two authoring styles are physically equivalent — the choice is purely about which curve is easier to shape in the project's authoring pipeline.
+
 #### EComposableCameraRotationConstrainType { #ecomposablecamerarotationconstraintype }
 
 ```cpp
@@ -329,6 +419,34 @@ enum EComposableCameraScreenSpacePivotSource
 |-------|-------------|
 | `WorldPosition` |  |
 | `ActorPosition` |  |
+
+#### EComposableCameraVolumeSource { #ecomposablecameravolumesource }
+
+```cpp
+enum EComposableCameraVolumeSource
+```
+
+| Value | Description |
+|-------|-------------|
+| `FromActor` |  |
+| `Inline` |  |
+
+How the constraint volume is sourced.
+
+FromActor — Pull the shape from the first `UShapeComponent` on VolumeActor. UBoxComponent and USphereComponent are supported; the component's world transform + scaled extents drive the volume. Capsule and other shape subclasses are rejected with a warning. Inline — The node carries its own world-space volume definition via VolumeCenter / VolumeRotation / BoxExtents / SphereRadius.
+
+#### EComposableCameraVolumeShape { #ecomposablecameravolumeshape }
+
+```cpp
+enum EComposableCameraVolumeShape
+```
+
+| Value | Description |
+|-------|-------------|
+| `Box` |  |
+| `Sphere` |  |
+
+Shape of the constraint volume in Inline mode. FromActor mode resolves the shape from the component's concrete class.
 
 #### EComposableCameraPathGuidedTransitionType { #ecomposablecamerapathguidedtransitiontype }
 

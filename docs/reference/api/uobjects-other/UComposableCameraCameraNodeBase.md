@@ -6,7 +6,7 @@
 ```
 
 > **Inherits:** `UObject`
-> **Subclassed by:** [`UComposableCameraAutoRotateNode`](../nodes/UComposableCameraAutoRotateNode.md#ucomposablecameraautorotatenode), [`UComposableCameraBlueprintCameraNode`](../nodes/UComposableCameraBlueprintCameraNode.md#ucomposablecamerablueprintcameranode), [`UComposableCameraCameraOffsetNode`](../nodes/UComposableCameraCameraOffsetNode.md#ucomposablecameracameraoffsetnode), [`UComposableCameraCollisionPushNode`](../nodes/UComposableCameraCollisionPushNode.md#ucomposablecameracollisionpushnode), [`UComposableCameraComputeNodeBase`](UComposableCameraComputeNodeBase.md#ucomposablecameracomputenodebase), [`UComposableCameraControlRotateNode`](../nodes/UComposableCameraControlRotateNode.md#ucomposablecameracontrolrotatenode), [`UComposableCameraFieldOfViewNode`](../nodes/UComposableCameraFieldOfViewNode.md#ucomposablecamerafieldofviewnode), [`UComposableCameraFilmbackNode`](../nodes/UComposableCameraFilmbackNode.md#ucomposablecamerafilmbacknode), [`UComposableCameraImpulseResolutionNode`](../nodes/UComposableCameraImpulseResolutionNode.md#ucomposablecameraimpulseresolutionnode), [`UComposableCameraLensNode`](../nodes/UComposableCameraLensNode.md#ucomposablecameralensnode), [`UComposableCameraLookAtNode`](../nodes/UComposableCameraLookAtNode.md#ucomposablecameralookatnode), [`UComposableCameraMixingCameraNode`](../nodes/UComposableCameraMixingCameraNode.md#ucomposablecameramixingcameranode), [`UComposableCameraOrthographicNode`](../nodes/UComposableCameraOrthographicNode.md#ucomposablecameraorthographicnode), [`UComposableCameraPivotDampingNode`](../nodes/UComposableCameraPivotDampingNode.md#ucomposablecamerapivotdampingnode), [`UComposableCameraPivotOffsetNode`](../nodes/UComposableCameraPivotOffsetNode.md#ucomposablecamerapivotoffsetnode), [`UComposableCameraPostProcessNode`](../nodes/UComposableCameraPostProcessNode.md#ucomposablecamerapostprocessnode), [`UComposableCameraReceivePivotActorNode`](../nodes/UComposableCameraReceivePivotActorNode.md#ucomposablecamerareceivepivotactornode), [`UComposableCameraRelativeFixedPoseNode`](../nodes/UComposableCameraRelativeFixedPoseNode.md#ucomposablecamerarelativefixedposenode), [`UComposableCameraRotationConstraints`](UComposableCameraRotationConstraints.md#ucomposablecamerarotationconstraints), [`UComposableCameraScreenSpaceConstraintsNode`](../nodes/UComposableCameraScreenSpaceConstraintsNode.md#ucomposablecamerascreenspaceconstraintsnode), [`UComposableCameraScreenSpacePivotNode`](../nodes/UComposableCameraScreenSpacePivotNode.md#ucomposablecamerascreenspacepivotnode), [`UComposableCameraSplineNode`](../splines/UComposableCameraSplineNode.md#ucomposablecamerasplinenode), [`UComposableCameraViewTargetProxyNode`](../nodes/UComposableCameraViewTargetProxyNode.md#ucomposablecameraviewtargetproxynode)
+> **Subclassed by:** [`UComposableCameraAutoRotateNode`](../nodes/UComposableCameraAutoRotateNode.md#ucomposablecameraautorotatenode), [`UComposableCameraBlueprintCameraNode`](../nodes/UComposableCameraBlueprintCameraNode.md#ucomposablecamerablueprintcameranode), [`UComposableCameraCameraOffsetNode`](../nodes/UComposableCameraCameraOffsetNode.md#ucomposablecameracameraoffsetnode), [`UComposableCameraCollisionPushNode`](../nodes/UComposableCameraCollisionPushNode.md#ucomposablecameracollisionpushnode), [`UComposableCameraComputeNodeBase`](UComposableCameraComputeNodeBase.md#ucomposablecameracomputenodebase), [`UComposableCameraControlRotateNode`](../nodes/UComposableCameraControlRotateNode.md#ucomposablecameracontrolrotatenode), [`UComposableCameraFieldOfViewNode`](../nodes/UComposableCameraFieldOfViewNode.md#ucomposablecamerafieldofviewnode), [`UComposableCameraFilmbackNode`](../nodes/UComposableCameraFilmbackNode.md#ucomposablecamerafilmbacknode), [`UComposableCameraFocusPullNode`](../nodes/UComposableCameraFocusPullNode.md#ucomposablecamerafocuspullnode), [`UComposableCameraHitchcockZoomNode`](../nodes/UComposableCameraHitchcockZoomNode.md#ucomposablecamerahitchcockzoomnode), [`UComposableCameraImpulseResolutionNode`](../nodes/UComposableCameraImpulseResolutionNode.md#ucomposablecameraimpulseresolutionnode), [`UComposableCameraLensNode`](../nodes/UComposableCameraLensNode.md#ucomposablecameralensnode), [`UComposableCameraLookAtNode`](../nodes/UComposableCameraLookAtNode.md#ucomposablecameralookatnode), [`UComposableCameraMixingCameraNode`](../nodes/UComposableCameraMixingCameraNode.md#ucomposablecameramixingcameranode), [`UComposableCameraOcclusionFadeNode`](../nodes/UComposableCameraOcclusionFadeNode.md#ucomposablecameraocclusionfadenode), [`UComposableCameraOrthographicNode`](../nodes/UComposableCameraOrthographicNode.md#ucomposablecameraorthographicnode), [`UComposableCameraPivotDampingNode`](../nodes/UComposableCameraPivotDampingNode.md#ucomposablecamerapivotdampingnode), [`UComposableCameraPivotOffsetNode`](../nodes/UComposableCameraPivotOffsetNode.md#ucomposablecamerapivotoffsetnode), [`UComposableCameraPostProcessNode`](../nodes/UComposableCameraPostProcessNode.md#ucomposablecamerapostprocessnode), [`UComposableCameraReceivePivotActorNode`](../nodes/UComposableCameraReceivePivotActorNode.md#ucomposablecamerareceivepivotactornode), [`UComposableCameraRelativeFixedPoseNode`](../nodes/UComposableCameraRelativeFixedPoseNode.md#ucomposablecamerarelativefixedposenode), [`UComposableCameraRotationConstraints`](UComposableCameraRotationConstraints.md#ucomposablecamerarotationconstraints), [`UComposableCameraScreenSpaceConstraintsNode`](../nodes/UComposableCameraScreenSpaceConstraintsNode.md#ucomposablecamerascreenspaceconstraintsnode), [`UComposableCameraScreenSpacePivotNode`](../nodes/UComposableCameraScreenSpacePivotNode.md#ucomposablecamerascreenspacepivotnode), [`UComposableCameraSpiralNode`](../nodes/UComposableCameraSpiralNode.md#ucomposablecameraspiralnode), [`UComposableCameraSplineNode`](../splines/UComposableCameraSplineNode.md#ucomposablecamerasplinenode), [`UComposableCameraViewTargetProxyNode`](../nodes/UComposableCameraViewTargetProxyNode.md#ucomposablecameraviewtargetproxynode), [`UComposableCameraVolumeConstraintNode`](../nodes/UComposableCameraVolumeConstraintNode.md#ucomposablecameravolumeconstraintnode)
 
 Base node for all camera nodes.
 
@@ -22,7 +22,7 @@ Base node for all camera nodes.
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility`](#getlevelsequencecompatibility) `const` | Declare how this node behaves when evaluated without a PCM (Level Sequence path). Default: Compatible. Override on nodes that need the viewport / player controller / HUD, or that spawn new cameras through the PCM. See the enum comment. |
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation) `virtual` `const` `inline` |  |
 | `void` | [`GetPinDeclarations`](#getpindeclarations) `const` | Declare this node's input and output data pins. Override in subclasses to define pins. The editor reads these to generate visual pins, and the runtime uses them to allocate the RuntimeDataBlock. |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-5) `virtual` `const` `inline` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-7) `virtual` `const` `inline` |  |
 | `void` | [`SetRuntimeDataBlock`](#setruntimedatablock) `inline` | Set the runtime data block for this node. Called during camera instantiation from type assets. |
 | `bool` | [`HasRuntimeDataBlock`](#hasruntimedatablock) `const` `inline` | Check if this node has a RuntimeDataBlock attached. |
 | `void` | [`GatherAllPinDeclarations`](#gatherallpindeclarations) `const` | Gather ALL pin declarations: calls [GetPinDeclarations()](#getpindeclarations) (the virtual chain), then auto-appends pins for every Instanced subobject UPROPERTY on this node. |
@@ -67,7 +67,7 @@ Base node for all camera nodes.
 |  | [`DECLARE_FUNCTION`](#declare_function-3) `inline` |  |
 | `void` | [`OnPreTick`](#onpretick-1) `virtual` |  |
 | `void` | [`OnPostTick`](#onposttick-1) `virtual` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-2) `virtual` `const` `inline` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-4) `virtual` `const` `inline` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 | `void` | [`DrawNodeDebug2D`](#drawnodedebug2d) `virtual` `const` `inline` | 2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos). |
 
 ---
@@ -156,7 +156,7 @@ Default implementation returns empty (no pins).
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-5 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-7 }
 
 `virtual` `const` `inline`
 
@@ -618,7 +618,7 @@ virtual void OnPostTick(float DeltaTime, const FComposableCameraPose & CurrentCa
 
 ---
 
-#### DrawNodeDebug { #drawnodedebug-2 }
+#### DrawNodeDebug { #drawnodedebug-4 }
 
 `virtual` `const` `inline`
 
@@ -701,11 +701,11 @@ This node's index in the camera type asset's NodeTemplates array.
 |--------|------|-------------|
 | `bool` | [`ShouldAutoResolveInputPins`](#shouldautoresolveinputpins) `virtual` `const` `inline` | Opt-out hook for the auto-resolve-before-tick behavior. Override and return false on nodes that manage their own pin reads (e.g. nodes whose UPROPERTYs must survive across frames or are written by external actors mid-tick). |
 | `void` | [`OnInitialize`](#oninitialize)  | Per-activation one-shot initialization. Called exactly once per camera activation, after OwningCamera / OwningPlayerCameraManager / RuntimeDataBlock have all been wired. This is the hook for caching refs, instantiating internal objects, reading exposed parameters, and seeding any per-activation state the node needs before the first Tick. |
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-3) `virtual` `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-5) `virtual` `inline` |  |
 | `void` | [`OnFirstTickNode`](#onfirstticknode)  | Called exactly once on the first TickNode after activation, immediately after [ResolveAllInputPins()](#resolveallinputpins) and immediately before [OnTickNode()](#onticknode). |
 | `void` | [`OnFirstTickNode_Implementation`](#onfirstticknode_implementation) `virtual` `inline` |  |
 | `void` | [`OnTickNode`](#onticknode)  | Main node logic implemented here. This node can read/write pin values and/or CameraPose. |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-5) `virtual` `inline` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-7) `virtual` `inline` |  |
 
 ---
 
@@ -739,7 +739,7 @@ NOTE: Input pin values are NOT yet resolved when this is called. Do not read pin
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-3 }
+#### OnInitialize_Implementation { #oninitialize_implementation-5 }
 
 `virtual` `inline`
 
@@ -793,7 +793,7 @@ Main node logic implemented here. This node can read/write pin values and/or Cam
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-5 }
+#### OnTickNode_Implementation { #onticknode_implementation-7 }
 
 `virtual` `inline`
 

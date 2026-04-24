@@ -18,7 +18,7 @@ Node for placing the camera on a given spline.
 | `EComposableCameraSplineNodeMoveMethod` | [`MoveMethod`](#movemethod)  |  |
 | `TObjectPtr< AActor >` | [`ClosestMoveMethodPivotActor`](#closestmovemethodpivotactor)  |  |
 | `TObjectPtr< UCurveFloat >` | [`AutomaticMoveCurve`](#automaticmovecurve)  |  |
-| `float` | [`Duration`](#duration-3)  |  |
+| `float` | [`Duration`](#duration-4)  |  |
 | `bool` | [`bLoop`](#bloop)  |  |
 | `TObjectPtr< UComposableCameraInterpolatorBase >` | [`MoveInterpolator`](#moveinterpolator)  |  |
 | `float` | [`MoveOffset`](#moveoffset)  |  |
@@ -66,7 +66,7 @@ TObjectPtr< UCurveFloat > AutomaticMoveCurve { nullptr }
 
 ---
 
-#### Duration { #duration-3 }
+#### Duration { #duration-4 }
 
 ```cpp
 float Duration { 3.0f }
@@ -108,14 +108,14 @@ bool bLockOrientationOnSpline { false }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-1) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-2) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-2) `virtual` `const` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-1) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-2) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-3) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-3) `virtual` `const` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-2) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-1 }
+#### OnInitialize_Implementation { #oninitialize_implementation-2 }
 
 `virtual`
 
@@ -125,7 +125,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-2 }
+#### OnTickNode_Implementation { #onticknode_implementation-3 }
 
 `virtual`
 
@@ -135,7 +135,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-2 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-3 }
 
 `virtual` `const`
 
@@ -145,7 +145,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ---
 
-#### DrawNodeDebug { #drawnodedebug-1 }
+#### DrawNodeDebug { #drawnodedebug-2 }
 
 `virtual` `const`
 

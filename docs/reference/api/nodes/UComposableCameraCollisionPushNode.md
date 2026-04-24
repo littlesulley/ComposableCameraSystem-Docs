@@ -17,7 +17,7 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor)  |  |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-2)  |  |
 | `TEnumAsByte< ETraceTypeQuery >` | [`TraceCollisionChannel`](#tracecollisionchannel)  |  |
 | `bool` | [`bTraceUseSphere`](#btraceusesphere)  |  |
 | `double` | [`TraceSphereRadius`](#tracesphereradius)  |  |
@@ -29,13 +29,13 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 | `double` | [`ExtraPushDistance`](#extrapushdistance)  |  |
 | `TObjectPtr< UComposableCameraInterpolatorBase >` | [`PushInterpolator`](#pushinterpolator)  |  |
 | `TObjectPtr< UComposableCameraInterpolatorBase >` | [`PullInterpolator`](#pullinterpolator)  |  |
-| `double` | [`PivotZOffset`](#pivotzoffset)  |  |
-| `bool` | [`bUseBoneForDetection`](#busebonefordetection)  |  |
-| `FName` | [`BoneName`](#bonename)  |  |
+| `double` | [`PivotZOffset`](#pivotzoffset-1)  |  |
+| `bool` | [`bUseBoneForDetection`](#busebonefordetection-1)  |  |
+| `FName` | [`BoneName`](#bonename-1)  |  |
 
 ---
 
-#### PivotActor { #pivotactor }
+#### PivotActor { #pivotactor-2 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor
@@ -131,7 +131,7 @@ TObjectPtr< UComposableCameraInterpolatorBase > PullInterpolator
 
 ---
 
-#### PivotZOffset { #pivotzoffset }
+#### PivotZOffset { #pivotzoffset-1 }
 
 ```cpp
 double PivotZOffset { 50. }
@@ -139,7 +139,7 @@ double PivotZOffset { 50. }
 
 ---
 
-#### bUseBoneForDetection { #busebonefordetection }
+#### bUseBoneForDetection { #busebonefordetection-1 }
 
 ```cpp
 bool bUseBoneForDetection { false }
@@ -147,7 +147,7 @@ bool bUseBoneForDetection { false }
 
 ---
 
-#### BoneName { #bonename }
+#### BoneName { #bonename-1 }
 
 ```cpp
 FName BoneName
@@ -157,15 +157,15 @@ FName BoneName
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-7) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-13) `virtual` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-9) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-15) `virtual` |  |
 | `void` | [`OnPreTick`](#onpretick-2) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-12) `virtual` `const` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-5) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-14) `virtual` `const` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-7) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-7 }
+#### OnInitialize_Implementation { #oninitialize_implementation-9 }
 
 `virtual`
 
@@ -175,7 +175,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-13 }
+#### OnTickNode_Implementation { #onticknode_implementation-15 }
 
 `virtual`
 
@@ -195,7 +195,7 @@ virtual void OnPreTick(float DeltaTime, const FComposableCameraPose & CurrentCam
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-12 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-14 }
 
 `virtual` `const`
 
@@ -205,7 +205,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ---
 
-#### DrawNodeDebug { #drawnodedebug-5 }
+#### DrawNodeDebug { #drawnodedebug-7 }
 
 `virtual` `const`
 

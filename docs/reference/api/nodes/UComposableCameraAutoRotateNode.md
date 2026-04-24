@@ -7,13 +7,16 @@
 
 > **Inherits:** [`UComposableCameraCameraNodeBase`](../uobjects-other/UComposableCameraCameraNodeBase.md#ucomposablecameracameranodebase)
 
-Node for auto-rotating around a given "main direction." The main direction is supplied through the MainDirection input pin, typically wired from an upstream node (e.g. a compute node that reads character forward vector) or set as a context parameter override.
+Node for auto-rotating around a given "main direction." The main direction is supplied either as an explicit direction vector or by reading an actor's forward vector each frame, selected via DirectionMode. Both inputs are pins so they can be wired from upstream compute nodes or context parameters.
 
 ### Public Attributes
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraAutoRotateDirectionMode` | [`DirectionMode`](#directionmode)  |  |
 | `FVector` | [`MainDirection`](#maindirection)  |  |
+| `TObjectPtr< AActor >` | [`PrimaryActor`](#primaryactor)  |  |
+| `bool` | [`bInterruptOnUserInput`](#binterruptonuserinput)  |  |
 | `FVector2D` | [`CameraRotationInput`](#camerarotationinput)  |  |
 | `FVector2D` | [`YawRange`](#yawrange)  |  |
 | `FVector2D` | [`PitchRange`](#pitchrange)  |  |
@@ -21,8 +24,15 @@ Node for auto-rotating around a given "main direction." The main direction is su
 | `float` | [`BeyondValidRangeCooldown`](#beyondvalidrangecooldown)  |  |
 | `float` | [`InputInterruptCooldown`](#inputinterruptcooldown)  |  |
 | `int32` | [`MaxCountAfterInputInterrupt`](#maxcountafterinputinterrupt)  |  |
-| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`RotateInterpolatorForYaw`](#rotateinterpolatorforyaw)  |  |
-| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`RotateInterpolatorForPitch`](#rotateinterpolatorforpitch)  |  |
+| `TObjectPtr< UComposableCameraInterpolatorBase >` | [`RotateInterpolator`](#rotateinterpolator)  |  |
+
+---
+
+#### DirectionMode { #directionmode }
+
+```cpp
+EComposableCameraAutoRotateDirectionMode DirectionMode {  }
+```
 
 ---
 
@@ -30,6 +40,22 @@ Node for auto-rotating around a given "main direction." The main direction is su
 
 ```cpp
 FVector MainDirection { FVector::ForwardVector }
+```
+
+---
+
+#### PrimaryActor { #primaryactor }
+
+```cpp
+TObjectPtr< AActor > PrimaryActor
+```
+
+---
+
+#### bInterruptOnUserInput { #binterruptonuserinput }
+
+```cpp
+bool bInterruptOnUserInput { true }
 ```
 
 ---
@@ -90,31 +116,23 @@ int32 MaxCountAfterInputInterrupt { -1 }
 
 ---
 
-#### RotateInterpolatorForYaw { #rotateinterpolatorforyaw }
+#### RotateInterpolator { #rotateinterpolator }
 
 ```cpp
-TObjectPtr< UComposableCameraInterpolatorBase > RotateInterpolatorForYaw
-```
-
----
-
-#### RotateInterpolatorForPitch { #rotateinterpolatorforpitch }
-
-```cpp
-TObjectPtr< UComposableCameraInterpolatorBase > RotateInterpolatorForPitch
+TObjectPtr< UComposableCameraInterpolatorBase > RotateInterpolator
 ```
 
 ### Public Methods
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-2) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-4) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-4) `virtual` `const` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-4) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-6) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-6) `virtual` `const` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-2 }
+#### OnInitialize_Implementation { #oninitialize_implementation-4 }
 
 `virtual`
 
@@ -124,7 +142,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-4 }
+#### OnTickNode_Implementation { #onticknode_implementation-6 }
 
 `virtual`
 
@@ -134,7 +152,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-4 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-6 }
 
 `virtual` `const`
 
@@ -146,8 +164,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`InterpolatorYaw_T`](#interpolatoryaw_t)  |  |
-| `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`InterpolatorPitch_T`](#interpolatorpitch_t)  |  |
+| `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FRotator > > >` | [`Interpolator_T`](#interpolator_t-1)  |  |
 | `bool` | [`bInAutoRotate`](#binautorotate)  |  |
 | `float` | [`BeyondValidRangeCooldownRemaining`](#beyondvalidrangecooldownremaining)  |  |
 | `float` | [`InputInterruptCooldownRemaining`](#inputinterruptcooldownremaining)  |  |
@@ -155,18 +172,10 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ---
 
-#### InterpolatorYaw_T { #interpolatoryaw_t }
+#### Interpolator_T { #interpolator_t-1 }
 
 ```cpp
-TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > > InterpolatorYaw_T
-```
-
----
-
-#### InterpolatorPitch_T { #interpolatorpitch_t }
-
-```cpp
-TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > > InterpolatorPitch_T
+TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FRotator > > > Interpolator_T
 ```
 
 ---

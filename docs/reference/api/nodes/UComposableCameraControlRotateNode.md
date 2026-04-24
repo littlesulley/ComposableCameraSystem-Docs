@@ -87,13 +87,13 @@ bool bInvertPitch { true }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-8) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-14) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-13) `virtual` `const` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-16) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-15) `virtual` `const` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-8 }
+#### OnInitialize_Implementation { #oninitialize_implementation-10 }
 
 `virtual`
 
@@ -103,7 +103,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-14 }
+#### OnTickNode_Implementation { #onticknode_implementation-16 }
 
 `virtual`
 
@@ -113,7 +113,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-13 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-15 }
 
 `virtual` `const`
 

@@ -97,12 +97,12 @@ Axis constraint to use when bOverrideAspectRatioAxisConstraint is true.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-3) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-3) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-4) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-4) `virtual` `const` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-3 }
+#### OnTickNode_Implementation { #onticknode_implementation-4 }
 
 `virtual`
 
@@ -112,7 +112,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-3 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-4 }
 
 `virtual` `const`
 

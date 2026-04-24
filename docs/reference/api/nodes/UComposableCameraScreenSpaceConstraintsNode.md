@@ -13,7 +13,7 @@ Node for constraining a pivot position in screen using either translation or rot
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-3)  |  |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-7)  |  |
 | `EComposableCameraScreenSpaceMethod` | [`Method`](#method-2)  |  |
 | `FVector2D` | [`SafeZoneCenter`](#safezonecenter-1)  |  |
 | `FVector2D` | [`SafeZoneWidth`](#safezonewidth-1)  |  |
@@ -21,7 +21,7 @@ Node for constraining a pivot position in screen using either translation or rot
 
 ---
 
-#### PivotActor { #pivotactor-3 }
+#### PivotActor { #pivotactor-7 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor
@@ -63,15 +63,15 @@ FVector2D SafeZoneHeight { -0.1, 0.1 }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-13) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-21) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-20) `virtual` `const` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-9) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-18) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-26) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-25) `virtual` `const` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-14) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 | `void` | [`DrawNodeDebug2D`](#drawnodedebug2d-2) `virtual` `const` | 2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos). |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-13 }
+#### OnInitialize_Implementation { #oninitialize_implementation-18 }
 
 `virtual`
 
@@ -81,7 +81,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-21 }
+#### OnTickNode_Implementation { #onticknode_implementation-26 }
 
 `virtual`
 
@@ -91,7 +91,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-20 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-25 }
 
 `virtual` `const`
 
@@ -101,7 +101,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ---
 
-#### DrawNodeDebug { #drawnodedebug-9 }
+#### DrawNodeDebug { #drawnodedebug-14 }
 
 `virtual` `const`
 

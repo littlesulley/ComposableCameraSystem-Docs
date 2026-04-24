@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-04-24 — plugin `e9af064..145a2e9`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/e9af064c76c180dbce61109529001b7659f843fd...145a2e9c9d4490517c56308367049f1d13eb1406))
+
+- `145a2e9` Add FocusPull, HitchcockZoom, OcclusionFade, Spiral, VolumeConstraint nodes; extend AutoRotate and K2 activation.
+
+**C++ API pages regenerated:** 145 pages (+7 new: FocusPullNode, HitchcockZoomNode, OcclusionFadeNode, SpiralNode, VolumeConstraintNode + 2 supporting structs; 1 modified: AutoRotateNode).
+
+**Prose drafts added:**
+
+- `docs/reference/nodes.md` — entry for `UComposableCameraFocusPullNode` (please review)
+- `docs/reference/nodes.md` — entry for `UComposableCameraHitchcockZoomNode` (please review)
+- `docs/reference/nodes.md` — entry for `UComposableCameraOcclusionFadeNode` (please review)
+- `docs/reference/nodes.md` — entry for `UComposableCameraSpiralNode` (please review)
+- `docs/reference/nodes.md` — entry for `UComposableCameraVolumeConstraintNode` (please review)
+
+**Design-doc sync:**
+
+- `DesignDoc.md` — Last updated 2026-04-24 ✓ in sync
+- `TechDoc.md` — Last updated 2026-04-24 ✓ in sync
+- `EditorDesignDoc.md` — Last updated 2026-04-23, commit date 2026-04-24 — **flagged for review**: may not reflect graph schema changes in this commit (editor-side changes to NodeGraphSchema and EditorToolkit were included).
+- `ExecutionFlowExamples.md` — No "Last updated" header found — **flagged for review**: verify it doesn't need a new flow example for the new cinematic/effects nodes.
+
+---
+
 ## 2026-04-23 — plugin `195b398..e9af064`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/195b3986d82aa849e03aac1a096b93ba4016f3dd...e9af064c76c180dbce61109529001b7659f843fd))

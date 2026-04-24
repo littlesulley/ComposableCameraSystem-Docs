@@ -17,13 +17,13 @@ This node is NOT meant to be placed in a camera type asset by designers. It is c
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-16) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-20) `virtual` |  |
 | `void` | [`SetViewTargetActor`](#setviewtargetactor)  | Set the actor and cache its UCameraComponent. |
 | `AActor *` | [`GetViewTargetActor`](#getviewtargetactor) `const` `inline` | Get the current view target actor. |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-16 }
+#### OnTickNode_Implementation { #onticknode_implementation-20 }
 
 `virtual`
 

@@ -36,16 +36,16 @@ UComposableCameraInterpolatorBase * Interpolator
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-18) `virtual` |  |
-| `void` | [`BeginDestroy`](#begindestroy-1) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-15) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-23) `virtual` |  |
+| `void` | [`BeginDestroy`](#begindestroy-2) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-21) `virtual` `const` |  |
 | `void` | [`AddImpulseShape`](#addimpulseshape) `inline` |  |
 | `void` | [`RemoveImpulseShape`](#removeimpulseshape) `inline` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-10 }
+#### OnInitialize_Implementation { #oninitialize_implementation-15 }
 
 `virtual`
 
@@ -55,7 +55,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-18 }
+#### OnTickNode_Implementation { #onticknode_implementation-23 }
 
 `virtual`
 
@@ -65,7 +65,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### BeginDestroy { #begindestroy-1 }
+#### BeginDestroy { #begindestroy-2 }
 
 `virtual`
 
@@ -75,7 +75,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-16 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-21 }
 
 `virtual` `const`
 
@@ -110,7 +110,7 @@ inline void RemoveImpulseShape(AActor * Shape)
 | `TObjectPtr< USphereComponent >` | [`Sphere`](#sphere)  |  |
 | `TArray< TScriptInterface< IComposableCameraImpulseShapeInterface > >` | [`ImpulseShapes`](#impulseshapes)  |  |
 | `FVector` | [`OldVelocity`](#oldvelocity)  |  |
-| `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FVector > > >` | [`Interpolator_T`](#interpolator_t-1)  |  |
+| `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FVector > > >` | [`Interpolator_T`](#interpolator_t-2)  |  |
 
 ---
 
@@ -138,7 +138,7 @@ FVector OldVelocity { FVector::ZeroVector }
 
 ---
 
-#### Interpolator_T { #interpolator_t-1 }
+#### Interpolator_T { #interpolator_t-2 }
 
 ```cpp
 TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FVector > > > Interpolator_T

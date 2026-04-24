@@ -36,10 +36,13 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraControlRotateNode`](nodes/UComposableCameraControlRotateNode.md)
 - [`UComposableCameraFieldOfViewNode`](nodes/UComposableCameraFieldOfViewNode.md)
 - [`UComposableCameraFilmbackNode`](nodes/UComposableCameraFilmbackNode.md)
+- [`UComposableCameraFocusPullNode`](nodes/UComposableCameraFocusPullNode.md)
+- [`UComposableCameraHitchcockZoomNode`](nodes/UComposableCameraHitchcockZoomNode.md)
 - [`UComposableCameraImpulseResolutionNode`](nodes/UComposableCameraImpulseResolutionNode.md)
 - [`UComposableCameraLensNode`](nodes/UComposableCameraLensNode.md)
 - [`UComposableCameraLookAtNode`](nodes/UComposableCameraLookAtNode.md)
 - [`UComposableCameraMixingCameraNode`](nodes/UComposableCameraMixingCameraNode.md)
+- [`UComposableCameraOcclusionFadeNode`](nodes/UComposableCameraOcclusionFadeNode.md)
 - [`UComposableCameraOrthographicNode`](nodes/UComposableCameraOrthographicNode.md)
 - [`UComposableCameraPivotDampingNode`](nodes/UComposableCameraPivotDampingNode.md)
 - [`UComposableCameraPivotOffsetNode`](nodes/UComposableCameraPivotOffsetNode.md)
@@ -48,7 +51,9 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraRelativeFixedPoseNode`](nodes/UComposableCameraRelativeFixedPoseNode.md)
 - [`UComposableCameraScreenSpaceConstraintsNode`](nodes/UComposableCameraScreenSpaceConstraintsNode.md)
 - [`UComposableCameraScreenSpacePivotNode`](nodes/UComposableCameraScreenSpacePivotNode.md)
+- [`UComposableCameraSpiralNode`](nodes/UComposableCameraSpiralNode.md)
 - [`UComposableCameraViewTargetProxyNode`](nodes/UComposableCameraViewTargetProxyNode.md)
+- [`UComposableCameraVolumeConstraintNode`](nodes/UComposableCameraVolumeConstraintNode.md)
 
 ## Transitions
 
@@ -174,6 +179,7 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FComposableCameraNodePinBindingTable`](structs/FComposableCameraNodePinBindingTable.md)
 - [`FComposableCameraNodePinDeclaration`](structs/FComposableCameraNodePinDeclaration.md)
 - [`FComposableCameraNodeTemplatePinOverrides`](structs/FComposableCameraNodeTemplatePinOverrides.md)
+- [`FComposableCameraOcclusionMaterialOverride`](structs/FComposableCameraOcclusionMaterialOverride.md)
 - [`FComposableCameraParameterBlock`](structs/FComposableCameraParameterBlock.md)
 - [`FComposableCameraParameterTableRow`](structs/FComposableCameraParameterTableRow.md)
 - [`FComposableCameraParameterValue`](structs/FComposableCameraParameterValue.md)
@@ -198,6 +204,7 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FComposableCameraViewportDebug`](structs/FComposableCameraViewportDebug.md)
 - [`FIsSimulatingInEditor`](structs/FIsSimulatingInEditor.md)
 - [`FModifierEntry`](structs/FModifierEntry.md)
+- [`FResolvedVolume`](structs/FResolvedVolume.md)
 - [`FTransitionDebugSnapshot`](structs/FTransitionDebugSnapshot.md)
 
 ## Other UObjects

@@ -63,14 +63,14 @@ FTransform TargetTransform
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-12) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-20) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-18) `virtual` `const` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-8) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-17) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-25) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-23) `virtual` `const` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-13) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-12 }
+#### OnInitialize_Implementation { #oninitialize_implementation-17 }
 
 `virtual`
 
@@ -80,7 +80,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-20 }
+#### OnTickNode_Implementation { #onticknode_implementation-25 }
 
 `virtual`
 
@@ -90,7 +90,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-18 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-23 }
 
 `virtual` `const`
 
@@ -100,7 +100,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ---
 
-#### DrawNodeDebug { #drawnodedebug-8 }
+#### DrawNodeDebug { #drawnodedebug-13 }
 
 `virtual` `const`
 

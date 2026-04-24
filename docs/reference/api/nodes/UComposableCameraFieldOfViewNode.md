@@ -81,12 +81,12 @@ TArray< TObjectPtr< AActor > > ActorsForDynamicFoV
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-6) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-6) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-8) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-8) `virtual` `const` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-6 }
+#### OnTickNode_Implementation { #onticknode_implementation-8 }
 
 `virtual`
 
@@ -96,7 +96,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-6 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-8 }
 
 `virtual` `const`
 
