@@ -67,7 +67,16 @@ Requires Enhanced Input — add `EnhancedInput` to the project's module dependen
 
 ### `AutoRotateNode`
 
-Auto-rotates within a range around a main direction. Used for gentle idle sweeps, breathing-style motion in cinematic framings, or subtle attention-directing motion toward a threat.
+Rotates the camera back toward a reference forward direction when it drifts outside an authored yaw/pitch range. Typical uses: idle sweep (camera drifts toward character forward while the player isn't touching the stick), soft threat lock-on, or cinematic re-framing.
+
+**Direction source.** `DirectionMode` selects how the reference forward is resolved each frame:
+
+- `Direction` — an explicit `MainDirection` vector, typically wired from an upstream compute node or set as a context parameter. Default; X-forward out of the box.
+- `ActorForward` — reads `PrimaryActor`'s world forward vector each frame. Use this when the reference should track a moving character naturally, without needing a compute node to publish the forward.
+
+**Input interrupt.** When `bInterruptOnUserInput` is true (default), stick input detected via the `CameraRotationInput` pin interrupts an in-progress auto-rotation and starts the `InputInterruptCooldown` timer before auto-rotation can resume. `MaxCountAfterInputInterrupt` caps how many times this re-activation is allowed per camera lifetime. Set `bInterruptOnUserInput` to false to run auto-rotation unconditionally — only `BeyondValidRangeCooldown` then gates it.
+
+**Interpolation.** A single `RotateInterpolator` (Instanced subobject) drives both yaw and pitch together so they reach the target boundary in the same time. If null, the camera teleports to the boundary in one frame.
 
 ### `RotationConstraints`
 
@@ -113,6 +122,28 @@ Authors physical-lens parameters on the pose: `FocalLength`, `Aperture`, `FocusD
 
 `PhysicalCameraBlendWeight` gates depth-of-field and auto-exposure post-process contribution — dial to 0 for "game FOV" feel, 1 for "cinematic lens" feel.
 
+### `FocusPullNode`
+
+Dynamically drives the camera pose's `FocusDistance` from the projected on-axis depth to a target actor. Single-responsibility node — it only touches `FocusDistance`; everything DoF needs beyond that (aperture, blade count, filmback, `PhysicalCameraBlendWeight`) comes from an upstream `LensNode`.
+
+**Intended composition:**
+
+```
+... → LensNode(FocalLength, Aperture, BlendWeight=1, FocusDistance=-1)
+    → FocusPullNode(drives FocusDistance from PivotActor)
+    → ...
+```
+
+`LensNode`'s `FocusDistance = -1` is the "leave for downstream" sentinel. If `LensNode` writes a concrete value instead, `FocusPullNode` overwrites it (last writer wins on the pose) — both work, but the sentinel makes intent obvious. Without a `LensNode` upstream (or another node setting `PhysicalCameraBlendWeight > 0`), the focus distance is written but DoF will not activate at the renderer level.
+
+**Target resolution** follows the same `PivotActor + BoneName / PivotZOffset` pattern as `CollisionPushNode` and `OcclusionFadeNode`, so the same context-parameter wiring feeds all three.
+
+**Depth formula.** Focus distance is camera-space depth — the dot product of `(TargetPoint − CameraPos)` with the camera forward vector — not Euclidean distance. For an off-axis target at 10 m and 45°, projected depth is ~7 m. This is what `ApplyPhysicalCameraSettings` and the renderer's DoF system consume; Euclidean distance would produce incorrect focus for any off-axis subject.
+
+**Smoothing** is optional via the standard interpolator system (SpringDamper / IIR / SimpleSpring). The first tick after activation bypasses the interpolator so focus snaps to the real depth rather than ramping in from a stale prior value.
+
+**C++ reference:** [`UComposableCameraFocusPullNode`](api/nodes/UComposableCameraFocusPullNode.md)
+
 ### `FilmbackNode`
 
 Authors sensor and aspect-ratio parameters: `SensorWidth`, `SensorHeight`, `SqueezeFactor`, `Overscan`, `ConstrainAspectRatio`, `OverrideAspectRatioAxisConstraint`, `AspectRatioAxisConstraint`. Sensor dimensions feed into the pose's focal-length-mode FOV resolution, so place this alongside `LensNode` when using physical lens authoring.
@@ -132,7 +163,9 @@ Switches the pose into orthographic projection and authors `OrthographicWidth`, 
 
 ---
 
-## Collision and impulses
+## Collision, occlusion, and constraints
+
+These nodes modify the camera's final position in response to the world — pushing it away from geometry, fading obstructing primitives, or keeping it inside a defined volume.
 
 ### `CollisionPushNode`
 
@@ -144,6 +177,36 @@ Dual-mode collision resolver, and one of the largest single nodes in the plugin.
 
 Both modes share the same interpolator pair (push/pull) and ignored-actor list. The two interpolators are Instanced subobjects — their parameters are [subobject-pin-exposed](../user-guide/authoring-camera-types.md#exposing-parameters) (e.g. `PushInterpolator.Speed`, `PullInterpolator.DampTime`) so they can be tuned from the type asset's Details panel or wired from gameplay.
 
+### `OcclusionFadeNode`
+
+Fades primitives between the camera and a target actor (or near the camera) by swapping their materials for a user-supplied transparency material. Two independent detection paths feed the same material-swap pipeline:
+
+- **Line-of-sight occlusion** (`bFadeOccluders`) — async multi-sphere sweep from camera to target each frame. Every primitive hit that passes the tag/mesh-type filters is fade-marked. The sweep is submitted on frame N and consumed on frame N+1, keeping the game thread off the physics query's critical path; occluder decisions lag by one frame, which is visually acceptable.
+- **Proximity fade** (`bFadeNearbyActors`) — synchronous sphere overlap at the camera position each frame. Every actor of class `ProximityActorClass` within `ProximityRadius` is fade-marked. Use for characters that walk directly in front of the camera.
+
+Both paths produce a union set of primitives to fade this frame. Delta tracking against `AppliedMaterialOverrides` means material API calls only happen when primitives enter or leave the set — the steady state produces zero per-frame material work.
+
+The fade look (dither, fresnel, opacity animation, speed) lives entirely in the `OcclusionMaterial` shader. The node does instant swaps; any smooth cross-fade is authored in the shader. This follows Epic's `UOcclusionMaterialCameraNode` design. Unlike Epic's node, both static and skeletal mesh components are eligible (controlled by `bAffectStaticMeshes` / `bAffectSkeletalMeshes`).
+
+**Chain placement:** typically after `CollisionPushNode` — let collision resolve the camera position first, then fade whatever remains between the camera and the subject.
+
+**C++ reference:** [`UComposableCameraOcclusionFadeNode`](api/nodes/UComposableCameraOcclusionFadeNode.md)
+
+### `VolumeConstraintNode`
+
+Constrains the camera position to stay inside a single Box or Sphere volume. When the upstream position is outside the volume it is projected to the nearest boundary point (per-axis OBB clamp for Box, radial clamp for Sphere); when it is already inside, the node is a no-op pass-through.
+
+**Volume source.** `VolumeSource` selects how the geometry is provided:
+
+- `FromActor` — reads the first `UBoxComponent` or `USphereComponent` on a placed `VolumeActor`. The component's world transform is sampled each tick, so moving volumes work.
+- `Inline` — the node carries its own `VolumeCenter`, `VolumeRotation`, `BoxExtents` / `SphereRadius` directly. Useful when no actor needs to be placed in the level.
+
+**Smoothing.** The default is a hard projection — stateless and deterministic. An optional `ClampInterpolator` adds per-axis temporal smoothing (three independent 1D filter instances, one per world-space axis) to eliminate visible snaps on release, corner face-switches, or scripted teleports.
+
+**Chain placement:** after `CameraOffsetNode` / `LookAtNode` (position-writing nodes) and **before** `CollisionPushNode` — so the collision resolver operates on the already-constrained position rather than fighting the constraint.
+
+**C++ reference:** [`UComposableCameraVolumeConstraintNode`](api/nodes/UComposableCameraVolumeConstraintNode.md)
+
 ### `ImpulseResolutionNode`
 
 Resolves impulse forces applied via volumes — the "camera got pushed by an explosion" channel. Listens for impulse events registered on trigger volumes in the level and integrates them into the pose with configurable damping.
@@ -152,12 +215,59 @@ Resolves impulse forces applied via volumes — the "camera got pushed by an exp
 
 ## Movement and authored motion
 
+These nodes place the camera on a pre-authored path or procedural trajectory. They produce position only — pair with a downstream `LookAtNode` to orient the camera along the path.
+
 ### `SplineNode`
 
 Places the camera on a spline, with multiple spline math backends: BuiltInSpline (wraps `USplineComponent`), BezierSpline, CubicHermiteSpline, BasicSpline (B-spline), NURBSpline. Useful for rail-style fixed-path cameras — boss intro flyovers, zone-entry establishing shots — where the path is authored, not derived.
 
 !!! note "Level Sequence integration"
     Sequencer-driven cinematics are now handled by the [Play Cutscene Sequence](../tutorials/level-sequence-camera.md) Blueprint node, which manages context pushing, CameraCut-driven camera switching, and cleanup automatically. See the [Level Sequence Integration](../tutorials/level-sequence-camera.md) tutorial.
+
+### `SpiralNode`
+
+Places the camera on a helical path around a pivot point. Position-only — rotation is left untouched, so pair with a downstream `LookAtNode` to keep the subject in frame.
+
+The trajectory is defined by three curves over normalized time:
+
+| Curve | Unit | Meaning |
+|---|---|---|
+| `RadiusCurve` | cm | Radial distance from the rotation axis |
+| `HeightCurve` | cm | Signed distance along the axis (+ = along axis, − = against) |
+| `AngleCurve` | degrees | Angular position, additive to `InitialAngleDegrees` |
+
+All three use the **Progress authoring pattern** — direct curve evaluation at `NormalizedTime`, no per-frame integration. Position at any instant is O(1) and the node carries no accumulated state, so scrubbing or restarting the effect is clean.
+
+**Spiral Space** (the Up/Forward/Right basis around which the angle is measured) is re-derived each tick from `RotationAxis` and `ReferenceDirection` enums. `CameraInitialForward` captures the camera's forward at activation and uses it as the angle reference, so the spiral starts seamlessly from wherever the camera was pointing.
+
+**Play modes:** `Once` (clamp at Duration), `Loop` (Fmod wrap), `PingPong` (mirrored time oscillation). A Loop orbit typically authors `AngleCurve` as Y(0)=0, Y(1)=360·N for a seamless N-turn cycle — trig periodicity absorbs the angular wrap.
+
+**C++ reference:** [`UComposableCameraSpiralNode`](api/nodes/UComposableCameraSpiralNode.md)
+
+---
+
+## Cinematic effects
+
+Time-based, curve-driven effects intended for scripted moments — boss reveals, narrative beats, cutscene punctuation. These nodes play once from activation (or loop/ping-pong when configured) and do not respond to per-frame player input.
+
+### `HitchcockZoomNode`
+
+The Hitchcock Zoom (also known as the Vertigo effect, dolly zoom, or trombone shot): the camera moves along its view axis while FOV changes in the opposite direction. The result is that the target subject keeps roughly the same on-screen size while the background perspective warps dramatically.
+
+**Authoring modes.** `Driver` selects which curve you author; the other quantity is solved from a lock constant (`distance · tan(FOV/2)`) captured on the first tick:
+
+- `FromFOVDelta` — author `FOVDeltaCurve` as an additive FOV delta in degrees over normalized time. Natural when you think about the visual look ("background should distort by N degrees wider").
+- `FromDistanceDelta` — author `DistanceDeltaCurve` as an additive distance delta in world units. Natural when you think about the physical move ("dolly back 3 metres").
+
+**Curve convention — additive delta, Y(0) = 0.** Both curves express the *change* from the captured initial state, not an absolute trajectory. A curve with Y(0)=0, Y(1)=−30 on `FOVDeltaCurve` means "narrow the FOV by 30 degrees over the duration", regardless of whether the initial FOV is 60 or 90. This makes curves portable across cameras and guarantees the first tick outputs the unmodified initial state — no seam at t=0.
+
+**Initial FOV.** Set `InitialFOVOverride` > 0 to pin the starting FOV explicitly (useful when no upstream `LensNode` or `FieldOfViewNode` is in the chain and the pose would otherwise inherit a renderer default). Leave at the default −1 to read `GetEffectiveFieldOfView()` from the upstream pose.
+
+**Composability.** Direction is resampled from the upstream pose every tick, so an upstream `LookAtNode` can continue steering during the effect — `HitchcockZoomNode` owns only the radial distance and FOV, leaving rotation to the rest of the chain. FOV ownership: the node writes `FieldOfView` and clears `FocalLength` to −1 (FOV-mode sentinel). If an upstream `LensNode` is present, set `bOverrideFieldOfViewFromFocalLength` to false on it.
+
+Play mode is implicitly **Once** — the curves clamp at `NormalizedTime = 1` after `Duration` elapses and the pose freezes at the final state. Re-activate the camera context to restart.
+
+**C++ reference:** [`UComposableCameraHitchcockZoomNode`](api/nodes/UComposableCameraHitchcockZoomNode.md)
 
 ---
 
@@ -172,6 +282,10 @@ Mixing weights and the blend function are authored as node parameters.
 ### `BlueprintCameraNode`
 
 A camera node whose `OnTickNode` is implemented in Blueprint. Lets gameplay programmers prototype or ship one-off node behavior without touching C++. For production code intended to ship on the per-frame hot path, migrate to a C++ subclass — Blueprint VM overhead is non-trivial when called every frame per camera.
+
+### `ViewTargetProxyNode`
+
+Internal-only node — not intended for placement in camera type assets by designers. Created programmatically by the PCM's `SetViewTarget` override (implicit camera activation) to relay an external `UCameraComponent`'s `FMinimalViewInfo` into CCS as an `FComposableCameraPose` each tick. If the target actor is missing or has no `UCameraComponent`, the node passes through the unmodified input pose.
 
 ---
 
@@ -214,114 +328,5 @@ Abstract. The base every compute node derives from. Overrides one method:
 - `OnComputeNodeInitialize_Implementation()`. Called once on the BeginPlay chain. Read inputs, compute, write outputs.
 
 ---
-
-## `PostProcessNode`
-
-!!! note "Auto-drafted from header — please review"
-    This entry was generated by the auto-updater from the class's doc comment. Expand with usage notes, pin descriptions, and an example when you have a moment.
-
-Works like a `PostProcessVolume` but scoped to a single camera type. Properties are applied once per tick via `FPostProcessUtils::OverridePostProcessSettings` onto `OutCameraPose.PostProcessSettings`. Configured entirely through the Details panel (no graph pins) — toggle `bOverride_*` flags to control which properties this node contributes. Multiple `PostProcessNode` instances in the same camera stack compose in execution order; later nodes win for the same property.
-
-**Header:** `ComposableCameraPostProcessNode.h`
-**C++ reference:** [`UComposableCameraPostProcessNode`](api/nodes/UComposableCameraPostProcessNode.md)
-
----
-
-## `ViewTargetProxyNode`
-
-!!! note "Auto-drafted from header — please review"
-    This entry was generated by the auto-updater from the class's doc comment. Expand with usage notes, pin descriptions, and an example when you have a moment.
-
-Internal-only node — not intended for placement in camera type assets by designers. Created programmatically by the PCM's `SetViewTarget` override (implicit camera activation) to relay an external `UCameraComponent`'s `FMinimalViewInfo` into CCS as an `FComposableCameraPose` each tick. If the target actor is missing or has no `UCameraComponent`, the node passes through the unmodified input pose.
-
-**Header:** `ComposableCameraViewTargetProxyNode.h`
-**C++ reference:** [`UComposableCameraViewTargetProxyNode`](api/nodes/UComposableCameraViewTargetProxyNode.md)
-
----
-
-
----
-
-## `FocusPullNode`
-
-!!! note "Auto-drafted from header — please review"
-    This entry was generated by the auto-updater from the class's doc comment. Expand with usage notes, pin descriptions, and an example when you have a moment.
-
-Dynamically drives the camera pose's `FocusDistance` from the projected depth to a target actor. Single-responsibility node — it only touches `FocusDistance`; aperture, blade count, filmback, and the `PhysicalCameraBlendWeight` that gates DoF application are expected to come from an upstream `LensNode`. The typical composition is `LensNode (FocusDistance=-1) → FocusPullNode → ...`, where `-1` is the "leave for downstream" sentinel.
-
-Target resolution uses the same pattern as `CollisionPushNode` and `OcclusionFadeNode` (PivotActor + bone/socket + Z offset). Damping is optional via the standard interpolator system (SpringDamper / IIR / SimpleSpring). First tick after activation bypasses the interpolator to avoid a visible focus ramp from a stale prior value.
-
-**Header:** `ComposableCameraFocusPullNode.h`
-**C++ reference:** [`UComposableCameraFocusPullNode`](api/nodes/UComposableCameraFocusPullNode.md)
-
----
-
-## `HitchcockZoomNode`
-
-!!! note "Auto-drafted from header — please review"
-    This entry was generated by the auto-updater from the class's doc comment. Expand with usage notes, pin descriptions, and an example when you have a moment.
-
-The Hitchcock Zoom (Vertigo effect / dolly zoom): dollies the camera along its view axis while changing FOV in the opposite direction so the target subject keeps a roughly constant on-screen size, while background perspective warps dramatically.
-
-Supports two authoring modes via `Driver`:
-
-- `FromFOVDelta` — author a `FOVDeltaCurve` (additive degrees over normalised time); camera distance is solved from the lock constant.
-- `FromDistanceDelta` — author a `DistanceDeltaCurve` (additive world-unit delta); FOV is solved from the lock constant.
-
-Both modes preserve `distance · tan(FOV/2) = LockConstant`, captured on the first tick. Direction is resampled every tick so upstream LookAt nodes continue to steer during the effect. Play mode is implicitly `Once`; re-activate the camera context to restart. FOV ownership: writes `FieldOfView` and clears `FocalLength` to `-1` (FOV-mode sentinel).
-
-**Header:** `ComposableCameraHitchcockZoomNode.h`
-**C++ reference:** [`UComposableCameraHitchcockZoomNode`](api/nodes/UComposableCameraHitchcockZoomNode.md)
-
----
-
-## `OcclusionFadeNode`
-
-!!! note "Auto-drafted from header — please review"
-    This entry was generated by the auto-updater from the class's doc comment. Expand with usage notes, pin descriptions, and an example when you have a moment.
-
-Fades primitives between the camera and a target actor (or near the camera) by swapping their materials for a user-supplied transparency material. Two independent detection paths feed the same material-swap pipeline:
-
-- **Line-of-sight occlusion** (`bFadeOccluders`): async multi-sphere sweep from camera to target each frame; every primitive hit that passes tag/mesh-type filters is fade-marked.
-- **Proximity fade** (`bFadeNearbyActors`): sphere overlap at the camera position each frame; every actor of class `ProximityActorClass` within `ProximityRadius` is fade-marked.
-
-Delta tracking against `AppliedMaterialOverrides` means material API calls only occur when primitives enter or leave the faded set; the steady state produces zero per-frame material work. Fade look (dither, fresnel, opacity animation) lives entirely in the `OcclusionMaterial` shader. Extends Epic's `UOcclusionMaterialCameraNode` pattern to cover both static and skeletal mesh components.
-
-**Header:** `ComposableCameraOcclusionFadeNode.h`
-**C++ reference:** [`UComposableCameraOcclusionFadeNode`](api/nodes/UComposableCameraOcclusionFadeNode.md)
-
----
-
-## `SpiralNode`
-
-!!! note "Auto-drafted from header — please review"
-    This entry was generated by the auto-updater from the class's doc comment. Expand with usage notes, pin descriptions, and an example when you have a moment.
-
-Position-only node — rotation is left untouched (pair with a downstream `LookAtNode`). Positions the camera on a helical path around a pivot point using three time-varying curves:
-
-- `RadiusCurve` — radial distance from the axis (cm, X∈[0,1]).
-- `HeightCurve` — signed distance along the rotation axis (cm).
-- `AngleCurve` — angular position in degrees (absolute, additive to `InitialAngleDegrees`).
-
-All curves use the Progress authoring pattern (direct evaluation, no integration), so position at any instant is O(1) and the node carries no frame-to-frame accumulated state. Spiral Space (Up / Forward / Right) is derived from configurable `RotationAxis` and `ReferenceDirection` enums; `CameraInitialForward` seamlessly continues from the camera's orientation at activation. Supports `Once`, `Loop`, and `PingPong` play modes.
-
-**Header:** `ComposableCameraSpiralNode.h`
-**C++ reference:** [`UComposableCameraSpiralNode`](api/nodes/UComposableCameraSpiralNode.md)
-
----
-
-## `VolumeConstraintNode`
-
-!!! note "Auto-drafted from header — please review"
-    This entry was generated by the auto-updater from the class's doc comment. Expand with usage notes, pin descriptions, and an example when you have a moment.
-
-Constrains the camera position to remain inside a single Box or Sphere volume. When the upstream position is outside the volume it is projected to the nearest boundary point (per-axis clamp for OBB, radial clamp for sphere); when it is inside the node is a no-op pass-through.
-
-Volume source is configurable: `FromActor` reads a `UBoxComponent` or `USphereComponent` from a placed actor; `Inline` lets the node carry its own world-space geometry. An optional `ClampInterpolator` adds per-axis temporal smoothing to eliminate visible snaps on release, corner face-switches, or scripted teleports.
-
-**Chain placement:** put after `CameraOffsetNode` / `LookAtNode` (position writing nodes) and **before** `CollisionPushNode` so the collision push operates on the already-clamped position.
-
-**Header:** `ComposableCameraVolumeConstraintNode.h`
-**C++ reference:** [`UComposableCameraVolumeConstraintNode`](api/nodes/UComposableCameraVolumeConstraintNode.md)
 
 *See also:* the auto-generated [API Reference](api/index.md) for per-class property tables; [Extending → Custom Nodes](../extending/custom-nodes.md) for writing your own; [User Guide → Graph Editor](../user-guide/graph-editor.md) for the authoring surface.
