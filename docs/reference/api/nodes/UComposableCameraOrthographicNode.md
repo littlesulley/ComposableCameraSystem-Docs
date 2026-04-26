@@ -62,12 +62,23 @@ Ortho far clip plane in world units. Must be > OrthoNearClipPlane.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-13) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-12) `virtual` `const` |  |
+|  | [`UComposableCameraOrthographicNode`](#ucomposablecameraorthographicnode-1) `inline` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-14) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-13) `virtual` `const` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-13 }
+#### UComposableCameraOrthographicNode { #ucomposablecameraorthographicnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraOrthographicNode()
+```
+
+---
+
+#### OnTickNode_Implementation { #onticknode_implementation-14 }
 
 `virtual`
 
@@ -77,7 +88,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-12 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-13 }
 
 `virtual` `const`
 

@@ -13,13 +13,13 @@ Reads a pivot actor's location and publishes it as the pivot position for downst
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-6)  |  |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-7)  |  |
 | `bool` | [`bUseBoneForPivot`](#buseboneforpivot)  |  |
 | `FName` | [`BoneName`](#bonename-4)  |  |
 
 ---
 
-#### PivotActor { #pivotactor-6 }
+#### PivotActor { #pivotactor-7 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor
@@ -45,15 +45,26 @@ FName BoneName
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-16) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-24) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-22) `virtual` `const` |  |
+|  | [`UComposableCameraReceivePivotActorNode`](#ucomposablecamerareceivepivotactornode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-17) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-25) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-23) `virtual` `const` |  |
 | `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility_Implementation`](#getpatchcompatibility_implementation-3) `virtual` `const` `inline` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-12) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-16 }
+#### UComposableCameraReceivePivotActorNode { #ucomposablecamerareceivepivotactornode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraReceivePivotActorNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-17 }
 
 `virtual`
 
@@ -63,7 +74,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-24 }
+#### OnTickNode_Implementation { #onticknode_implementation-25 }
 
 `virtual`
 
@@ -73,7 +84,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-22 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-23 }
 
 `virtual` `const`
 

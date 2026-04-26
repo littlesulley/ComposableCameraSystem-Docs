@@ -87,13 +87,24 @@ bool bInvertPitch { true }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-16) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-15) `virtual` `const` |  |
+|  | [`UComposableCameraControlRotateNode`](#ucomposablecameracontrolrotatenode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-11) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-17) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-10 }
+#### UComposableCameraControlRotateNode { #ucomposablecameracontrolrotatenode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraControlRotateNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-11 }
 
 `virtual`
 
@@ -103,7 +114,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-16 }
+#### OnTickNode_Implementation { #onticknode_implementation-17 }
 
 `virtual`
 
@@ -113,7 +124,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-15 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-16 }
 
 `virtual` `const`
 

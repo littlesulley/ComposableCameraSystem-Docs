@@ -118,12 +118,23 @@ FVector2D PitchRange { FVector2D {-70., 70.} }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-19) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-18) `virtual` `const` |  |
+|  | [`UComposableCameraRotationConstraints`](#ucomposablecamerarotationconstraints-1) `inline` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-20) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-19) `virtual` `const` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-19 }
+#### UComposableCameraRotationConstraints { #ucomposablecamerarotationconstraints-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraRotationConstraints()
+```
+
+---
+
+#### OnTickNode_Implementation { #onticknode_implementation-20 }
 
 `virtual`
 
@@ -133,7 +144,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-18 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-19 }
 
 `virtual` `const`
 

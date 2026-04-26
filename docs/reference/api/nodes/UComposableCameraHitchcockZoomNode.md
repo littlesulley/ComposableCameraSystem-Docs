@@ -42,7 +42,7 @@ PlayMode is implicit: Once. There is no Loop / PingPong — authors who need a c
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-3)  | The subject the effect locks on. Camera dollies along the camera→subject axis; FOV compensates so this subject stays the same on-screen size. Required — the node is a pass-through with a warning when null. |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-4)  | The subject the effect locks on. Camera dollies along the camera→subject axis; FOV compensates so this subject stays the same on-screen size. Required — the node is a pass-through with a warning when null. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-2)  | When true, target point is the named bone / socket on PivotActor's skeletal mesh (if resolvable). Falls back to ActorLocation + PivotZOffset on any failure. |
 | `FName` | [`BoneName`](#bonename-2)  | Bone / socket name. Sampled when bUseBoneForDetection is true. |
 | `float` | [`PivotZOffset`](#pivotzoffset-2)  | World-Z offset added to ActorLocation when bUseBoneForDetection is false (or the bone can't be found). Typical 50–80 to land on chest / head rather than foot. |
@@ -57,7 +57,7 @@ PlayMode is implicit: Once. There is no Loop / PingPong — authors who need a c
 
 ---
 
-#### PivotActor { #pivotactor-3 }
+#### PivotActor { #pivotactor-4 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor { nullptr }
@@ -186,14 +186,25 @@ corridor" look that a near-zero derived FOV produces.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-11) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-17) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-16) `virtual` `const` |  |
+|  | [`UComposableCameraHitchcockZoomNode`](#ucomposablecamerahitchcockzoomnode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-12) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-18) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-17) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-8) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-11 }
+#### UComposableCameraHitchcockZoomNode { #ucomposablecamerahitchcockzoomnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraHitchcockZoomNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-12 }
 
 `virtual`
 
@@ -203,7 +214,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-17 }
+#### OnTickNode_Implementation { #onticknode_implementation-18 }
 
 `virtual`
 
@@ -213,7 +224,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-16 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-17 }
 
 `virtual` `const`
 

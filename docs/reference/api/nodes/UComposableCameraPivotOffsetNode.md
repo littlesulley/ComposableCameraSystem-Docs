@@ -59,10 +59,21 @@ FVector PivotOffset = FVector::ZeroVector
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraPivotOffsetNode`](#ucomposablecamerapivotoffsetnode-1) `inline` |  |
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-6) `virtual` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-9) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-9) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-5) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+
+---
+
+#### UComposableCameraPivotOffsetNode { #ucomposablecamerapivotoffsetnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraPivotOffsetNode()
+```
 
 ---
 

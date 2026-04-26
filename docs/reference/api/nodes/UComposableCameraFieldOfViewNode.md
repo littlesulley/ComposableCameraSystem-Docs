@@ -81,8 +81,19 @@ TArray< TObjectPtr< AActor > > ActorsForDynamicFoV
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraFieldOfViewNode`](#ucomposablecamerafieldofviewnode-1) `inline` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-8) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-8) `virtual` `const` |  |
+
+---
+
+#### UComposableCameraFieldOfViewNode { #ucomposablecamerafieldofviewnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraFieldOfViewNode()
+```
 
 ---
 

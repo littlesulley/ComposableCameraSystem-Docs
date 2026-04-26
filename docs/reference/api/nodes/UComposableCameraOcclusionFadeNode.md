@@ -35,7 +35,7 @@ StaticMeshComponent-only is NOT enforced — unlike Epic's node, we consider any
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-4)  | Actor whose location (plus PivotZOffset, or bone socket) is the "protected end" of the line-of-sight sweep and the hit-test anchor for proximity fade. Typically the player pawn. Must be non-null when bFadeOccluders is true; otherwise the sweep is skipped with a warning. |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-5)  | Actor whose location (plus PivotZOffset, or bone socket) is the "protected end" of the line-of-sight sweep and the hit-test anchor for proximity fade. Typically the player pawn. Must be non-null when bFadeOccluders is true; otherwise the sweep is skipped with a warning. |
 | `float` | [`PivotZOffset`](#pivotzoffset-3)  | World-Z offset added on top of the actor location when bUseBoneForDetection is false (or the requested bone can't be found). Typically ~50 to raise the target from foot to chest so the sweep line doesn't graze the floor. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-3)  | When true, the target point is the named bone's world location on the actor's skeletal mesh (if present and the bone resolves). Falls back to ActorLocation + PivotZOffset on any failure. |
 | `FName` | [`BoneName`](#bonename-3)  | Bone / socket name sampled on the actor's skeletal mesh when bUseBoneForDetection is true. |
@@ -54,7 +54,7 @@ StaticMeshComponent-only is NOT enforced — unlike Epic's node, we consider any
 
 ---
 
-#### PivotActor { #pivotactor-4 }
+#### PivotActor { #pivotactor-5 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor { nullptr }
@@ -218,15 +218,26 @@ player when camera vision gets too close" pattern wants PivotActor included. Fli
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-12) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-18) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-17) `virtual` `const` |  |
+|  | [`UComposableCameraOcclusionFadeNode`](#ucomposablecameraocclusionfadenode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-13) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-19) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-18) `virtual` `const` |  |
 | `void` | [`BeginDestroy`](#begindestroy-1) `virtual` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-9) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-12 }
+#### UComposableCameraOcclusionFadeNode { #ucomposablecameraocclusionfadenode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraOcclusionFadeNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-13 }
 
 `virtual`
 
@@ -236,7 +247,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-18 }
+#### OnTickNode_Implementation { #onticknode_implementation-19 }
 
 `virtual`
 
@@ -246,7 +257,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-17 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-18 }
 
 `virtual` `const`
 

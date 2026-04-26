@@ -14,7 +14,7 @@ Node for resolving impulse shapes including impulse box and impulse sphere.
 | Return | Name | Description |
 |--------|------|-------------|
 | `float` | [`VelocityDamping`](#velocitydamping)  |  |
-| `UComposableCameraInterpolatorBase *` | [`Interpolator`](#interpolator-3)  |  |
+| `UComposableCameraInterpolatorBase *` | [`Interpolator`](#interpolator-4)  |  |
 
 ---
 
@@ -26,7 +26,7 @@ float VelocityDamping { 1.f }
 
 ---
 
-#### Interpolator { #interpolator-3 }
+#### Interpolator { #interpolator-4 }
 
 ```cpp
 UComposableCameraInterpolatorBase * Interpolator
@@ -36,16 +36,27 @@ UComposableCameraInterpolatorBase * Interpolator
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-15) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-23) `virtual` |  |
+|  | [`UComposableCameraImpulseResolutionNode`](#ucomposablecameraimpulseresolutionnode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-16) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-24) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy-2) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-21) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-22) `virtual` `const` |  |
 | `void` | [`AddImpulseShape`](#addimpulseshape) `inline` |  |
 | `void` | [`RemoveImpulseShape`](#removeimpulseshape) `inline` |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-15 }
+#### UComposableCameraImpulseResolutionNode { #ucomposablecameraimpulseresolutionnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraImpulseResolutionNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-16 }
 
 `virtual`
 
@@ -55,7 +66,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-23 }
+#### OnTickNode_Implementation { #onticknode_implementation-24 }
 
 `virtual`
 
@@ -75,7 +86,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-21 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-22 }
 
 `virtual` `const`
 
@@ -110,7 +121,7 @@ inline void RemoveImpulseShape(AActor * Shape)
 | `TObjectPtr< USphereComponent >` | [`Sphere`](#sphere)  |  |
 | `TArray< TScriptInterface< IComposableCameraImpulseShapeInterface > >` | [`ImpulseShapes`](#impulseshapes)  |  |
 | `FVector` | [`OldVelocity`](#oldvelocity)  |  |
-| `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FVector > > >` | [`Interpolator_T`](#interpolator_t-2)  |  |
+| `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FVector > > >` | [`Interpolator_T`](#interpolator_t-3)  |  |
 
 ---
 
@@ -138,7 +149,7 @@ FVector OldVelocity { FVector::ZeroVector }
 
 ---
 
-#### Interpolator_T { #interpolator_t-2 }
+#### Interpolator_T { #interpolator_t-3 }
 
 ```cpp
 TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FVector > > > Interpolator_T

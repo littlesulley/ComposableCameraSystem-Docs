@@ -92,8 +92,19 @@ When true, this node also puts the pose in focal-length-drives-FOV mode by clear
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraLensNode`](#ucomposablecameralensnode-1) `inline` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation) `virtual` `const` |  |
+
+---
+
+#### UComposableCameraLensNode { #ucomposablecameralensnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraLensNode()
+```
 
 ---
 

@@ -46,6 +46,7 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraOrthographicNode`](nodes/UComposableCameraOrthographicNode.md)
 - [`UComposableCameraPivotDampingNode`](nodes/UComposableCameraPivotDampingNode.md)
 - [`UComposableCameraPivotOffsetNode`](nodes/UComposableCameraPivotOffsetNode.md)
+- [`UComposableCameraPivotRotateNode`](nodes/UComposableCameraPivotRotateNode.md)
 - [`UComposableCameraPostProcessNode`](nodes/UComposableCameraPostProcessNode.md)
 - [`UComposableCameraReceivePivotActorNode`](nodes/UComposableCameraReceivePivotActorNode.md)
 - [`UComposableCameraRelativeFixedPoseNode`](nodes/UComposableCameraRelativeFixedPoseNode.md)

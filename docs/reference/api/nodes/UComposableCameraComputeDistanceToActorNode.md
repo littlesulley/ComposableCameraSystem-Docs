@@ -27,8 +27,19 @@ Outputs:
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraComputeDistanceToActorNode`](#ucomposablecameracomputedistancetoactornode-1) `inline` |  |
 | `void` | [`ExecuteBeginPlay`](#executebeginplay-1) `virtual` | Execute this compute node's one-shot work. |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-24) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-25) `virtual` `const` |  |
+
+---
+
+#### UComposableCameraComputeDistanceToActorNode { #ucomposablecameracomputedistancetoactornode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraComputeDistanceToActorNode()
+```
 
 ---
 
@@ -50,7 +61,7 @@ Plain virtual (not a BlueprintNativeEvent) for 4a. If Blueprint authoring of com
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-24 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-25 }
 
 `virtual` `const`
 

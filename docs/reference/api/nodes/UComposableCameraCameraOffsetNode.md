@@ -36,12 +36,23 @@ FVector CameraOffset
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-11) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-10) `virtual` `const` |  |
+|  | [`UComposableCameraCameraOffsetNode`](#ucomposablecameracameraoffsetnode-1) `inline` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-12) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-11) `virtual` `const` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-11 }
+#### UComposableCameraCameraOffsetNode { #ucomposablecameracameraoffsetnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraCameraOffsetNode()
+```
+
+---
+
+#### OnTickNode_Implementation { #onticknode_implementation-12 }
 
 `virtual`
 
@@ -51,7 +62,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-10 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-11 }
 
 `virtual` `const`
 

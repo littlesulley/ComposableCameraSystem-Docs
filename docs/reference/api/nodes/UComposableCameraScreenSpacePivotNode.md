@@ -15,7 +15,7 @@ Node for positioning the given pivot point in the given screen space.
 |--------|------|-------------|
 | `EComposableCameraScreenSpacePivotSource` | [`PivotSource`](#pivotsource)  |  |
 | `FVector` | [`PivotWorldPosition`](#pivotworldposition)  |  |
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-5)  |  |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-6)  |  |
 | `float` | [`PivotWorldUpOffset`](#pivotworldupoffset)  |  |
 | `EComposableCameraScreenSpaceMethod` | [`Method`](#method)  |  |
 | `FComposableCameraScreenSpaceTranslationParams` | [`TranslationParams`](#translationparams)  |  |
@@ -42,7 +42,7 @@ FVector PivotWorldPosition { FVector::ZeroVector }
 
 ---
 
-#### PivotActor { #pivotactor-5 }
+#### PivotActor { #pivotactor-6 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor
@@ -108,15 +108,26 @@ FVector2D SafeZoneHeight { -0.1, 0.1 }
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-13) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-21) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-19) `virtual` `const` |  |
+|  | [`UComposableCameraScreenSpacePivotNode`](#ucomposablecamerascreenspacepivotnode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-14) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-22) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-20) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-10) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 | `void` | [`DrawNodeDebug2D`](#drawnodedebug2d-1) `virtual` `const` | 2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos). |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-13 }
+#### UComposableCameraScreenSpacePivotNode { #ucomposablecamerascreenspacepivotnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraScreenSpacePivotNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-14 }
 
 `virtual`
 
@@ -126,7 +137,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-21 }
+#### OnTickNode_Implementation { #onticknode_implementation-22 }
 
 `virtual`
 
@@ -136,7 +147,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-19 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-20 }
 
 `virtual` `const`
 

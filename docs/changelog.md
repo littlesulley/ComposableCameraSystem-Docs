@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-04-26 — plugin `1f6fc9d..0021823`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/1f6fc9d29bfb15773d16c9dd47b57d5f0fc5f13b...00218233c9d80a262ae25b0c27f0236039f482db))
+
+- `0021823` Add PivotRotate node; per-category palette nesting in camera editor.
+
+**C++ API pages regenerated:** 156 pages (1 class added: `UComposableCameraPivotRotateNode`; all existing node headers updated with `PaletteCategory` field)
+
+**Prose drafts added:**
+
+- `docs/reference/nodes.md` — entry for `PivotRotateNode` (please review)
+
+**Design docs status:** DesignDoc.md, EditorDesignDoc.md, TechDoc.md confirmed in sync (Last updated 2026-04-26 ≥ commit date 2026-04-26). ExecutionFlowExamples.md has no Last updated header — no new flow patterns detected in this commit.
+
+---
+
 ## 2026-04-26 — plugin `145a2e9..1f6fc9d`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/145a2e9c9d4490517c56308367049f1d13eb1406...1f6fc9d29bfb15773d16c9dd47b57d5f0fc5f13b))

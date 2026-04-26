@@ -33,9 +33,20 @@ This class is Abstract — users must subclass it in Blueprint; it cannot be pla
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraBlueprintCameraNode`](#ucomposablecamerablueprintcameranode-1) `inline` |  |
 | `FVector2D` | [`GetInputPinValueVector2D`](#getinputpinvaluevector2d) `const` | Read an input pin value as Vector2D from Blueprint. (The base class exposes Float/Int32/Bool/Vector/Rotator/Transform/Actor but omits Vector2D and Double — fill the gap here.) |
 | `void` | [`SetOutputPinValueVector2D`](#setoutputpinvaluevector2d)  |  |
 | `FComposableCameraPose` | [`GetCurrentCameraPose`](#getcurrentcamerapose-1) `const` | Convenience: get the current camera pose from the owning PCM. Useful in OnInitialize when the node needs the pose at activation time. |
+
+---
+
+#### UComposableCameraBlueprintCameraNode { #ucomposablecamerablueprintcameranode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraBlueprintCameraNode()
+```
 
 ---
 

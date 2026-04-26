@@ -17,7 +17,7 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-2)  |  |
+| `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-3)  |  |
 | `TEnumAsByte< ETraceTypeQuery >` | [`TraceCollisionChannel`](#tracecollisionchannel)  |  |
 | `bool` | [`bTraceUseSphere`](#btraceusesphere)  |  |
 | `double` | [`TraceSphereRadius`](#tracesphereradius)  |  |
@@ -35,7 +35,7 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 
 ---
 
-#### PivotActor { #pivotactor-2 }
+#### PivotActor { #pivotactor-3 }
 
 ```cpp
 TObjectPtr< AActor > PivotActor
@@ -157,15 +157,26 @@ FName BoneName
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-9) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-15) `virtual` |  |
+|  | [`UComposableCameraCollisionPushNode`](#ucomposablecameracollisionpushnode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-10) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-16) `virtual` |  |
 | `void` | [`OnPreTick`](#onpretick-2) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-14) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-15) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-7) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-9 }
+#### UComposableCameraCollisionPushNode { #ucomposablecameracollisionpushnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraCollisionPushNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-10 }
 
 `virtual`
 
@@ -175,7 +186,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-15 }
+#### OnTickNode_Implementation { #onticknode_implementation-16 }
 
 `virtual`
 
@@ -195,7 +206,7 @@ virtual void OnPreTick(float DeltaTime, const FComposableCameraPose & CurrentCam
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-14 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-15 }
 
 `virtual` `const`
 

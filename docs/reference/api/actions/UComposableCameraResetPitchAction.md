@@ -15,7 +15,7 @@ This action smoothly resets pitch to a target value. If the camera rotates to th
 |--------|------|-------------|
 | `float` | [`Pitch`](#pitch-1)  |  |
 | `class UInputAction *` | [`RotateAction`](#rotateaction-1)  |  |
-| `UComposableCameraInterpolatorBase *` | [`Interpolator`](#interpolator-2)  |  |
+| `UComposableCameraInterpolatorBase *` | [`Interpolator`](#interpolator-3)  |  |
 | `float` | [`InterpSpeed`](#interpspeed-1)  |  |
 
 ---
@@ -36,7 +36,7 @@ class UInputAction * RotateAction { nullptr }
 
 ---
 
-#### Interpolator { #interpolator-2 }
+#### Interpolator { #interpolator-3 }
 
 ```cpp
 UComposableCameraInterpolatorBase * Interpolator { nullptr }

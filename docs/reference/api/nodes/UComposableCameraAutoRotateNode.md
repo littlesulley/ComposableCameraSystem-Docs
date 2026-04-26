@@ -126,9 +126,20 @@ TObjectPtr< UComposableCameraInterpolatorBase > RotateInterpolator
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraAutoRotateNode`](#ucomposablecameraautorotatenode-1) `inline` |  |
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-4) `virtual` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-6) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-6) `virtual` `const` |  |
+
+---
+
+#### UComposableCameraAutoRotateNode { #ucomposablecameraautorotatenode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraAutoRotateNode()
+```
 
 ---
 

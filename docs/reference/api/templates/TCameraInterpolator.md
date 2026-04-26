@@ -82,14 +82,14 @@ ValueType Run(const float DeltaTime)
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `const UComposableCameraInterpolatorBase *` | [`Interpolator`](#interpolator-4)  |  |
+| `const UComposableCameraInterpolatorBase *` | [`Interpolator`](#interpolator-5)  |  |
 | `WrappedValueType` | [`CurrentValue`](#currentvalue)  |  |
 | `WrappedValueType` | [`TargetValue`](#targetvalue)  |  |
 | `bool` | [`bFinished`](#bfinished-1)  |  |
 
 ---
 
-#### Interpolator { #interpolator-4 }
+#### Interpolator { #interpolator-5 }
 
 ```cpp
 const UComposableCameraInterpolatorBase * Interpolator

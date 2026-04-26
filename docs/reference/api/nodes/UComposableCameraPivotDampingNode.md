@@ -97,15 +97,26 @@ TObjectPtr< UComposableCameraInterpolatorBase > BackwardInterpolator
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-8) `virtual` |  |
+|  | [`UComposableCameraPivotDampingNode`](#ucomposablecamerapivotdampingnode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-9) `virtual` |  |
 | `void` | [`OnFirstTickNode_Implementation`](#onfirstticknode_implementation-1) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-14) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-13) `virtual` `const` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-15) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-14) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-6) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-8 }
+#### UComposableCameraPivotDampingNode { #ucomposablecamerapivotdampingnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraPivotDampingNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-9 }
 
 `virtual`
 
@@ -125,7 +136,7 @@ virtual void OnFirstTickNode_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-14 }
+#### OnTickNode_Implementation { #onticknode_implementation-15 }
 
 `virtual`
 
@@ -135,7 +146,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-13 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-14 }
 
 `virtual` `const`
 

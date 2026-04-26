@@ -42,8 +42,19 @@ Compute nodes must NOT register for OnPreTick / OnPostTick and must NOT override
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraComputeNodeBase`](#ucomposablecameracomputenodebase-1) `inline` |  |
 | `void` | [`ExecuteBeginPlay`](#executebeginplay) `virtual` `inline` | Execute this compute node's one-shot work. |
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation-1) `virtual` `const` `inline` |  |
+
+---
+
+#### UComposableCameraComputeNodeBase { #ucomposablecameracomputenodebase-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraComputeNodeBase()
+```
 
 ---
 

@@ -35,11 +35,22 @@ Post-process settings to apply. Toggle individual bOverride_* flags to control w
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-10) `virtual` |  |
+|  | [`UComposableCameraPostProcessNode`](#ucomposablecamerapostprocessnode-1) `inline` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-11) `virtual` |  |
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-10 }
+#### UComposableCameraPostProcessNode { #ucomposablecamerapostprocessnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraPostProcessNode()
+```
+
+---
+
+#### OnTickNode_Implementation { #onticknode_implementation-11 }
 
 `virtual`
 

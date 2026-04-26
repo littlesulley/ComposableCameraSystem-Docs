@@ -136,10 +136,21 @@ Optional interpolator applied to the focus distance each tick. When null, the no
 
 | Return | Name | Description |
 |--------|------|-------------|
+|  | [`UComposableCameraFocusPullNode`](#ucomposablecamerafocuspullnode-1) `inline` |  |
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-3) `virtual` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-5) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-5) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-3) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+
+---
+
+#### UComposableCameraFocusPullNode { #ucomposablecamerafocuspullnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraFocusPullNode()
+```
 
 ---
 

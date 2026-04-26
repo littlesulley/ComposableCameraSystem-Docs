@@ -75,17 +75,28 @@ FOnReceiveMixingCameraWeights OnReceiveMixingCameraWeights
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-7) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-12) `virtual` |  |
+|  | [`UComposableCameraMixingCameraNode`](#ucomposablecameramixingcameranode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-8) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-13) `virtual` |  |
 | `void` | [`BeginDestroy`](#begindestroy) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-11) `virtual` `const` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-12) `virtual` `const` |  |
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation-2) `virtual` `const` `inline` |  |
 | `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility_Implementation`](#getpatchcompatibility_implementation-1) `virtual` `const` `inline` |  |
 | `void` | [`SetUpdateWeights`](#setupdateweights)  |  |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-7 }
+#### UComposableCameraMixingCameraNode { #ucomposablecameramixingcameranode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraMixingCameraNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-8 }
 
 `virtual`
 
@@ -95,7 +106,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-12 }
+#### OnTickNode_Implementation { #onticknode_implementation-13 }
 
 `virtual`
 
@@ -115,7 +126,7 @@ virtual void BeginDestroy()
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-11 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-12 }
 
 `virtual` `const`
 

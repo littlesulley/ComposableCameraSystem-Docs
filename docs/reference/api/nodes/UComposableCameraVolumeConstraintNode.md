@@ -129,14 +129,25 @@ Picks the same UInterpolatorBase instanced subobject pattern that CollisionPush 
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-14) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-22) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-20) `virtual` `const` |  |
+|  | [`UComposableCameraVolumeConstraintNode`](#ucomposablecameravolumeconstraintnode-1) `inline` |  |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-15) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-23) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-21) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-11) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-14 }
+#### UComposableCameraVolumeConstraintNode { #ucomposablecameravolumeconstraintnode-1 }
+
+`inline`
+
+```cpp
+inline UComposableCameraVolumeConstraintNode()
+```
+
+---
+
+#### OnInitialize_Implementation { #oninitialize_implementation-15 }
 
 `virtual`
 
@@ -146,7 +157,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-22 }
+#### OnTickNode_Implementation { #onticknode_implementation-23 }
 
 `virtual`
 
@@ -156,7 +167,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-20 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-21 }
 
 `virtual` `const`
 
