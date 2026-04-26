@@ -161,18 +161,12 @@ The Camera Cut Track in the same sequence can target the LS Actor — when it do
 Both paths are visible in the debug HUD. Run:
 
 ```
-showdebug ComposableCameraSystem
+ccs.debug.panel 1
 ```
 
 The debug panel shows a **Patches** section per Director listing each active Patch by asset name, layer index, phase, current alpha, elapsed time, and expiration config. The `stat CCS` command adds `PatchManager Apply` and `Patch TickEvaluator` cycle counters so you can measure per-frame overhead.
 
-For a captured snapshot (useful in non-interactive builds), use the dump command:
-
-```
-CCS.DumpCameraState
-```
-
-The output includes a `[Patches]` block per Director.
+![[assets/images/Pasted image 20260426205159.png]]
 
 ---
 

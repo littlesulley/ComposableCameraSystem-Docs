@@ -204,6 +204,8 @@ Both paths produce a union set of primitives to fade this frame. Delta tracking 
 
 The fade look (dither, fresnel, opacity animation, speed) lives entirely in the `OcclusionMaterial` shader. The node does instant swaps; any smooth cross-fade is authored in the shader. This follows Epic's `UOcclusionMaterialCameraNode` design. Unlike Epic's node, both static and skeletal mesh components are eligible (controlled by `bAffectStaticMeshes` / `bAffectSkeletalMeshes`).
 
+![[assets/images/OcclusionFade.gif]]
+
 **Chain placement:** typically after `CollisionPushNode` — let collision resolve the camera position first, then fade whatever remains between the camera and the subject.
 
 **C++ reference:** [`UComposableCameraOcclusionFadeNode`](api/nodes/UComposableCameraOcclusionFadeNode.md)
@@ -220,6 +222,8 @@ Constrains the camera position to stay inside a single Box or Sphere volume. Whe
 **Smoothing.** The default is a hard projection — stateless and deterministic. An optional `ClampInterpolator` adds per-axis temporal smoothing (three independent 1D filter instances, one per world-space axis) to eliminate visible snaps on release, corner face-switches, or scripted teleports.
 
 **Chain placement:** after `CameraOffsetNode` / `LookAtNode` (position-writing nodes) and **before** `CollisionPushNode` — so the collision resolver operates on the already-constrained position rather than fighting the constraint.
+
+![[assets/images/Volume.gif]]
 
 **C++ reference:** [`UComposableCameraVolumeConstraintNode`](api/nodes/UComposableCameraVolumeConstraintNode.md)
 
@@ -258,6 +262,8 @@ All three use the **Progress authoring pattern** — direct curve evaluation at 
 
 **Play modes:** `Once` (clamp at Duration), `Loop` (Fmod wrap), `PingPong` (mirrored time oscillation). A Loop orbit typically authors `AngleCurve` as Y(0)=0, Y(1)=360·N for a seamless N-turn cycle — trig periodicity absorbs the angular wrap.
 
+![[assets/images/Spiral.gif]]
+
 **C++ reference:** [`UComposableCameraSpiralNode`](api/nodes/UComposableCameraSpiralNode.md)
 
 ---
@@ -282,6 +288,8 @@ The Hitchcock Zoom (also known as the Vertigo effect, dolly zoom, or trombone sh
 **Composability.** Direction is resampled from the upstream pose every tick, so an upstream `LookAtNode` can continue steering during the effect — `HitchcockZoomNode` owns only the radial distance and FOV, leaving rotation to the rest of the chain. FOV ownership: the node writes `FieldOfView` and clears `FocalLength` to −1 (FOV-mode sentinel). If an upstream `LensNode` is present, set `bOverrideFieldOfViewFromFocalLength` to false on it.
 
 Play mode is implicitly **Once** — the curves clamp at `NormalizedTime = 1` after `Duration` elapses and the pose freezes at the final state. Re-activate the camera context to restart.
+
+![[assets/images/Dolly.gif]]
 
 **C++ reference:** [`UComposableCameraHitchcockZoomNode`](api/nodes/UComposableCameraHitchcockZoomNode.md)
 
