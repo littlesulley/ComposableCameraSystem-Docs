@@ -157,6 +157,53 @@ Compute nodes are the right choice when the result is stable across the camera's
 
 Placement isn't cosmetic — the editor's palette and context menu walk the class hierarchy under `Nodes/`, and misplaced classes don't appear. If you're extending the plugin from a separate project module, follow the same `Public/Nodes` / `Private/Nodes` layout inside that module.
 
+## Editor palette category
+
+The camera graph editor groups nodes in the **Add Node** palette by a sub-menu category. Every node has a `PaletteCategory` field inherited from `UComposableCameraCameraNodeBase`:
+
+```cpp
+// UComposableCameraCameraNodeBase — inherited field
+UPROPERTY(EditDefaultsOnly, Category = "Node Metadata", meta = (NoPinExposure))
+FName PaletteCategory = TEXT("Misc");
+```
+
+The default is `"Misc"`. Set it to anything meaningful in your node's inline constructor — the schema reads the CDO at palette-build time and nests the menu entry under `Camera Nodes | <YourCategory>` automatically (UE honors `|` in `FEdGraphSchemaAction::Category` as a path delimiter):
+
+```cpp
+UCLASS(ClassGroup = ComposableCameraSystem, meta = (DisplayName = "My Offset"))
+class MYPROJECT_API UMyOffsetNode : public UComposableCameraCameraNodeBase
+{
+    GENERATED_BODY()
+
+public:
+    UMyOffsetNode() { PaletteCategory = TEXT("Position"); }  // ← appears under "Camera Nodes | Position"
+    // ...
+};
+```
+
+The built-in nodes use these categories (pick whichever fits, or invent your own):
+
+| Category | What lives there |
+|---|---|
+| `Pivot` | Nodes that establish or move the pivot point |
+| `Position` | Camera position / offset operators |
+| `Rotation` | Camera rotation operators (control rotate, auto-rotate, pivot-rotate) |
+| `Framing` | Screen-space / look-at / framing constraints |
+| `Optics` | FOV, filmback, lens, orthographic |
+| `Focus & Effects` | Focus pull, post-process, filmgrain |
+| `Collision & Occlusion` | Collision push, occlusion fade |
+| `Post Process` | Full post-process override nodes |
+| `Composition` | Mixing / blending camera sub-trees |
+| `Math` | Compute nodes that produce numeric outputs for downstream wiring |
+| `Misc` | Default — anything that doesn't fit the above |
+
+!!! note "Blueprint subclasses use Class Defaults, not the constructor"
+    C++ nodes set `PaletteCategory` in the constructor because that initialises the CDO. Blueprint-derived nodes (from `UComposableCameraBlueprintCameraNode`) cannot set UCLASS meta at all — instead, open the Blueprint's **Class Defaults** panel and set the `Palette Category` property there. The schema reads the CDO either way.
+
+!!! note "`NoPinExposure` keeps it off the graph"
+    `PaletteCategory` is tagged `meta = (NoPinExposure)`, so it never appears as a pin in the camera graph even though it's a `UPROPERTY`. You never need to wire it.
+
+
 ## Node vs modifier — when to pick which
 
 The question comes up often enough to restate: **is the effect always on, or is it gameplay-conditional?**
