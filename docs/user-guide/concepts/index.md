@@ -14,6 +14,7 @@ This section explains **how ComposableCameraSystem works** — enough that you c
 4. **[Transitions](transitions.md)** — pose-only blenders, and the five-tier resolution chain that decides which transition runs between any two cameras.
 5. **[Modifiers](modifiers.md)** — post-evaluation tweaks and runtime re-tuning of nodes.
 6. **[Actions](actions.md)** — lightweight, self-expiring per-frame behaviors that run alongside the node chain.
+7. **[Camera Patches](patches.md)** — time-bounded, envelope-blended overlays that layer a full node graph on top of the running camera's output pose. The right tool for hit reactions, scope-zoom pushes, cinematic overlays, and any temporary effect that needs its own authored graph.
 
 ## The two ideas to internalize
 
