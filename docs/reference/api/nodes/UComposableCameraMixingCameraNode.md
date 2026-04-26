@@ -80,6 +80,7 @@ FOnReceiveMixingCameraWeights OnReceiveMixingCameraWeights
 | `void` | [`BeginDestroy`](#begindestroy) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-11) `virtual` `const` |  |
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation-2) `virtual` `const` `inline` |  |
+| `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility_Implementation`](#getpatchcompatibility_implementation-1) `virtual` `const` `inline` |  |
 | `void` | [`SetUpdateWeights`](#setupdateweights)  |  |
 
 ---
@@ -130,6 +131,16 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ```cpp
 virtual inline EComposableCameraNodeLevelSequenceCompatibility GetLevelSequenceCompatibility_Implementation() const
+```
+
+---
+
+#### GetPatchCompatibility_Implementation { #getpatchcompatibility_implementation-1 }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline EComposableCameraNodePatchCompatibility GetPatchCompatibility_Implementation() const
 ```
 
 ---

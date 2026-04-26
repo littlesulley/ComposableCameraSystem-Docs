@@ -41,6 +41,13 @@ inline DECLARE_FUNCTION(execSetParameterBlockValue)
 | `UComposableCameraActionBase *` | [`AddAction`](#addaction) `static` | Add a camera action. Multiple actions of the same class are not allowed. |
 | `void` | [`ExpireAction`](#expireaction-1) `static` | Expire a camera action. |
 | `AComposableCameraPlayerCameraManager *` | [`GetComposableCameraPlayerCameraManager`](#getcomposablecameraplayercameramanager) `static` | Get player camera manager and cast it to ComposableCameraPlayerCameraManager. Can be null if it's not the type. |
+| `UComposableCameraPatchHandle *` | [`AddCameraPatch`](#addcamerapatch) `static` | Add a Camera Patch on the active context's Director, or on a named context if ContextName is non-None. |
+| `void` | [`ExpireCameraPatch`](#expirecamerapatch) `static` | Manually retire a Patch by its handle. Flips the Patch to Exiting via the normal envelope ramp; the actual removal happens at the end of the next Apply pass. |
+| `void` | [`ExpireAllPatchesOnContext`](#expireallpatchesoncontext) `static` | Soft-expire every active Patch on the named context's Director. Each Patch flips to Exiting via its normal envelope ramp — mid-Entering patches fade out from their current alpha rather than popping to 1 first. Already-Exiting / Expired patches are left alone (idempotent). |
+| `bool` | [`IsPatchActive`](#ispatchactive) `static` | True iff the handle's instance is still alive AND in Entering / Active phase. |
+| `EComposableCameraPatchPhase` | [`GetPatchPhase`](#getpatchphase) `static` | Current lifecycle phase. Returns Expired when the handle is stale. |
+| `float` | [`GetPatchAlpha`](#getpatchalpha) `static` | Current envelope alpha [0..1]. Returns 0 when the handle is stale. |
+| `float` | [`GetPatchElapsedTime`](#getpatchelapsedtime) `static` | Cumulative time spent in Active phase (seconds). The Duration channel fires when this reaches the Patch's resolved Duration. Returns 0 for a stale handle or a Patch that hasn't reached Active yet. |
 | `void` | [`SetParameterBlockValue`](#setparameterblockvalue) `static` | Custom thunk function for setting a single value in a ParameterBlock. Used internally by UK2Node_ActivateComposableCamera to fill the parameter block at compile time. |
 | `FVector` | [`MakeLiteralVector`](#makeliteralvector) `static` |  |
 | `FVector4` | [`MakeLiteralVector4`](#makeliteralvector4) `static` |  |
@@ -322,6 +329,120 @@ Get player camera manager and cast it to ComposableCameraPlayerCameraManager. Ca
 **Parameters**
 
 * `Index` Player index.
+
+---
+
+#### AddCameraPatch { #addcamerapatch }
+
+`static`
+
+```cpp
+static UComposableCameraPatchHandle * AddCameraPatch(const UObject * WorldContextObject, int32 PlayerIndex, UComposableCameraPatchTypeAsset * PatchAsset, FName ContextName, FComposableCameraPatchActivateParams Params, FComposableCameraParameterBlock Parameters)
+```
+
+Add a Camera Patch on the active context's Director, or on a named context if ContextName is non-None.
+
+Hidden from the Blueprint palette — designers should author this through UK2Node_AddCameraPatch, which generates a typed pin per exposed parameter / exposed variable on the chosen Patch asset and expands into this call at compile time.
+
+**Parameters**
+
+* `PlayerIndex` Player index (0 for single player). Resolved to a UComposableCameraPlayerCameraManager via GetComposableCameraPlayerCameraManager — matches ActivateComposableCameraFromTypeAsset's PlayerIndex surface so the two K2 nodes feel like siblings. 
+
+* `PatchAsset` The Patch type asset (a subclass of CameraTypeAsset). 
+
+* `ContextName` NAME_None → target the current active context (the common case). Otherwise the context with that name must already be on the stack — the patch attaches to THAT context's Director, even if it is currently buried below the active context. Patches on a buried context tick (their Director's Evaluate still runs) but are not user-visible until the context returns to the top — useful for staging gameplay overlays while a cutscene is playing. 
+
+* `Params` Envelope / lifetime / composition activation parameters; see [FComposableCameraPatchActivateParams](../structs/FComposableCameraPatchActivateParams.md#fcomposablecamerapatchactivateparams) docs for sentinels. 
+
+* `Parameters` Exposed-parameter / exposed-variable values for the Patch evaluator. Same keyspace as the block accepted by ActivateComposableCameraFromTypeAsset. 
+
+**Returns**
+
+A handle to the added Patch (nullptr on rejection — see log warning for the reason).
+
+---
+
+#### ExpireCameraPatch { #expirecamerapatch }
+
+`static`
+
+```cpp
+static void ExpireCameraPatch(UComposableCameraPatchHandle * Handle, float ExitDurationOverride)
+```
+
+Manually retire a Patch by its handle. Flips the Patch to Exiting via the normal envelope ramp; the actual removal happens at the end of the next Apply pass.
+
+**Parameters**
+
+* `Handle` Handle returned from AddCameraPatch. 
+
+* `ExitDurationOverride` < 0 → use the Patch's authored ExitDuration. >= 0 replaces the per-Patch ExitDuration (pass 0 for an instant cut-off).
+
+---
+
+#### ExpireAllPatchesOnContext { #expireallpatchesoncontext }
+
+`static`
+
+```cpp
+static void ExpireAllPatchesOnContext(const UObject * WorldContextObject, int32 PlayerIndex, FName ContextName, float ExitDurationOverride)
+```
+
+Soft-expire every active Patch on the named context's Director. Each Patch flips to Exiting via its normal envelope ramp — mid-Entering patches fade out from their current alpha rather than popping to 1 first. Already-Exiting / Expired patches are left alone (idempotent).
+
+**Parameters**
+
+* `ContextName` The context whose Director's PatchManager to sweep. NAME_None → active context. 
+
+* `ExitDurationOverride` < 0 → each patch keeps its own ExitDuration. >= 0 replaces every patch's ExitDuration uniformly.
+
+---
+
+#### IsPatchActive { #ispatchactive }
+
+`static`
+
+```cpp
+static bool IsPatchActive(const UComposableCameraPatchHandle * Handle)
+```
+
+True iff the handle's instance is still alive AND in Entering / Active phase.
+
+---
+
+#### GetPatchPhase { #getpatchphase }
+
+`static`
+
+```cpp
+static EComposableCameraPatchPhase GetPatchPhase(const UComposableCameraPatchHandle * Handle)
+```
+
+Current lifecycle phase. Returns Expired when the handle is stale.
+
+---
+
+#### GetPatchAlpha { #getpatchalpha }
+
+`static`
+
+```cpp
+static float GetPatchAlpha(const UComposableCameraPatchHandle * Handle)
+```
+
+Current envelope alpha [0..1]. Returns 0 when the handle is stale.
+
+---
+
+#### GetPatchElapsedTime { #getpatchelapsedtime }
+
+`static`
+
+```cpp
+static float GetPatchElapsedTime(const UComposableCameraPatchHandle * Handle)
+```
+
+Cumulative time spent in Active phase (seconds). The Duration channel fires when this reaches the Patch's resolved Duration. Returns 0 for a stale handle or a Patch that hasn't reached Active yet.
 
 ---
 

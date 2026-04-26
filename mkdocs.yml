@@ -122,6 +122,7 @@ nav:
       - Node Catalog: reference/nodes.md
       - Transition Catalog: reference/transitions.md
       - Modifier Catalog: reference/modifiers.md
+      - Camera Patch Catalog: reference/patches.md
       - Project Settings: reference/project-settings.md
       - Debugging:
           - ShowDebug: reference/debugging/showdebug.md
@@ -204,6 +205,7 @@ nav:
             - 'UAsyncVectorCurveEvaluator': reference/api/async-actions/UAsyncVectorCurveEvaluator.md
           - 'Data Assets':
             - 'UComposableCameraNodeModifierDataAsset': reference/api/data-assets/UComposableCameraNodeModifierDataAsset.md
+            - 'UComposableCameraPatchTypeAsset': reference/api/data-assets/UComposableCameraPatchTypeAsset.md
             - 'UComposableCameraProjectSettings': reference/api/data-assets/UComposableCameraProjectSettings.md
             - 'UComposableCameraTransitionDataAsset': reference/api/data-assets/UComposableCameraTransitionDataAsset.md
             - 'UComposableCameraTransitionTableDataAsset': reference/api/data-assets/UComposableCameraTransitionTableDataAsset.md
@@ -251,6 +253,8 @@ nav:
             - 'FComposableCameraParameterBlock': reference/api/structs/FComposableCameraParameterBlock.md
             - 'FComposableCameraParameterTableRow': reference/api/structs/FComposableCameraParameterTableRow.md
             - 'FComposableCameraParameterValue': reference/api/structs/FComposableCameraParameterValue.md
+            - 'FComposableCameraPatchActivateParams': reference/api/structs/FComposableCameraPatchActivateParams.md
+            - 'FComposableCameraPatchSnapshot': reference/api/structs/FComposableCameraPatchSnapshot.md
             - 'FComposableCameraPersistentActivateParams': reference/api/structs/FComposableCameraPersistentActivateParams.md
             - 'FComposableCameraPinConnection': reference/api/structs/FComposableCameraPinConnection.md
             - 'FComposableCameraPinKey': reference/api/structs/FComposableCameraPinKey.md
@@ -262,6 +266,7 @@ nav:
             - 'FComposableCameraRuntimeDataBlock': reference/api/structs/FComposableCameraRuntimeDataBlock.md
             - 'FComposableCameraScreenSpaceRotationParams': reference/api/structs/FComposableCameraScreenSpaceRotationParams.md
             - 'FComposableCameraScreenSpaceTranslationParams': reference/api/structs/FComposableCameraScreenSpaceTranslationParams.md
+            - 'FComposableCameraSequencerPatchOverlay': reference/api/structs/FComposableCameraSequencerPatchOverlay.md
             - 'FComposableCameraSystemModule': reference/api/structs/FComposableCameraSystemModule.md
             - 'FComposableCameraTransitionInitParams': reference/api/structs/FComposableCameraTransitionInitParams.md
             - 'FComposableCameraTransitionTableEntry': reference/api/structs/FComposableCameraTransitionTableEntry.md
@@ -280,7 +285,12 @@ nav:
             - 'UComposableCameraComputeNodeBase': reference/api/uobjects-other/UComposableCameraComputeNodeBase.md
             - 'UComposableCameraImpulseShapeInterface': reference/api/uobjects-other/UComposableCameraImpulseShapeInterface.md
             - 'UComposableCameraLevelSequenceComponent': reference/api/uobjects-other/UComposableCameraLevelSequenceComponent.md
+            - 'UComposableCameraPatchHandle': reference/api/uobjects-other/UComposableCameraPatchHandle.md
+            - 'UComposableCameraPatchInstance': reference/api/uobjects-other/UComposableCameraPatchInstance.md
+            - 'UComposableCameraPatchManager': reference/api/uobjects-other/UComposableCameraPatchManager.md
             - 'UComposableCameraRotationConstraints': reference/api/uobjects-other/UComposableCameraRotationConstraints.md
+            - 'UMovieSceneComposableCameraPatchSection': reference/api/uobjects-other/UMovieSceneComposableCameraPatchSection.md
+            - 'UMovieSceneComposableCameraPatchTrack': reference/api/uobjects-other/UMovieSceneComposableCameraPatchTrack.md
           - 'Helpers':
             - 'ComposableCameraIndependentPositionalInertializer': reference/api/helpers/ComposableCameraIndependentPositionalInertializer.md
             - 'ComposableCameraInitializer': reference/api/helpers/ComposableCameraInitializer.md

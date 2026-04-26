@@ -52,7 +52,7 @@ The transition routing entries. Exact-match by (Source, Target) pair; first matc
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`PostEditChangeProperty`](#posteditchangeproperty) `virtual` |  |
-| `void` | [`PostLoad`](#postload) `virtual` |  |
+| `void` | [`PostLoad`](#postload-1) `virtual` |  |
 | `EDataValidationResult` | [`IsDataValid`](#isdatavalid) `virtual` `const` |  |
 | `UComposableCameraTransitionBase *` | [`FindTransition`](#findtransition) `const` | Look up the transition for an exact (Source, Target) pair. |
 
@@ -68,7 +68,7 @@ virtual void PostEditChangeProperty(FPropertyChangedEvent & PropertyChangedEvent
 
 ---
 
-#### PostLoad { #postload }
+#### PostLoad { #postload-1 }
 
 `virtual`
 

@@ -120,6 +120,7 @@ Async Blueprint-latent curve evaluators.
 Type assets, transition tables, project settings, node modifier data.
 
 - [`UComposableCameraNodeModifierDataAsset`](data-assets/UComposableCameraNodeModifierDataAsset.md)
+- [`UComposableCameraPatchTypeAsset`](data-assets/UComposableCameraPatchTypeAsset.md)
 - [`UComposableCameraProjectSettings`](data-assets/UComposableCameraProjectSettings.md)
 - [`UComposableCameraTransitionDataAsset`](data-assets/UComposableCameraTransitionDataAsset.md)
 - [`UComposableCameraTransitionTableDataAsset`](data-assets/UComposableCameraTransitionTableDataAsset.md)
@@ -183,6 +184,8 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FComposableCameraParameterBlock`](structs/FComposableCameraParameterBlock.md)
 - [`FComposableCameraParameterTableRow`](structs/FComposableCameraParameterTableRow.md)
 - [`FComposableCameraParameterValue`](structs/FComposableCameraParameterValue.md)
+- [`FComposableCameraPatchActivateParams`](structs/FComposableCameraPatchActivateParams.md)
+- [`FComposableCameraPatchSnapshot`](structs/FComposableCameraPatchSnapshot.md)
 - [`FComposableCameraPersistentActivateParams`](structs/FComposableCameraPersistentActivateParams.md)
 - [`FComposableCameraPinConnection`](structs/FComposableCameraPinConnection.md)
 - [`FComposableCameraPinKey`](structs/FComposableCameraPinKey.md)
@@ -194,6 +197,7 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FComposableCameraRuntimeDataBlock`](structs/FComposableCameraRuntimeDataBlock.md)
 - [`FComposableCameraScreenSpaceRotationParams`](structs/FComposableCameraScreenSpaceRotationParams.md)
 - [`FComposableCameraScreenSpaceTranslationParams`](structs/FComposableCameraScreenSpaceTranslationParams.md)
+- [`FComposableCameraSequencerPatchOverlay`](structs/FComposableCameraSequencerPatchOverlay.md)
 - [`FComposableCameraSystemModule`](structs/FComposableCameraSystemModule.md)
 - [`FComposableCameraTransitionInitParams`](structs/FComposableCameraTransitionInitParams.md)
 - [`FComposableCameraTransitionTableEntry`](structs/FComposableCameraTransitionTableEntry.md)
@@ -216,7 +220,12 @@ UObject-derived types that don't fit a more specific category.
 - [`UComposableCameraComputeNodeBase`](uobjects-other/UComposableCameraComputeNodeBase.md)
 - [`UComposableCameraImpulseShapeInterface`](uobjects-other/UComposableCameraImpulseShapeInterface.md)
 - [`UComposableCameraLevelSequenceComponent`](uobjects-other/UComposableCameraLevelSequenceComponent.md)
+- [`UComposableCameraPatchHandle`](uobjects-other/UComposableCameraPatchHandle.md)
+- [`UComposableCameraPatchInstance`](uobjects-other/UComposableCameraPatchInstance.md)
+- [`UComposableCameraPatchManager`](uobjects-other/UComposableCameraPatchManager.md)
 - [`UComposableCameraRotationConstraints`](uobjects-other/UComposableCameraRotationConstraints.md)
+- [`UMovieSceneComposableCameraPatchSection`](uobjects-other/UMovieSceneComposableCameraPatchSection.md)
+- [`UMovieSceneComposableCameraPatchTrack`](uobjects-other/UMovieSceneComposableCameraPatchTrack.md)
 
 ## Helpers
 

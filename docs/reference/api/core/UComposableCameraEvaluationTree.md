@@ -37,8 +37,8 @@ You should be very careful about *transient* cameras, because they may break the
 | `bool` | [`HasActiveCamera`](#hasactivecamera) `const` | Returns true if the tree has at least one active camera. |
 | `AComposableCameraCameraBase *` | [`GetRunningCamera`](#getrunningcamera-2) `const` `inline` | Get the current running camera (set when a camera is activated, updated on tree rebuild). |
 | `const TSharedPtr< FComposableCameraEvaluationTreeNode > &` | [`GetRootNode`](#getrootnode) `const` `inline` | Read-only access to the current root node. Used by director-to-director inter-context APIs to capture a `TSharedPtr` snapshot of this tree's current shape when creating a reference leaf in another tree — the returned pointer is shared (not copied), so the snapshot keeps the captured subtree alive even if THIS tree later swaps its root. Returns null if no camera has been activated yet. |
-| `void` | [`DestroyAll`](#destroyall)  | Destroy all cameras in the tree and reset to empty. |
-| `void` | [`BuildDebugSnapshot`](#builddebugsnapshot-2) `const` | Build a flat DFS pre-order snapshot of the tree for every debug consumer (2D panel, `showdebug camera`, dump commands — all render from the snapshot through `[ComposableCameraDebug::AppendTreeNodeLine](../free-functions/Functions.md#appendtreenodeline)`). Appends to OutNodes (caller is responsible for Reset if starting fresh). Computes bIsDominantLeaf as part of the walk (root → Right* → leaf). |
+| `void` | [`DestroyAll`](#destroyall-1)  | Destroy all cameras in the tree and reset to empty. |
+| `void` | [`BuildDebugSnapshot`](#builddebugsnapshot-3) `const` | Build a flat DFS pre-order snapshot of the tree for every debug consumer (2D panel, `showdebug camera`, dump commands — all render from the snapshot through `[ComposableCameraDebug::AppendTreeNodeLine](../free-functions/Functions.md#appendtreenodeline)`). Appends to OutNodes (caller is responsible for Reset if starting fresh). Computes bIsDominantLeaf as part of the walk (root → Right* → leaf). |
 | `void` | [`DrawTransitionsDebug`](#drawtransitionsdebug) `const` | Walk every Inner (transition) node reachable from the tree's root and invoke `[UComposableCameraTransitionBase::DrawTransitionDebug](../transitions/UComposableCameraTransitionBase.md#drawtransitiondebug-1)` on each. Each transition self-gates on its own `CCS.Debug.Viewport.Transitions.<Name>` CVar — if none are enabled, this call is effectively free. |
 
 ---
@@ -152,7 +152,7 @@ Read-only access to the current root node. Used by director-to-director inter-co
 
 ---
 
-#### DestroyAll { #destroyall }
+#### DestroyAll { #destroyall-1 }
 
 ```cpp
 void DestroyAll()
@@ -162,7 +162,7 @@ Destroy all cameras in the tree and reset to empty.
 
 ---
 
-#### BuildDebugSnapshot { #builddebugsnapshot-2 }
+#### BuildDebugSnapshot { #builddebugsnapshot-3 }
 
 `const`
 
@@ -257,7 +257,7 @@ Cleanup triggers (in priority order):
 
 1. `InTransition->OnTransitionFinishesDelegate` — normal completion.
 
-1. `[DestroyAll()](#destroyall)` — shutdown / context pop. Edge case: if the transition is replaced (another activation fires before T completes), the pending subtree lingers here until (2) eventually fires. That's a memory cost, not a correctness bug.
+1. `[DestroyAll()](#destroyall-1)` — shutdown / context pop. Edge case: if the transition is replaced (another activation fires before T completes), the pending subtree lingers here until (2) eventually fires. That's a memory cost, not a correctness bug.
 
 GC: the entries here are registered with the reference collector via `AddReferencedObjects` so the cameras/transitions inside stay alive until we explicitly destroy them below.
 

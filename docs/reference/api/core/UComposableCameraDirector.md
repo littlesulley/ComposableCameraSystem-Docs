@@ -23,6 +23,7 @@
 | `FComposableCameraPose` | [`Evaluate`](#evaluate)  |  |
 | `AComposableCameraCameraBase *` | [`GetRunningCamera`](#getrunningcamera) `const` `inline` | Get the currently running (target) camera in this Director's evaluation tree. |
 | `UComposableCameraEvaluationTree *` | [`GetEvaluationTree`](#getevaluationtree) `const` `inline` | Read-only access to the director's evaluation tree. Intended for debug tooling (viewport debug transition walker, snapshot builders, tests). Returns the raw pointer — do not cache it across activations, since the tree is torn down with the director. |
+| `UComposableCameraPatchManager *` | [`GetPatchManager`](#getpatchmanager) `const` `inline` | Access to this director's PatchManager — owner of active CameraPatches. Lifetime: created in the director ctor, destroyed with the director. Stage 1 has the manager wired through but its Apply pass is a no-op stub (see [UComposableCameraPatchManager](../uobjects-other/UComposableCameraPatchManager.md#ucomposablecamerapatchmanager) doc comment for the staging plan). |
 | `const FComposableCameraPose &` | [`GetLastEvaluatedPose`](#getlastevaluatedpose) `const` `inline` | Get the last evaluated (blended) pose from this Director. |
 | `const FComposableCameraPose &` | [`GetPreviousEvaluatedPose`](#getpreviousevaluatedpose) `const` `inline` | Get the previous frame's evaluated (blended) pose from this Director. |
 | `void` | [`DestroyAllCameras`](#destroyallcameras)  | Destroy all cameras in this Director's evaluation tree. Called when a context is popped. |
@@ -163,6 +164,18 @@ Read-only access to the director's evaluation tree. Intended for debug tooling (
 
 ---
 
+#### GetPatchManager { #getpatchmanager }
+
+`const` `inline`
+
+```cpp
+inline UComposableCameraPatchManager * GetPatchManager() const
+```
+
+Access to this director's PatchManager — owner of active CameraPatches. Lifetime: created in the director ctor, destroyed with the director. Stage 1 has the manager wired through but its Apply pass is a no-op stub (see [UComposableCameraPatchManager](../uobjects-other/UComposableCameraPatchManager.md#ucomposablecamerapatchmanager) doc comment for the staging plan).
+
+---
+
 #### GetLastEvaluatedPose { #getlastevaluatedpose }
 
 `const` `inline`
@@ -213,6 +226,7 @@ Populate the context snapshot's director-owned fields: RunningCameraDisplay, Las
 |--------|------|-------------|
 | `UComposableCameraEvaluationTree *` | [`EvaluationTree`](#evaluationtree)  |  |
 | `AComposableCameraCameraBase *` | [`RunningCamera`](#runningcamera)  |  |
+| `TObjectPtr< UComposableCameraPatchManager >` | [`PatchManager`](#patchmanager)  |  |
 | `FComposableCameraPose` | [`LastEvaluatedPose`](#lastevaluatedpose)  | Cached blended pose from the last [Evaluate()](#evaluate) call — represents the Director's actual output. |
 | `FComposableCameraPose` | [`PreviousEvaluatedPose`](#previousevaluatedpose)  | Previous frame's blended pose — used for velocity estimation in transitions. |
 
@@ -230,6 +244,14 @@ UComposableCameraEvaluationTree * EvaluationTree { nullptr }
 
 ```cpp
 AComposableCameraCameraBase * RunningCamera { nullptr }
+```
+
+---
+
+#### PatchManager { #patchmanager }
+
+```cpp
+TObjectPtr< UComposableCameraPatchManager > PatchManager
 ```
 
 ---

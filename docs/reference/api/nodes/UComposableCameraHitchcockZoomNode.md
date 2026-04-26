@@ -50,7 +50,7 @@ PlayMode is implicit: Once. There is no Loop / PingPong — authors who need a c
 | `EComposableCameraHitchcockZoomDriver` | [`Driver`](#driver)  | Which authored curve drives the effect. The other quantity is solved from the lock constant captured on the first tick. |
 | `TObjectPtr< UCurveFloat >` | [`FOVDeltaCurve`](#fovdeltacurve)  | Additive FOV delta (degrees) over normalized time. X ∈ [0, 1], Y is DELTA from InitialFOV — author Y(0) = 0 so the first tick preserves InitialFOV exactly. Positive Y widens the FOV, negative narrows (the classic "zoom in as the camera dollies out" is a curve with negative Y values). |
 | `TObjectPtr< UCurveFloat >` | [`DistanceDeltaCurve`](#distancedeltacurve)  | Additive distance delta (world units) over normalized time. X ∈ [0, 1], Y is DELTA from InitialDistance — author Y(0) = 0. Positive Y dollies the camera back (away from subject), negative Y pushes in. |
-| `float` | [`Duration`](#duration-5)  | Seconds the effect takes to play from start to end state. After Duration elapses, the curves are evaluated at NormalizedTime = 1 and the pose freezes at the final state for as long as the node remains active. |
+| `float` | [`Duration`](#duration-7)  | Seconds the effect takes to play from start to end state. After Duration elapses, the curves are evaluated at NormalizedTime = 1 and the pose freezes at the final state for as long as the node remains active. |
 | `bool` | [`bEnable`](#benable)  | Master toggle. When false, the node is a pass-through this tick (no camera dolly, no FOV override). Useful for Blueprint-gated effects: trigger the activation + enable on cue, disable on cut. |
 | `bool` | [`bClampCameraDistance`](#bclampcameradistance)  | When true, the derived camera distance is clamped to CameraDistanceClamp. Prevents pathological curve shapes from flying the camera off to kilometres away (very narrow FOV) or plunging into / past the subject (very wide FOV). |
 | `FFloatInterval` | [`CameraDistanceClamp`](#cameradistanceclamp)  | Min/max on the camera-to-subject distance when bClampCameraDistance is true. Min should be larger than the subject's extent so the camera doesn't end up inside the actor; Max bounds the "infinite |
@@ -143,7 +143,7 @@ Additive distance delta (world units) over normalized time. X ∈ [0, 1], Y is D
 
 ---
 
-#### Duration { #duration-5 }
+#### Duration { #duration-7 }
 
 ```cpp
 float Duration { 3.f }

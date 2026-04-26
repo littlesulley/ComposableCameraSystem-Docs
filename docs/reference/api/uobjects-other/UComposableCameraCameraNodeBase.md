@@ -21,6 +21,8 @@ Base node for all camera nodes.
 | `AComposableCameraPlayerCameraManager *` | [`GetOwningPlayerCameraManager`](#getowningplayercameramanager-1) `const` `inline` |  |
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility`](#getlevelsequencecompatibility) `const` | Declare how this node behaves when evaluated without a PCM (Level Sequence path). Default: Compatible. Override on nodes that need the viewport / player controller / HUD, or that spawn new cameras through the PCM. See the enum comment. |
 | `EComposableCameraNodeLevelSequenceCompatibility` | [`GetLevelSequenceCompatibility_Implementation`](#getlevelsequencecompatibility_implementation) `virtual` `const` `inline` |  |
+| `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility`](#getpatchcompatibility) `const` | Declare how this node behaves when placed in a Camera Patch graph (PatchSystemProposal §11). Default: Compatible. Override on nodes that synthesize pose from scratch (Incompatible) or have surprising semantics when reading from an upstream pose (CompatibleWithCaveat). |
+| `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility_Implementation`](#getpatchcompatibility_implementation) `virtual` `const` `inline` |  |
 | `void` | [`GetPinDeclarations`](#getpindeclarations) `const` | Declare this node's input and output data pins. Override in subclasses to define pins. The editor reads these to generate visual pins, and the runtime uses them to allocate the RuntimeDataBlock. |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-7) `virtual` `const` `inline` |  |
 | `void` | [`SetRuntimeDataBlock`](#setruntimedatablock) `inline` | Set the runtime data block for this node. Called during camera instantiation from type assets. |
@@ -138,6 +140,31 @@ BlueprintNativeEvent so BP-authored camera nodes (subclasses of [UComposableCame
 
 ```cpp
 virtual inline EComposableCameraNodeLevelSequenceCompatibility GetLevelSequenceCompatibility_Implementation() const
+```
+
+---
+
+#### GetPatchCompatibility { #getpatchcompatibility }
+
+`const`
+
+```cpp
+EComposableCameraNodePatchCompatibility GetPatchCompatibility() const
+```
+
+Declare how this node behaves when placed in a Camera Patch graph (PatchSystemProposal §11). Default: Compatible. Override on nodes that synthesize pose from scratch (Incompatible) or have surprising semantics when reading from an upstream pose (CompatibleWithCaveat).
+
+BlueprintNativeEvent to mirror GetLevelSequenceCompatibility's idiom — BP-authored camera nodes (subclasses of [UComposableCameraBlueprintCameraNode](../nodes/UComposableCameraBlueprintCameraNode.md#ucomposablecamerablueprintcameranode)) can declare their own compatibility alongside native nodes. C++ overrides go on the _Implementation below; BP subclasses override via a "Get Patch
+Compatibility" BlueprintImplementableEvent in their graph.
+
+---
+
+#### GetPatchCompatibility_Implementation { #getpatchcompatibility_implementation }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline EComposableCameraNodePatchCompatibility GetPatchCompatibility_Implementation() const
 ```
 
 ---

@@ -54,7 +54,7 @@ One entry per TypeAsset::ExposedParameters, typed according to each exposed para
 * FixedLayout prevents the designer from reshaping the bag by hand in the Details panel — its structure is derived from the TypeAsset and must only be mutated via RebuildBagsFromTypeAsset.
 
 * We deliberately do NOT set meta=(InterpBagProperties=true) here. That metadata would make Sequencer's core drill-in walk the bag automatically and surface leaves through a deep "TypeAssetReference
-  › Parameters › Value › Leaf" chain — duplicating what our own FComposableCameraLevelSequenceComponentTrackEditor already surfaces at two levels (Camera Parameters › Leaf). Instead, we only rely on CPF_Interp being set on each dynamic bag leaf by RebuildBagsFromTypeAsset (see AddDescIfSupported in the .cpp) — that single flag is what makes CanKeyProperty succeed; the outer bag metadata is not required for the custom track-editor path.
+  › Parameters › Value › Leaf" chain — duplicating what our own FComposableCameraLevelSequenceComponentTrackEditor already surfaces at two levels (Camera Parameters › Leaf). Instead, we only rely on CPF_Interp being set on each dynamic bag leaf by RebuildBagsFromTypeAsset (see [UE::ComposableCameras::ExposedBag::AddDescIfSupported](FModifierEntry.md#adddescifsupported)) — that single flag is what makes CanKeyProperty succeed; the outer bag metadata is not required for the custom track-editor path.
 
 ---
 

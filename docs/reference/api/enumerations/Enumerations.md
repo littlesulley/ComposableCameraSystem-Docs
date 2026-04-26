@@ -165,6 +165,61 @@ enum EComposableCameraSplineNodeMoveMethod
 | `Automatic` |  |
 | `ClosestPoint` |  |
 
+#### EComposableCameraPatchExpirationType { #ecomposablecamerapatchexpirationtype }
+
+```cpp
+enum EComposableCameraPatchExpirationType
+```
+
+| Value | Description |
+|-------|-------------|
+| `None` |  |
+| `Duration` | Expires after Duration seconds, counted from the moment the envelope reaches Active (alpha == 1). |
+| `Manual` | Expires only when ExpirePatch(handle) is called. |
+| `Condition` | Expires when the Patch asset's CanRemain() override returns false. |
+
+Bitmask of expiration channels that may individually fire to retire a Patch.
+
+Mirrors the spirit of EComposableCameraActionExpirationType but is tailored to Patch's "always has an enter/exit envelope" model — there is no Instant variant because every Patch ramps in and out via its envelope.
+
+A Patch's effective expiration is the OR of its enabled channels: the first channel to fire flips Phase to Exiting. Bits are independent and stack additively — e.g. (Duration | Manual) means "expires after Duration seconds
+OR when ExpirePatch is called, whichever comes first".
+
+#### EComposableCameraPatchEase { #ecomposablecamerapatchease }
+
+```cpp
+enum EComposableCameraPatchEase
+```
+
+| Value | Description |
+|-------|-------------|
+| `Linear` |  |
+| `EaseIn` |  |
+| `EaseOut` |  |
+| `EaseInOut` |  |
+| `Smooth` |  |
+
+Easing curve applied symmetrically to the enter and exit alpha ramps.
+
+Asset-only in V1 — there is no per-AddPatch override (an enum has no natural sentinel value, and adding a parallel bool is worse than asset-only). If a future case requires a runtime override, add a sixth `Custom` member with a companion `FRuntimeFloatCurve` pin (see PatchSystemProposal §8.1).
+
+#### EComposableCameraPatchPhase { #ecomposablecamerapatchphase }
+
+```cpp
+enum EComposableCameraPatchPhase
+```
+
+| Value | Description |
+|-------|-------------|
+| `Entering` |  |
+| `Active` |  |
+| `Exiting` |  |
+| `Expired` |  |
+
+Lifecycle phase of a Patch instance.
+
+Entering : alpha ramping 0 → 1 over EnterDuration. Patch evaluator already ticks at full fidelity. Active : alpha == 1, expiration channels are evaluated each frame. Exiting : alpha ramping 1 → 0 over ExitDuration. Expired : terminal; instance is removed at the end of PatchManager::Apply.
+
 #### EComposableCameraImpulseBoxDistanceType { #ecomposablecameraimpulseboxdistancetype }
 
 ```cpp
@@ -259,6 +314,19 @@ Design:
 
 * Progress / lifetime fields are captured as floats, not pre-formatted strings, so the renderer can draw real progress bars instead of parsing text. Kind of an evaluation-tree node. Parallels the TVariant in [FComposableCameraEvaluationTreeNode](../structs/FComposableCameraEvaluationTreeNode.md#fcomposablecameraevaluationtreenode).
 
+#### EComposableCameraPatchSource { #ecomposablecamerapatchsource }
+
+```cpp
+enum EComposableCameraPatchSource
+```
+
+| Value | Description |
+|-------|-------------|
+| `BlueprintLibrary` | Added via BP `AddCameraPatch` library / runtime PCM path. Lives on the Director's PatchManager; uses stateful envelope. |
+| `Sequencer` | Driven by a Sequencer `[UMovieSceneComposableCameraPatchTrack](../uobjects-other/UMovieSceneComposableCameraPatchTrack.md#umoviescenecomposablecamerapatchtrack)` section bound to an `[AComposableCameraLevelSequenceActor](../actors/AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor)` via `TargetActorBinding`. Lives on the LS Component's overlay map; uses stateless envelope. |
+
+Where a patch entry was sourced from — drives the row's prefix label so the designer can tell which path is producing each visible patch.
+
 #### EComposableCameraAutoRotateDirectionMode { #ecomposablecameraautorotatedirectionmode }
 
 ```cpp
@@ -287,6 +355,24 @@ How a node class behaves when evaluated in a Level-Sequence context, where the c
 Queried by the LS Details-panel customization (to warn the designer) and by the LS component's tick path (to decide whether to evaluate the node at all).
 
 Default is Compatible; override in node classes that cannot run without a PCM, or on compute-chain nodes that are never evaluated in LS by design.
+
+#### EComposableCameraNodePatchCompatibility { #ecomposablecameranodepatchcompatibility }
+
+```cpp
+enum EComposableCameraNodePatchCompatibility
+```
+
+| Value | Description |
+|-------|-------------|
+| `Compatible` | Reads upstream pose, mutates it. Safe in a Patch graph. |
+| `Incompatible` | Initializes pose from scratch or delegates to external sources — ignores InPose. Meaningless in a Patch context; editor emits an error build message. |
+| `CompatibleWithCaveat` | Works but with surprising semantics (e.g. overrides a single pose field in a way that may discard useful upstream data). Editor emits a warning build message so the author can confirm intent. |
+
+Declares how a node behaves when placed in a Camera Patch graph (per PatchSystemProposal §11). A Patch evaluator receives an upstream pose each frame and expects its nodes to read-modify-write that pose — nodes that synthesize pose from scratch or delegate to external sources produce surprising results in a Patch context.
+
+Queried by the Patch asset's editor-time validation (to warn the designer via Build messages) and by future runtime tooling (no current runtime gate, so Incompatible nodes do run — they just produce wrong output). The classification is authoring-side guidance, not a runtime safety net.
+
+Default is Compatible; override in nodes that have surprising semantics.
 
 #### ECameraPivotOffset { #ecamerapivotoffset }
 

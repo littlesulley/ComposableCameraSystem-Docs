@@ -5,7 +5,7 @@
 #include <ComposableCameraDebugPanelData.h>
 ```
 
-One node in an evaluation tree, flattened. Produced by [UComposableCameraEvaluationTree::BuildDebugSnapshot](../core/UComposableCameraEvaluationTree.md#builddebugsnapshot-2).
+One node in an evaluation tree, flattened. Produced by [UComposableCameraEvaluationTree::BuildDebugSnapshot](../core/UComposableCameraEvaluationTree.md#builddebugsnapshot-3).
 
 ### Public Attributes
 

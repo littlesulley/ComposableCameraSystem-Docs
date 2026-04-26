@@ -18,6 +18,7 @@ This node is NOT meant to be placed in a camera type asset by designers. It is c
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-20) `virtual` |  |
+| `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility_Implementation`](#getpatchcompatibility_implementation-2) `virtual` `const` `inline` |  |
 | `void` | [`SetViewTargetActor`](#setviewtargetactor)  | Set the actor and cache its UCameraComponent. |
 | `AActor *` | [`GetViewTargetActor`](#getviewtargetactor) `const` `inline` | Get the current view target actor. |
 
@@ -29,6 +30,16 @@ This node is NOT meant to be placed in a camera type asset by designers. It is c
 
 ```cpp
 virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraPose & CurrentCameraPose, FComposableCameraPose & OutCameraPose)
+```
+
+---
+
+#### GetPatchCompatibility_Implementation { #getpatchcompatibility_implementation-2 }
+
+`virtual` `const` `inline`
+
+```cpp
+virtual inline EComposableCameraNodePatchCompatibility GetPatchCompatibility_Implementation() const
 ```
 
 ---

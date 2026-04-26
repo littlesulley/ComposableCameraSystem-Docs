@@ -6,6 +6,7 @@
 ```
 
 > **Inherits:** `UPrimaryDataAsset`
+> **Subclassed by:** [`UComposableCameraPatchTypeAsset`](UComposableCameraPatchTypeAsset.md#ucomposablecamerapatchtypeasset)
 
 Data asset defining a camera type: node composition, exposed parameters, internal variables, pin connections, and default transition.
 

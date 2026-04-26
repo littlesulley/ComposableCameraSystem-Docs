@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-04-26 — plugin `145a2e9..1f6fc9d`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/145a2e9c9d4490517c56308367049f1d13eb1406...1f6fc9d29bfb15773d16c9dd47b57d5f0fc5f13b))
+
+- `1f6fc9d` Add Patch Sequencer integration: track / section / track-instance, LS Component overlay, channel-keyable parameters, dilation-on-resize, debug observability, authoring polish.
+- `c89d99c` Add Camera Patch system: type asset, runtime PatchManager with envelope/schedule/layer ordering, K2 node + BP API, debug HUD, per-node compatibility validation.
+
+**C++ API pages regenerated:** 155 pages across 18 categories (includes 9 new Patch-system headers and 2 new MovieScene headers).
+
+**Prose drafts added:**
+
+- `docs/reference/patches.md` — new Camera Patch Catalog page (auto-drafted; covers `UComposableCameraPatchTypeAsset`, `UComposableCameraPatchManager`, `UComposableCameraPatchHandle`, lifecycle enums/structs, Sequencer track/section, and envelope math). Please review and expand with usage examples.
+
+**Flagged for review:**
+
+- `DesignDoc.md` last-updated date (`2026-04-25`) predates the commit date (`2026-04-26`). The Patch system is a significant runtime addition — check that `Docs/DesignDoc.md` fully covers `PatchManager` integration into the Director evaluation path, context-stack teardown semantics for patches, and the staged rollout (Stage 1 = no-op Apply; Stage 2 = Director::Evaluate wiring).
+- `ExecutionFlowExamples.md` has no "Last updated" header — verify manually whether a Patch activation/expiry flow example should be added.
+- Node patch-compatibility validation (`GetPatchCompatibility()` enum) is referenced in headers as a future staging step (`PatchSystemProposal §11 / §19`) but not yet implemented. Consider adding a "coming soon" note to `docs/reference/patches.md` once the enum lands.
+- `UComposableCameraLevelSequenceComponent` gained a Sequencer overlay surface (`SetSequencerPatchOverlay`). If `docs/user-guide/` has a Level Sequence integration page, check it reflects the new per-frame overlay tick.
+
+---
+
 ## 2026-04-24 — plugin `e9af064..145a2e9`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/e9af064c76c180dbce61109529001b7659f843fd...145a2e9c9d4490517c56308367049f1d13eb1406))
