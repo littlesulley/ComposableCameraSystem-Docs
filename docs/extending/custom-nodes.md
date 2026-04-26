@@ -8,6 +8,8 @@ Write a node when the effect is **always part of this camera's behavior** and **
 
 If the effect is *conditional* on runtime gameplay state (sprint FOV bump, aim pitch damping) or needs to reach into an existing node's parameters, write a [modifier](custom-modifiers.md) instead. If the effect is *pose-to-pose blending* (easing, physics-plausible recovery), write a [transition](custom-transitions.md).
 
+![[assets/images/Pasted image 20260426202816.png]]
+
 ## The two-method contract
 
 Every camera node implements two `BlueprintNativeEvent`-style hooks. The base class provides non-virtual `Initialize()` / `TickNode()` wrappers — you override the `_Implementation` methods.
@@ -180,6 +182,10 @@ public:
     // ...
 };
 ```
+
+![[assets/images/Pasted image 20260426202631.png]]
+
+![[assets/images/Pasted image 20260426203042.png]]
 
 The built-in nodes use these categories (pick whichever fits, or invent your own):
 

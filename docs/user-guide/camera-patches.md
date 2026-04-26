@@ -10,6 +10,8 @@ This page covers everything from asset creation to runtime management to Sequenc
 
 In the Content Browser, right-click → **ComposableCameraSystem → Camera Patch Type Asset**. A `UComposableCameraPatchTypeAsset` is created — it opens in the same visual graph editor as a regular camera type asset.
 
+![[assets/images/Pasted image 20260426203337.png]]
+
 The graph works identically to a regular camera graph: wire nodes, set parameters, expose parameters or variables as pins. The key difference is **how the root node receives its input**: in a regular camera the root synthesizes a pose from scratch; in a Patch the root receives the upstream pose from the running camera as its starting point and modifies it. Nodes that synthesize a pose from scratch (e.g. `RelativeFixedPoseNode`, `MixingCameraNode`, `ViewTargetProxyNode`) will compile but produce incorrect results as Patch nodes — you'll see a build warning on those nodes in a future validation pass.
 
 ### Patch-specific asset settings
@@ -26,6 +28,8 @@ Open the asset's **Class Defaults**. Under the `Patch|Envelope`, `Patch|Composit
 | `DefaultDuration` | Seconds in Active phase before auto-expiry (only consulted when the Duration channel is enabled). |
 
 All of these are defaults — every field can be overridden per-call via `FComposableCameraPatchActivateParams`.
+
+![[assets/images/Pasted image 20260426203401.png]]
 
 ---
 
@@ -47,6 +51,8 @@ AddCameraPatch(PlayerIndex, PatchAsset, Params, [exposed parameter pins])
 - **`Params`** — a `FComposableCameraPatchActivateParams` struct for per-call overrides.
 - **Exposed parameter pins** — if the Patch asset has exposed parameters or variables, `UK2Node_AddCameraPatch` generates typed input pins for each one, so you set them inline without building a separate parameter bag.
 
+![[assets/images/Pasted image 20260426203526.png]]
+
 The function returns a `UComposableCameraPatchHandle`. Store this in a Blueprint variable — it is your only handle to the live Patch, and you need it to manually expire, query phase, or check alpha.
 
 !!! warning "Keep the handle alive"
@@ -67,6 +73,8 @@ Each overridable field in `FComposableCameraPatchActivateParams` is paired with 
 
 **Blueprint MakeStruct tip.** The "Show Pin For X" checkboxes in the MakeStruct node's **Details panel** (not the per-pin eye icon) control whether the corresponding `bOverride*` flag is set to `true`. Hiding a pin via the eye icon only visually collapses it — the override flag stays `true`. To use the asset default for a field, open the MakeStruct node's Details panel and **uncheck** "Show Pin For [FieldName]".
 
+![[assets/images/Pasted image 20260426203620.png]]
+
 ### Patch lifecycle and expiration
 
 Once added, a Patch is owned by the Director's `PatchManager` and runs in the Director's evaluation pass each frame, just after the evaluation tree. You do not need to tick it manually.
@@ -82,7 +90,11 @@ Channels combine: `Duration | Manual` expires on whichever fires first. Multiple
 
 **Manual expiry.** Call **Expire Camera Patch** (Blueprint) and pass the handle. An optional `ExitDurationOverride` lets you shorten or lengthen the fade-out relative to the asset's default — pass `0.0` for an instant cut.
 
+![[assets/images/Pasted image 20260426203716.png]]
+
 **Soft expire-all.** Call `PatchManager->ExpireAll(ExitDurationOverride)` to begin the exit ramp on every active Patch. Each one fades out individually according to its own exit duration (or your override). This is different from `DestroyAll()`, which tears everything down instantly without a fade.
+
+![[assets/images/Pasted image 20260426203732.png]]
 
 ### Layer ordering
 
@@ -102,6 +114,8 @@ The Sequencer path is suited for authored cinematic overlays: you know the timin
 2. In the Sequencer toolbar, click **+ Track → Camera Patch Track** (under the ComposableCameraSystem group). This adds a `UMovieSceneComposableCameraPatchTrack` at the root level — it is not bound to any object binding.
 3. The track starts empty. Click **+ Section** to add a `UMovieSceneComposableCameraPatchSection`.
 
+![[assets/images/Pasted image 20260426204023.png]]
+
 ### Configuring a section
 
 Select the section and open its **Details panel**:
@@ -110,6 +124,8 @@ Select the section and open its **Details panel**:
 - **Params** — the same `FComposableCameraPatchActivateParams` struct as the runtime path. For Sequencer-driven patches the section's TrueRange is the authoritative lifetime, so Duration / Manual / Condition expiration channels are advisory; leaving them at defaults is recommended.
 - **Parameters / Variables** — static default values for each exposed parameter or variable. These are the fallback when no keyframe channel exists for a parameter.
 - **Target Actor Binding** — bind to the `AComposableCameraLevelSequenceActor` in this sequence. Drag the binding row from the Sequencer tracks list onto this field, or use the picker. The section uses this binding for **editor preview** (the Patch applies on the LS Actor's CineCamera while you scrub the Sequencer). Without a binding the Patch is invisible in the editor viewport — it still works in PIE.
+
+![[assets/images/Pasted image 20260426204058.png]]
 
 ### Envelope from section easing
 
@@ -130,7 +146,11 @@ Parameters that are not promoted to a channel continue to use the bag default va
 
 **Editor preview** (Sequencer scrubbing in the editor viewport) applies the Patch's effect on the LS Actor's bound CineCamera by calling `SetSequencerPatchOverlay` on its `UComposableCameraLevelSequenceComponent`. Alpha is computed statelessly via `PatchEnvelope::ComputeStatelessAlpha` — scrubbing backwards correctly shows the fade-out because alpha is a pure function of playhead position, enter/exit durations, and easing. No stateful phase machine is involved in editor scrub, so drag-to-anywhere is always accurate.
 
+![[assets/images/patch_preview.gif]]
+
 **PIE** uses the same LS component path. The active `UMovieSceneComposableCameraPatchTrackInstance` calls `SetSequencerPatchOverlay` each frame with the current parameter block and the statelessly computed alpha. The LS component applies all registered overlays in its `TickComponent`, sorted by `Params.LayerIndex`, before projecting the final pose to the CineCamera.
+
+![[assets/images/patch_pie.gif]]
 
 The Camera Cut Track in the same sequence can target the LS Actor — when it does, the Patch overlays apply only while the LS Actor is the active camera, which is the expected behavior for cutscenes.
 
