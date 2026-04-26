@@ -93,11 +93,13 @@ nav:
           - Transitions: user-guide/concepts/transitions.md
           - Modifiers: user-guide/concepts/modifiers.md
           - Actions: user-guide/concepts/actions.md
+          - Camera Patches: user-guide/concepts/patches.md
       - The Graph Editor: user-guide/graph-editor.md
       - Authoring Camera Types: user-guide/authoring-camera-types.md
       - Blueprint API: user-guide/blueprint-api.md
       - Transitions & Blending: user-guide/transitions-and-blending.md
       - Camera Actions: user-guide/camera-actions.md
+      - Camera Patches: user-guide/camera-patches.md
       - Impulse System: user-guide/impulse-system.md
       - Profiling & Performance: user-guide/profiling.md
       - Debugging: user-guide/debugging.md
