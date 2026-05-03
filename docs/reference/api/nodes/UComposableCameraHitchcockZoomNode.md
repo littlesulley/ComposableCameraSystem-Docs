@@ -44,7 +44,7 @@ PlayMode is implicit: Once. There is no Loop / PingPong — authors who need a c
 |--------|------|-------------|
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-4)  | The subject the effect locks on. Camera dollies along the camera→subject axis; FOV compensates so this subject stays the same on-screen size. Required — the node is a pass-through with a warning when null. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-2)  | When true, target point is the named bone / socket on PivotActor's skeletal mesh (if resolvable). Falls back to ActorLocation + PivotZOffset on any failure. |
-| `FName` | [`BoneName`](#bonename-2)  | Bone / socket name. Sampled when bUseBoneForDetection is true. |
+| `FName` | [`BoneName`](#bonename-3)  | Bone / socket name. Sampled when bUseBoneForDetection is true. |
 | `float` | [`PivotZOffset`](#pivotzoffset-2)  | World-Z offset added to ActorLocation when bUseBoneForDetection is false (or the bone can't be found). Typical 50–80 to land on chest / head rather than foot. |
 | `float` | [`InitialFOVOverride`](#initialfovoverride)  | Baseline FOV (degrees) captured as InitialFOV on the first tick. When > 0, this value wins regardless of what the upstream pose carried for FieldOfView — the typical case for camera type assets that have no `FieldOfViewNode` / `LensNode` upstream and would otherwise inherit a renderer default on the first tick. |
 | `EComposableCameraHitchcockZoomDriver` | [`Driver`](#driver)  | Which authored curve drives the effect. The other quantity is solved from the lock constant captured on the first tick. |
@@ -77,7 +77,7 @@ When true, target point is the named bone / socket on PivotActor's skeletal mesh
 
 ---
 
-#### BoneName { #bonename-2 }
+#### BoneName { #bonename-3 }
 
 ```cpp
 FName BoneName

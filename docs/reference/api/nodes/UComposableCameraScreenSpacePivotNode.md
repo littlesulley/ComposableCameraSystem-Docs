@@ -247,8 +247,6 @@ TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > > PitchInterpolat
 | `void` | [`EnsureWithinBoundsRotation`](#ensurewithinboundsrotation)  |  |
 | `std::pair< float, float >` | [`GetTanHalfHORAndAspectRatio`](#gettanhalfhorandaspectratio)  |  |
 | `FVector` | [`GetScreenSpaceTranslateAmount`](#getscreenspacetranslateamount)  |  |
-| `std::pair< float, float >` | [`CalibrateRotationOffsetLM`](#calibraterotationoffsetlm)  |  |
-| `std::pair< float, float >` | [`CalibrateRotationOffsetNewton`](#calibraterotationoffsetnewton)  |  |
 | `FRotator` | [`GetScreenSpaceRotateAmount`](#getscreenspacerotateamount)  |  |
 | `FVector` | [`GetCurrentPivot`](#getcurrentpivot) `const` |  |
 
@@ -282,22 +280,6 @@ std::pair< float, float > GetTanHalfHORAndAspectRatio(const FComposableCameraPos
 
 ```cpp
 FVector GetScreenSpaceTranslateAmount(const FVector & Pivot, const FComposableCameraPose & OutCameraPose, float DeltaTime)
-```
-
----
-
-#### CalibrateRotationOffsetLM { #calibraterotationoffsetlm }
-
-```cpp
-std::pair< float, float > CalibrateRotationOffsetLM(float TanHalfHOR, float AspectRatio, FVector Direction, FRotator LookAtRotation, float ScreenX, float ScreenY)
-```
-
----
-
-#### CalibrateRotationOffsetNewton { #calibraterotationoffsetnewton }
-
-```cpp
-std::pair< float, float > CalibrateRotationOffsetNewton(float TanHalfHOR, float AspectRatio, FVector Direction, FRotator LookAtRotation, float ScreenX, float ScreenY)
 ```
 
 ---

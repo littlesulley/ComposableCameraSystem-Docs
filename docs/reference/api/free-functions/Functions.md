@@ -8,6 +8,32 @@
 DECLARE_DELEGATE_RetVal(bool, FGetIsSimulatingInEditor)
 ```
 
+#### DECLARE_DELEGATE_TwoParams { #declare_delegate_twoparams }
+
+```cpp
+DECLARE_DELEGATE_TwoParams(FOpenShotEditorRequest, FComposableCameraShot *, UObject *)
+```
+
+Bridge for "open the Shot Editor for this Shot" calls coming from runtime UFUNCTION(CallInEditor) buttons (currently `UComposableCameraCompositionFramingNode::OpenShotEditor`, future Phase E LS Section context menu).
+
+The runtime module declares the hook and exposes a guarded execute helper; the editor module binds the hook in `FComposableCameraSystemEditorModule::StartupModule` to the actual tab-spawning logic in `Editors/ComposableCameraShotEditor.h`.
+
+Parameters:
+
+* `Shot` : pointer to the Shot data the editor should bind to. Must remain valid for as long as the host UObject is alive (the editor stores a raw pointer + a TWeakObjectPtr to the host for liveness checks).
+
+* `HostObject`: the UObject that OWNS `Shot` (e.g. the `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)` whose UPROPERTY is the Shot, or the future LS Shot Section). Used by the editor for transaction context, MarkPackageDirty, and liveness invalidation when the host is GC'd.
+
+#### DECLARE_DELEGATE_RetVal_OneParam { #declare_delegate_retval_oneparam }
+
+```cpp
+DECLARE_DELEGATE_RetVal_OneParam(bool, FGetActiveEditorViewportSize, FIntPoint &)
+```
+
+Editor-world viewport size resolver. Bound by the editor module to `GEditor->GetActiveViewport()->GetSizeXY()` (or the perspective level viewport's size). Lets runtime helpers — `TryGetEffectiveViewportSize` specifically — return the actual editor-scrub viewport dimensions instead of a hardcoded 1920×1080 fallback. Without this, the Composition Solver runs with a wrong aspect during editor scrub of LS Spawnables, causing anchor screen positions to drift from what designers see in the Shot Editor preview.
+
+Returns false when no editor viewport is resolvable (cooked builds, very early startup, headless commandlet) — caller falls back through later resolution steps.
+
 #### DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam { #declare_dynamic_multicast_delegate_oneparam }
 
 ```cpp
@@ -333,6 +359,8 @@ inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & Da
 | `FQuat` | [`ApplyAdditiveCameraRotation`](#applyadditivecamerarotation) `inline` | Apply an additive rotation to camera rotation. First about world space yaw using AdditiveRotation.X, then about local space pitch using AdditiveRotation.Y. |
 | `FVector2D` | [`GetCameraRotationFromTarget`](#getcamerarotationfromtarget) `inline` | Get world space yaw and local space pitch change from a camera rotation to a look-at direction. |
 | `FQuat` | [`GetCameraRotationFromVectors`](#getcamerarotationfromvectors) `inline` | Get camera rotation from V1 to V2 with up vector Up. |
+| `std::pair< float, float >` | [`SolveCameraRotationForScreenTarget`](#solvecamerarotationforscreentarget) `inline` | Closed-form solver for (Pitch X, Yaw Y) rotation (Roll = 0) such that the world-space ray `Direction` (from camera origin) projects onto the normalized screen coords `(ScreenX, ScreenY)` ∈ [-0.5, 0.5]². Returns { Pitch, Yaw } in degrees, UE convention (positive pitch = up, positive yaw = right). Replaces the iterative Newton solver formerly duplicated inside ScreenSpacePivotNode and ScreenSpaceConstraintsNode. |
+| `bool` | [`ProjectWorldPointToScreen`](#projectworldpointtoscreen) `inline` | Forward projection: a world point → normalized screen coords [-0.5, 0.5]², matching the convention used by SafeZoneCenter on ScreenSpacePivotNode and Placement.ScreenPosition / Aim.ScreenPosition on the Shot data structs. |
 | `FVector4` | [`FindEigenVectorByPowerIteration`](#findeigenvectorbypoweriteration) `inline` | Power iteration to find eigenvector. Ref [https://en.wikipedia.org/wiki/Power_iteration](https://en.wikipedia.org/wiki/Power_iteration) Rayleigh quotient iteration converges faster, but involving computing matrix inverse. Ref [https://en.wikipedia.org/wiki/Rayleigh_quotient_iteration](https://en.wikipedia.org/wiki/Rayleigh_quotient_iteration) |
 | `std::pair< FRotator, FVector4 >` | [`MatrixInterpRotation`](#matrixinterprotation) `inline` |  |
 | `FRotator` | [`CircularInterpRotation`](#circularinterprotation) `inline` |  |
@@ -478,6 +506,88 @@ Get camera rotation from V1 to V2 with up vector Up.
 
 ---
 
+#### SolveCameraRotationForScreenTarget { #solvecamerarotationforscreentarget }
+
+`inline`
+
+```cpp
+inline std::pair< float, float > SolveCameraRotationForScreenTarget(float TanHalfHOR, float AspectRatio, const FVector & Direction, float ScreenX, float ScreenY)
+```
+
+Closed-form solver for (Pitch X, Yaw Y) rotation (Roll = 0) such that the world-space ray `Direction` (from camera origin) projects onto the normalized screen coords `(ScreenX, ScreenY)` ∈ [-0.5, 0.5]². Returns { Pitch, Yaw } in degrees, UE convention (positive pitch = up, positive yaw = right). Replaces the iterative Newton solver formerly duplicated inside ScreenSpacePivotNode and ScreenSpaceConstraintsNode.
+
+──** Derivation**
+
+Camera basis under (Pitch X, Yaw Y, Roll 0), expressed in world frame: F = ( cos X cos Y,  cos X sin Y,  sin X)        // forward (cam +X)
+R = (-sin Y,        cos Y,        0    )        // right   (cam +Y)
+U = (-sin X cos Y, -sin X sin Y,  cos X)        // up      (cam +Z)
+ Direction in camera space is Px = F·D, Py = R·D, Pz = U·D, with D = (A, B, C) = Direction.
+
+Screen mapping is Py / (2·m·Px) and Pz / (2·n·Px) where m = TanHalfHOR and n = TanHalfHOR / AspectRatio. Letting u = 2·ScreenX·m, v = 2·ScreenY·n, the constraint is Py = u·Px,    Pz = v·Px                                   (★)
+ (★) ⇔ (Px, Py, Pz) ∝ (1, u, v). Geometrically: the pivot must lie on the ray from camera origin through the screen-plane point (1, u, v). The unit direction in camera space is therefore d_cam = (1, u, v) / s,    s = √(1 + u² + v²)
+ The same physical ray in world frame is d_world = D / L, with L = ‖D‖. With R the camera-to-world rotation matrix (whose columns are F, R, U), R · (1, u, v)ᵀ = K · (A, B, C)ᵀ        where K ≡ s / L
+ Component-wise: cos X cos Y - u sin Y - v sin X cos Y = K·A           (I)
+cos X sin Y + u cos Y - v sin X sin Y = K·B           (II)
+sin X            + v cos X            = K·C           (III)
+ (III) contains only X — that is why the system decouples.
+
+Solve X. By the harmonic identity sin X + v cos X = √(1+v²) · sin(X + arctan v), (III) becomes X = arcsin(K·C / √(1+v²)) - arctan v ─── (X) The other branch X = π - arcsin(...) - arctan v corresponds to a back-facing camera and is discarded.
+
+Solve Y. With X known, let α = cos X - v sin X. (I)+(II) become a 2×2 linear system in (cos Y, sin Y): [α  -u] [cos Y]     [A]
+[u   α] [sin Y] = K [B]
+ Determinant α² + u² > 0 generically, Cramer gives a Y where K cancels: Y = atan2(α·B - u·A,  α·A + u·B)                   ─── (Y)
+ Y is independent of ‖D‖ — depends only on the direction of D.
+
+Consistency. (X)+(III) automatically imply α² + u² = K²(A² + B²), i.e. (cos Y, sin Y) lies on the unit circle — no extra check required in the regular regime.
+
+──** Edge cases**
+
+|T| > 1, T ≡ K·C / √(1+v²) The pivot cannot be placed at (ScreenX, ScreenY) without exceeding the FOV cone. Clamped to ±1 so the pivot lands at the closest reachable on-FOV pitch. EnsureWithinBoundsRotation callers usually pre-clamp to a safe zone, so this hits only when the pivot direction itself is outside the FOV.
+
+A² + B² → 0 Direction parallel to world ±Z (gimbal lock). Yaw is genuinely indeterminate at this configuration — a property of the Pitch+Yaw parameterization, not of the algorithm. Returns Yaw = 0 as the stable choice.
+
+L < ε Zero-length Direction (pivot at camera position). Returns (0, 0); upstream code should guard before calling here.
+
+---
+
+#### ProjectWorldPointToScreen { #projectworldpointtoscreen }
+
+`inline`
+
+```cpp
+inline bool ProjectWorldPointToScreen(const FVector & WorldPoint, const FVector & CameraPos, const FRotator & CameraRot, float TanHalfHOR, float AspectRatio, FVector2D & OutScreenCoord)
+```
+
+Forward projection: a world point → normalized screen coords [-0.5, 0.5]², matching the convention used by SafeZoneCenter on ScreenSpacePivotNode and Placement.ScreenPosition / Aim.ScreenPosition on the Shot data structs.
+
+Companion to SolveCameraRotationForScreenTarget (which goes the other direction). Both use the same projection model and the same screen-coord convention so callers can round-trip cleanly.
+
+1. Transform WorldPoint into camera space: P_cam = R⁻¹ · (WorldPoint - CameraPos) where R is the camera-to-world rotation. Px = depth (forward), Py = right, Pz = up.
+
+1. If Px <= 0, the point is behind the camera or on the near plane — no valid screen projection. Returns false; OutScreenCoord left unchanged.
+
+1. Apply the perspective division using the screen-coord convention (Py / (2m·Px), Pz / (2n·Px)) where m = tan(FOV_h/2), n = m / AspectRatio.
+
+**Parameters**
+
+* `WorldPoint` Point to project. 
+
+* `CameraPos` Camera world position. 
+
+* `CameraRot` Camera world rotation (Pitch, Yaw, Roll allowed). 
+
+* `TanHalfHOR` tan(FOV_horizontal / 2). Same input convention as SolveCameraRotationForScreenTarget. 
+
+* `AspectRatio` Viewport aspect ratio (width / height). 
+
+* `OutScreenCoord` Normalized screen coords in [-0.5, 0.5]² when the point is on screen — but values OUTSIDE that range are returned for off-screen points (no clamping). The Composition Solver's micro-refinement pass uses the unclamped values as a gradient signal.
+
+**Returns**
+
+True iff the point is in front of the camera (Px > 0).
+
+---
+
 #### FindEigenVectorByPowerIteration { #findeigenvectorbypoweriteration }
 
 `inline`
@@ -593,6 +703,7 @@ Resolution order (first source that returns a valid size wins):
 | `bool` | [`PinTypeToPropertyBagType`](#pintypetopropertybagtype)  | Map an EComposableCameraPinType (+ struct / enum metadata) to the matching EPropertyBagPropertyType and ValueTypeObject expected by FInstancedPropertyBag::AddProperty. |
 | `bool` | [`TryGetEffectiveViewportSize`](#trygeteffectiveviewportsize)  | Get the effective viewport size in pixels. Returns true when the value came from a real source (PCM / GameViewport / editor viewport); false when OutSize is the fallback 1920×1080. Callers that need a different fallback behavior can branch on the return value. |
 | `float` | [`GetEffectiveViewportAspectRatio`](#geteffectiveviewportaspectratio)  | Convenience wrapper — returns aspect ratio (width / height) from the resolved viewport size. Always returns a finite positive number; falls back to 16:9 if no real source is available. |
+| `float` | [`GetEffectiveAspectRatioForCineCamera`](#geteffectiveaspectratioforcinecamera)  | Resolve the effective render aspect for a specific `UCineCameraComponent` — what the renderer ACTUALLY uses, not just the viewport raw aspect. |
 
 ---
 
@@ -677,6 +788,22 @@ float GetEffectiveViewportAspectRatio(const AComposableCameraPlayerCameraManager
 ```
 
 Convenience wrapper — returns aspect ratio (width / height) from the resolved viewport size. Always returns a finite positive number; falls back to 16:9 if no real source is available.
+
+---
+
+#### GetEffectiveAspectRatioForCineCamera { #geteffectiveaspectratioforcinecamera }
+
+```cpp
+float GetEffectiveAspectRatioForCineCamera(const UCineCameraComponent * CineCam, const AComposableCameraPlayerCameraManager * OptionalPCM)
+```
+
+Resolve the effective render aspect for a specific `UCineCameraComponent` — what the renderer ACTUALLY uses, not just the viewport raw aspect.
+
+* `CineCam->bConstrainAspectRatio == true` → return `CineCam->AspectRatio` (filmback-derived). Renderer letterboxes to this aspect regardless of the viewport's actual shape, so the solver should match.
+
+* `CineCam->bConstrainAspectRatio == false` → return the actual viewport aspect (PCM / GameViewport / editor viewport via `TryGetEffectiveViewportSize`). Renderer adapts to viewport, so the solver tracks real-time when designers resize the level viewport.
+
+Used by the Composition Solver via `FShotSolveContext::ViewportAspectRatio` so anchor screen positions match between the Shot Editor preview and LS playback regardless of CineCam constraint state. Falls back to `GetEffectiveViewportAspectRatio` when `CineCam` is null.
 
 # ComposableCameraModifier { #composablecameramodifier }
 

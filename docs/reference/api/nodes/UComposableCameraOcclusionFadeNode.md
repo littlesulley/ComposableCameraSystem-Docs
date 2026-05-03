@@ -38,7 +38,7 @@ StaticMeshComponent-only is NOT enforced — unlike Epic's node, we consider any
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-5)  | Actor whose location (plus PivotZOffset, or bone socket) is the "protected end" of the line-of-sight sweep and the hit-test anchor for proximity fade. Typically the player pawn. Must be non-null when bFadeOccluders is true; otherwise the sweep is skipped with a warning. |
 | `float` | [`PivotZOffset`](#pivotzoffset-3)  | World-Z offset added on top of the actor location when bUseBoneForDetection is false (or the requested bone can't be found). Typically ~50 to raise the target from foot to chest so the sweep line doesn't graze the floor. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-3)  | When true, the target point is the named bone's world location on the actor's skeletal mesh (if present and the bone resolves). Falls back to ActorLocation + PivotZOffset on any failure. |
-| `FName` | [`BoneName`](#bonename-3)  | Bone / socket name sampled on the actor's skeletal mesh when bUseBoneForDetection is true. |
+| `FName` | [`BoneName`](#bonename-4)  | Bone / socket name sampled on the actor's skeletal mesh when bUseBoneForDetection is true. |
 | `TObjectPtr< UMaterialInterface >` | [`OcclusionMaterial`](#occlusionmaterial)  | Transparency material swapped onto every faded primitive's material slots. The shader inside this material owns the fade look — dither, fresnel, opacity — and any smooth fade-in/out animation. Must be set or the node no-ops. |
 | `bool` | [`bAffectStaticMeshes`](#baffectstaticmeshes)  | Whether static mesh components are eligible for fade. |
 | `bool` | [`bAffectSkeletalMeshes`](#baffectskeletalmeshes)  | Whether skeletal mesh components are eligible for fade. Enabled by default — Epic's node misses this, but NPCs / characters blocking the view are one of the most common fade cases. |
@@ -84,7 +84,7 @@ When true, the target point is the named bone's world location on the actor's sk
 
 ---
 
-#### BoneName { #bonename-3 }
+#### BoneName { #bonename-4 }
 
 ```cpp
 FName BoneName

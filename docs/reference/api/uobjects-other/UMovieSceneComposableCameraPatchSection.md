@@ -121,7 +121,7 @@ Leave unset (NAME_None GUID) to disable editor preview entirely — the patch wi
 |--------|------|-------------|
 |  | [`UMovieSceneComposableCameraPatchSection`](#umoviescenecomposablecamerapatchsection-1)  |  |
 | `void` | [`PostLoad`](#postload) `virtual` |  |
-| `void` | [`ImportEntityImpl`](#importentityimpl) `virtual` |  |
+| `void` | [`ImportEntityImpl`](#importentityimpl-1) `virtual` |  |
 | `bool` | [`PopulateEvaluationFieldImpl`](#populateevaluationfieldimpl) `virtual` `inline` | Override the parameter-section base's PopulateEvaluationFieldImpl — which returns `true` (i.e. "I handle entity-field setup, skip the |
 | `void` | [`RebuildBagsFromPatchAsset`](#rebuildbagsfrompatchasset)  | Sync Parameters / Variables bag layouts to the current PatchAsset's exposed surface. Preserves values for entries whose name + type survive via FInstancedPropertyBag::MigrateToNewBagStruct. Resets both bags empty when PatchAsset is null. |
 | `void` | [`BuildParameterBlock`](#buildparameterblock-1) `const` | Build a parameter block at the given frame time. Channel-keyed params are sampled from their curves; un-keyed params fall back to bag values. |
@@ -146,7 +146,7 @@ virtual void PostLoad()
 
 ---
 
-#### ImportEntityImpl { #importentityimpl }
+#### ImportEntityImpl { #importentityimpl-1 }
 
 `virtual`
 

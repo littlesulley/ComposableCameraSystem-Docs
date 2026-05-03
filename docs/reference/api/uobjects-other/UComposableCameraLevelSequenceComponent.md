@@ -35,7 +35,7 @@ Compatibility & responsibilities remain unchanged:
 | Return | Name | Description |
 |--------|------|-------------|
 | `FComposableCameraTypeAssetReference` | [`TypeAssetReference`](#typeassetreference)  | The TypeAsset reference + its per-instance parameter and variable bags. Editing TypeAsset from the Details panel rebuilds the bags on PostEditChangeProperty; editing individual parameter values rebuilds the internal camera so the new values are reflected in the pose. Not BlueprintReadWrite: the nested FInstancedPropertyBag fields are not Blueprint-supported (see the struct comment). |
-| `TObjectPtr< UCineCameraComponent >` | [`OutputCineCameraComponent`](#outputcinecameracomponent)  | Reference to the Actor's UCineCameraComponent used as the viewport terminal. Assigned by the owning Actor's constructor (primary path) or resolved in OnRegister via FindComponentByClass (fallback for arbitrary Actor hosts). The component does not own lifetime of the CineCamera — the Actor does. |
+| `TObjectPtr< UCineCameraComponent >` | [`OutputCineCameraComponent`](#outputcinecameracomponent-1)  | Reference to the Actor's UCineCameraComponent used as the viewport terminal. Assigned by the owning Actor's constructor (primary path) or resolved in OnRegister via FindComponentByClass (fallback for arbitrary Actor hosts). The component does not own lifetime of the CineCamera — the Actor does. |
 
 ---
 
@@ -49,13 +49,15 @@ The TypeAsset reference + its per-instance parameter and variable bags. Editing 
 
 ---
 
-#### OutputCineCameraComponent { #outputcinecameracomponent }
+#### OutputCineCameraComponent { #outputcinecameracomponent-1 }
 
 ```cpp
 TObjectPtr< UCineCameraComponent > OutputCineCameraComponent
 ```
 
 Reference to the Actor's UCineCameraComponent used as the viewport terminal. Assigned by the owning Actor's constructor (primary path) or resolved in OnRegister via FindComponentByClass (fallback for arbitrary Actor hosts). The component does not own lifetime of the CineCamera — the Actor does.
+
+No edit/visible specifier on purpose: `[AComposableCameraLevelSequenceActor](../actors/AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor)` exposes the same `UCineCameraComponent` via its own `OutputCineCameraComponent` UPROPERTY (the surface designers actually use to author optics). Adding Visible/EditAnywhere here would create TWO UPROPERTY paths reaching the same component instance — when the Details panel walks the actor's property map, `UpdateSinglePropertyMapRecursive` follows both paths, hits the component on the second path, and recurses without cycle detection (StackOverflow inside SDetailsView::SetObjects on Track / actor selection). Plain `UPROPERTY()` keeps GC tracking + retains the value through serialization but skips Details panel walking.
 
 ### Public Methods
 
@@ -76,6 +78,8 @@ Reference to the Actor's UCineCameraComponent used as the viewport terminal. Ass
 | `void` | [`SetSequencerPatchOverlay`](#setsequencerpatchoverlay)  | Push (or refresh) an overlay registration for `Section`. Called every frame the section is in-range. The pre-computed `EnvelopeAlpha` (from the section's playhead position via `PatchEnvelope::ComputeStatelessAlpha`) drives the BlendBy. The component caches a transient evaluator actor per section (lazy-spawned on first use, destroyed on Remove or component teardown). Intentionally accepts the parameter block by value — caller builds it per-frame from the section's channel curves. |
 | `void` | [`RemoveSequencerPatchOverlay`](#removesequencerpatchoverlay)  | Remove an overlay registration when the section leaves its range or when the TrackInstance shuts down. Destroys the cached evaluator actor. Idempotent — safe to call on a section that wasn't registered. |
 | `void` | [`BuildSequencerPatchSnapshot`](#buildsequencerpatchsnapshot) `const` | Capture this LS Component's currently-registered Sequencer patch overlays as Debug Panel snapshot rows. Called by the panel's `BuildPatchesLines` (it walks every LS Component in the world and merges results with the PatchManager-side snapshot). One snapshot row per overlay, sorted by the section's resolved LayerIndex (matches the per-tick apply order so the panel rows reflect actual composition order). Each entry has `Source = [EComposableCameraPatchSource::Sequencer](#ComposableCameraDebugPanelData_8h_1aa9c73c4b40ce69b42a63367e19e90b86a0aa30ee67105bbe58a0c35001b9efe88)` and `HostActorName` populated so the renderer can prefix "[Seq]" / suffix "on Actor". |
+| `void` | [`SetSequencerShotOverride`](#setsequencershotoverride)  | Push (or refresh) a Shot override for `Section`. Called every frame the section is in-range. The `InEntry` carries the resolved Shot, RowIndex, EnterTransition, and pre-computed BlendAlpha — the TrackInstance does the cross-section overlap analysis once per frame and the LSComponent blender just consumes the result. |
+| `void` | [`RemoveSequencerShotOverride`](#removesequencershotoverride)  | Remove a Shot override when the section leaves its range or the TrackInstance shuts down. Idempotent. |
 
 ---
 
@@ -231,6 +235,26 @@ void BuildSequencerPatchSnapshot(TArray< struct FComposableCameraPatchSnapshot >
 
 Capture this LS Component's currently-registered Sequencer patch overlays as Debug Panel snapshot rows. Called by the panel's `BuildPatchesLines` (it walks every LS Component in the world and merges results with the PatchManager-side snapshot). One snapshot row per overlay, sorted by the section's resolved LayerIndex (matches the per-tick apply order so the panel rows reflect actual composition order). Each entry has `Source = [EComposableCameraPatchSource::Sequencer](#ComposableCameraDebugPanelData_8h_1aa9c73c4b40ce69b42a63367e19e90b86a0aa30ee67105bbe58a0c35001b9efe88)` and `HostActorName` populated so the renderer can prefix "[Seq]" / suffix "on Actor".
 
+---
+
+#### SetSequencerShotOverride { #setsequencershotoverride }
+
+```cpp
+void SetSequencerShotOverride(UMovieSceneComposableCameraShotSection * Section, const FComposableCameraSequencerShotEntry & InEntry)
+```
+
+Push (or refresh) a Shot override for `Section`. Called every frame the section is in-range. The `InEntry` carries the resolved Shot, RowIndex, EnterTransition, and pre-computed BlendAlpha — the TrackInstance does the cross-section overlap analysis once per frame and the LSComponent blender just consumes the result.
+
+---
+
+#### RemoveSequencerShotOverride { #removesequencershotoverride }
+
+```cpp
+void RemoveSequencerShotOverride(UMovieSceneComposableCameraShotSection * Section)
+```
+
+Remove a Shot override when the section leaves its range or the TrackInstance shuts down. Idempotent.
+
 ### Private Attributes
 
 | Return | Name | Description |
@@ -238,6 +262,7 @@ Capture this LS Component's currently-registered Sequencer patch overlays as Deb
 | `TObjectPtr< AComposableCameraCameraBase >` | [`InternalCamera`](#internalcamera)  | Transient internal camera — spawned lazily on first evaluation. Not added to any context stack or director; driven entirely by this component's TickComponent. |
 | `bool` | [`bEvaluationEnabled`](#bevaluationenabled)  | Gate for on-demand ticking; see SetEvaluationEnabled. |
 | `TMap< TObjectPtr< UMovieSceneComposableCameraPatchSection >, FComposableCameraSequencerPatchOverlay >` | [`SequencerPatchOverlays`](#sequencerpatchoverlays)  | Active overlays keyed by section. UPROPERTY so the inner TObjectPtrs inside [FComposableCameraSequencerPatchOverlay](../structs/FComposableCameraSequencerPatchOverlay.md#fcomposablecamerasequencerpatchoverlay) are GC-tracked. Pruned on RemoveSequencerPatchOverlay or when the section pointer goes stale. |
+| `TMap< TWeakObjectPtr< UMovieSceneComposableCameraShotSection >, FComposableCameraSequencerShotEntry >` | [`SequencerShotOverrides`](#sequencershotoverrides)  | Active Shot overrides keyed by Section. Held by raw section pointer with `TWeakObjectPtr` to tolerate GC of the section between frames (a common case during Sequencer hot-reload / asset reimport). |
 
 ---
 
@@ -269,6 +294,16 @@ TMap< TObjectPtr< UMovieSceneComposableCameraPatchSection >, FComposableCameraSe
 
 Active overlays keyed by section. UPROPERTY so the inner TObjectPtrs inside [FComposableCameraSequencerPatchOverlay](../structs/FComposableCameraSequencerPatchOverlay.md#fcomposablecamerasequencerpatchoverlay) are GC-tracked. Pruned on RemoveSequencerPatchOverlay or when the section pointer goes stale.
 
+---
+
+#### SequencerShotOverrides { #sequencershotoverrides }
+
+```cpp
+TMap< TWeakObjectPtr< UMovieSceneComposableCameraShotSection >, FComposableCameraSequencerShotEntry > SequencerShotOverrides
+```
+
+Active Shot overrides keyed by Section. Held by raw section pointer with `TWeakObjectPtr` to tolerate GC of the section between frames (a common case during Sequencer hot-reload / asset reimport).
+
 ### Private Methods
 
 | Return | Name | Description |
@@ -278,6 +313,7 @@ Active overlays keyed by section. UPROPERTY so the inner TObjectPtrs inside [FCo
 | `void` | [`ProjectPoseToCineCamera`](#projectposetocinecamera)  | Project a pose into OutputCineCameraComponent. Position and rotation are the only fields written; physical optics stay on the CineCamera (designer or Sequencer property tracks drive them). |
 | `void` | [`DestroyInternalCamera`](#destroyinternalcamera)  | Destroy the internal camera actor if one exists. |
 | `void` | [`ApplySequencerPatchOverlays`](#applysequencerpatchoverlays)  | Apply every active editor-preview patch overlay (sorted by the section's resolved LayerIndex) onto `InOutPose`. Called from TickComponent in editor world only, between InternalCamera->TickCamera and ProjectPoseToCineCamera. Lazy-spawns evaluator actors as needed and prunes stale entries (section GC'd) from the overlay map. |
+| `void` | [`ApplyActiveSequencerShotOverride`](#applyactivesequencershotoverride)  | Pick the top-row override (lowest RowIndex) and write its Shot into the first found `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)` on the InternalCamera's CameraNodes array. No-op when the map is empty (gap between sections — CompositionFramingNode keeps last-written Shot). |
 
 ---
 
@@ -328,3 +364,15 @@ void ApplySequencerPatchOverlays(FComposableCameraPose & InOutPose, float DeltaT
 ```
 
 Apply every active editor-preview patch overlay (sorted by the section's resolved LayerIndex) onto `InOutPose`. Called from TickComponent in editor world only, between InternalCamera->TickCamera and ProjectPoseToCineCamera. Lazy-spawns evaluator actors as needed and prunes stale entries (section GC'd) from the overlay map.
+
+---
+
+#### ApplyActiveSequencerShotOverride { #applyactivesequencershotoverride }
+
+```cpp
+void ApplyActiveSequencerShotOverride()
+```
+
+Pick the top-row override (lowest RowIndex) and write its Shot into the first found `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)` on the InternalCamera's CameraNodes array. No-op when the map is empty (gap between sections — CompositionFramingNode keeps last-written Shot).
+
+Called from TickComponent BEFORE `InternalCamera->TickCamera` so the solver evaluates with the new Shot data on the same frame.

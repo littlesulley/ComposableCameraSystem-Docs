@@ -34,7 +34,7 @@ First tick after activation bypasses the damping so the initial focus distance s
 |--------|------|-------------|
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-1)  | Actor whose distance from the camera drives the focus distance. Typically the player pawn or a narrative focal actor. Required — the node pass-throughs with a warning each tick when unset. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection)  | When true, the target point is sampled at the named bone / socket on PivotActor's skeletal mesh (if present and resolvable). Falls back to ActorLocation + PivotZOffset on any failure. |
-| `FName` | [`BoneName`](#bonename)  | Bone / socket name, sampled when bUseBoneForDetection is true. |
+| `FName` | [`BoneName`](#bonename-1)  | Bone / socket name, sampled when bUseBoneForDetection is true. |
 | `float` | [`PivotZOffset`](#pivotzoffset)  | World-Z offset added to ActorLocation when bUseBoneForDetection is false (or the requested bone can't be found). Typical 50–80 to land on a chest/head target rather than foot. |
 | `bool` | [`bEnableFocusPull`](#benablefocuspull)  | Master toggle. When false, the node is a no-op pass-through this tick — the previous FocusDistance on the pose is preserved. Useful for Blueprint-driven "focus hold" moments (aim down sights, cinematic freeze, etc.) where external logic wants to take over. |
 | `float` | [`FocusDistanceOffset`](#focusdistanceoffset)  | Constant offset added to the on-axis camera→target depth before clamp and damping. Positive = focus farther along the view axis than the target (e.g. focus slightly past the subject); negative = focus nearer. Applied to the projected depth, not Euclidean distance, so it stays visually consistent regardless of how off-axis the target is. |
@@ -64,7 +64,7 @@ When true, the target point is sampled at the named bone / socket on PivotActor'
 
 ---
 
-#### BoneName { #bonename }
+#### BoneName { #bonename-1 }
 
 ```cpp
 FName BoneName

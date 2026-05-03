@@ -22,17 +22,17 @@ Modeled on UMovieSceneCVarTrack: same ImportEntityImpl-via-section pattern, same
 | Return | Name | Description |
 |--------|------|-------------|
 |  | [`UMovieSceneComposableCameraPatchTrack`](#umoviescenecomposablecamerapatchtrack-1)  |  |
-| `void` | [`AddSection`](#addsection) `virtual` |  |
-| `bool` | [`SupportsType`](#supportstype) `virtual` `const` |  |
-| `UMovieSceneSection *` | [`CreateNewSection`](#createnewsection) `virtual` |  |
-| `bool` | [`SupportsMultipleRows`](#supportsmultiplerows) `virtual` `const` `inline` |  |
-| `EMovieSceneTrackEasingSupportFlags` | [`SupportsEasing`](#supportseasing) `virtual` `const` |  |
-| `const TArray< UMovieSceneSection * > &` | [`GetAllSections`](#getallsections) `virtual` `const` |  |
-| `bool` | [`HasSection`](#hassection) `virtual` `const` |  |
-| `bool` | [`IsEmpty`](#isempty) `virtual` `const` |  |
-| `void` | [`RemoveSection`](#removesection) `virtual` |  |
-| `void` | [`RemoveSectionAt`](#removesectionat) `virtual` |  |
-| `void` | [`RemoveAllAnimationData`](#removeallanimationdata) `virtual` |  |
+| `void` | [`AddSection`](#addsection-1) `virtual` |  |
+| `bool` | [`SupportsType`](#supportstype-1) `virtual` `const` |  |
+| `UMovieSceneSection *` | [`CreateNewSection`](#createnewsection-1) `virtual` |  |
+| `bool` | [`SupportsMultipleRows`](#supportsmultiplerows-1) `virtual` `const` `inline` |  |
+| `EMovieSceneTrackEasingSupportFlags` | [`SupportsEasing`](#supportseasing-1) `virtual` `const` |  |
+| `const TArray< UMovieSceneSection * > &` | [`GetAllSections`](#getallsections-1) `virtual` `const` |  |
+| `bool` | [`HasSection`](#hassection-1) `virtual` `const` |  |
+| `bool` | [`IsEmpty`](#isempty-1) `virtual` `const` |  |
+| `void` | [`RemoveSection`](#removesection-1) `virtual` |  |
+| `void` | [`RemoveSectionAt`](#removesectionat-1) `virtual` |  |
+| `void` | [`RemoveAllAnimationData`](#removeallanimationdata-1) `virtual` |  |
 
 ---
 
@@ -44,7 +44,7 @@ UMovieSceneComposableCameraPatchTrack(const FObjectInitializer & ObjectInitializ
 
 ---
 
-#### AddSection { #addsection }
+#### AddSection { #addsection-1 }
 
 `virtual`
 
@@ -54,7 +54,7 @@ virtual void AddSection(UMovieSceneSection & Section)
 
 ---
 
-#### SupportsType { #supportstype }
+#### SupportsType { #supportstype-1 }
 
 `virtual` `const`
 
@@ -64,7 +64,7 @@ virtual bool SupportsType(TSubclassOf< UMovieSceneSection > SectionClass) const
 
 ---
 
-#### CreateNewSection { #createnewsection }
+#### CreateNewSection { #createnewsection-1 }
 
 `virtual`
 
@@ -74,7 +74,7 @@ virtual UMovieSceneSection * CreateNewSection()
 
 ---
 
-#### SupportsMultipleRows { #supportsmultiplerows }
+#### SupportsMultipleRows { #supportsmultiplerows-1 }
 
 `virtual` `const` `inline`
 
@@ -84,7 +84,7 @@ virtual inline bool SupportsMultipleRows() const
 
 ---
 
-#### SupportsEasing { #supportseasing }
+#### SupportsEasing { #supportseasing-1 }
 
 `virtual` `const`
 
@@ -94,7 +94,7 @@ virtual EMovieSceneTrackEasingSupportFlags SupportsEasing(FMovieSceneSupportsEas
 
 ---
 
-#### GetAllSections { #getallsections }
+#### GetAllSections { #getallsections-1 }
 
 `virtual` `const`
 
@@ -104,7 +104,7 @@ virtual const TArray< UMovieSceneSection * > & GetAllSections() const
 
 ---
 
-#### HasSection { #hassection }
+#### HasSection { #hassection-1 }
 
 `virtual` `const`
 
@@ -114,7 +114,7 @@ virtual bool HasSection(const UMovieSceneSection & Section) const
 
 ---
 
-#### IsEmpty { #isempty }
+#### IsEmpty { #isempty-1 }
 
 `virtual` `const`
 
@@ -124,7 +124,7 @@ virtual bool IsEmpty() const
 
 ---
 
-#### RemoveSection { #removesection }
+#### RemoveSection { #removesection-1 }
 
 `virtual`
 
@@ -134,7 +134,7 @@ virtual void RemoveSection(UMovieSceneSection & Section)
 
 ---
 
-#### RemoveSectionAt { #removesectionat }
+#### RemoveSectionAt { #removesectionat-1 }
 
 `virtual`
 
@@ -144,7 +144,7 @@ virtual void RemoveSectionAt(int32 SectionIndex)
 
 ---
 
-#### RemoveAllAnimationData { #removeallanimationdata }
+#### RemoveAllAnimationData { #removeallanimationdata-1 }
 
 `virtual`
 
@@ -156,11 +156,11 @@ virtual void RemoveAllAnimationData()
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TArray< TObjectPtr< UMovieSceneSection > >` | [`Sections`](#sections)  |  |
+| `TArray< TObjectPtr< UMovieSceneSection > >` | [`Sections`](#sections-1)  |  |
 
 ---
 
-#### Sections { #sections }
+#### Sections { #sections-1 }
 
 ```cpp
 TArray< TObjectPtr< UMovieSceneSection > > Sections

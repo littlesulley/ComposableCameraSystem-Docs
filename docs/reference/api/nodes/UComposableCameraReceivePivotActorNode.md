@@ -15,7 +15,7 @@ Reads a pivot actor's location and publishes it as the pivot position for downst
 |--------|------|-------------|
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-7)  |  |
 | `bool` | [`bUseBoneForPivot`](#buseboneforpivot)  |  |
-| `FName` | [`BoneName`](#bonename-4)  |  |
+| `FName` | [`BoneName`](#bonename-5)  |  |
 
 ---
 
@@ -35,7 +35,7 @@ bool bUseBoneForPivot { false }
 
 ---
 
-#### BoneName { #bonename-4 }
+#### BoneName { #bonename-5 }
 
 ```cpp
 FName BoneName

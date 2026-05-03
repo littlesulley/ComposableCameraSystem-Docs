@@ -12,7 +12,7 @@
 | `FVector` | [`Origin`](#origin)  |  |
 | `FVector` | [`Direction`](#direction)  |  |
 | `float` | [`MinimumDistance`](#minimumdistance)  |  |
-| `float` | [`Distance`](#distance)  |  |
+| `float` | [`Distance`](#distance-1)  |  |
 | `bool` | [`bInfiniteDistance`](#binfinitedistance)  |  |
 
 ---
@@ -41,7 +41,7 @@ float MinimumDistance
 
 ---
 
-#### Distance { #distance }
+#### Distance { #distance-1 }
 
 ```cpp
 float Distance

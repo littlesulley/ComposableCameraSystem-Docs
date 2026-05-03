@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-05-03 — plugin `0021823..07208d8`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/00218233c9d80a262ae25b0c27f0236039f482db...07208d8e459a1e4f7efbacb0afd2bffca5c43168))
+
+- `07208d8` Add Shot-Based Keyframing system: Shot data model, Composition Solver (closed-form + Picard joint solve), CompositionFramingNode runtime, LS Shot Section/Track/TrackInstance with two-Shot transition blend, full Shot Editor (viewport client, customizations, factories, asset definition), Cinemachine-style authoring surface for designer-driven cinematography.
+
+**C++ API pages regenerated:** 175 classes (9 added, 8 modified)
+
+**Prose drafts added:**
+
+- `docs/reference/nodes.md` — entry for `UComposableCameraCompositionFramingNode` (please review)
+
+**Flagged for review:**
+
+- All internal design docs (DesignDoc.md, EditorDesignDoc.md, TechDoc.md, ExecutionFlowExamples.md) last updated 2026-04-30, which predates this commit (2026-05-02). Check the User Guide → Concepts pages and Reference catalog for accuracy against the Shot-Based Keyframing additions.
+- New public types in `DataAssets/`, `MovieScene/`, `LevelSequence/`, and `Math/` (Shot data model, ShotSolver, MovieScene track/section, ShotActor) are documented only in the auto-generated API reference. Consider adding a dedicated User Guide page for the Shot-Based Keyframing workflow.
+
+---
+
 ## 2026-04-26 — plugin `1f6fc9d..0021823`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/1f6fc9d29bfb15773d16c9dd47b57d5f0fc5f13b...00218233c9d80a262ae25b0c27f0236039f482db))

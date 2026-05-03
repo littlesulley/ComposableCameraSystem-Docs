@@ -31,7 +31,7 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 | `TObjectPtr< UComposableCameraInterpolatorBase >` | [`PullInterpolator`](#pullinterpolator)  |  |
 | `double` | [`PivotZOffset`](#pivotzoffset-1)  |  |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-1)  |  |
-| `FName` | [`BoneName`](#bonename-1)  |  |
+| `FName` | [`BoneName`](#bonename-2)  |  |
 
 ---
 
@@ -147,7 +147,7 @@ bool bUseBoneForDetection { false }
 
 ---
 
-#### BoneName { #bonename-1 }
+#### BoneName { #bonename-2 }
 
 ```cpp
 FName BoneName

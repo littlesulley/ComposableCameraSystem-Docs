@@ -2,6 +2,103 @@
 
 # Enumerations
 
+#### EShotAnchorMode { #eshotanchormode }
+
+```cpp
+enum EShotAnchorMode
+```
+
+| Value | Description |
+|-------|-------------|
+| `SingleTarget` | Anchor = Targets[TargetIndex].Target's resolved world pivot. |
+| `WeightedWorldCentroid` | Anchor = weighted centroid of multiple targets' world pivots. WeightedTargets carries (TargetIndex, Weight) pairs; only entries with valid TargetIndex AND Weight > 0 contribute. |
+| `FixedWorldPosition` | Anchor = an explicit world-space point (WorldPosition), independent of any target. |
+
+Selects how a Shot anchor — a single world-space point — is resolved from the Shot's targets. Used by both the placement anchor (where the camera is placed relative to) and the aim anchor (where the camera is looking at). See `[FComposableCameraAnchorSpec](../structs/FComposableCameraAnchorSpec.md#fcomposablecameraanchorspec)` below for the data-side.
+
+#### EShotPlacementMode { #eshotplacementmode }
+
+```cpp
+enum EShotPlacementMode
+```
+
+| Value | Description |
+|-------|-------------|
+| `AnchorOrbit` |  |
+| `AnchorAtScreen` |  |
+| `FixedWorldPosition` |  |
+
+Selects how the camera's POSITION is determined.
+
+* **AnchorOrbit**: pure spherical placement around the placement anchor. Camera = PlacementAnchor + Distance · BasisQuat · UnitDir(Yaw, Pitch). `ScreenPosition` is **unused** — anchor projects to screen center under tentative look-at-anchor rotation. Recommended default; designers wanting an off-center anchor on screen should use `Aim.ScreenPosition` (rotation-realized) instead.
+
+* **AnchorAtScreen**: AnchorOrbit's spherical placement THEN a lateral camera shift along basis-derived right / up axes to make the anchor project to `Placement.ScreenPosition` under tentative rotation. Useful for OTS-style framings where designer wants explicit control over the placement anchor's screen X / Y while Aim looks at a different anchor. **Caveat**: once the lateral shift is applied, the camera is no longer literally "at
+    Yaw/Pitch around anchor" — the effective spherical position drifts. The two parametrizations (Yaw/Pitch + ScreenPosition) over-specify the camera position; the result is the geometric composition of both, NOT a strict spherical interpretation of Yaw/Pitch.
+
+* **FixedWorldPosition**: camera placed at an explicit world-space point. No orbit, no anchor required for position. Useful for "locked" cinematic shots (cranes, jib heads, surveillance cams).
+
+Drives the Placement layer of the Composition Solver. See Docs/ShotBasedKeyframing.md §4.3.
+
+#### EShotAimMode { #eshotaimmode }
+
+```cpp
+enum EShotAimMode
+```
+
+| Value | Description |
+|-------|-------------|
+| `LookAtAnchor` |  |
+| `NoOp` |  |
+
+Selects how the camera's ROTATION is determined (after Position is set by the Placement layer).
+
+* **LookAtAnchor**: camera rotates so the aim anchor lands at `Aim.ScreenPosition`. Closed-form via `SolveCameraRotationForScreenTarget`. The aim anchor may differ from the placement anchor — when it does, this is naturally an OTS / two-shot framing (camera placed near subject A, looking at subject B).
+
+* **NoOp**: Aim layer does nothing. Output rotation = identity with `Shot.Roll` composed. `Aim.AimAnchor` and `Aim.ScreenPosition` are ignored. Useful when downstream nodes (or a FixedWorldPosition placement) should fully drive rotation; the editor renders the Aim handle greyed out as a non-effective indicator. Note: in NoOp mode `SolvedFromBoundsFit` FOV and `FollowAnchor` Focus modes still consume the identity rotation — projection / depth computations relative to that frame may not match designer intent; prefer `Manual` Lens + Focus modes when pairing with NoOp Aim.
+
+Drives the Aim layer of the Composition Solver. See spec §4.4.
+
+#### EShotFOVMode { #eshotfovmode }
+
+```cpp
+enum EShotFOVMode
+```
+
+| Value | Description |
+|-------|-------------|
+| `Manual` | Use [FShotLens::ManualFOV](../structs/FShotLens.md#manualfov) directly. |
+| `SolvedFromBoundsFit` | Solve FOV from per-target bounds using the Weight-scaled Perceptual Union Box algorithm (spec §4.5). |
+
+Selects how FOV is computed. Drives the Lens layer.
+
+#### EShotFocusMode { #eshotfocusmode }
+
+```cpp
+enum EShotFocusMode
+```
+
+| Value | Description |
+|-------|-------------|
+| `Manual` | Use [FShotFocus::ManualDistance](../structs/FShotFocus.md#manualdistance) directly. |
+| `FollowPlacementAnchor` | Focus distance = camera-to-PlacementAnchor depth (along forward). |
+| `FollowAimAnchor` | Focus distance = camera-to-AimAnchor depth (along forward). |
+| `FollowCustomAnchor` | Focus distance = camera-to-FocusAnchor depth (along forward), where FocusAnchor is its own `[FComposableCameraAnchorSpec](../structs/FComposableCameraAnchorSpec.md#fcomposablecameraanchorspec)` — letting the focus point follow a third world point independent of Placement / Aim. |
+
+Selects what world point drives the focus distance. Independent of Position / Rotation / FOV. See spec §4.6.
+
+#### EShotPlacementBasisFrame { #eshotplacementbasisframe }
+
+```cpp
+enum EShotPlacementBasisFrame
+```
+
+| Value | Description |
+|-------|-------------|
+| `World` | Use world axes for the LocalCameraDirection basis. Always valid. |
+| `InheritFromActor` | Use the actor at `[FShotPlacement::BasisActorIndex](../structs/FShotPlacement.md#basisactorindex)` as the basis — its world quat (or its first SkelMeshComponent's quat when the target's `bUseSkeletalMeshForwardAsBasis` flag is set, see `[FComposableCameraTargetInfo::ResolveBasisQuat](../structs/FComposableCameraTargetInfo.md#resolvebasisquat)`). Falls back to World basis with a warning when the index is out of range or the actor is null. |
+
+Reference-frame selector for AnchorOrbit's `LocalCameraDirection`. Lives at `[FShotPlacement::BasisFrame](../structs/FShotPlacement.md#basisframe)`. See spec §3.5.2.
+
 #### EComposableCameraBuildStatus { #ecomposablecamerabuildstatus }
 
 ```cpp
@@ -55,6 +152,34 @@ enum EComposableCameraResumeCameraTransformSchema
 | `PreserveCurrent` |  |
 | `PreserveResumed` |  |
 | `Specified` |  |
+
+#### EShotTargetBoundsShape { #eshottargetboundsshape }
+
+```cpp
+enum EShotTargetBoundsShape
+```
+
+| Value | Description |
+|-------|-------------|
+| `None` | No bounding box — target does not contribute to FOV solve. Most common. |
+| `ManualExtent` | Author-supplied half-extent (ManualBoundsExtent). Always cheap. |
+| `AutoFromComponentBounds` | Snapshot of Actor->GetComponentsBoundingBox() per BoundsCachePolicy. Walks the actor's component hierarchy each refresh — never per-frame unless BoundsCachePolicy == Live. See §3.3.1 of the spec for the cache lifecycle. |
+
+Selects how the bounding box around a shot target is determined. The bounding box drives the FOV solve when FOVMode == SolvedFromBoundsFit (Docs/ShotBasedKeyframing.md §4.5 — Weight-scaled Perceptual Union Box).
+
+#### EBoundsCachePolicy { #eboundscachepolicy }
+
+```cpp
+enum EBoundsCachePolicy
+```
+
+| Value | Description |
+|-------|-------------|
+| `StaticSnapshot` | Cached once when the Shot becomes the active shot in LS; never refreshed for the lifetime of the Shot section. Cheapest; right for non-deforming scene actors. Default. |
+| `Periodic` | Re-cached every BoundsRefreshIntervalFrames frames. Right for slowly- deforming actors (vehicles with moving parts, characters whose pose changes slowly). |
+| `Live` | Re-cached every frame. Most accurate, most expensive — use sparingly, only for highly animated characters whose BB matters frame-to-frame. |
+
+Cache refresh policy for AutoFromComponentBounds bounds shape. Only meaningful when BoundsShape == AutoFromComponentBounds.
 
 #### EComposableCameraLookAtType { #ecomposablecameralookattype }
 
@@ -544,6 +669,19 @@ enum EComposableCameraPathGuidedTransitionType
 |-------|-------------|
 | `Inertialized` |  |
 | `Auto` |  |
+
+#### EComposableCameraShotSource { #ecomposablecamerashotsource }
+
+```cpp
+enum EComposableCameraShotSource
+```
+
+| Value | Description |
+|-------|-------------|
+| `Inline` | `InlineShot` carries the Shot data directly inside the Section. One-off framing for a specific moment. Good for shots that aren't reused elsewhere and don't justify a separate asset. |
+| `AssetReference` | `ShotAssetRef` soft-refs a `[UComposableCameraShotAsset](../uobjects-other/UComposableCameraShotAsset.md#ucomposablecamerashotasset)`. Editing the asset propagates to every Section referencing it. Good for reusable framing presets ("close-up A", "two-shot wide"). |
+
+Source-of-truth for a Shot Section's framing data — Inline value-typed struct or AssetReference soft-pointer. See `[UComposableCameraShotAsset](../uobjects-other/UComposableCameraShotAsset.md#ucomposablecamerashotasset)` and spec §3.4.1.
 
 #### EComposableCameraRelativeFixedPoseMethod { #ecomposablecamerarelativefixedposemethod }
 

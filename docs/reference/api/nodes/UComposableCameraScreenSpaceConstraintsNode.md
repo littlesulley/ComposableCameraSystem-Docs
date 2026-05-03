@@ -64,10 +64,10 @@ FVector2D SafeZoneHeight { -0.1, 0.1 }
 | Return | Name | Description |
 |--------|------|-------------|
 |  | [`UComposableCameraScreenSpaceConstraintsNode`](#ucomposablecamerascreenspaceconstraintsnode-1) `inline` |  |
-| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-19) `virtual` |  |
-| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-27) `virtual` |  |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-26) `virtual` `const` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-14) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-20) `virtual` |  |
+| `void` | [`OnTickNode_Implementation`](#onticknode_implementation-28) `virtual` |  |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-27) `virtual` `const` |  |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-15) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 | `void` | [`DrawNodeDebug2D`](#drawnodedebug2d-2) `virtual` `const` | 2D counterpart to DrawNodeDebug. Fires from a separate UDebugDrawService hook on the "Game" channel — which means it runs during PIE-possessed play (and standalone), NOT during F8 eject (editor viewport doesn't route through the game channel). That lines up with what 2D overlays are good for: screen-space debug that the player-eye perspective answers and an external view cannot (safe-zone rectangles, projected pivot markers, HUD-space gizmos). |
 
 ---
@@ -82,7 +82,7 @@ inline UComposableCameraScreenSpaceConstraintsNode()
 
 ---
 
-#### OnInitialize_Implementation { #oninitialize_implementation-19 }
+#### OnInitialize_Implementation { #oninitialize_implementation-20 }
 
 `virtual`
 
@@ -92,7 +92,7 @@ virtual void OnInitialize_Implementation()
 
 ---
 
-#### OnTickNode_Implementation { #onticknode_implementation-27 }
+#### OnTickNode_Implementation { #onticknode_implementation-28 }
 
 `virtual`
 
@@ -102,7 +102,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-26 }
+#### GetPinDeclarations_Implementation { #getpindeclarations_implementation-27 }
 
 `virtual` `const`
 
@@ -112,7 +112,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 ---
 
-#### DrawNodeDebug { #drawnodedebug-14 }
+#### DrawNodeDebug { #drawnodedebug-15 }
 
 `virtual` `const`
 
@@ -151,7 +151,6 @@ Default implementation does nothing. Compiled out in shipping builds.
 | `FVector` | [`EnsureWithinBoundsTranslation`](#ensurewithinboundstranslation-1)  |  |
 | `FRotator` | [`EnsureWithinBoundsRotation`](#ensurewithinboundsrotation-1)  |  |
 | `std::pair< float, float >` | [`GetTanHalfHORAndAspectRatio`](#gettanhalfhorandaspectratio-1)  |  |
-| `std::pair< float, float >` | [`CalibrateRotationOffsetNewton`](#calibraterotationoffsetnewton-1)  |  |
 | `FVector` | [`GetCurrentPivot`](#getcurrentpivot-1) `const` |  |
 
 ---
@@ -176,14 +175,6 @@ FRotator EnsureWithinBoundsRotation(const FVector & Pivot, const FComposableCame
 
 ```cpp
 std::pair< float, float > GetTanHalfHORAndAspectRatio(const FComposableCameraPose & OutCameraPose)
-```
-
----
-
-#### CalibrateRotationOffsetNewton { #calibraterotationoffsetnewton-1 }
-
-```cpp
-std::pair< float, float > CalibrateRotationOffsetNewton(float TanHalfHOR, float AspectRatio, FVector Direction, FRotator LookAtRotation, float ScreenX, float ScreenY)
 ```
 
 ---

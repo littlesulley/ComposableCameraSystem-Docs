@@ -35,7 +35,7 @@ Sentinel semantics (<= 0 means "unset"):
 | `float` | [`FocalLength`](#focallength)  | Focal length in mm. If <= 0, FieldOfView (in degrees) is used instead. |
 | `float` | [`SensorWidth`](#sensorwidth)  | Sensor width in mm. Super35 default. |
 | `float` | [`SensorHeight`](#sensorheight)  | Sensor height in mm. |
-| `float` | [`Aperture`](#aperture)  | Lens aperture in f-stops. Used for DoF when PhysicalCameraBlendWeight > 0. |
+| `float` | [`Aperture`](#aperture-1)  | Lens aperture in f-stops. Used for DoF when PhysicalCameraBlendWeight > 0. |
 | `float` | [`FocusDistance`](#focusdistance)  | Focus distance in world units. <= 0 means "no DoF override" (sentinel). |
 | `float` | [`ShutterSpeed`](#shutterspeed)  | Shutter speed in 1/seconds. Used for auto-exposure when PhysicalCameraBlendWeight > 0. |
 | `float` | [`ISO`](#iso)  | Sensor sensitivity in ISO. |
@@ -110,7 +110,7 @@ Sensor height in mm.
 
 ---
 
-#### Aperture { #aperture }
+#### Aperture { #aperture-1 }
 
 ```cpp
 float Aperture { 2.8f }

@@ -11,7 +11,7 @@
 |--------|------|-------------|
 | `FVector` | [`FirstPoint`](#firstpoint)  |  |
 | `FVector` | [`SecondPoint`](#secondpoint)  |  |
-| `float` | [`Distance`](#distance-1)  |  |
+| `float` | [`Distance`](#distance-2)  |  |
 | `bool` | [`bIsParallel`](#bisparallel)  |  |
 
 ---
@@ -32,7 +32,7 @@ FVector SecondPoint
 
 ---
 
-#### Distance { #distance-1 }
+#### Distance { #distance-2 }
 
 ```cpp
 float Distance

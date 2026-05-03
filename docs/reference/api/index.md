@@ -22,6 +22,7 @@ Context stack, evaluation tree, director, modifier manager.
 - [`AComposableCameraImpulseBox`](actors/AComposableCameraImpulseBox.md)
 - [`AComposableCameraImpulseSphere`](actors/AComposableCameraImpulseSphere.md)
 - [`AComposableCameraLevelSequenceActor`](actors/AComposableCameraLevelSequenceActor.md)
+- [`AComposableCameraLevelSequenceShotActor`](actors/AComposableCameraLevelSequenceShotActor.md)
 - [`AComposableCameraPlayerCameraManager`](actors/AComposableCameraPlayerCameraManager.md)
 
 ## Camera Nodes
@@ -32,6 +33,7 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraBlueprintCameraNode`](nodes/UComposableCameraBlueprintCameraNode.md)
 - [`UComposableCameraCameraOffsetNode`](nodes/UComposableCameraCameraOffsetNode.md)
 - [`UComposableCameraCollisionPushNode`](nodes/UComposableCameraCollisionPushNode.md)
+- [`UComposableCameraCompositionFramingNode`](nodes/UComposableCameraCompositionFramingNode.md)
 - [`UComposableCameraComputeDistanceToActorNode`](nodes/UComposableCameraComputeDistanceToActorNode.md)
 - [`UComposableCameraControlRotateNode`](nodes/UComposableCameraControlRotateNode.md)
 - [`UComposableCameraFieldOfViewNode`](nodes/UComposableCameraFieldOfViewNode.md)
@@ -158,6 +160,8 @@ Template helpers and typed interpolator wrappers.
 USTRUCTs — init params, pose records, parameter blocks, etc.
 
 - [`FComposableCameraActivateParams`](structs/FComposableCameraActivateParams.md)
+- [`FComposableCameraAnchorSpec`](structs/FComposableCameraAnchorSpec.md)
+- [`FComposableCameraAnchorTargetWeight`](structs/FComposableCameraAnchorTargetWeight.md)
 - [`FComposableCameraBuildMessage`](structs/FComposableCameraBuildMessage.md)
 - [`FComposableCameraContextEntry`](structs/FComposableCameraContextEntry.md)
 - [`FComposableCameraContextSnapshot`](structs/FComposableCameraContextSnapshot.md)
@@ -199,7 +203,12 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FComposableCameraScreenSpaceRotationParams`](structs/FComposableCameraScreenSpaceRotationParams.md)
 - [`FComposableCameraScreenSpaceTranslationParams`](structs/FComposableCameraScreenSpaceTranslationParams.md)
 - [`FComposableCameraSequencerPatchOverlay`](structs/FComposableCameraSequencerPatchOverlay.md)
+- [`FComposableCameraSequencerShotEntry`](structs/FComposableCameraSequencerShotEntry.md)
+- [`FComposableCameraShot`](structs/FComposableCameraShot.md)
+- [`FComposableCameraShotTarget`](structs/FComposableCameraShotTarget.md)
+- [`FComposableCameraShotTargetActorOverride`](structs/FComposableCameraShotTargetActorOverride.md)
 - [`FComposableCameraSystemModule`](structs/FComposableCameraSystemModule.md)
+- [`FComposableCameraTargetInfo`](structs/FComposableCameraTargetInfo.md)
 - [`FComposableCameraTransitionInitParams`](structs/FComposableCameraTransitionInitParams.md)
 - [`FComposableCameraTransitionTableEntry`](structs/FComposableCameraTransitionTableEntry.md)
 - [`FComposableCameraTreeNodeSnapshot`](structs/FComposableCameraTreeNodeSnapshot.md)
@@ -207,9 +216,17 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FComposableCameraVariableNodeRecord`](structs/FComposableCameraVariableNodeRecord.md)
 - [`FComposableCameraVariablePinConnection`](structs/FComposableCameraVariablePinConnection.md)
 - [`FComposableCameraViewportDebug`](structs/FComposableCameraViewportDebug.md)
+- [`FGetActiveEditorViewport`](structs/FGetActiveEditorViewport.md)
 - [`FIsSimulatingInEditor`](structs/FIsSimulatingInEditor.md)
 - [`FModifierEntry`](structs/FModifierEntry.md)
+- [`FOpenShotEditor`](structs/FOpenShotEditor.md)
 - [`FResolvedVolume`](structs/FResolvedVolume.md)
+- [`FShotAim`](structs/FShotAim.md)
+- [`FShotFocus`](structs/FShotFocus.md)
+- [`FShotLens`](structs/FShotLens.md)
+- [`FShotPlacement`](structs/FShotPlacement.md)
+- [`FShotSolveContext`](structs/FShotSolveContext.md)
+- [`FShotSolveResult`](structs/FShotSolveResult.md)
 - [`FTransitionDebugSnapshot`](structs/FTransitionDebugSnapshot.md)
 
 ## Other UObjects
@@ -225,8 +242,11 @@ UObject-derived types that don't fit a more specific category.
 - [`UComposableCameraPatchInstance`](uobjects-other/UComposableCameraPatchInstance.md)
 - [`UComposableCameraPatchManager`](uobjects-other/UComposableCameraPatchManager.md)
 - [`UComposableCameraRotationConstraints`](uobjects-other/UComposableCameraRotationConstraints.md)
+- [`UComposableCameraShotAsset`](uobjects-other/UComposableCameraShotAsset.md)
 - [`UMovieSceneComposableCameraPatchSection`](uobjects-other/UMovieSceneComposableCameraPatchSection.md)
 - [`UMovieSceneComposableCameraPatchTrack`](uobjects-other/UMovieSceneComposableCameraPatchTrack.md)
+- [`UMovieSceneComposableCameraShotSection`](uobjects-other/UMovieSceneComposableCameraShotSection.md)
+- [`UMovieSceneComposableCameraShotTrack`](uobjects-other/UMovieSceneComposableCameraShotTrack.md)
 
 ## Helpers
 

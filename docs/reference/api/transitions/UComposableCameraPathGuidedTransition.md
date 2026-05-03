@@ -136,7 +136,7 @@ Compiled out in shipping builds.
 |--------|------|-------------|
 | `AComposableCameraCameraBase *` | [`IntermediateCamera`](#intermediatecamera)  |  |
 | `ACameraRig_Rail *` | [`Rail`](#rail-1)  |  |
-| `UComposableCameraInertializedTransition *` | [`EnterTransition`](#entertransition-3)  |  |
+| `UComposableCameraInertializedTransition *` | [`EnterTransition`](#entertransition-4)  |  |
 | `UComposableCameraInertializedTransition *` | [`ExitTransition`](#exittransition-1)  |  |
 | `USplineComponent *` | [`InternalSpline`](#internalspline)  |  |
 | `AActor *` | [`DebugSplineActor`](#debugsplineactor)  |  |
@@ -159,7 +159,7 @@ ACameraRig_Rail * Rail
 
 ---
 
-#### EnterTransition { #entertransition-3 }
+#### EnterTransition { #entertransition-4 }
 
 ```cpp
 UComposableCameraInertializedTransition * EnterTransition { nullptr }

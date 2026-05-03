@@ -22,7 +22,7 @@ FOV mode coupling: writing FocalLength is orthogonal to SetFieldOfViewDegrees. T
 | Return | Name | Description |
 |--------|------|-------------|
 | `float` | [`FocalLength`](#focallength-1)  | Focal length in millimetres. Drives both physical DoF and (optionally) FOV. |
-| `float` | [`Aperture`](#aperture-1)  | Lens aperture (f-stops). Smaller number = wider aperture = more DoF blur. |
+| `float` | [`Aperture`](#aperture-2)  | Lens aperture (f-stops). Smaller number = wider aperture = more DoF blur. |
 | `float` | [`FocusDistance`](#focusdistance-1)  | Distance to the focus subject in world units. <= 0 leaves the pose's FocusDistance sentinel in place (no DoF override). |
 | `int32` | [`DiaphragmBladeCount`](#diaphragmbladecount-1)  | Number of blades in the lens diaphragm. Affects bokeh polygon shape. |
 | `float` | [`PhysicalCameraBlendWeight`](#physicalcamerablendweight-1)  | Physical camera contribution weight. 0 disables ApplyPhysicalCameraSettings entirely; 1 applies it at full strength. Default 1.0 so that merely placing this node in the chain is enough to get DoF / auto-exposure driven off the authored lens values — callers who want a per-frame fade should wire this pin explicitly. |
@@ -40,7 +40,7 @@ Focal length in millimetres. Drives both physical DoF and (optionally) FOV.
 
 ---
 
-#### Aperture { #aperture-1 }
+#### Aperture { #aperture-2 }
 
 ```cpp
 float Aperture { 2.8f }
