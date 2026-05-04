@@ -71,6 +71,7 @@ In Phase F's two-Shot blend the field is treated as the *primary* (outgoing / lo
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-25) `virtual` `const` |  |
 | `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility_Implementation`](#getpatchcompatibility_implementation-5) `virtual` `const` |  |
 | `void` | [`DrawNodeDebug`](#drawnodedebug-14) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`BeginDestroy`](#begindestroy-3) `virtual` |  |
 | `void` | [`SetActiveShotsFromSequencer`](#setactiveshotsfromsequencer)  | Phase F: push the active Shot pair from the LSComponent each frame an override is applied. |
 | `void` | [`SetExternalAspectRatioOverride`](#setexternalaspectratiooverride) `inline` | Push the effective render aspect ratio for solver use. The node by default queries `GetEffectiveViewportAspectRatio` from `OwningPlayerCameraManager`, which is null in the LS Component path → falls back to either GameViewport (PIE) or editor active viewport. That works for unconstrained CineCams, but with `bConstrainAspectRatio == true` the renderer letterboxes to the filmback-derived aspect regardless of viewport, and the solver needs to match. The LS Component computes the effective aspect via `GetEffectiveAspectRatioForCineCamera(OutputCineCameraComponent)` and pushes it here; OnTickNode prefers the override when > 0. |
 
@@ -144,15 +145,25 @@ Default implementation does nothing. Compiled out in shipping builds.
 
 ---
 
+#### BeginDestroy { #begindestroy-3 }
+
+`virtual`
+
+```cpp
+virtual void BeginDestroy()
+```
+
+---
+
 #### SetActiveShotsFromSequencer { #setactiveshotsfromsequencer }
 
 ```cpp
-void SetActiveShotsFromSequencer(const FComposableCameraShot & InPrimaryShot, const FComposableCameraShot * InSecondaryShot, UComposableCameraTransitionDataAsset * InTransition, float InAlpha)
+void SetActiveShotsFromSequencer(const FComposableCameraShot & InPrimaryShot, const FComposableCameraShot * InSecondaryShot, UComposableCameraTransitionDataAsset * InTransition, float InAlpha, bool bPrimaryChanged)
 ```
 
 Phase F: push the active Shot pair from the LSComponent each frame an override is applied.
 
-InPrimaryShot → written into `Shot` (the V1 primary path). InSecondaryShot → optional incoming Shot (the higher-row of an overlap pair). When non-null AND `InTransition` is non-null, the framing node runs both solvers and blends their poses through the transition using `InAlpha` ∈ [0, 1]. InTransition → resolved transition asset; null = hard cut. The blend pass is skipped — `Shot` (primary) is the sole solver input, matching V1 top-row- winner behavior. InAlpha → secondary's contribution weight ∈ [0, 1]. Clamped defensively. Ignored when `InSecondaryShot` is null or `InTransition` is null.
+InPrimaryShot → written into `Shot` (the V1 primary path). InSecondaryShot → optional incoming Shot (the higher-row of an overlap pair). When non-null AND `InTransition` is non-null, the framing node runs both solvers and blends their poses through the transition using `InAlpha` ∈ [0, 1]. InTransition → resolved transition asset; null = hard cut. The blend pass is skipped — `Shot` (primary) is the sole solver input, matching V1 top-row- winner behavior. InAlpha → secondary's contribution weight ∈ [0, 1]. Clamped defensively. Ignored when `InSecondaryShot` is null or `InTransition` is null. bPrimaryChanged → true iff the LSComponent detected that the active *primary* Section has changed since the previous tick (Section A → Section B with no overlap, Section bind to a different ShotAsset, etc.). Triggers a primary-state reseed (`bHasLastPrimaryOutputPose = false`, `LastPrimaryDistance / FOV / Roll` cleared) so V2.2 damping doesn't carry the previous shot's pose into the new shot's first frame — without this, Distance / FOV / Roll damping would visibly glide between the two shots' poses on every cut. Phase F blend exits already trigger the same reseed independently; this flag covers the non-overlap cut case.
 
 Persistence: the node retains the last-written state across frames. When the LSComponent's override map empties, no further calls happen and the camera holds its last framing — the gap-fill semantic Phase E established and Phase F preserves.
 
@@ -170,11 +181,45 @@ Push the effective render aspect ratio for solver use. The node by default queri
 
 Set every tick by `[UComposableCameraLevelSequenceComponent::TickComponent](../uobjects-other/UComposableCameraLevelSequenceComponent.md#tickcomponent)` before invoking the solver. PCM-driven path doesn't call this — falls back to the `OwningPlayerCameraManager` query, which is correct for gameplay (PCM has access to PlayerController viewport).
 
+### Public Static Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `const TSet< TWeakObjectPtr< UComposableCameraCompositionFramingNode > > &` | [`GetActiveInstances`](#getactiveinstances) `static` | Per-process registry of all currently-initialized framing nodes — read by `[FComposableCameraShotZoneOverlay](../structs/FComposableCameraShotZoneOverlay.md#fcomposablecamerashotzoneoverlay)` (the LS / PIE viewport `CCS.Debug.Viewport.ShotZones` overlay) so it can paint anchor + zone gizmos for every active Shot regardless of whether the host camera is on the PCM context stack or owned by an LS Component. |
+
+---
+
+#### GetActiveInstances { #getactiveinstances }
+
+`static`
+
+```cpp
+static const TSet< TWeakObjectPtr< UComposableCameraCompositionFramingNode > > & GetActiveInstances()
+```
+
+Per-process registry of all currently-initialized framing nodes — read by `[FComposableCameraShotZoneOverlay](../structs/FComposableCameraShotZoneOverlay.md#fcomposablecamerashotzoneoverlay)` (the LS / PIE viewport `CCS.Debug.Viewport.ShotZones` overlay) so it can paint anchor + zone gizmos for every active Shot regardless of whether the host camera is on the PCM context stack or owned by an LS Component.
+
+Ownership: each instance adds itself in `OnInitialize` and removes itself in `BeginDestroy`. `TWeakObjectPtr` keys ensure GC'd nodes silently drop out of iteration without needing manual cleanup.
+
+Cost: a single static `TSet` insert/remove per camera lifecycle boundary; iteration cost is paid only when the overlay CVar is on. Compiled out in shipping.
+
 ### Private Attributes
 
 | Return | Name | Description |
 |--------|------|-------------|
 | `int32` | [`LocalFrameCounter`](#localframecounter)  | Per-instance frame counter for the `Periodic` bounds-cache policy. Reset in OnInitialize, incremented at the end of every OnTickNode. `[EBoundsCachePolicy::Live](#ComposableCameraShotTarget_8h_1a8e6b3060b0f99d10653877e1989d03aba955ad3298db330b5ee880c2c9e6f23a0)` ignores this; `StaticSnapshot` doesn't touch the cache after OnInitialize. |
+| `bool` | [`bHasLastPrimaryOutputPose`](#bhaslastprimaryoutputpose)  | True iff `LastPrimaryOutputPose` carries a valid prior solve. False = next tick performs a V1 hard solve and seeds the cache. |
+| `FVector` | [`LastPrimaryOutputPosition`](#lastprimaryoutputposition)  | Position + rotation produced by the most recent successful primary solve. Read by the next tick to project Aim/Placement anchors when the corresponding zones are enabled. Only Position + Rotation are cached because the Solver re-derives FOV / Focus from the current frame's context regardless. |
+| `FRotator` | [`LastPrimaryOutputRotation`](#lastprimaryoutputrotation)  |  |
+| `float` | [`LastPrimaryDistance`](#lastprimarydistance)  | Last frame's effective `Placement.Distance` (post-damping + post-clamp) for the primary shot. `< 0` ⇒ no prior — solver skips Distance damping on the next tick and uses the authored value. Cached together with the pose because both share the same activation / Section-boundary lifecycle. |
+| `float` | [`LastPrimaryFOV`](#lastprimaryfov)  | Last frame's effective FOV / Roll for the primary shot — sentinel semantics match `FShotPriorPose::LastFOV` / `LastRoll`: `LastPrimaryFOV < 0` ⇒ no prior; `LastPrimaryRoll == FLT_MAX` ⇒ no prior. Solver skips the corresponding damping on the next tick when the prior is absent. |
+| `float` | [`LastPrimaryRoll`](#lastprimaryroll)  |  |
+| `bool` | [`bHasLastSecondaryOutputPose`](#bhaslastsecondaryoutputpose)  | Same as primary, but for the Phase F secondary (incoming) shot. Cleared whenever `SetActiveShotsFromSequencer` transitions out of the secondary-active state. |
+| `FVector` | [`LastSecondaryOutputPosition`](#lastsecondaryoutputposition)  |  |
+| `FRotator` | [`LastSecondaryOutputRotation`](#lastsecondaryoutputrotation)  |  |
+| `float` | [`LastSecondaryDistance`](#lastsecondarydistance)  |  |
+| `float` | [`LastSecondaryFOV`](#lastsecondaryfov)  |  |
+| `float` | [`LastSecondaryRoll`](#lastsecondaryroll)  |  |
 | `bool` | [`bHasSecondaryShot`](#bhassecondaryshot)  | True iff a secondary (incoming) Shot is currently active for blend. When false the node behaves as V1: Shot is the sole solver input. |
 | `FComposableCameraShot` | [`SecondaryShot`](#secondaryshot)  | Phase F secondary Shot — the higher-row (incoming) section's effective Shot. Only consumed when `bHasSecondaryShot` is true and `ActiveBlendTransition` is non-null. |
 | `TObjectPtr< UComposableCameraTransitionDataAsset >` | [`ActiveBlendTransition`](#activeblendtransition)  | Resolved EnterTransition asset for the active two-Shot blend. Set by `SetActiveShotsFromSequencer`. Null indicates hard cut — F.4 treats this as "secondary Shot is unused" and runs only the primary solver path. |
@@ -190,6 +235,112 @@ int32 LocalFrameCounter = 0
 ```
 
 Per-instance frame counter for the `Periodic` bounds-cache policy. Reset in OnInitialize, incremented at the end of every OnTickNode. `[EBoundsCachePolicy::Live](#ComposableCameraShotTarget_8h_1a8e6b3060b0f99d10653877e1989d03aba955ad3298db330b5ee880c2c9e6f23a0)` ignores this; `StaticSnapshot` doesn't touch the cache after OnInitialize.
+
+---
+
+#### bHasLastPrimaryOutputPose { #bhaslastprimaryoutputpose }
+
+```cpp
+bool bHasLastPrimaryOutputPose = false
+```
+
+True iff `LastPrimaryOutputPose` carries a valid prior solve. False = next tick performs a V1 hard solve and seeds the cache.
+
+---
+
+#### LastPrimaryOutputPosition { #lastprimaryoutputposition }
+
+```cpp
+FVector LastPrimaryOutputPosition = FVector::ZeroVector
+```
+
+Position + rotation produced by the most recent successful primary solve. Read by the next tick to project Aim/Placement anchors when the corresponding zones are enabled. Only Position + Rotation are cached because the Solver re-derives FOV / Focus from the current frame's context regardless.
+
+---
+
+#### LastPrimaryOutputRotation { #lastprimaryoutputrotation }
+
+```cpp
+FRotator LastPrimaryOutputRotation = FRotator::ZeroRotator
+```
+
+---
+
+#### LastPrimaryDistance { #lastprimarydistance }
+
+```cpp
+float LastPrimaryDistance = -1.f
+```
+
+Last frame's effective `Placement.Distance` (post-damping + post-clamp) for the primary shot. `< 0` ⇒ no prior — solver skips Distance damping on the next tick and uses the authored value. Cached together with the pose because both share the same activation / Section-boundary lifecycle.
+
+---
+
+#### LastPrimaryFOV { #lastprimaryfov }
+
+```cpp
+float LastPrimaryFOV = -1.f
+```
+
+Last frame's effective FOV / Roll for the primary shot — sentinel semantics match `FShotPriorPose::LastFOV` / `LastRoll`: `LastPrimaryFOV < 0` ⇒ no prior; `LastPrimaryRoll == FLT_MAX` ⇒ no prior. Solver skips the corresponding damping on the next tick when the prior is absent.
+
+---
+
+#### LastPrimaryRoll { #lastprimaryroll }
+
+```cpp
+float LastPrimaryRoll = TNumericLimits<float>::Max()
+```
+
+---
+
+#### bHasLastSecondaryOutputPose { #bhaslastsecondaryoutputpose }
+
+```cpp
+bool bHasLastSecondaryOutputPose = false
+```
+
+Same as primary, but for the Phase F secondary (incoming) shot. Cleared whenever `SetActiveShotsFromSequencer` transitions out of the secondary-active state.
+
+---
+
+#### LastSecondaryOutputPosition { #lastsecondaryoutputposition }
+
+```cpp
+FVector LastSecondaryOutputPosition = FVector::ZeroVector
+```
+
+---
+
+#### LastSecondaryOutputRotation { #lastsecondaryoutputrotation }
+
+```cpp
+FRotator LastSecondaryOutputRotation = FRotator::ZeroRotator
+```
+
+---
+
+#### LastSecondaryDistance { #lastsecondarydistance }
+
+```cpp
+float LastSecondaryDistance = -1.f
+```
+
+---
+
+#### LastSecondaryFOV { #lastsecondaryfov }
+
+```cpp
+float LastSecondaryFOV = -1.f
+```
+
+---
+
+#### LastSecondaryRoll { #lastsecondaryroll }
+
+```cpp
+float LastSecondaryRoll = TNumericLimits<float>::Max()
+```
 
 ---
 

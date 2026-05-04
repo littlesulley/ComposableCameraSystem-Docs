@@ -263,6 +263,7 @@ Remove a Shot override when the section leaves its range or the TrackInstance sh
 | `bool` | [`bEvaluationEnabled`](#bevaluationenabled)  | Gate for on-demand ticking; see SetEvaluationEnabled. |
 | `TMap< TObjectPtr< UMovieSceneComposableCameraPatchSection >, FComposableCameraSequencerPatchOverlay >` | [`SequencerPatchOverlays`](#sequencerpatchoverlays)  | Active overlays keyed by section. UPROPERTY so the inner TObjectPtrs inside [FComposableCameraSequencerPatchOverlay](../structs/FComposableCameraSequencerPatchOverlay.md#fcomposablecamerasequencerpatchoverlay) are GC-tracked. Pruned on RemoveSequencerPatchOverlay or when the section pointer goes stale. |
 | `TMap< TWeakObjectPtr< UMovieSceneComposableCameraShotSection >, FComposableCameraSequencerShotEntry >` | [`SequencerShotOverrides`](#sequencershotoverrides)  | Active Shot overrides keyed by Section. Held by raw section pointer with `TWeakObjectPtr` to tolerate GC of the section between frames (a common case during Sequencer hot-reload / asset reimport). |
+| `TWeakObjectPtr< UMovieSceneComposableCameraShotSection >` | [`LastActivePrimarySection`](#lastactiveprimarysection)  | Last frame's resolved *primary* Section (lowest RowIndex among the active overrides). `ApplyActiveSequencerShotOverride` compares this to the current frame's primary; mismatch = section transition with no overlap (cut), which the framing node must treat as a hard reseed of its V2.2 damping state to avoid bleeding the previous shot's Distance / FOV / Roll into the new one. Phase F blend exits already trigger the same reseed independently inside `SetActiveShotsFromSequencer`; this tracker is for the non-overlap cut path that the blend logic doesn't cover. |
 
 ---
 
@@ -304,6 +305,16 @@ TMap< TWeakObjectPtr< UMovieSceneComposableCameraShotSection >, FComposableCamer
 
 Active Shot overrides keyed by Section. Held by raw section pointer with `TWeakObjectPtr` to tolerate GC of the section between frames (a common case during Sequencer hot-reload / asset reimport).
 
+---
+
+#### LastActivePrimarySection { #lastactiveprimarysection }
+
+```cpp
+TWeakObjectPtr< UMovieSceneComposableCameraShotSection > LastActivePrimarySection
+```
+
+Last frame's resolved *primary* Section (lowest RowIndex among the active overrides). `ApplyActiveSequencerShotOverride` compares this to the current frame's primary; mismatch = section transition with no overlap (cut), which the framing node must treat as a hard reseed of its V2.2 damping state to avoid bleeding the previous shot's Distance / FOV / Roll into the new one. Phase F blend exits already trigger the same reseed independently inside `SetActiveShotsFromSequencer`; this tracker is for the non-overlap cut path that the blend logic doesn't cover.
+
 ### Private Methods
 
 | Return | Name | Description |
@@ -314,6 +325,7 @@ Active Shot overrides keyed by Section. Held by raw section pointer with `TWeakO
 | `void` | [`DestroyInternalCamera`](#destroyinternalcamera)  | Destroy the internal camera actor if one exists. |
 | `void` | [`ApplySequencerPatchOverlays`](#applysequencerpatchoverlays)  | Apply every active editor-preview patch overlay (sorted by the section's resolved LayerIndex) onto `InOutPose`. Called from TickComponent in editor world only, between InternalCamera->TickCamera and ProjectPoseToCineCamera. Lazy-spawns evaluator actors as needed and prunes stale entries (section GC'd) from the overlay map. |
 | `void` | [`ApplyActiveSequencerShotOverride`](#applyactivesequencershotoverride)  | Pick the top-row override (lowest RowIndex) and write its Shot into the first found `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)` on the InternalCamera's CameraNodes array. No-op when the map is empty (gap between sections — CompositionFramingNode keeps last-written Shot). |
+| `void` | [`EvaluateOnce`](#evaluateonce)  | Run one full evaluation pass (parameter block sync → Shot override apply → InternalCamera TickCamera → patch overlays → CineCamera projection). Identical to a `TickComponent` body sans the `Super::TickComponent` / gate-check shell. Factored out so `SetEvaluationEnabled(true)` can force a same-frame solve when the ECS gate first opens — without it, the LS Actor's CineCamera renders one frame at its default (origin) transform on every cut into a non-overlapping section, because the normal `TickComponent` happens after the first PCM render. |
 
 ---
 
@@ -376,3 +388,15 @@ void ApplyActiveSequencerShotOverride()
 Pick the top-row override (lowest RowIndex) and write its Shot into the first found `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)` on the InternalCamera's CameraNodes array. No-op when the map is empty (gap between sections — CompositionFramingNode keeps last-written Shot).
 
 Called from TickComponent BEFORE `InternalCamera->TickCamera` so the solver evaluates with the new Shot data on the same frame.
+
+---
+
+#### EvaluateOnce { #evaluateonce }
+
+```cpp
+void EvaluateOnce(float DeltaTime)
+```
+
+Run one full evaluation pass (parameter block sync → Shot override apply → InternalCamera TickCamera → patch overlays → CineCamera projection). Identical to a `TickComponent` body sans the `Super::TickComponent` / gate-check shell. Factored out so `SetEvaluationEnabled(true)` can force a same-frame solve when the ECS gate first opens — without it, the LS Actor's CineCamera renders one frame at its default (origin) transform on every cut into a non-overlapping section, because the normal `TickComponent` happens after the first PCM render.
+
+`DeltaTime <= 0` is the standard "first-frame snap" signal — downstream solvers (V2.2 IIR damping, scrub-aware nodes) treat it as "use authored values, don't damp", which matches the cut-as-cut design intent.

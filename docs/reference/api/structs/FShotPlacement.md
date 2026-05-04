@@ -19,7 +19,9 @@ Anchor concepts unified: Placement's anchor is the world point the camera is pla
 | `int32` | [`BasisActorIndex`](#basisactorindex)  | Index into Targets — the actor whose world quat is the basis when `BasisFrame == InheritFromActor`. Falls back to World basis when out of range or the actor is null. AnchorOrbit-only. |
 | `FVector2D` | [`LocalCameraDirection`](#localcameradirection)  | Camera position direction in BasisFrame's basis, expressed as (Yaw, Pitch) in degrees. AnchorOrbit-only — `AnchorAtScreen` derives camera position from the joint Aim+Placement screen constraints, no spherical direction parameter. Roll about the look axis is authored separately on the Shot's top-level `Roll` field. |
 | `float` | [`Distance`](#distance)  | Camera-to-PlacementAnchor distance in world units (cm). Semantics depend on Mode: |
+| `float` | [`DistanceSpeed`](#distancespeed)  | IIR damping speed for `Distance` (`FMath::FInterpTo` Speed semantics). `0` = no damping → camera snaps to the authored Distance every frame (V1 default behavior). Positive = damped — when the designer drags the Distance slider or a Sequencer track keys it, the camera glides toward the new value over time instead of teleporting. Higher values = snappier; lower values = heavier camera. Independent of the screen-space framing zones (which damp X / Y); this damps Z. |
 | `FVector2D` | [`ScreenPosition`](#screenposition-1)  | `AnchorAtScreen`-only. Where the resolved PlacementAnchor should land on screen, normalized to [-0.5, 0.5]² — (0, 0) is screen center. Realized via the joint Position+Rotation solve described in spec §4.3 — camera position is constrained such that PlacementAnchor is at depth `Distance` and screen `ScreenPosition` AT THE SAME TIME AS Aim's rotation puts AimAnchor at `Aim.ScreenPosition`. Both constraints are simultaneously satisfied by a closed-form solve (5 constraints on 5 unknowns). |
+| `FShotScreenZones` | [`PlacementZones`](#placementzones)  | Cinemachine-style screen-space framing zones for `Placement.ScreenPosition`. Only consumed in `AnchorAtScreen` placement mode (where placement actually produces a screen-position constraint on PlacementAnchor); ignored in `AnchorOrbit` (no `Placement.ScreenPosition`) and `FixedWorldPosition` (placement is world-locked, not screen-driven). |
 | `FVector` | [`FixedWorldPosition`](#fixedworldposition)  | Used iff `Mode == FixedWorldPosition`. Camera lives at this world point; PlacementAnchor / Distance / Direction / ScreenPosition are ignored in this mode. |
 
 ---
@@ -93,6 +95,18 @@ Range `[1, 10000]` cm = `[1cm, 100m]`. Floor matches the solver's pre-flight che
 
 ---
 
+#### DistanceSpeed { #distancespeed }
+
+```cpp
+float DistanceSpeed = 0.f
+```
+
+IIR damping speed for `Distance` (`FMath::FInterpTo` Speed semantics). `0` = no damping → camera snaps to the authored Distance every frame (V1 default behavior). Positive = damped — when the designer drags the Distance slider or a Sequencer track keys it, the camera glides toward the new value over time instead of teleporting. Higher values = snappier; lower values = heavier camera. Independent of the screen-space framing zones (which damp X / Y); this damps Z.
+
+Skipped in `FixedWorldPosition` mode (Distance is unused there). Requires `PriorPose != nullptr` like the rest of the V2.2 stateful solver — first-frame seed snaps to authored value, damping kicks in from frame 2 onward.
+
+---
+
 #### ScreenPosition { #screenposition-1 }
 
 ```cpp
@@ -102,6 +116,18 @@ FVector2D ScreenPosition = FVector2D::ZeroVector
 `AnchorAtScreen`-only. Where the resolved PlacementAnchor should land on screen, normalized to [-0.5, 0.5]² — (0, 0) is screen center. Realized via the joint Position+Rotation solve described in spec §4.3 — camera position is constrained such that PlacementAnchor is at depth `Distance` and screen `ScreenPosition` AT THE SAME TIME AS Aim's rotation puts AimAnchor at `Aim.ScreenPosition`. Both constraints are simultaneously satisfied by a closed-form solve (5 constraints on 5 unknowns).
 
 Requires `Aim.Mode == LookAtAnchor` AND `AimAnchor != PlacementAnchor` — the joint solve degenerates without both. Solver logs warning + skips pose update otherwise.
+
+---
+
+#### PlacementZones { #placementzones }
+
+```cpp
+FShotScreenZones PlacementZones
+```
+
+Cinemachine-style screen-space framing zones for `Placement.ScreenPosition`. Only consumed in `AnchorAtScreen` placement mode (where placement actually produces a screen-position constraint on PlacementAnchor); ignored in `AnchorOrbit` (no `Placement.ScreenPosition`) and `FixedWorldPosition` (placement is world-locked, not screen-driven).
+
+When enabled the joint Picard solve runs against the zone-derived effective screen target instead of the raw authored `ScreenPosition`, with damping applied in screen space — anchor inside the dead zone produces zero error → joint solve is short-circuited and the camera holds its previous `LastOutputPose`. See `[FShotScreenZones](FShotScreenZones.md#fshotscreenzones)` for the algorithm description.
 
 ---
 

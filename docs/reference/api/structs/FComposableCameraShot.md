@@ -19,6 +19,7 @@ See Docs/ShotBasedKeyframing.md §3 for the full data model and §4 for the solv
 | `FShotPlacement` | [`Placement`](#placement)  | Placement layer — decides Position. |
 | `FShotAim` | [`Aim`](#aim)  | Aim layer — decides Rotation (Position is already set by Placement). |
 | `float` | [`Roll`](#roll)  | Camera roll about its forward (look) axis, in degrees. Composed onto the output rotation as the final operation; the solver pre-rotates Aim.ScreenPosition by -Roll before solving so the screen constraint holds at any Roll. 0 = level. See spec §4.8. |
+| `float` | [`RollSpeed`](#rollspeed)  | IIR damping speed for `Roll` (`FMath::FInterpTo` Speed semantics). `0` = no damping → camera snaps to the authored Roll every frame (V1 default). Positive = damped — when the designer Alt+RMB-drags Roll or a Sequencer track keys it, the camera eases into the new angle. The IIR is **wrap-aware**: a transition from +175° to -175° (visually +10°) takes the short way around, not the long way. Requires `PriorPose != nullptr` like the other V2.2 stateful damping; first-frame seed snaps to authored. |
 | `FShotLens` | [`Lens`](#lens)  | Lens layer — decides FOV + Aperture. |
 | `FShotFocus` | [`Focus`](#focus)  | Focus layer — decides focus distance. Independent of pose / FOV. |
 
@@ -73,6 +74,16 @@ Range `[-180, 180]`° — kept narrow on purpose:
 1. FRotator's wrap math handles in-engine values outside the range correctly — the clamp is purely a UX / authoring- canonical-form constraint, not a runtime correctness one.
 
 If a future use case (e.g. multi-revolution roll for a transition effect) demands wider range, prefer a dedicated transition node over widening this clamp — the canonical shot Roll should stay unique-per-pose.
+
+---
+
+#### RollSpeed { #rollspeed }
+
+```cpp
+float RollSpeed = 0.f
+```
+
+IIR damping speed for `Roll` (`FMath::FInterpTo` Speed semantics). `0` = no damping → camera snaps to the authored Roll every frame (V1 default). Positive = damped — when the designer Alt+RMB-drags Roll or a Sequencer track keys it, the camera eases into the new angle. The IIR is **wrap-aware**: a transition from +175° to -175° (visually +10°) takes the short way around, not the long way. Requires `PriorPose != nullptr` like the other V2.2 stateful damping; first-frame seed snaps to authored.
 
 ---
 

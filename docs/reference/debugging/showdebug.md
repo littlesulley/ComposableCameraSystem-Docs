@@ -15,6 +15,7 @@ The overlay is implemented by `AComposableCameraPlayerCameraManager::DisplayDebu
 
     - **`CCS.Debug.Panel 1`** — always-on HUD overlay with sparklines, tree glyphs, per-pin output values, and a live warnings region. Recommended as a persistent companion during development.
     - **`CCS.Debug.Viewport 1`** — 3D in-world gizmos (frustum, per-node overlays) visible during F8 eject.
+    - **`CCS.Debug.Viewport.ShotZones 1`** — 2D screen-space framing-zone overlay (dead zone + soft zone rectangles + anchor disc) for all active `CompositionFramingNode` Shots. Works in PIE, Game, and Sequencer-scrub viewports. Independent of the 3D-gizmo master switch.
     - **`CCS.Dump.Stack` / `CCS.Dump.Tree` / `CCS.Dump.Camera`** — one-shot plain-text dumps to Output Log and clipboard, ideal for bug reports.
 
     See the [Debug Panel & Dump Commands reference](debug-panel.md) and [User Guide → Debugging](../../user-guide/debugging.md) for full details.

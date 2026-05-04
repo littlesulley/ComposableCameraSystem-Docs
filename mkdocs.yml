@@ -278,6 +278,7 @@ nav:
                 - 'FComposableCameraShot': reference/api/structs/FComposableCameraShot.md
                 - 'FComposableCameraShotTarget': reference/api/structs/FComposableCameraShotTarget.md
                 - 'FComposableCameraShotTargetActorOverride': reference/api/structs/FComposableCameraShotTargetActorOverride.md
+                - 'FComposableCameraShotZoneOverlay': reference/api/structs/FComposableCameraShotZoneOverlay.md
                 - 'FComposableCameraSystemModule': reference/api/structs/FComposableCameraSystemModule.md
                 - 'FComposableCameraTargetInfo': reference/api/structs/FComposableCameraTargetInfo.md
                 - 'FComposableCameraTransitionInitParams': reference/api/structs/FComposableCameraTransitionInitParams.md
@@ -296,6 +297,9 @@ nav:
                 - 'FShotFocus': reference/api/structs/FShotFocus.md
                 - 'FShotLens': reference/api/structs/FShotLens.md
                 - 'FShotPlacement': reference/api/structs/FShotPlacement.md
+                - 'FShotPriorPose': reference/api/structs/FShotPriorPose.md
+                - 'FShotScreenZonePadding': reference/api/structs/FShotScreenZonePadding.md
+                - 'FShotScreenZones': reference/api/structs/FShotScreenZones.md
                 - 'FShotSolveContext': reference/api/structs/FShotSolveContext.md
                 - 'FShotSolveResult': reference/api/structs/FShotSolveResult.md
                 - 'FTransitionDebugSnapshot': reference/api/structs/FTransitionDebugSnapshot.md

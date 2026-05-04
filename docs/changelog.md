@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-05-04 — plugin `07208d8..61534f9`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/07208d8e459a1e4f7efbacb0afd2bffca5c43168...61534f9685b5897989f5c20b38092321a036e716))
+
+- `61534f9` Add V2.2 Shot Solver: framing zones + five-axis damping + decoupled AnchorAtScreen + LS overlay + cut hardening.
+
+**C++ API pages regenerated:** 179 classes (4 added, 9 modified)
+
+**Prose drafts added:**
+
+- `docs/reference/debugging/debug-panel.md` — new section "Shot Zone Overlay (`FComposableCameraShotZoneOverlay`)" (please review)
+- `docs/reference/debugging/showdebug.md` — added `CCS.Debug.Viewport.ShotZones` to quick-start CVar list
+
+**Flagged for review:**
+
+- `DesignDoc.md` Last updated 2026-04-30 < commit date 2026-05-03 — check `docs/user-guide/concepts/` pages for V2.2 Shot Solver architectural changes (AnchorAtScreen decoupled pipeline, framing zones, five-axis damping).
+- `EditorDesignDoc.md` Last updated 2026-04-30 — check `docs/user-guide/` for Shot Editor viewport client changes (§D.4.1 framing-zone preview gizmos updated).
+- `ExecutionFlowExamples.md` Last updated 2026-04-30 — review if LS/PCM cut-hardening flow examples need updating.
+- New structs `FShotScreenZonePadding`, `FShotScreenZones`, `FShotPriorPose` auto-generated into API reference — verify descriptions are accurate.
+
+---
+
 ## 2026-05-03 — plugin `0021823..07208d8`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/00218233c9d80a262ae25b0c27f0236039f482db...07208d8e459a1e4f7efbacb0afd2bffca5c43168))

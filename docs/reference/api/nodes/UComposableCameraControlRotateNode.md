@@ -21,8 +21,8 @@ Node for receiving user input and applying it to camera rotation. <br/>
 |--------|------|-------------|
 | `TObjectPtr< AActor >` | [`RotationInputActor`](#rotationinputactor)  |  |
 | `TObjectPtr< class UInputAction >` | [`RotateAction`](#rotateaction-2)  |  |
-| `float` | [`HorizontalSpeed`](#horizontalspeed)  |  |
-| `float` | [`VerticalSpeed`](#verticalspeed)  |  |
+| `float` | [`HorizontalSpeed`](#horizontalspeed-1)  |  |
+| `float` | [`VerticalSpeed`](#verticalspeed-1)  |  |
 | `FVector2D` | [`HorizontalDamping`](#horizontaldamping)  |  |
 | `FVector2D` | [`VerticalDamping`](#verticaldamping)  |  |
 | `bool` | [`bInvertPitch`](#binvertpitch)  |  |
@@ -45,7 +45,7 @@ TObjectPtr< class UInputAction > RotateAction
 
 ---
 
-#### HorizontalSpeed { #horizontalspeed }
+#### HorizontalSpeed { #horizontalspeed-1 }
 
 ```cpp
 float HorizontalSpeed { 1.f }
@@ -53,7 +53,7 @@ float HorizontalSpeed { 1.f }
 
 ---
 
-#### VerticalSpeed { #verticalspeed }
+#### VerticalSpeed { #verticalspeed-1 }
 
 ```cpp
 float VerticalSpeed { 1.f }

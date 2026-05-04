@@ -17,6 +17,7 @@ Solver output. `bValid == false` when an essential anchor cannot be resolved (pl
 | `float` | [`FieldOfView`](#fieldofview-2)  |  |
 | `float` | [`FocusDistance`](#focusdistance-2)  |  |
 | `float` | [`Aperture`](#aperture-3)  |  |
+| `float` | [`EffectiveDistance`](#effectivedistance)  | Effective `Placement.Distance` actually used by the solve this frame — = `FInterpTo(prior.LastDistance, Shot.Placement.Distance, dt, Shot.Placement.DistanceSpeed)` clamped `>= 1cm`, or simply `max(Shot.Placement.Distance, 1)` when no prior pose was supplied / DistanceSpeed is 0 / DeltaTime is 0. |
 
 ---
 
@@ -65,6 +66,18 @@ float FocusDistance = 200.f
 ```cpp
 float Aperture = 2.8f
 ```
+
+---
+
+#### EffectiveDistance { #effectivedistance }
+
+```cpp
+float EffectiveDistance = -1.f
+```
+
+Effective `Placement.Distance` actually used by the solve this frame — = `FInterpTo(prior.LastDistance, Shot.Placement.Distance, dt, Shot.Placement.DistanceSpeed)` clamped `>= 1cm`, or simply `max(Shot.Placement.Distance, 1)` when no prior pose was supplied / DistanceSpeed is 0 / DeltaTime is 0.
+
+Caller should feed this back into `[FShotPriorPose::LastDistance](FShotPriorPose.md#lastdistance)` on the next tick to keep the IIR seeded. `< 0` ⇒ Distance was irrelevant for this solve (e.g. `FixedWorldPosition` mode).
 
 # ExposedBag { #exposedbag }
 
