@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-05-05 — plugin `61534f9..7330930`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/61534f9685b5897989f5c20b38092321a036e716...7330930e46c1fcde23bcaf1237b863551506159c))
+
+- `7330930` Fix intermittent orphan pin on K2Node_ActivateComposableCamera cold restart.
+- `68ed0cd` Fix LS Shot CineCam-at-origin on PIE cut into Shot-driven LSActor.
+
+**C++ API pages regenerated:** 179 classes across 18 categories (modified: `UComposableCameraCameraBase`, `UComposableCameraCompositionFramingNode`)
+
+**Prose drafts added:** none (no new node / transition / modifier headers)
+
+**Flagged for review:**
+
+- `DesignDoc.md` last updated 2026-04-30 — predates commit date 2026-05-04; check whether framing-node solver-failure guard and `bLastTickFramingFailed` field are reflected in the relevant Concepts pages.
+- `EditorDesignDoc.md` last updated 2026-04-30 — predates commit date; verify no editor-side assumptions changed.
+- `ExecutionFlowExamples.md` last updated 2026-04-30 — predates commit date; verify LS-integration flow examples still accurate.
+- `TechDoc.md` confirmed in sync (last updated 2026-05-04 ≥ commit date).
+- `InvalidateTickCache()` added to `UComposableCameraCameraBase` — new public API, non-DAG-only. Ensure it is documented or call-site rules are noted wherever the public reference page lives.
+
+---
+
+
+
 ## 2026-05-04 — plugin `07208d8..61534f9`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/07208d8e459a1e4f7efbacb0afd2bffca5c43168...61534f9685b5897989f5c20b38092321a036e716))

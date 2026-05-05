@@ -208,6 +208,8 @@ Cost: a single static `TSet` insert/remove per camera lifecycle boundary; iterat
 | Return | Name | Description |
 |--------|------|-------------|
 | `int32` | [`LocalFrameCounter`](#localframecounter)  | Per-instance frame counter for the `Periodic` bounds-cache policy. Reset in OnInitialize, incremented at the end of every OnTickNode. `[EBoundsCachePolicy::Live](#ComposableCameraShotTarget_8h_1a8e6b3060b0f99d10653877e1989d03aba955ad3298db330b5ee880c2c9e6f23a0)` ignores this; `StaticSnapshot` doesn't touch the cache after OnInitialize. |
+| `bool` | [`bLastTickWasUnresolved`](#blasttickwasunresolved)  |  |
+| `int32` | [`LastUnresolvedTargetCount`](#lastunresolvedtargetcount)  |  |
 | `bool` | [`bHasLastPrimaryOutputPose`](#bhaslastprimaryoutputpose)  | True iff `LastPrimaryOutputPose` carries a valid prior solve. False = next tick performs a V1 hard solve and seeds the cache. |
 | `FVector` | [`LastPrimaryOutputPosition`](#lastprimaryoutputposition)  | Position + rotation produced by the most recent successful primary solve. Read by the next tick to project Aim/Placement anchors when the corresponding zones are enabled. Only Position + Rotation are cached because the Solver re-derives FOV / Focus from the current frame's context regardless. |
 | `FRotator` | [`LastPrimaryOutputRotation`](#lastprimaryoutputrotation)  |  |
@@ -235,6 +237,22 @@ int32 LocalFrameCounter = 0
 ```
 
 Per-instance frame counter for the `Periodic` bounds-cache policy. Reset in OnInitialize, incremented at the end of every OnTickNode. `[EBoundsCachePolicy::Live](#ComposableCameraShotTarget_8h_1a8e6b3060b0f99d10653877e1989d03aba955ad3298db330b5ee880c2c9e6f23a0)` ignores this; `StaticSnapshot` doesn't touch the cache after OnInitialize.
+
+---
+
+#### bLastTickWasUnresolved { #blasttickwasunresolved }
+
+```cpp
+bool bLastTickWasUnresolved = false
+```
+
+---
+
+#### LastUnresolvedTargetCount { #lastunresolvedtargetcount }
+
+```cpp
+int32 LastUnresolvedTargetCount = INDEX_NONE
+```
 
 ---
 
