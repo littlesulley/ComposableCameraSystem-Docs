@@ -224,11 +224,11 @@ Build a structured snapshot of the stack + each director's tree. The snapshot is
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`AddReferencedObjects`](#addreferencedobjects) `static` |  |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-1) `static` |  |
 
 ---
 
-#### AddReferencedObjects { #addreferencedobjects }
+#### AddReferencedObjects { #addreferencedobjects-1 }
 
 `static`
 

@@ -21,6 +21,8 @@ Each slot is aligned to the type's natural alignment. The per-instance default s
 | `TMap< FComposableCameraPinKey, int32 >` | [`OutputPinOffsets`](#outputpinoffsets)  | Lookup: (NodeIndex, PinName) for OUTPUT pins → byte offset in Storage. |
 | `TMap< FName, int32 >` | [`ExposedParameterOffsets`](#exposedparameteroffsets)  | Lookup: ExposedParameterName → byte offset in Storage. |
 | `TMap< FName, int32 >` | [`InternalVariableOffsets`](#internalvariableoffsets)  | Lookup: InternalVariableName → byte offset in Storage. |
+| `TMap< int32, TObjectPtr< AActor > >` | [`ActorReferenceSlots`](#actorreferenceslots)  | Object-reference slots mirrored from raw storage for explicit GC collection. |
+| `TMap< int32, TObjectPtr< UObject > >` | [`ObjectReferenceSlots`](#objectreferenceslots)  | Object-reference slots mirrored from raw storage for explicit GC collection. |
 | `TMap< FComposableCameraPinKey, int32 >` | [`InputPinSourceOffsets`](#inputpinsourceoffsets)  | Connection table: for each input pin, the offset of its source data. Key = (TargetNodeIndex, TargetPinName), Value = offset in Storage where the source output pin wrote its data. |
 | `TMap< FComposableCameraPinKey, int32 >` | [`ExposedInputPinOffsets`](#exposedinputpinoffsets)  | Exposure table: for each exposed input pin, the offset of the parameter slot. Key = (TargetNodeIndex, TargetPinName), Value = offset of the exposed parameter in Storage. |
 | `TMap< FComposableCameraPinKey, int32 >` | [`DefaultValueOffsets`](#defaultvalueoffsets)  | Per-instance default-value table: for each input pin that has an authored [FComposableCameraPinOverride::DefaultValueOverride](FComposableCameraPinOverride.md#defaultvalueoverride) (see [Nodes/ComposableCameraNodePinTypes.h](#composablecameranodepintypesh)), the offset of the slot holding the pre-parsed typed bytes. Key = (TargetNodeIndex, PinName), Value = offset in Storage. |
@@ -65,6 +67,26 @@ TMap< FName, int32 > InternalVariableOffsets
 ```
 
 Lookup: InternalVariableName → byte offset in Storage.
+
+---
+
+#### ActorReferenceSlots { #actorreferenceslots }
+
+```cpp
+TMap< int32, TObjectPtr< AActor > > ActorReferenceSlots
+```
+
+Object-reference slots mirrored from raw storage for explicit GC collection.
+
+---
+
+#### ObjectReferenceSlots { #objectreferenceslots }
+
+```cpp
+TMap< int32, TObjectPtr< UObject > > ObjectReferenceSlots
+```
+
+Object-reference slots mirrored from raw storage for explicit GC collection.
 
 ---
 
@@ -123,6 +145,10 @@ Total allocated size.
 | `void` | [`WriteInternalVariable`](#writeinternalvariable) `inline` | Write an internal variable by name. |
 | `bool` | [`HasInternalVariable`](#hasinternalvariable) `const` `inline` | Check if a specific internal variable exists. |
 | `void` | [`CopySlot`](#copyslot) `inline` | Copy raw bytes from one slot to another within the same storage. Used by the exec-chain SetVariable dispatch to transfer a source node's output pin value into an internal variable slot without knowing the concrete C++ type at compile time. |
+| `void` | [`RegisterReferenceSlot`](#registerreferenceslot)  |  |
+| `void` | [`RefreshReferenceSlot`](#refreshreferenceslot)  |  |
+| `void` | [`RefreshAllReferenceSlots`](#refreshallreferenceslots)  |  |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-4)  |  |
 | `bool` | [`IsValid`](#isvalid) `const` `inline` | Check if storage has been allocated. |
 | `void` | [`ZeroInitialize`](#zeroinitialize) `inline` | Zero-initialize all storage. Called at allocation time. |
 
@@ -241,6 +267,38 @@ inline void CopySlot(int32 SourceOffset, int32 TargetOffset, int32 NumBytes)
 ```
 
 Copy raw bytes from one slot to another within the same storage. Used by the exec-chain SetVariable dispatch to transfer a source node's output pin value into an internal variable slot without knowing the concrete C++ type at compile time.
+
+---
+
+#### RegisterReferenceSlot { #registerreferenceslot }
+
+```cpp
+void RegisterReferenceSlot(EComposableCameraPinType PinType, int32 Offset)
+```
+
+---
+
+#### RefreshReferenceSlot { #refreshreferenceslot }
+
+```cpp
+void RefreshReferenceSlot(int32 Offset)
+```
+
+---
+
+#### RefreshAllReferenceSlots { #refreshallreferenceslots }
+
+```cpp
+void RefreshAllReferenceSlots()
+```
+
+---
+
+#### AddReferencedObjects { #addreferencedobjects-4 }
+
+```cpp
+void AddReferencedObjects(FReferenceCollector & Collector)
+```
 
 ---
 

@@ -546,6 +546,22 @@ inline float GetRemainingLifeTime() const
 inline bool IsFinished() const
 ```
 
+### Public Static Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `void` | [`AddReferencedObjects`](#addreferencedobjects) `static` |  |
+
+---
+
+#### AddReferencedObjects { #addreferencedobjects }
+
+`static`
+
+```cpp
+static void AddReferencedObjects(UObject * InThis, FReferenceCollector & Collector)
+```
+
 ### Protected Attributes
 
 | Return | Name | Description |

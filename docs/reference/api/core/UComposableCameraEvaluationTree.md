@@ -198,11 +198,11 @@ Compiled out in shipping builds.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`AddReferencedObjects`](#addreferencedobjects-1) `static` |  |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-2) `static` |  |
 
 ---
 
-#### AddReferencedObjects { #addreferencedobjects-1 }
+#### AddReferencedObjects { #addreferencedobjects-2 }
 
 `static`
 

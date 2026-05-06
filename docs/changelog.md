@@ -1,5 +1,24 @@
 # Changelog
 
+
+## 2026-05-06 — plugin `7330930..51debc2`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/7330930e46c1fcde23bcaf1237b863551506159c...51debc253d8cd15dc7a3b707fda0fec91bb6d7d0))
+
+- `51debc2` Port three-layer K2 reconstruction safety to AddCameraPatch + FromDataTable.
+- `791cd96` Add GC-safe Actor/Object mirrors and widen struct pins to POD-friendly auto-detection.
+
+**C++ API pages regenerated:** 179 classes (8 public headers modified; no new/removed public classes)
+
+**Prose drafts added:** none (no new public node/transition/modifier headers)
+
+**Flagged for review:**
+
+- `EditorDesignDoc.md` last updated 2026-04-30, behind latest commit date 2026-05-05 — check editor-side docs for K2 node changes (AddCameraPatch, FromDataTable K2 reconstruction safety).
+- `ExecutionFlowExamples.md` last updated 2026-04-30, behind latest commit date 2026-05-05 — review execution flow examples for GC-safe Actor/Object mirror paths.
+
+---
+
 ## 2026-05-05 — plugin `61534f9..7330930`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/61534f9685b5897989f5c20b38092321a036e716...7330930e46c1fcde23bcaf1237b863551506159c))

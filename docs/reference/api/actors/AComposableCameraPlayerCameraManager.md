@@ -500,7 +500,18 @@ Fixed ring-buffer capacity. 120 frames ≈ 2 seconds at 60 fps, which is enough 
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-5) `static` |  |
 | `bool` | [`IsPoseHistoryFrozen`](#isposehistoryfrozen) `static` | Whether the pose-history ring buffer is currently frozen (driven by `CCS.Debug.Panel.PoseHistory.Freeze`). Read-only accessor for the debug panel so it can render a `[FROZEN]` indicator in the title bar without having to duplicate the CVar declaration. Debug-only; not declared outside `!UE_BUILD_SHIPPING`. |
+
+---
+
+#### AddReferencedObjects { #addreferencedobjects-5 }
+
+`static`
+
+```cpp
+static void AddReferencedObjects(UObject * InThis, FReferenceCollector & Collector)
+```
 
 ---
 

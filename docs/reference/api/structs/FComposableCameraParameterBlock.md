@@ -14,6 +14,8 @@ The K2Node fills this automatically from its dynamic pins. C++ callers fill it m
 | Return | Name | Description |
 |--------|------|-------------|
 | `TMap< FName, FComposableCameraParameterValue >` | [`Values`](#values)  | Type-erased parameter storage, keyed by parameter name. POD-only — delegates are stored in DelegateValues instead. |
+| `TMap< FName, TObjectPtr< AActor > >` | [`ActorValues`](#actorvalues)  | GC-visible owners for object-valued entries mirrored in Values. |
+| `TMap< FName, TObjectPtr< UObject > >` | [`ObjectValues`](#objectvalues)  | GC-visible owners for object-valued entries mirrored in Values. |
 | `TMap< FName, FScriptDelegate >` | [`DelegateValues`](#delegatevalues)  | Parallel storage for single-cast delegate bindings. Delegates are not POD and cannot be stored in the byte-array-based [FComposableCameraParameterValue](FComposableCameraParameterValue.md#fcomposablecameraparametervalue). They are applied at activation time via ApplyDelegateBindings (on the type asset), which writes them into the target node's FDelegateProperty UPROPERTY via reflection. |
 
 ---
@@ -25,6 +27,26 @@ TMap< FName, FComposableCameraParameterValue > Values
 ```
 
 Type-erased parameter storage, keyed by parameter name. POD-only — delegates are stored in DelegateValues instead.
+
+---
+
+#### ActorValues { #actorvalues }
+
+```cpp
+TMap< FName, TObjectPtr< AActor > > ActorValues
+```
+
+GC-visible owners for object-valued entries mirrored in Values.
+
+---
+
+#### ObjectValues { #objectvalues }
+
+```cpp
+TMap< FName, TObjectPtr< UObject > > ObjectValues
+```
+
+GC-visible owners for object-valued entries mirrored in Values.
 
 ---
 
@@ -40,6 +62,9 @@ Parallel storage for single-cast delegate bindings. Delegates are not POD and ca
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `void` | [`Reserve`](#reserve) `inline` |  |
+| `void` | [`StoreValue`](#storevalue) `inline` |  |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-3)  |  |
 | `void` | [`SetBool`](#setbool) `inline` | Set a bool parameter. |
 | `void` | [`SetInt32`](#setint32) `inline` | Set an int32 parameter. |
 | `void` | [`SetFloat`](#setfloat) `inline` | Set a float parameter. |
@@ -55,6 +80,34 @@ Parallel storage for single-cast delegate bindings. Delegates are not POD and ca
 | `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name (either POD or delegate). |
 | `bool` | [`Get`](#get-1) `const` `inline` | Try to get a typed value. Returns false if not found or type mismatch. |
 | `int32` | [`CopyRawTo`](#copyrawto) `const` `inline` | Copy a parameter's raw bytes into a destination buffer. Returns the number of bytes copied, or 0 if not found. |
+
+---
+
+#### Reserve { #reserve }
+
+`inline`
+
+```cpp
+inline void Reserve(int32 Num)
+```
+
+---
+
+#### StoreValue { #storevalue }
+
+`inline`
+
+```cpp
+inline void StoreValue(FName Name, FComposableCameraParameterValue && Entry)
+```
+
+---
+
+#### AddReferencedObjects { #addreferencedobjects-3 }
+
+```cpp
+void AddReferencedObjects(FReferenceCollector & Collector)
+```
 
 ---
 

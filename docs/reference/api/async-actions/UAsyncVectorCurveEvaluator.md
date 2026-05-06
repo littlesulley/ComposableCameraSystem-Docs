@@ -90,7 +90,7 @@ static UAsyncVectorCurveEvaluator * AsyncVectorCurveEvaluator(UObject * WorldCon
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `UCurveVector *` | [`Curve`](#curve-1)  |  |
+| `TObjectPtr< UCurveVector >` | [`Curve`](#curve-1)  |  |
 | `float` | [`Duration`](#duration-1)  |  |
 | `float` | [`ElapsedTime`](#elapsedtime-1)  |  |
 | `bool` | [`bShouldTick`](#bshouldtick-1)  |  |
@@ -100,7 +100,7 @@ static UAsyncVectorCurveEvaluator * AsyncVectorCurveEvaluator(UObject * WorldCon
 #### Curve { #curve-1 }
 
 ```cpp
-UCurveVector * Curve { nullptr }
+TObjectPtr< UCurveVector > Curve { nullptr }
 ```
 
 ---

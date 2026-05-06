@@ -116,6 +116,38 @@ DECLARE_LOG_CATEGORY_EXTERN(LogComposableCameraSystem, Log, All)
 DECLARE_STATS_GROUP(TEXT("ComposableCamera"), STATGROUP_CCS, STATCAT_Advanced)
 ```
 
+#### IsBytewiseSafeStruct { #isbytewisesafestruct }
+
+```cpp
+inline bool IsBytewiseSafeStruct(const UScriptStruct * Struct)
+```
+
+Whether a USTRUCT can be safely stored in the byte-array RuntimeDataBlock / ParameterBlock storage path. "Safe" means: copying via FMemory::Memcpy / FProperty::CopyCompleteValue produces a value identical to a deep copy, and the struct's destruction is a no-op (no heap-owned storage to leak).
+
+Used by:
+
+* TryMapPropertyToPinType (auto-discovery of exposable struct UPROPERTYs)
+
+* GetPinTypeSize / GetPinTypeAlignment (RuntimeDataBlock layout)
+
+* SetParameterBlockValue (CustomThunk struct write filter)
+
+* ApplyStringValue (string -> struct import path)
+
+* UComposableCameraTypeAsset::Build (authoring-time validation)
+
+Decision logic:
+
+1. STRUCT_IsPlainOldData flag set -> safe (UHT / TStructOpsTypeTraits opted in).
+
+1. Walk every UPROPERTY of the struct. Reject on FStr / FText / containers / object refs / interfaces / delegates &ndash; all carry heap-owned storage or GC-tracked references that cannot survive a raw byte copy.
+
+1. Recurse into nested FStructProperty.
+
+1. Everything else (Bool, numeric, Byte/Enum, Name, FieldPath) -> safe.
+
+Bounded by reflection nesting depth (UE structs cannot be circularly self-containing); no cycle guard required.
+
 #### TryMapPropertyToPinType { #trymappropertytopintype }
 
 ```cpp
@@ -126,7 +158,7 @@ Attempt to map an FProperty (from UClass reflection) to an EComposableCameraPinT
 
 Returns true if the property type has a direct pin-type mapping. Returns false for unsupported types (arrays, maps, sets, Instanced object properties, FString, etc.).
 
-For Enum-typed properties (`FEnumProperty` for `enum class`, or `FByteProperty` whose IntPropertyEnum is set), OutEnumType receives the backing UEnum*. For Struct-typed properties that aren't one of the hard-coded math types, OutStructType receives the specific UScriptStruct*. Both are cleared on entry.
+For Enum-typed properties (`FEnumProperty` for `enum class`, or `FByteProperty` whose IntPropertyEnum is set), OutEnumType receives the backing UEnum*. Generic Struct properties pass iff `IsBytewiseSafeStruct` returns true (POD-like) &ndash; non-POD structs are rejected until typed storage lands. Both metadata outputs are cleared on entry.
 
 Used by DeclareSubobjectPins to auto-discover exposable sub-properties of an Instanced UObject, and by ApplySubobjectPinValues to dispatch typed reads.
 

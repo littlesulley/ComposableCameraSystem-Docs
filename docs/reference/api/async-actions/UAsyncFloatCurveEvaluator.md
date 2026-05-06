@@ -90,7 +90,7 @@ static UAsyncFloatCurveEvaluator * AsyncFloatCurveEvaluator(UObject * WorldConte
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `UCurveFloat *` | [`Curve`](#curve)  |  |
+| `TObjectPtr< UCurveFloat >` | [`Curve`](#curve)  |  |
 | `float` | [`Duration`](#duration)  |  |
 | `float` | [`ElapsedTime`](#elapsedtime)  |  |
 | `bool` | [`bShouldTick`](#bshouldtick)  |  |
@@ -100,7 +100,7 @@ static UAsyncFloatCurveEvaluator * AsyncFloatCurveEvaluator(UObject * WorldConte
 #### Curve { #curve }
 
 ```cpp
-UCurveFloat * Curve { nullptr }
+TObjectPtr< UCurveFloat > Curve { nullptr }
 ```
 
 ---
