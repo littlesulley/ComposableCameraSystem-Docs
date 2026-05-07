@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-05-07 — plugin `51debc2..c3e14fd`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/51debc253d8cd15dc7a3b707fda0fec91bb6d7d0...c3e14fd1773b484e142f79b86602dd029cecb2c5))
+
+- `c3e14fd` Add typed struct storage, typed K2 setter dispatch, and full enum picker.
+
+**C++ API pages regenerated:** 180 pages (modified: `FComposableCameraParameterBlock`, `FComposableCameraRuntimeDataBlock`, `ComposableCameraNodePinTypes`, `ComposableCameraBlueprintLibrary`)
+
+**Prose drafts added:** none (no new public node/transition/modifier headers)
+
+**Flagged for review:**
+
+- `EditorDesignDoc.md` last updated 2026-04-30, commit date 2026-05-06 — K2 ExpandNode dispatch was refactored (typed-setter dispatch, enum picker); verify the K2 node authoring section reflects this.
+- `ExecutionFlowExamples.md` last updated 2026-04-30, commit date 2026-05-06 — may need a new flow example for typed-struct parameter propagation through `SetParameterBlockValue` → typed setter fallback.
+- New typed setters (`SetParameterBlockBool`, `SetParameterBlockVector`, etc.) added to `UComposableCameraBlueprintLibrary` — consider adding a usage note to the Blueprint parameter-passing section of the user guide.
+
+---
 
 ## 2026-05-06 — plugin `7330930..51debc2`
 

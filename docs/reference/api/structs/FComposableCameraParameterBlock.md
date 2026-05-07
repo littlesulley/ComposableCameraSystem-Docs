@@ -17,6 +17,7 @@ The K2Node fills this automatically from its dynamic pins. C++ callers fill it m
 | `TMap< FName, TObjectPtr< AActor > >` | [`ActorValues`](#actorvalues)  | GC-visible owners for object-valued entries mirrored in Values. |
 | `TMap< FName, TObjectPtr< UObject > >` | [`ObjectValues`](#objectvalues)  | GC-visible owners for object-valued entries mirrored in Values. |
 | `TMap< FName, FScriptDelegate >` | [`DelegateValues`](#delegatevalues)  | Parallel storage for single-cast delegate bindings. Delegates are not POD and cannot be stored in the byte-array-based [FComposableCameraParameterValue](FComposableCameraParameterValue.md#fcomposablecameraparametervalue). They are applied at activation time via ApplyDelegateBindings (on the type asset), which writes them into the target node's FDelegateProperty UPROPERTY via reflection. |
+| `TMap< FName, FInstancedStruct >` | [`StructValues`](#structvalues)  | Parallel storage for non-POD struct values (USTRUCTs containing FString / FText / TArray / object refs / delegates &ndash; anything `IsBytewiseSafeStruct` rejects). The byte-array `Values` map cannot transport these because raw memcpy aliases heap-owned storage and makes the GC blind to embedded references; FInstancedStruct owns its memory, runs proper constructors / destructors, and surfaces UObject references via AddStructReferencedObjects. POD struct values (FVector / FRotator / FTransform / etc.) still go through the byte-array `Values` map &ndash; they're memcpy-safe and the existing offset tables in RuntimeDataBlock are tighter. |
 
 ---
 
@@ -58,12 +59,23 @@ TMap< FName, FScriptDelegate > DelegateValues
 
 Parallel storage for single-cast delegate bindings. Delegates are not POD and cannot be stored in the byte-array-based [FComposableCameraParameterValue](FComposableCameraParameterValue.md#fcomposablecameraparametervalue). They are applied at activation time via ApplyDelegateBindings (on the type asset), which writes them into the target node's FDelegateProperty UPROPERTY via reflection.
 
+---
+
+#### StructValues { #structvalues }
+
+```cpp
+TMap< FName, FInstancedStruct > StructValues
+```
+
+Parallel storage for non-POD struct values (USTRUCTs containing FString / FText / TArray / object refs / delegates &ndash; anything `IsBytewiseSafeStruct` rejects). The byte-array `Values` map cannot transport these because raw memcpy aliases heap-owned storage and makes the GC blind to embedded references; FInstancedStruct owns its memory, runs proper constructors / destructors, and surfaces UObject references via AddStructReferencedObjects. POD struct values (FVector / FRotator / FTransform / etc.) still go through the byte-array `Values` map &ndash; they're memcpy-safe and the existing offset tables in RuntimeDataBlock are tighter.
+
 ### Public Methods
 
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`Reserve`](#reserve) `inline` |  |
 | `void` | [`StoreValue`](#storevalue) `inline` |  |
+| `void` | [`SetStruct`](#setstruct) `inline` | Set a non-POD struct parameter. The struct is copied into a fresh FInstancedStruct via InitializeAs(StructType, Memory), which runs the proper per-property copy (FString operator=, TArray copy, UObject ptr etc.) and owns the result for the lifetime of this map entry. The parallel `Values` / `ActorValues` / `ObjectValues` / `DelegateValues` entries under the same Name are cleared so a subsequent Get-by-name cannot read a stale POD-shaped entry for what is now a struct value. |
 | `void` | [`AddReferencedObjects`](#addreferencedobjects-3)  |  |
 | `void` | [`SetBool`](#setbool) `inline` | Set a bool parameter. |
 | `void` | [`SetInt32`](#setint32) `inline` | Set an int32 parameter. |
@@ -77,7 +89,7 @@ Parallel storage for single-cast delegate bindings. Delegates are not POD and ca
 | `void` | [`SetName`](#setname) `inline` | Set an FName parameter. FName is POD (NAME_INDEX + NAME_NUMBER, 8 bytes) and is memcpy-safe in the type-erased data storage. |
 | `void` | [`SetEnum`](#setenum) `inline` | Set an enum parameter. Enums are always normalized to int64 in the data storage, regardless of the backing property's actual underlying width. The narrow-cast into the final storage happens at resolve time, where the owning FProperty is known (see WriteEnumInt64ToProperty). |
 | `void` | [`SetDelegate`](#setdelegate) `inline` | Set a single-cast delegate binding. The delegate is stored in a parallel map (not the POD byte array) and applied at activation time via ApplyDelegateBindings on the type asset. |
-| `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name (either POD or delegate). |
+| `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name (POD / actor / object / struct / delegate). |
 | `bool` | [`Get`](#get-1) `const` `inline` | Try to get a typed value. Returns false if not found or type mismatch. |
 | `int32` | [`CopyRawTo`](#copyrawto) `const` `inline` | Copy a parameter's raw bytes into a destination buffer. Returns the number of bytes copied, or 0 if not found. |
 
@@ -100,6 +112,18 @@ inline void Reserve(int32 Num)
 ```cpp
 inline void StoreValue(FName Name, FComposableCameraParameterValue && Entry)
 ```
+
+---
+
+#### SetStruct { #setstruct }
+
+`inline`
+
+```cpp
+inline void SetStruct(FName Name, const UScriptStruct * Struct, const void * Memory)
+```
+
+Set a non-POD struct parameter. The struct is copied into a fresh FInstancedStruct via InitializeAs(StructType, Memory), which runs the proper per-property copy (FString operator=, TArray copy, UObject ptr etc.) and owns the result for the lifetime of this map entry. The parallel `Values` / `ActorValues` / `ObjectValues` / `DelegateValues` entries under the same Name are cleared so a subsequent Get-by-name cannot read a stale POD-shaped entry for what is now a struct value.
 
 ---
 
@@ -263,7 +287,7 @@ Set a single-cast delegate binding. The delegate is stored in a parallel map (no
 inline bool HasValue(FName Name) const
 ```
 
-Check if a parameter exists by name (either POD or delegate).
+Check if a parameter exists by name (POD / actor / object / struct / delegate).
 
 ---
 

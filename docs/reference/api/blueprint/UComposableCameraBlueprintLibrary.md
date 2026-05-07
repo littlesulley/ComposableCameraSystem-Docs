@@ -57,6 +57,19 @@ inline DECLARE_FUNCTION(execSetParameterBlockValue)
 | `UObject *` | [`MakeLiteralObject`](#makeliteralobject) `static` |  |
 | `FName` | [`MakeLiteralName`](#makeliteralname) `static` |  |
 | `uint8` | [`MakeLiteralByte`](#makeliteralbyte) `static` |  |
+| `void` | [`SetParameterBlockBool`](#setparameterblockbool) `static` |  |
+| `void` | [`SetParameterBlockInt32`](#setparameterblockint32) `static` |  |
+| `void` | [`SetParameterBlockFloat`](#setparameterblockfloat) `static` |  |
+| `void` | [`SetParameterBlockDouble`](#setparameterblockdouble) `static` |  |
+| `void` | [`SetParameterBlockName`](#setparameterblockname) `static` |  |
+| `void` | [`SetParameterBlockVector2D`](#setparameterblockvector2d) `static` |  |
+| `void` | [`SetParameterBlockVector`](#setparameterblockvector) `static` |  |
+| `void` | [`SetParameterBlockVector4`](#setparameterblockvector4) `static` |  |
+| `void` | [`SetParameterBlockRotator`](#setparameterblockrotator) `static` |  |
+| `void` | [`SetParameterBlockTransform`](#setparameterblocktransform) `static` |  |
+| `void` | [`SetParameterBlockFloatInterval`](#setparameterblockfloatinterval) `static` |  |
+| `void` | [`SetParameterBlockActor`](#setparameterblockactor) `static` |  |
+| `void` | [`SetParameterBlockObject`](#setparameterblockobject) `static` |  |
 
 ---
 
@@ -542,4 +555,134 @@ static FName MakeLiteralName(FName Value)
 
 ```cpp
 static uint8 MakeLiteralByte(uint8 Value)
+```
+
+---
+
+#### SetParameterBlockBool { #setparameterblockbool }
+
+`static`
+
+```cpp
+static void SetParameterBlockBool(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, bool Value)
+```
+
+---
+
+#### SetParameterBlockInt32 { #setparameterblockint32 }
+
+`static`
+
+```cpp
+static void SetParameterBlockInt32(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, int32 Value)
+```
+
+---
+
+#### SetParameterBlockFloat { #setparameterblockfloat }
+
+`static`
+
+```cpp
+static void SetParameterBlockFloat(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, float Value)
+```
+
+---
+
+#### SetParameterBlockDouble { #setparameterblockdouble }
+
+`static`
+
+```cpp
+static void SetParameterBlockDouble(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, double Value)
+```
+
+---
+
+#### SetParameterBlockName { #setparameterblockname }
+
+`static`
+
+```cpp
+static void SetParameterBlockName(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, FName Value)
+```
+
+---
+
+#### SetParameterBlockVector2D { #setparameterblockvector2d }
+
+`static`
+
+```cpp
+static void SetParameterBlockVector2D(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, FVector2D Value)
+```
+
+---
+
+#### SetParameterBlockVector { #setparameterblockvector }
+
+`static`
+
+```cpp
+static void SetParameterBlockVector(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, FVector Value)
+```
+
+---
+
+#### SetParameterBlockVector4 { #setparameterblockvector4 }
+
+`static`
+
+```cpp
+static void SetParameterBlockVector4(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, FVector4 Value)
+```
+
+---
+
+#### SetParameterBlockRotator { #setparameterblockrotator }
+
+`static`
+
+```cpp
+static void SetParameterBlockRotator(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, FRotator Value)
+```
+
+---
+
+#### SetParameterBlockTransform { #setparameterblocktransform }
+
+`static`
+
+```cpp
+static void SetParameterBlockTransform(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, FTransform Value)
+```
+
+---
+
+#### SetParameterBlockFloatInterval { #setparameterblockfloatinterval }
+
+`static`
+
+```cpp
+static void SetParameterBlockFloatInterval(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, FFloatInterval Value)
+```
+
+---
+
+#### SetParameterBlockActor { #setparameterblockactor }
+
+`static`
+
+```cpp
+static void SetParameterBlockActor(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, AActor * Value)
+```
+
+---
+
+#### SetParameterBlockObject { #setparameterblockobject }
+
+`static`
+
+```cpp
+static void SetParameterBlockObject(FComposableCameraParameterBlock & ParameterBlock, FName ParameterName, UObject * Value)
 ```
