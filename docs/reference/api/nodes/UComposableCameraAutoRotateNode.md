@@ -15,6 +15,7 @@ Node for auto-rotating around a given "main direction." The main direction is su
 |--------|------|-------------|
 | `EComposableCameraAutoRotateDirectionMode` | [`DirectionMode`](#directionmode)  |  |
 | `FVector` | [`MainDirection`](#maindirection)  |  |
+| `EComposableCameraActorInputSource` | [`PrimaryActorSource`](#primaryactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PrimaryActor`](#primaryactor)  |  |
 | `bool` | [`bInterruptOnUserInput`](#binterruptonuserinput)  |  |
 | `FVector2D` | [`CameraRotationInput`](#camerarotationinput)  |  |
@@ -41,6 +42,16 @@ EComposableCameraAutoRotateDirectionMode DirectionMode {  }
 ```cpp
 FVector MainDirection { FVector::ForwardVector }
 ```
+
+---
+
+#### PrimaryActorSource { #primaryactorsource }
+
+```cpp
+EComposableCameraActorInputSource PrimaryActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether this node resolves the actor from an explicit property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

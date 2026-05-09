@@ -15,6 +15,7 @@ Node for positioning the given pivot point in the given screen space.
 |--------|------|-------------|
 | `EComposableCameraScreenSpacePivotSource` | [`PivotSource`](#pivotsource)  |  |
 | `FVector` | [`PivotWorldPosition`](#pivotworldposition)  |  |
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-6)  |  |
 | `float` | [`PivotWorldUpOffset`](#pivotworldupoffset)  |  |
 | `EComposableCameraScreenSpaceMethod` | [`Method`](#method)  |  |
@@ -39,6 +40,16 @@ EComposableCameraScreenSpacePivotSource PivotSource {  }
 ```cpp
 FVector PivotWorldPosition { FVector::ZeroVector }
 ```
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

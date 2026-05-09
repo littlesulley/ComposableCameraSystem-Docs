@@ -17,6 +17,7 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-3)  |  |
 | `TEnumAsByte< ETraceTypeQuery >` | [`TraceCollisionChannel`](#tracecollisionchannel)  |  |
 | `bool` | [`bTraceUseSphere`](#btraceusesphere)  |  |
@@ -32,6 +33,16 @@ The first we call it TraceCollision, and the second SelfCollision, both dealt wi
 | `double` | [`PivotZOffset`](#pivotzoffset-1)  |  |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-1)  |  |
 | `FName` | [`BoneName`](#bonename-2)  |  |
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

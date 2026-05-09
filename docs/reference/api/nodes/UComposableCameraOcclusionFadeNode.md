@@ -35,6 +35,7 @@ StaticMeshComponent-only is NOT enforced — unlike Epic's node, we consider any
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-5)  | Actor whose location (plus PivotZOffset, or bone socket) is the "protected end" of the line-of-sight sweep and the hit-test anchor for proximity fade. Typically the player pawn. Must be non-null when bFadeOccluders is true; otherwise the sweep is skipped with a warning. |
 | `float` | [`PivotZOffset`](#pivotzoffset-3)  | World-Z offset added on top of the actor location when bUseBoneForDetection is false (or the requested bone can't be found). Typically ~50 to raise the target from foot to chest so the sweep line doesn't graze the floor. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-3)  | When true, the target point is the named bone's world location on the actor's skeletal mesh (if present and the bone resolves). Falls back to ActorLocation + PivotZOffset on any failure. |
@@ -51,6 +52,16 @@ StaticMeshComponent-only is NOT enforced — unlike Epic's node, we consider any
 | `float` | [`ProximityRadius`](#proximityradius)  | Radius of the proximity overlap centred at the camera location. Actors of class ProximityActorClass whose bounding shape intersects this sphere are fade-marked. |
 | `TSubclassOf< AActor >` | [`ProximityActorClass`](#proximityactorclass)  | Actor class filter for proximity fade. Null = treat as APawn. Use a narrower class (e.g. a game-specific ACharacter subclass) to exclude vehicles / AI turrets / etc. |
 | `bool` | [`bIgnorePivotActorInProximity`](#bignorepivotactorinproximity)  | When true, PivotActor is excluded from proximity fade even if it lies within ProximityRadius. Defaults to false — the typical "fade the |
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

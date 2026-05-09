@@ -25,11 +25,13 @@ Node for constraining rotation's yaw or pitch. <br/>
 |--------|------|-------------|
 | `bool` | [`bConstrainYaw`](#bconstrainyaw)  |  |
 | `EComposableCameraRotationConstrainType` | [`ConstrainYawType`](#constrainyawtype)  |  |
+| `EComposableCameraActorInputSource` | [`ActorForYawConstrainSource`](#actorforyawconstrainsource)  |  |
 | `TSoftObjectPtr< AActor >` | [`ActorForYawConstrain`](#actorforyawconstrain)  |  |
 | `FVector` | [`VectorForYawConstrain`](#vectorforyawconstrain)  |  |
 | `FVector2D` | [`YawRange`](#yawrange-1)  |  |
 | `bool` | [`bConstrainPitch`](#bconstrainpitch)  |  |
 | `EComposableCameraRotationConstrainType` | [`ConstrainPitchType`](#constrainpitchtype)  |  |
+| `EComposableCameraActorInputSource` | [`ActorForPitchConstrainSource`](#actorforpitchconstrainsource)  |  |
 | `TSoftObjectPtr< AActor >` | [`ActorForPitchConstrain`](#actorforpitchconstrain)  |  |
 | `FVector` | [`VectorForPitchConstrain`](#vectorforpitchconstrain)  |  |
 | `FVector2D` | [`PitchRange`](#pitchrange-1)  |  |
@@ -49,6 +51,16 @@ bool bConstrainYaw { false }
 ```cpp
 EComposableCameraRotationConstrainType ConstrainYawType {  }
 ```
+
+---
+
+#### ActorForYawConstrainSource { #actorforyawconstrainsource }
+
+```cpp
+EComposableCameraActorInputSource ActorForYawConstrainSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether yaw actor-space constraints use an explicit actor or the controller-controlled pawn owned by the camera manager.
 
 ---
 
@@ -89,6 +101,16 @@ bool bConstrainPitch { true }
 ```cpp
 EComposableCameraRotationConstrainType ConstrainPitchType {  }
 ```
+
+---
+
+#### ActorForPitchConstrainSource { #actorforpitchconstrainsource }
+
+```cpp
+EComposableCameraActorInputSource ActorForPitchConstrainSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether pitch actor-space constraints use an explicit actor or the controller-controlled pawn owned by the camera manager.
 
 ---
 

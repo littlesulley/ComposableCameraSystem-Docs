@@ -45,6 +45,7 @@ PlayMode is implicit: Once. There is no Loop / PingPong — authors who need a c
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-4)  | The subject the effect locks on. Camera dollies along the camera→subject axis; FOV compensates so this subject stays the same on-screen size. Required — the node is a pass-through with a warning when null. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection-2)  | When true, target point is the named bone / socket on PivotActor's skeletal mesh (if resolvable). Falls back to ActorLocation + PivotZOffset on any failure. |
 | `FName` | [`BoneName`](#bonename-3)  | Bone / socket name. Sampled when bUseBoneForDetection is true. |
@@ -57,6 +58,16 @@ PlayMode is implicit: Once. There is no Loop / PingPong — authors who need a c
 | `bool` | [`bEnable`](#benable)  | Master toggle. When false, the node is a pass-through this tick (no camera dolly, no FOV override). Useful for Blueprint-gated effects: trigger the activation + enable on cue, disable on cut. |
 | `bool` | [`bClampCameraDistance`](#bclampcameradistance)  | When true, the derived camera distance is clamped to CameraDistanceClamp. Prevents pathological curve shapes from flying the camera off to kilometres away (very narrow FOV) or plunging into / past the subject (very wide FOV). |
 | `FFloatInterval` | [`CameraDistanceClamp`](#cameradistanceclamp)  | Min/max on the camera-to-subject distance when bClampCameraDistance is true. Min should be larger than the subject's extent so the camera doesn't end up inside the actor; Max bounds the "infinite |
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

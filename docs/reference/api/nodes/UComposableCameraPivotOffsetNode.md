@@ -20,6 +20,7 @@ This node runs every tick.
 |--------|------|-------------|
 | `FVector` | [`PivotPosition`](#pivotposition-1)  |  |
 | `ECameraPivotOffset` | [`PivotOffsetType`](#pivotoffsettype)  |  |
+| `EComposableCameraActorInputSource` | [`ActorForLocalSpaceSource`](#actorforlocalspacesource)  |  |
 | `TSoftObjectPtr< AActor >` | [`ActorForLocalSpace`](#actorforlocalspace)  |  |
 | `FVector` | [`PivotOffset`](#pivotoffset-1)  |  |
 
@@ -38,6 +39,16 @@ FVector PivotPosition { FVector::ZeroVector }
 ```cpp
 ECameraPivotOffset PivotOffsetType = 
 ```
+
+---
+
+#### ActorForLocalSpaceSource { #actorforlocalspacesource }
+
+```cpp
+EComposableCameraActorInputSource ActorForLocalSpaceSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether actor-local pivot offsets use an explicit actor or the controller-controlled pawn owned by the camera manager.
 
 ---
 

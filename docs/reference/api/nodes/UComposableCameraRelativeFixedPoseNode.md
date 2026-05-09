@@ -15,6 +15,7 @@ Node for maintaining a fixed pose relative to some given transform.
 |--------|------|-------------|
 | `EComposableCameraRelativeFixedPoseMethod` | [`Method`](#method-1)  |  |
 | `FTransform` | [`RelativeTransform`](#relativetransform)  |  |
+| `EComposableCameraActorInputSource` | [`RelativeActorSource`](#relativeactorsource)  |  |
 | `TObjectPtr< AActor >` | [`RelativeActor`](#relativeactor)  |  |
 | `FName` | [`RelativeSocket`](#relativesocket)  |  |
 | `FTransform` | [`TargetTransform`](#targettransform)  |  |
@@ -34,6 +35,16 @@ EComposableCameraRelativeFixedPoseMethod Method
 ```cpp
 FTransform RelativeTransform
 ```
+
+---
+
+#### RelativeActorSource { #relativeactorsource }
+
+```cpp
+EComposableCameraActorInputSource RelativeActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the relative pose actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

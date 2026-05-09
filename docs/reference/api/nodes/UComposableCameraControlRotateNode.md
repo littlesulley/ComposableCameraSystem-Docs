@@ -19,6 +19,7 @@ Node for receiving user input and applying it to camera rotation. <br/>
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraActorInputSource` | [`RotationInputActorSource`](#rotationinputactorsource)  |  |
 | `TObjectPtr< AActor >` | [`RotationInputActor`](#rotationinputactor)  |  |
 | `TObjectPtr< class UInputAction >` | [`RotateAction`](#rotateaction-2)  |  |
 | `float` | [`HorizontalSpeed`](#horizontalspeed-1)  |  |
@@ -26,6 +27,16 @@ Node for receiving user input and applying it to camera rotation. <br/>
 | `FVector2D` | [`HorizontalDamping`](#horizontaldamping)  |  |
 | `FVector2D` | [`VerticalDamping`](#verticaldamping)  |  |
 | `bool` | [`bInvertPitch`](#binvertpitch)  |  |
+
+---
+
+#### RotationInputActorSource { #rotationinputactorsource }
+
+```cpp
+EComposableCameraActorInputSource RotationInputActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether rotation input is bound from an explicit actor or from the controller-controlled pawn owned by the camera manager.
 
 ---
 
@@ -193,5 +204,5 @@ void ApplyAcceleration(float DeltaTime, const FVector2D & Damping, double & This
 #### EnsureInputBinding { #ensureinputbinding }
 
 ```cpp
-void EnsureInputBinding()
+void EnsureInputBinding(AActor * EffectiveRotationInputActor)
 ```

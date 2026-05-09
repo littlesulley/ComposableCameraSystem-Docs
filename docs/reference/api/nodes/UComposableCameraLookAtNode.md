@@ -15,6 +15,7 @@ Node for looking at some target position.
 |--------|------|-------------|
 | `EComposableCameraLookAtType` | [`LookAtType`](#lookattype)  |  |
 | `FVector` | [`LookAtPosition`](#lookatposition)  |  |
+| `EComposableCameraActorInputSource` | [`LookAtActorSource`](#lookatactorsource)  |  |
 | `TObjectPtr< AActor >` | [`LookAtActor`](#lookatactor)  |  |
 | `FName` | [`LookAtSocket`](#lookatsocket)  |  |
 | `EComposableCameraLookAtConstraintType` | [`LookAtConstraintType`](#lookatconstrainttype)  |  |
@@ -37,6 +38,16 @@ EComposableCameraLookAtType LookAtType
 ```cpp
 FVector LookAtPosition
 ```
+
+---
+
+#### LookAtActorSource { #lookatactorsource }
+
+```cpp
+EComposableCameraActorInputSource LookAtActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the look-at target actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

@@ -13,11 +13,22 @@ Node for constraining a pivot position in screen using either translation or rot
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-8)  |  |
 | `EComposableCameraScreenSpaceMethod` | [`Method`](#method-2)  |  |
 | `FVector2D` | [`SafeZoneCenter`](#safezonecenter-1)  |  |
 | `FVector2D` | [`SafeZoneWidth`](#safezonewidth-1)  |  |
 | `FVector2D` | [`SafeZoneHeight`](#safezoneheight-1)  |  |
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

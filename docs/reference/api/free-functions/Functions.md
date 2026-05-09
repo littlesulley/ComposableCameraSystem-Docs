@@ -397,6 +397,7 @@ inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & Da
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `AActor *` | [`ResolveActorInput`](#resolveactorinput)  | Resolve an actor input selector to the effective actor used by camera nodes. |
 | `float` | [`SmoothStep`](#smoothstep) `inline` |  |
 | `float` | [`SmootherStep`](#smootherstep) `inline` |  |
 | `double` | [`SimpleExpDamp`](#simpleexpdamp) `inline` |  |
@@ -419,6 +420,16 @@ inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & Da
 | `float` | [`GetClosestAngleDegree`](#getclosestangledegree) `inline` |  |
 | `float` | [`GetProjectPerpLength`](#getprojectperplength) `inline` | Get the perpendicular vector's length from any vector B projecting onto a unit vector A. i.e., (B - A * (A.Dot(B)).Length(). |
 | `FVector` | [`GetProjectedPoint`](#getprojectedpoint) `inline` | Get the point projected from B to a unit vector A. |
+
+---
+
+#### ResolveActorInput { #resolveactorinput }
+
+```cpp
+AActor * ResolveActorInput(EComposableCameraActorInputSource Source, AActor * ExplicitActor, const AComposableCameraPlayerCameraManager * PlayerCameraManager)
+```
+
+Resolves an actor input selector to the effective actor used by camera nodes. `ExplicitActor` returns the supplied actor; `ControllerControlledPawn` reads the pawn controlled by the camera manager's owning player controller.
 
 ---
 

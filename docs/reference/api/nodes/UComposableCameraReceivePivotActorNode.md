@@ -13,9 +13,20 @@ Reads a pivot actor's location and publishes it as the pivot position for downst
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-7)  |  |
 | `bool` | [`bUseBoneForPivot`](#buseboneforpivot)  |  |
 | `FName` | [`BoneName`](#bonename-5)  |  |
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 
@@ -125,6 +136,7 @@ Default implementation does nothing. Compiled out in shipping builds.
 | Return | Name | Description |
 |--------|------|-------------|
 | `TWeakObjectPtr< USkeletalMeshComponent >` | [`SkeletalMeshComponentForPivotActor`](#skeletalmeshcomponentforpivotactor-1)  |  |
+| `TWeakObjectPtr< AActor >` | [`LastEffectivePivotActor`](#lasteffectivepivotactor)  |  |
 | `TWeakObjectPtr< AActor >` | [`LastResolvedPivotActor`](#lastresolvedpivotactor-1)  |  |
 
 ---
@@ -134,6 +146,16 @@ Default implementation does nothing. Compiled out in shipping builds.
 ```cpp
 TWeakObjectPtr< USkeletalMeshComponent > SkeletalMeshComponentForPivotActor
 ```
+
+---
+
+#### LastEffectivePivotActor { #lasteffectivepivotactor }
+
+```cpp
+TWeakObjectPtr< AActor > LastEffectivePivotActor
+```
+
+Caches the effective pivot actor resolved from PivotActorSource.
 
 ---
 

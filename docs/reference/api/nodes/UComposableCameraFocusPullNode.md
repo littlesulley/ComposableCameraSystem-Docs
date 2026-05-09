@@ -38,6 +38,7 @@ First tick after activation bypasses the damping so the initial focus distance s
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor-1)  | Actor whose distance from the camera drives the focus distance. Typically the player pawn or a narrative focal actor. Required — the node pass-throughs with a warning each tick when unset. |
 | `bool` | [`bUseBoneForDetection`](#busebonefordetection)  | When true, the target point is sampled at the named bone / socket on PivotActor's skeletal mesh (if present and resolvable). Falls back to ActorLocation + PivotZOffset on any failure. |
 | `FName` | [`BoneName`](#bonename-1)  | Bone / socket name, sampled when bUseBoneForDetection is true. |
@@ -47,6 +48,16 @@ First tick after activation bypasses the damping so the initial focus distance s
 | `bool` | [`bClampFocusDistance`](#bclampfocusdistance)  | When true, the resolved focus distance is clamped to FocusDistanceClamp. |
 | `FFloatInterval` | [`FocusDistanceClamp`](#focusdistanceclamp)  | Min/max range applied when bClampFocusDistance is true. Min clamps against micro-distances (rarely useful below ~10 cm; the renderer's near plane usually dominates before that). Max clamps against the "background"-tier distances that would produce no visible DoF anyway. |
 | `TObjectPtr< UComposableCameraInterpolatorBase >` | [`FocusInterpolator`](#focusinterpolator)  | Optional interpolator applied to the focus distance each tick. When null, the node is stateless and the pose's FocusDistance equals the raw (clamped, offset-adjusted) distance every frame — visually this means focus tracks the target with zero lag, which is jittery for fast-moving targets. Pick any of the built-in interpolators (SpringDamper / IIR / SimpleSpring) to get a smooth "focus pull" that matches the camera's broader tuning. First tick after activation bypasses the interpolator to avoid a visible ramp from the previous FocusDistance value. |
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

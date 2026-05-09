@@ -16,6 +16,7 @@ Node for placing the camera on a given spline.
 | `EComposableCameraSplineNodeSplineType` | [`SplineType`](#splinetype)  |  |
 | `TObjectPtr< ACameraRig_Rail >` | [`Rail`](#rail)  |  |
 | `EComposableCameraSplineNodeMoveMethod` | [`MoveMethod`](#movemethod)  |  |
+| `EComposableCameraActorInputSource` | [`ClosestMoveMethodPivotActorSource`](#closestmovemethodpivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`ClosestMoveMethodPivotActor`](#closestmovemethodpivotactor)  |  |
 | `TObjectPtr< UCurveFloat >` | [`AutomaticMoveCurve`](#automaticmovecurve)  |  |
 | `float` | [`Duration`](#duration-4)  |  |
@@ -47,6 +48,16 @@ TObjectPtr< ACameraRig_Rail > Rail { nullptr }
 ```cpp
 EComposableCameraSplineNodeMoveMethod MoveMethod {  }
 ```
+
+---
+
+#### ClosestMoveMethodPivotActorSource { #closestmovemethodpivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource ClosestMoveMethodPivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether ClosestPoint follows an explicit pivot actor or the controller-controlled pawn owned by the camera manager.
 
 ---
 

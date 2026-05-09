@@ -2,6 +2,18 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-10 - C++ API actor source reference follow-up
+
+**Plugin commits processed:** `2785600..332f3e9`, covering `Add controller pawn actor source option`.
+
+**C++ API reference:** updated generated API markdown manually because local Doxygen/moxygen tooling is unavailable. Added `EComposableCameraActorInputSource`, `ComposableCameraSystem::ResolveActorInput`, the new `*ActorSource` public attributes for affected camera nodes and rotation constraints, `LastEffectivePivotActor`, and the current `EnsureInputBinding(AActor * EffectiveRotationInputActor)` signature.
+
+**New-feature documentation decision:** prose docs for controller-controlled-pawn actor sources already exist in `docs/reference/actor-input-sources.md`; this follow-up only brings stale C++ reference node definitions back in line with the public headers.
+
+**Validation:** checked the public-header actor-source field list against API docs. `mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `mkdocs build` passed.
+
+---
+
 ## 2026-05-09 — plugin `2785600..332f3e9`
 
 **Plugin commits processed:** `332f3e9` (`Add controller pawn actor source option`) on the local `dev-v1` branch. Repository synchronization was attempted first, but the plugin fetch was blocked by `.git/FETCH_HEAD` permission denial and the Documentation fetch was blocked by unavailable GitHub network access in this environment.

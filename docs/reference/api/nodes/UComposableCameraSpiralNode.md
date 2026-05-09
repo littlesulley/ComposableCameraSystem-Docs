@@ -32,6 +32,7 @@ Curve authoring convention (Progress pattern, matching SplineNode's AutomaticMov
 | Return | Name | Description |
 |--------|------|-------------|
 | `EComposableCameraSpiralPivotSourceType` | [`PivotSourceType`](#pivotsourcetype)  | Whether the pivot comes from an Actor's location or a raw vector. |
+| `EComposableCameraActorInputSource` | [`PivotActorSource`](#pivotactorsource)  |  |
 | `TObjectPtr< AActor >` | [`PivotActor`](#pivotactor)  | Actor whose world location is used as the pivot. Typically driven by an upstream ReceivePivotActorNode's output, or set on the instance. |
 | `FVector` | [`PivotPosition`](#pivotposition)  | Raw pivot position in world space. Typically driven by an upstream pivot-producing node via wire (PivotOffsetNode's output). |
 | `FVector` | [`PivotOffset`](#pivotoffset)  | Offset applied to the resolved pivot, expressed in Spiral Space: X = along Forward, Y = along Right, Z = along Axis (Up). Spiral Space is re-derived from RotationAxis and ReferenceDirection each tick, so this offset automatically tracks a pivot actor's orientation when Spiral Space is anchored to the actor. |
@@ -55,6 +56,16 @@ EComposableCameraSpiralPivotSourceType PivotSourceType {  }
 ```
 
 Whether the pivot comes from an Actor's location or a raw vector.
+
+---
+
+#### PivotActorSource { #pivotactorsource }
+
+```cpp
+EComposableCameraActorInputSource PivotActorSource { EComposableCameraActorInputSource::ExplicitActor }
+```
+
+Selects whether the pivot actor is resolved from the explicit actor property/pin or from the controller-controlled pawn owned by the camera manager.
 
 ---
 

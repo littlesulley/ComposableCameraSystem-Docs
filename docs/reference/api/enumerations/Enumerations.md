@@ -99,6 +99,19 @@ enum EShotPlacementBasisFrame
 
 Reference-frame selector for AnchorOrbit's `LocalCameraDirection`. Lives at `[FShotPlacement::BasisFrame](../structs/FShotPlacement.md#basisframe)`. See spec §3.5.2.
 
+#### EComposableCameraActorInputSource { #ecomposablecameraactorinputsource }
+
+```cpp
+enum EComposableCameraActorInputSource
+```
+
+| Value | Description |
+|-------|-------------|
+| `ExplicitActor` | Resolve from the actor property or promoted input pin on the node. |
+| `ControllerControlledPawn` | Resolve from the pawn controlled by the camera manager's owning player controller. |
+
+Shared selector used by camera nodes that can either target an explicit actor or automatically follow the controller-controlled pawn.
+
 #### EComposableCameraBuildStatus { #ecomposablecamerabuildstatus }
 
 ```cpp
