@@ -136,24 +136,33 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `UEnhancedInputComponent *` | [`InputComponent`](#inputcomponent)  |  |
-| `FEnhancedInputActionValueBinding *` | [`InputBinding`](#inputbinding)  |  |
+| `TWeakObjectPtr< UEnhancedInputComponent >` | [`CachedInputComponent`](#cachedinputcomponent)  |  |
+| `TWeakObjectPtr< AActor >` | [`LastBoundInputActor`](#lastboundinputactor)  |  |
+| `TWeakObjectPtr< UInputAction >` | [`LastBoundAction`](#lastboundaction)  |  |
 | `FVector2D` | [`LastFrameCameraRotationInput`](#lastframecamerarotationinput)  |  |
 
 ---
 
-#### InputComponent { #inputcomponent }
+#### CachedInputComponent { #cachedinputcomponent }
 
 ```cpp
-UEnhancedInputComponent * InputComponent
+TWeakObjectPtr< UEnhancedInputComponent > CachedInputComponent
 ```
 
 ---
 
-#### InputBinding { #inputbinding }
+#### LastBoundInputActor { #lastboundinputactor }
 
 ```cpp
-FEnhancedInputActionValueBinding * InputBinding
+TWeakObjectPtr< AActor > LastBoundInputActor
+```
+
+---
+
+#### LastBoundAction { #lastboundaction }
+
+```cpp
+TWeakObjectPtr< UInputAction > LastBoundAction
 ```
 
 ---
@@ -169,6 +178,7 @@ FVector2D LastFrameCameraRotationInput
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`ApplyAcceleration`](#applyacceleration)  |  |
+| `void` | [`EnsureInputBinding`](#ensureinputbinding)  |  |
 
 ---
 
@@ -176,4 +186,12 @@ FVector2D LastFrameCameraRotationInput
 
 ```cpp
 void ApplyAcceleration(float DeltaTime, const FVector2D & Damping, double & ThisFrameRotationInput, const double & LastFrameRotationInput)
+```
+
+---
+
+#### EnsureInputBinding { #ensureinputbinding }
+
+```cpp
+void EnsureInputBinding()
 ```

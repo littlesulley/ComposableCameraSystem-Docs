@@ -15,6 +15,7 @@ Base camera class.
 | Return | Name | Description |
 |--------|------|-------------|
 | `FGameplayTag` | [`CameraTag`](#cameratag-1)  | Tag for this camera. Used by modifiers to distinguish different cameras. |
+| `FString` | [`CameraTagTraceName`](#cameratagtracename)  | Cached `CameraTag.ToString()` populated once at Initialize and reused by per-tick `TRACE_CPUPROFILER_EVENT_SCOPE_STR` so the dynamic Insights scope name doesn't allocate an FString per tick. CameraTag is EditDefaultsOnly so the cache is stable across the camera's lifetime — repopulated only on Initialize (in case the runtime mutates the tag before construction completes). |
 | `UComposableCameraTransitionBase *` | [`EnterTransition`](#entertransition-2)  | Enter transition. Usually used for returning back to this camera from a transient camera. |
 | `bool` | [`bDefaultPreserveCameraPose`](#bdefaultpreservecamerapose-1)  | Whether to preserve last camera's pose when resuming this camera. |
 | `TArray< UComposableCameraCameraNodeBase * >` | [`CameraNodes`](#cameranodes)  | Nodes for this camera. They're executed in the order they are placed in this array. Each node reads input pin values, applies its logic, and writes output pin values. Inter-node data flow is handled entirely through the pin-based RuntimeDataBlock system. |
@@ -36,7 +37,7 @@ Base camera class.
 | `TArray< FComposableCameraExecEntry >` | [`ComputeFullExecChain`](#computefullexecchain-1)  | Full execution chain for the BeginPlay compute pass, including both compute-node steps and internal-variable Set operations. Copied from [UComposableCameraTypeAsset::ComputeFullExecChain](../data-assets/UComposableCameraTypeAsset.md#computefullexecchain) during OnTypeAssetCameraConstructed. |
 | `int32` | [`TypeAssetNodeTemplateCount`](#typeassetnodetemplatecount)  | The number of entries in TypeAsset::NodeTemplates at construction time. Used as the base offset for compute-node pin keys in the RuntimeDataBlock (compute node i has pin key NodeIndex = TypeAssetNodeTemplateCount + i). |
 | `TUniquePtr< FComposableCameraRuntimeDataBlock >` | [`OwnedRuntimeDataBlock`](#ownedruntimedatablock)  | Owned RuntimeDataBlock for type-asset-based cameras. Allocated during activation from a [UComposableCameraTypeAsset](../data-assets/UComposableCameraTypeAsset.md#ucomposablecameratypeasset). Nodes hold raw pointers into this block — they never outlive the camera. |
-| `TWeakObjectPtr< UComposableCameraTypeAsset >` | [`SourceTypeAsset`](#sourcetypeasset)  | The type asset that was used to construct this camera. Stored so that ReactivateCurrentCamera (triggered by modifier changes) can fully reconstruct the camera from the same source asset instead of producing an empty shell. |
+| `TObjectPtr< UComposableCameraTypeAsset >` | [`SourceTypeAsset`](#sourcetypeasset)  | The type asset that was used to construct this camera. Stored so that ReactivateCurrentCamera (triggered by modifier changes) can fully reconstruct the camera from the same source asset instead of producing an empty shell. |
 | `FComposableCameraParameterBlock` | [`SourceParameterBlock`](#sourceparameterblock)  | The parameter block that was applied when this camera was activated from a type asset. Stored alongside SourceTypeAsset so reactivation preserves the original caller-provided parameter values. |
 
 ---
@@ -48,6 +49,16 @@ FGameplayTag CameraTag {}
 ```
 
 Tag for this camera. Used by modifiers to distinguish different cameras.
+
+---
+
+#### CameraTagTraceName { #cameratagtracename }
+
+```cpp
+FString CameraTagTraceName
+```
+
+Cached `CameraTag.ToString()` populated once at Initialize and reused by per-tick `TRACE_CPUPROFILER_EVENT_SCOPE_STR` so the dynamic Insights scope name doesn't allocate an FString per tick. CameraTag is EditDefaultsOnly so the cache is stable across the camera's lifetime — repopulated only on Initialize (in case the runtime mutates the tag before construction completes).
 
 ---
 
@@ -270,10 +281,12 @@ Owned RuntimeDataBlock for type-asset-based cameras. Allocated during activation
 #### SourceTypeAsset { #sourcetypeasset }
 
 ```cpp
-TWeakObjectPtr< UComposableCameraTypeAsset > SourceTypeAsset
+TObjectPtr< UComposableCameraTypeAsset > SourceTypeAsset
 ```
 
 The type asset that was used to construct this camera. Stored so that ReactivateCurrentCamera (triggered by modifier changes) can fully reconstruct the camera from the same source asset instead of producing an empty shell.
+
+STRONG ref by design (not weak). Reactivation routes through `OnTypeAssetCameraConstructed`, which dereferences this to walk the type asset's NodeTemplates / ExposedParameters / FullExecChain. If the asset was originally loaded transiently — soft path resolved mid-frame, DataTable row asset, BP local that already went out of scope — the only remaining reference at activation time may be this one. A weak ref would let GC reclaim the asset between activation and a later modifier-triggered Reactivate, the `.Get()` would return null, and the new camera would be built as an empty shell with no nodes / no data block (silent regression, no crash). The strong ref's only cost is keeping the type asset alive for the camera's lifetime — acceptable because (a) type assets are small metadata, (b) the camera owns this anyway in spirit (it can't function without it), and (c) the field is `Transient` so save / load is unaffected.
 
 ---
 
@@ -550,11 +563,11 @@ inline bool IsFinished() const
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`AddReferencedObjects`](#addreferencedobjects) `static` |  |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-1) `static` |  |
 
 ---
 
-#### AddReferencedObjects { #addreferencedobjects }
+#### AddReferencedObjects { #addreferencedobjects-1 }
 
 `static`
 

@@ -163,7 +163,8 @@ Compiled out in shipping builds.
 |--------|------|-------------|
 | `FVector` | [`PreviousOffset`](#previousoffset)  |  |
 | `float` | [`ElapsedWaitingTime`](#elapsedwaitingtime)  |  |
-| `TArray< AActor * >` | [`ActorsToIgnore`](#actorstoignore)  |  |
+| `TArray< TWeakObjectPtr< AActor > >` | [`ActorsToIgnoreWeak`](#actorstoignoreweak-1)  |  |
+| `TArray< AActor * >` | [`ResolvedActorsToIgnore`](#resolvedactorstoignore-1)  |  |
 | `EDrawDebugTrace::Type` | [`DrawDebugType`](#drawdebugtype)  |  |
 
 ---
@@ -184,10 +185,18 @@ float ElapsedWaitingTime { 0.f }
 
 ---
 
-#### ActorsToIgnore { #actorstoignore }
+#### ActorsToIgnoreWeak { #actorstoignoreweak-1 }
 
 ```cpp
-TArray< AActor * > ActorsToIgnore
+TArray< TWeakObjectPtr< AActor > > ActorsToIgnoreWeak
+```
+
+---
+
+#### ResolvedActorsToIgnore { #resolvedactorstoignore-1 }
+
+```cpp
+TArray< AActor * > ResolvedActorsToIgnore
 ```
 
 ---

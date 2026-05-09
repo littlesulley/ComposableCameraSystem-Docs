@@ -17,7 +17,8 @@ Stage 1 note: Evaluator stays nullptr; PatchManager::Apply does not tick anythin
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TWeakObjectPtr< UComposableCameraPatchTypeAsset >` | [`SourcePatchAsset`](#sourcepatchasset)  | Source patch asset. Weak — the asset can outlive any single runtime instance. |
+| `TObjectPtr< UComposableCameraPatchTypeAsset >` | [`SourcePatchAsset`](#sourcepatchasset)  | Source patch asset. |
+| `FString` | [`PatchAssetTraceName`](#patchassettracename)  | Cached `Asset->GetName()` populated at AddPatch time. Reused by the per-Apply `TRACE_CPUPROFILER_EVENT_SCOPE_STR` so the dynamic Insights label doesn't allocate an FString per patch per frame. The asset identity is immutable for the lifetime of the instance, so we compute it once when the instance is constructed. |
 | `TObjectPtr< AComposableCameraCameraBase >` | [`Evaluator`](#evaluator)  | The Patch's own camera-actor evaluator. Stage 2+: spawned by AddPatch via [UE::ComposableCameras::ConstructCameraFromTypeAsset](../free-functions/Functions.md#constructcamerafromtypeasset). Stage 1: always nullptr. |
 | `int32` | [`LayerIndex`](#layerindex)  | Effective composition order. Resolved from the asset default and the per-AddPatch override (Params.bOverrideLayerIndex true → use Params.LayerIndex). |
 | `int32` | [`PushSequence`](#pushsequence)  | Monotonic insertion sequence — tiebreaker for equal LayerIndex. Older first. |
@@ -41,10 +42,23 @@ Stage 1 note: Evaluator stays nullptr; PatchManager::Apply does not tick anythin
 #### SourcePatchAsset { #sourcepatchasset }
 
 ```cpp
-TWeakObjectPtr< UComposableCameraPatchTypeAsset > SourcePatchAsset
+TObjectPtr< UComposableCameraPatchTypeAsset > SourcePatchAsset
 ```
 
-Source patch asset. Weak — the asset can outlive any single runtime instance.
+Source patch asset.
+
+STRONG ref by design (not weak). The schedule's Condition channel — one of the two ways a Patch normally exits — calls `Asset->CanRemain(...)` every Apply tick to decide whether to flip to Exiting. A weak ref that nullifies (asset only loaded transiently — soft path, DataTable row, BP local that fell out of scope) silently disables the Condition check in CheckPatchScheduleExpiration and, for a Patch whose ONLY exit channel is Condition, leaves the instance live in `ActivePatches` forever (and the spawned Evaluator actor with it). Strong ref keeps the asset reachable for the instance's lifetime, which the instance was always going to need anyway — `Apply` reads `Asset->Layer / Duration / Envelope...` on every tick, so a "weak
+ref + survive cleanly when null" model would have to either early-expire or no-op every Apply call, both of which are user- visible regressions worse than the strong-ref cost.
+
+---
+
+#### PatchAssetTraceName { #patchassettracename }
+
+```cpp
+FString PatchAssetTraceName
+```
+
+Cached `Asset->GetName()` populated at AddPatch time. Reused by the per-Apply `TRACE_CPUPROFILER_EVENT_SCOPE_STR` so the dynamic Insights label doesn't allocate an FString per patch per frame. The asset identity is immutable for the lifetime of the instance, so we compute it once when the instance is constructed.
 
 ---
 

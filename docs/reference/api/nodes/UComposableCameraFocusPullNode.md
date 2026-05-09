@@ -7,16 +7,21 @@
 
 > **Inherits:** [`UComposableCameraCameraNodeBase`](../uobjects-other/UComposableCameraCameraNodeBase.md#ucomposablecameracameranodebase)
 
-Dynamically drives the camera pose's `FocusDistance` from the distance to a target actor. Single-responsibility node — it only touches `FocusDistance`. Everything else DoF needs (aperture, blade count, filmback, and the `PhysicalCameraBlendWeight` that gates whether DoF is applied at all) is expected to come from an upstream `LensNode`. The intended composition: ... → LensNode(FocalLength, Aperture, BlendWeight=1, FocusDistance=-1)
+Dynamically drives the camera pose's `FocusDistance` from the distance to a target actor. Single-responsibility node — it only touches `FocusDistance`. Everything else DoF needs (aperture, blade count, filmback, and the `PhysicalCameraBlendWeight` that gates whether DoF is applied at all) is expected to come from an upstream `LensNode`. The intended composition: 
+```
+... → LensNode(FocalLength, Aperture, BlendWeight=1, FocusDistance=-1)
     → FocusPullNode(drives FocusDistance from PivotActor)
     → ...
+```
  LensNode's `FocusDistance = -1` sentinel is the "leave for downstream" signal that pairs cleanly with this node. If LensNode instead writes a concrete focus distance, FocusPullNode will **overwrite** it (last writer wins on the pose) — both work, the sentinel just makes the intent obvious at read time.
 
 Without any LensNode upstream, the pose's default `PhysicalCameraBlendWeight` is 0 — `ApplyPhysicalCameraSettings()` will not route `FocusDistance` into the post-process DoF slots regardless of what this node writes. Add a LensNode (or at minimum wire `PhysicalCameraBlendWeight > 0` some other way) or the node is a no-op at the renderer level.
 
 Target resolution matches the plugin's `CollisionPushNode` / `OcclusionFadeNode` pattern (PivotActor + bone/socket + Z offset) so the same context-parameter wiring flows to all three. Damping is optional and uses the standard interpolator system (SpringDamper / IIR / SimpleSpring) so the focus-pull rate matches the project's broader camera tuning.
 
-Per-tick formula: TargetPoint  = Resolve(PivotActor, BoneName | PivotZOffset)
+Per-tick formula: 
+```
+TargetPoint  = Resolve(PivotActor, BoneName | PivotZOffset)
 CameraFwd    = OutCameraPose.Rotation.Vector()
 Depth        = (TargetPoint - OutCameraPose.Position) · CameraFwd
 if Depth <= 0: pass-through this tick (target is behind camera)
@@ -24,6 +29,7 @@ Raw          = Depth + FocusDistanceOffset
 if bClampFocusDistance: Raw = FMath::Clamp(Raw, Clamp.Min, Clamp.Max)
 if FocusInterpolator:   Raw = Interp.Run(LastFocus → Raw, DeltaTime)
 OutCameraPose.FocusDistance = Raw
+```
 `FocusDistance` is camera-space depth (distance along the view axis), NOT Euclidean distance — that's what `ApplyPhysicalCameraSettings` and the renderer's DoF system consume. For an off-axis target the two diverge significantly (10 m @ 45° has depth ~7 m), so projecting onto the camera forward is the correct reduction.
 
 First tick after activation bypasses the damping so the initial focus distance snaps to the real depth (avoids a visible focus ramp from whatever the pose's previous FocusDistance was).

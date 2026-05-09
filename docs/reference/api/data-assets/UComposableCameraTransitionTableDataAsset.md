@@ -51,39 +51,17 @@ The transition routing entries. Exact-match by (Source, Target) pair; first matc
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`PostEditChangeProperty`](#posteditchangeproperty) `virtual` |  |
-| `void` | [`PostLoad`](#postload-1) `virtual` |  |
-| `EDataValidationResult` | [`IsDataValid`](#isdatavalid) `virtual` `const` |  |
+| `void` | [`PostLoad`](#postload-2) `virtual` |  |
 | `UComposableCameraTransitionBase *` | [`FindTransition`](#findtransition) `const` | Look up the transition for an exact (Source, Target) pair. |
 
 ---
 
-#### PostEditChangeProperty { #posteditchangeproperty }
-
-`virtual`
-
-```cpp
-virtual void PostEditChangeProperty(FPropertyChangedEvent & PropertyChangedEvent)
-```
-
----
-
-#### PostLoad { #postload-1 }
+#### PostLoad { #postload-2 }
 
 `virtual`
 
 ```cpp
 virtual void PostLoad()
-```
-
----
-
-#### IsDataValid { #isdatavalid }
-
-`virtual` `const`
-
-```cpp
-virtual EDataValidationResult IsDataValid(FDataValidationContext & Context) const
 ```
 
 ---

@@ -9,15 +9,15 @@
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `UComposableCameraModifierBase *` | [`Modifier`](#modifier)  |  |
-| `UComposableCameraNodeModifierDataAsset *` | [`Asset`](#asset)  |  |
+| `TObjectPtr< UComposableCameraModifierBase >` | [`Modifier`](#modifier)  |  |
+| `TObjectPtr< UComposableCameraNodeModifierDataAsset >` | [`Asset`](#asset)  |  |
 
 ---
 
 #### Modifier { #modifier }
 
 ```cpp
-UComposableCameraModifierBase * Modifier
+TObjectPtr< UComposableCameraModifierBase > Modifier
 ```
 
 ---
@@ -25,7 +25,7 @@ UComposableCameraModifierBase * Modifier
 #### Asset { #asset }
 
 ```cpp
-UComposableCameraNodeModifierDataAsset * Asset
+TObjectPtr< UComposableCameraNodeModifierDataAsset > Asset
 ```
 
 ### Public Methods
@@ -54,6 +54,42 @@ inline bool operator==(const FModifierEntry & Other) const
 ```cpp
 inline bool operator!=(const FModifierEntry & Other) const
 ```
+
+# Private { #private }
+
+### Functions
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `constexpr EComposableCameraPinType` | [`ExpectedPinTypeFor`](#expectedpintypefor)  | Compile-time map from a templated value type T to the `EComposableCameraPinType` the data block tracks for that type. Used by `ReadValue<T>` / `WriteValue<T>` to compare against the recorded `FSlotShape::PinType` for a given offset and refuse cross-shape access. The order of `if constexpr` branches matters: `AActor*` matches both AActor and UObject base checks, so the AActor branch must come first to map it to `Actor`, not `Object`. |
+
+---
+
+#### ExpectedPinTypeFor { #expectedpintypefor }
+
+```cpp
+template<typename T> constexpr EComposableCameraPinType ExpectedPinTypeFor()
+```
+
+Compile-time map from a templated value type T to the `EComposableCameraPinType` the data block tracks for that type. Used by `ReadValue<T>` / `WriteValue<T>` to compare against the recorded `FSlotShape::PinType` for a given offset and refuse cross-shape access. The order of `if constexpr` branches matters: `AActor*` matches both AActor and UObject base checks, so the AActor branch must come first to map it to `Actor`, not `Object`.
+
+Unsupported T (e.g., `uint32`, raw `enum class`, user 4 B POD without `TModels_V<CStaticStructProvider>`) `static_assert`s instead of silently degrading to `Float`. The earlier Float-fallback let any 4-byte T pass the downstream `Shape->Size` check against a `Float` slot — `ReadValue<uint32>(FloatOffset)` would silently reinterpret the float bytes as `uint32`, same class of type-pun the slot-shape work was meant to close. Forcing a compile error makes the caller pick a supported T (`int32` for signed 32-bit, `int64` for enums — which is the canonical enum storage width — etc.).
+
+### Variables
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `constexpr bool` | [`always_false_v`](#always_false_v)  | Always-false dependent constant — needed because `static_assert(false, …)` in a discarded `if constexpr` branch fires unconditionally on some compilers (DR2518 only mandates per-instantiation evaluation in C++23). The dependent form defers evaluation until the enclosing template is actually instantiated for the unsupported T. |
+
+---
+
+#### always_false_v { #always_false_v }
+
+```cpp
+constexpr bool always_false_v = false
+```
+
+Always-false dependent constant — needed because `static_assert(false, …)` in a discarded `if constexpr` branch fires unconditionally on some compilers (DR2518 only mandates per-instantiation evaluation in C++23). The dependent form defers evaluation until the enclosing template is actually instantiated for the unsupported T.
 
 # ShotSolver { #shotsolver }
 
@@ -178,10 +214,16 @@ inline FVector2D PreRotateScreenForRoll(const FVector2D & Authored, float CosRol
 
 Pre-rotates an authored screen position by -Roll so that, after the final pose has Roll composed onto its rotation, the world point still projects to the *authored* (un-pre-rotated) screen coords.
 
-Math (derivation in spec §4.8): under camera Roll R about forward, a fixed world point's projected coords transform anisotropically as Sx_R = Sx_0 · cosR  -  (Sy_0 / AR) · sinR
+Math (derivation in spec §4.8): under camera Roll R about forward, a fixed world point's projected coords transform anisotropically as 
+```
+Sx_R = Sx_0 · cosR  -  (Sy_0 / AR) · sinR
 Sy_R = AR · Sx_0 · sinR  +  Sy_0 · cosR
- To preserve post-Roll proj == authored ScreenPos, we solve the inverse: Sx_0 = Sx · cosR  +  (Sy / AR) · sinR
+```
+ To preserve post-Roll proj == authored ScreenPos, we solve the inverse: 
+```
+Sx_0 = Sx · cosR  +  (Sy / AR) · sinR
 Sy_0 = -AR · Sx · sinR  +  Sy · cosR
+```
  Defined here (above the first caller, `SolveLookAtAnchorRotation`) so the order of inline definitions in this header matches the order of use — C++ requires inline functions to be defined before use within the same translation unit.
 
 ---
@@ -252,8 +294,11 @@ inline bool SolveAnchorAtScreenPos(const FVector & PlacementAnchorPos, FVector2D
 
 Closed-form Position pass for `[EShotPlacementMode::AnchorAtScreen](#ComposableCameraShot_8h_1ad8bb9ef9d1aefe5e2b42410fc9908537a8da460d070406aab8e2caa882f9cbf2c)`.
 
-Computes a camera position that places `PlacementAnchor` at depth `Distance` and screen `ScreenPos` IN THE CAM FRAME OF `AssumedRot`. Algebraic, no iteration: cam_anchor = (D, sx · 2·TanH · D, sy · 2·TanV · D)   // cam frame
+Computes a camera position that places `PlacementAnchor` at depth `Distance` and screen `ScreenPos` IN THE CAM FRAME OF `AssumedRot`. Algebraic, no iteration: 
+```
+cam_anchor = (D, sx · 2·TanH · D, sy · 2·TanV · D)   // cam frame
 CamPos     = PlacementAnchor - AssumedRot · cam_anchor
+```
 `AssumedRot` is sourced from:
 
 * Aim NoOp: identity + Shot.Roll (Roll-only).

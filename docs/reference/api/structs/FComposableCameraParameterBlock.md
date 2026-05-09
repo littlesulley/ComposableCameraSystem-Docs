@@ -74,9 +74,11 @@ Parallel storage for non-POD struct values (USTRUCTs containing FString / FText 
 | Return | Name | Description |
 |--------|------|-------------|
 | `void` | [`Reserve`](#reserve) `inline` |  |
+| `void` | [`RemoveValue`](#removevalue) `inline` | Drop any value stored under Name across every storage class (Values / ActorValues / ObjectValues / StructValues / DelegateValues). After this call, `HasValue(Name)` returns false and downstream reads fall through to the type asset's authored default. |
 | `void` | [`StoreValue`](#storevalue) `inline` |  |
 | `void` | [`SetStruct`](#setstruct) `inline` | Set a non-POD struct parameter. The struct is copied into a fresh FInstancedStruct via InitializeAs(StructType, Memory), which runs the proper per-property copy (FString operator=, TArray copy, UObject ptr etc.) and owns the result for the lifetime of this map entry. The parallel `Values` / `ActorValues` / `ObjectValues` / `DelegateValues` entries under the same Name are cleared so a subsequent Get-by-name cannot read a stale POD-shaped entry for what is now a struct value. |
-| `void` | [`AddReferencedObjects`](#addreferencedobjects-3)  |  |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-4)  |  |
+| `void` | [`AddStructReferencedObjects`](#addstructreferencedobjects) `const` `inline` | Engine reflection hook — called automatically by `AddPropertyReferencesWithStructARO` (and any UPROPERTY-driven GC walk that reaches this struct) once the matching `TStructOpsTypeTraits` opt-in is declared below. Without this hook, embedding the struct as a UPROPERTY (`[UComposableCameraPatchInstance::CachedParameters](../uobjects-other/UComposableCameraPatchInstance.md#cachedparameters)`, `[UComposableCameraLevelSequenceComponent](../uobjects-other/UComposableCameraLevelSequenceComponent.md#ucomposablecameralevelsequencecomponent)` overlay surfaces, ...) only walked the struct's reflected fields — `ActorValues` / `ObjectValues` / `StructValues` are `UPROPERTY` so reflection sees them, but `DelegateValues` is non-`UPROPERTY` and the `FScriptDelegate`'s bound target's strong-mark step (see `AddReferencedObjects` body) was therefore unreachable from any reflection-driven owner. Same hole for the `StructValues`-side `UScriptStruct` mark: reflection walks members, not type identity. Routing through `AddReferencedObjects` closes both gaps. |
 | `void` | [`SetBool`](#setbool) `inline` | Set a bool parameter. |
 | `void` | [`SetInt32`](#setint32) `inline` | Set an int32 parameter. |
 | `void` | [`SetFloat`](#setfloat) `inline` | Set a float parameter. |
@@ -91,7 +93,7 @@ Parallel storage for non-POD struct values (USTRUCTs containing FString / FText 
 | `void` | [`SetDelegate`](#setdelegate) `inline` | Set a single-cast delegate binding. The delegate is stored in a parallel map (not the POD byte array) and applied at activation time via ApplyDelegateBindings on the type asset. |
 | `bool` | [`HasValue`](#hasvalue) `const` `inline` | Check if a parameter exists by name (POD / actor / object / struct / delegate). |
 | `bool` | [`Get`](#get-1) `const` `inline` | Try to get a typed value. Returns false if not found or type mismatch. |
-| `int32` | [`CopyRawTo`](#copyrawto) `const` `inline` | Copy a parameter's raw bytes into a destination buffer. Returns the number of bytes copied, or 0 if not found. |
+| `int32` | [`CopyRawTo`](#copyrawto) `const` `inline` | Copy a parameter's raw bytes into a destination buffer, with strict PinType + exact-size validation. |
 
 ---
 
@@ -102,6 +104,21 @@ Parallel storage for non-POD struct values (USTRUCTs containing FString / FText 
 ```cpp
 inline void Reserve(int32 Num)
 ```
+
+---
+
+#### RemoveValue { #removevalue }
+
+`inline`
+
+```cpp
+inline void RemoveValue(FName Name)
+```
+
+Drop any value stored under Name across every storage class (Values / ActorValues / ObjectValues / StructValues / DelegateValues). After this call, `HasValue(Name)` returns false and downstream reads fall through to the type asset's authored default.
+
+Used by failure paths in `SetStruct` so a refused setter call does not silently leave a previous-shape stale value live under the same name — the contract is "failed setter = no value here", not "old value
+preserved". Public so callers that want to explicitly clear a slot (e.g. a designer-driven "reset to default" affordance) have a single entry point that handles all five maps.
 
 ---
 
@@ -127,11 +144,25 @@ Set a non-POD struct parameter. The struct is copied into a fresh FInstancedStru
 
 ---
 
-#### AddReferencedObjects { #addreferencedobjects-3 }
+#### AddReferencedObjects { #addreferencedobjects-4 }
 
 ```cpp
 void AddReferencedObjects(FReferenceCollector & Collector)
 ```
+
+---
+
+#### AddStructReferencedObjects { #addstructreferencedobjects }
+
+`const` `inline`
+
+```cpp
+inline void AddStructReferencedObjects(FReferenceCollector & Collector) const
+```
+
+Engine reflection hook — called automatically by `AddPropertyReferencesWithStructARO` (and any UPROPERTY-driven GC walk that reaches this struct) once the matching `TStructOpsTypeTraits` opt-in is declared below. Without this hook, embedding the struct as a UPROPERTY (`[UComposableCameraPatchInstance::CachedParameters](../uobjects-other/UComposableCameraPatchInstance.md#cachedparameters)`, `[UComposableCameraLevelSequenceComponent](../uobjects-other/UComposableCameraLevelSequenceComponent.md#ucomposablecameralevelsequencecomponent)` overlay surfaces, ...) only walked the struct's reflected fields — `ActorValues` / `ObjectValues` / `StructValues` are `UPROPERTY` so reflection sees them, but `DelegateValues` is non-`UPROPERTY` and the `FScriptDelegate`'s bound target's strong-mark step (see `AddReferencedObjects` body) was therefore unreachable from any reflection-driven owner. Same hole for the `StructValues`-side `UScriptStruct` mark: reflection walks members, not type identity. Routing through `AddReferencedObjects` closes both gaps.
+
+Const because the trait expects `const`; the implementation `const_cast`s through to the non-const `AddReferencedObjects` since `FReferenceCollector::AddReferencedObject` needs a mutable `TObjectPtr<>&` reference.
 
 ---
 
@@ -308,10 +339,16 @@ Try to get a typed value. Returns false if not found or type mismatch.
 `const` `inline`
 
 ```cpp
-inline int32 CopyRawTo(FName Name, uint8 * Dest, int32 DestSize) const
+inline int32 CopyRawTo(FName Name, uint8 * Dest, int32 DestSize, EComposableCameraPinType ExpectedPinType) const
 ```
 
-Copy a parameter's raw bytes into a destination buffer. Returns the number of bytes copied, or 0 if not found.
+Copy a parameter's raw bytes into a destination buffer, with strict PinType + exact-size validation.
+
+Returns the number of bytes copied (== DestSize on success), or 0 on any of: parameter not found, PinType mismatch, Data.Num() != DestSize.
+
+Strict validation rationale: the prior signature accepted any source size `<= DestSize` and silently memcpy'd. A stale row entry that stored a Float (4 B Data) under a name now bound to an Actor target slot (8 B Dest) landed 4 bytes of float data in the lower half of the slot and left the upper 4 bytes whatever was already there; the immediately following `RefreshReferenceSlot` reinterpreted the result as `AActor*` and registered a fake pointer with the GC mirror — next sweep crashed. Equality-on-size plus a PinType match forces a clean miss for any shape-wrong entry, and the caller's existing zero-init of the destination keeps the slot empty rather than half-populated.
+
+PinType match is sufficient for most types because PinType pins down storage size for primitives / vectors / Actor / Object / Name. For Struct and Enum the additional shape (StructType / EnumType) is metadata the caller carries; layout-phase validation in `BuildRuntimeDataLayout` handles those, so this hot-path check only needs PinType + size to catch the cross-shape case the reviewer reported.
 
 ### Public Static Methods
 

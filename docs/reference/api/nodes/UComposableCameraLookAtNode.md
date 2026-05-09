@@ -158,7 +158,8 @@ Default implementation does nothing. Compiled out in shipping builds.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `USkeletalMeshComponent *` | [`SkeletalMeshComponentForLookAtActor`](#skeletalmeshcomponentforlookatactor)  |  |
+| `TWeakObjectPtr< USkeletalMeshComponent >` | [`SkeletalMeshComponentForLookAtActor`](#skeletalmeshcomponentforlookatactor)  |  |
+| `TWeakObjectPtr< AActor >` | [`LastResolvedLookAtActor`](#lastresolvedlookatactor)  |  |
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FRotator > > >` | [`Interpolator_T`](#interpolator_t)  |  |
 
 ---
@@ -166,7 +167,15 @@ Default implementation does nothing. Compiled out in shipping builds.
 #### SkeletalMeshComponentForLookAtActor { #skeletalmeshcomponentforlookatactor }
 
 ```cpp
-USkeletalMeshComponent * SkeletalMeshComponentForLookAtActor { nullptr }
+TWeakObjectPtr< USkeletalMeshComponent > SkeletalMeshComponentForLookAtActor
+```
+
+---
+
+#### LastResolvedLookAtActor { #lastresolvedlookatactor }
+
+```cpp
+TWeakObjectPtr< AActor > LastResolvedLookAtActor
 ```
 
 ---

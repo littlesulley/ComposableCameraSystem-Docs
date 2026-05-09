@@ -90,16 +90,29 @@ virtual void OnExecute_Implementation(float DeltaTime, const FComposableCameraPo
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `class UEnhancedInputLocalPlayerSubsystem *` | [`Subsystem`](#subsystem-1)  |  |
+| `TWeakObjectPtr< class UEnhancedInputLocalPlayerSubsystem >` | [`CachedSubsystem`](#cachedsubsystem-1)  | Weak — `UEnhancedInputLocalPlayerSubsystem` is owned by the LocalPlayer, which is destroyed on PIE stop, controller swap, level-streaming-out, or kick. |
+| `TWeakObjectPtr< class ULocalPlayer >` | [`CachedLocalPlayer`](#cachedlocalplayer-1)  | Identity of the LocalPlayer the cached subsystem belongs to. Used by `ResolveInputSubsystem` to detect controller-swap-without- destruction and invalidate the subsystem cache before reading from the wrong player's input source. |
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`Interp_T`](#interp_t-1)  |  |
 
 ---
 
-#### Subsystem { #subsystem-1 }
+#### CachedSubsystem { #cachedsubsystem-1 }
 
 ```cpp
-class UEnhancedInputLocalPlayerSubsystem * Subsystem { nullptr }
+TWeakObjectPtr< class UEnhancedInputLocalPlayerSubsystem > CachedSubsystem
 ```
+
+Weak — `UEnhancedInputLocalPlayerSubsystem` is owned by the LocalPlayer, which is destroyed on PIE stop, controller swap, level-streaming-out, or kick.
+
+---
+
+#### CachedLocalPlayer { #cachedlocalplayer-1 }
+
+```cpp
+TWeakObjectPtr< class ULocalPlayer > CachedLocalPlayer
+```
+
+Identity of the LocalPlayer the cached subsystem belongs to. Used by `ResolveInputSubsystem` to detect controller-swap-without- destruction and invalidate the subsystem cache before reading from the wrong player's input source.
 
 ---
 
@@ -108,3 +121,21 @@ class UEnhancedInputLocalPlayerSubsystem * Subsystem { nullptr }
 ```cpp
 TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > > Interp_T
 ```
+
+### Private Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `class UEnhancedInputLocalPlayerSubsystem *` | [`ResolveInputSubsystem`](#resolveinputsubsystem-1)  | Walk PCM → OwningPC → LocalPlayer with per-link `IsValid`, then reuse the cached subsystem only if its owning LocalPlayer matches the chain's current LocalPlayer. Returns nullptr on any chain null OR mismatch (after invalidating the stale cache). |
+
+---
+
+#### ResolveInputSubsystem { #resolveinputsubsystem-1 }
+
+```cpp
+class UEnhancedInputLocalPlayerSubsystem * ResolveInputSubsystem()
+```
+
+Walk PCM → OwningPC → LocalPlayer with per-link `IsValid`, then reuse the cached subsystem only if its owning LocalPlayer matches the chain's current LocalPlayer. Returns nullptr on any chain null OR mismatch (after invalidating the stale cache).
+
+Caching just the subsystem isn't enough: `OwningPlayerController` can be re-pointed (re-possess, AI takeover, splitscreen reshuffle) to a DIFFERENT `LocalPlayer` whose subsystem is a different live object. The previous LocalPlayer can stay alive (its subsystem still valid in isolation) — so a `IsValid(CachedSubsystem)` test alone passes against a stale-player cache and we'd keep reading the previous player's input source. The LocalPlayer comparison fixes that.

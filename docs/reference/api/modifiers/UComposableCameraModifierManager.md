@@ -56,6 +56,22 @@ inline const FComposableCameraModifierData & GetModifierData() const
 
 Const overload for read-only access (debug tooling / inspectors). Returns the same struct by const reference — callers can iterate the ModifierData / EffectiveModifiers maps but cannot mutate them.
 
+### Public Static Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-5) `static` |  |
+
+---
+
+#### AddReferencedObjects { #addreferencedobjects-5 }
+
+`static`
+
+```cpp
+static void AddReferencedObjects(UObject * InThis, FReferenceCollector & Collector)
+```
+
 ### Private Attributes
 
 | Return | Name | Description |

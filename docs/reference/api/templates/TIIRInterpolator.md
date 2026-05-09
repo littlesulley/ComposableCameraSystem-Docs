@@ -144,3 +144,30 @@ WrappedValueType LastTargetValue {}
 ```cpp
 float LastUpdateLeftoverTime = 0.f
 ```
+
+### Private Static Attributes
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `constexpr float` | [`MaxSubstepTime`](#maxsubsteptime) `static` |  |
+| `constexpr bool` | [`bDoLeftoverRewind`](#bdoleftoverrewind) `static` |  |
+
+---
+
+#### MaxSubstepTime { #maxsubsteptime }
+
+`static`
+
+```cpp
+constexpr float MaxSubstepTime = 1.f / 120.f
+```
+
+---
+
+#### bDoLeftoverRewind { #bdoleftoverrewind }
+
+`static`
+
+```cpp
+constexpr bool bDoLeftoverRewind = true
+```

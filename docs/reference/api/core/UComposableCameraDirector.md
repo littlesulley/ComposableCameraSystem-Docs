@@ -220,6 +220,24 @@ void BuildDebugSnapshot(FComposableCameraContextSnapshot & OutSnapshot) const
 
 Populate the context snapshot's director-owned fields: RunningCameraDisplay, LastPose, and the flattened TreeNodes (via the evaluation tree). The ContextName / active / base / pending-destroy flags are populated by the caller ([UComposableCameraContextStack::BuildDebugSnapshot](UComposableCameraContextStack.md#builddebugsnapshot-1)) since only the stack knows its own structure.
 
+### Public Static Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `void` | [`AddReferencedObjects`](#addreferencedobjects) `static` | Walk UObject references inside the non-UPROPERTY cached poses `LastEvaluatedPose` / `PreviousEvaluatedPose`. Both poses' embedded `FPostProcessSettings` carries TObjectPtr references to materials / textures / WeightedBlendables that would otherwise be GC-blind here (the poses are not reflected fields on this UObject). |
+
+---
+
+#### AddReferencedObjects { #addreferencedobjects }
+
+`static`
+
+```cpp
+static void AddReferencedObjects(UObject * InThis, FReferenceCollector & Collector)
+```
+
+Walk UObject references inside the non-UPROPERTY cached poses `LastEvaluatedPose` / `PreviousEvaluatedPose`. Both poses' embedded `FPostProcessSettings` carries TObjectPtr references to materials / textures / WeightedBlendables that would otherwise be GC-blind here (the poses are not reflected fields on this UObject).
+
 ### Private Attributes
 
 | Return | Name | Description |

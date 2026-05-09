@@ -21,11 +21,14 @@ The clamp is a hard projection by default. An optional ClampInterpolator adds pe
 
 When ClampInterpolator is null, the node is fully stateless and the pose is deterministic given the upstream input. When it is set, per-axis smoothing introduces controllable lag.
 
-Position formula each tick: let Volume = Resolve(VolumeSource)
+Position formula each tick: 
+```
+let Volume = Resolve(VolumeSource)
 if IsInside(OutPose.Position, Volume):
     OutPose.Position unchanged
 else:
     OutPose.Position = NearestPointInsideVolume(OutPose.Position, Volume)
+```
  For a Box volume (OBB), "nearest point" is computed in the volume's local space by per-axis clamping against the half-extents, then transformed back to world. For a Sphere, it is `Center + (Pos - Center).SafeNormal * Radius`.
 
 Chain placement: runs on the camera's position, so put it after `CameraOffsetNode` / `LookAtNode` / any position-writing node that produces the "desired" position, and before `CollisionPushNode` so the collision push operates on the already-clamped input.

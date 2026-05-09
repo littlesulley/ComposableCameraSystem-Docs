@@ -9,7 +9,9 @@
 
 The Hitchcock Zoom (also known as the Vertigo effect, dolly zoom, or trombone shot): the camera dollies along its view axis while the FOV changes in the opposite direction, such that the target subject keeps roughly the same on-screen size while the background perspective warps dramatically.
 
-Per-tick math: let InitialDistance = |UpstreamPos_0 - TargetPoint_0|
+Per-tick math: 
+```
+let InitialDistance = |UpstreamPos_0 - TargetPoint_0|
 let InitialFOV      = InitialFOVOverride if > 0
                       else OutCameraPose.GetEffectiveFieldOfView()
 let LockConstant    = InitialDistance * tan(radians(InitialFOV / 2))
@@ -27,6 +29,7 @@ else:  // FromDistanceDelta
 OutPose.Position    = TargetPoint + Direction * Dist(t)
 OutPose.FieldOfView = FOV(t)
 OutPose.FocalLength = -1                 // sentinel: FOV-mode authoritative
+```
 **Curve convention — additive delta, Y(0) = 0.** Both curves express the *change* from the captured initial state, not the absolute trajectory. A curve of Y(0)=0, Y(1)=-30 on FOVDeltaCurve says "narrow the FOV by 30
 degrees over the duration", regardless of whether InitialFOV was 60 or
 

@@ -15,7 +15,7 @@ Node for maintaining a fixed pose relative to some given transform.
 |--------|------|-------------|
 | `EComposableCameraRelativeFixedPoseMethod` | [`Method`](#method-1)  |  |
 | `FTransform` | [`RelativeTransform`](#relativetransform)  |  |
-| `AActor *` | [`RelativeActor`](#relativeactor)  |  |
+| `TObjectPtr< AActor >` | [`RelativeActor`](#relativeactor)  |  |
 | `FName` | [`RelativeSocket`](#relativesocket)  |  |
 | `FTransform` | [`TargetTransform`](#targettransform)  |  |
 
@@ -40,7 +40,7 @@ FTransform RelativeTransform
 #### RelativeActor { #relativeactor }
 
 ```cpp
-AActor * RelativeActor
+TObjectPtr< AActor > RelativeActor
 ```
 
 ---
@@ -142,12 +142,12 @@ Default implementation does nothing. Compiled out in shipping builds.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `USkeletalMeshComponent *` | [`SkeletalMeshComponentForRelativeActor`](#skeletalmeshcomponentforrelativeactor)  |  |
+| `TWeakObjectPtr< USkeletalMeshComponent >` | [`SkeletalMeshComponentForRelativeActor`](#skeletalmeshcomponentforrelativeactor)  |  |
 
 ---
 
 #### SkeletalMeshComponentForRelativeActor { #skeletalmeshcomponentforrelativeactor }
 
 ```cpp
-USkeletalMeshComponent * SkeletalMeshComponentForRelativeActor { nullptr }
+TWeakObjectPtr< USkeletalMeshComponent > SkeletalMeshComponentForRelativeActor
 ```

@@ -13,18 +13,18 @@ A transition which utilizes a path　(spline) to guide its position during trans
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `UComposableCameraTransitionBase *` | [`DrivingTransition`](#drivingtransition)  |  |
+| `TObjectPtr< UComposableCameraTransitionBase >` | [`DrivingTransition`](#drivingtransition)  |  |
 | `EComposableCameraPathGuidedTransitionType` | [`Type`](#type)  |  |
 | `TSoftObjectPtr< ACameraRig_Rail >` | [`RailActor`](#railactor)  |  |
 | `FVector2D` | [`GuideRange`](#guiderange)  |  |
-| `UCurveFloat *` | [`SplineMoveCurve`](#splinemovecurve)  |  |
+| `TObjectPtr< UCurveFloat >` | [`SplineMoveCurve`](#splinemovecurve)  |  |
 
 ---
 
 #### DrivingTransition { #drivingtransition }
 
 ```cpp
-UComposableCameraTransitionBase * DrivingTransition
+TObjectPtr< UComposableCameraTransitionBase > DrivingTransition
 ```
 
 ---
@@ -56,7 +56,7 @@ FVector2D GuideRange { 0.25, 0.75 }
 #### SplineMoveCurve { #splinemovecurve }
 
 ```cpp
-UCurveFloat * SplineMoveCurve
+TObjectPtr< UCurveFloat > SplineMoveCurve
 ```
 
 ### Public Methods
@@ -66,6 +66,7 @@ UCurveFloat * SplineMoveCurve
 | `void` | [`OnBeginPlay_Implementation`](#onbeginplay_implementation-2) `virtual` |  |
 | `FComposableCameraPose` | [`OnEvaluate_Implementation`](#onevaluate_implementation-6) `virtual` |  |
 | `float` | [`GetBlendWeightAt`](#getblendweightat-5) `virtual` `const` | Evaluate the transition's timing curve at a given normalized progress in [0, 1]. Returns the blend weight this transition would apply at that progress — i.e. the shape of its Percentage-over-duration curve. |
+| `void` | [`BeginDestroy`](#begindestroy-2) `virtual` |  |
 | `void` | [`DrawTransitionDebug`](#drawtransitiondebug-6) `virtual` `const` | Per-transition world-space debug hook. |
 
 ---
@@ -108,6 +109,16 @@ Concrete overrides should be pure math — no reads of `RemainingTime`, `Transit
 
 ---
 
+#### BeginDestroy { #begindestroy-2 }
+
+`virtual`
+
+```cpp
+virtual void BeginDestroy()
+```
+
+---
+
 #### DrawTransitionDebug { #drawtransitiondebug-6 }
 
 `virtual` `const`
@@ -134,19 +145,19 @@ Compiled out in shipping builds.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `AComposableCameraCameraBase *` | [`IntermediateCamera`](#intermediatecamera)  |  |
-| `ACameraRig_Rail *` | [`Rail`](#rail-1)  |  |
-| `UComposableCameraInertializedTransition *` | [`EnterTransition`](#entertransition-4)  |  |
-| `UComposableCameraInertializedTransition *` | [`ExitTransition`](#exittransition-1)  |  |
-| `USplineComponent *` | [`InternalSpline`](#internalspline)  |  |
-| `AActor *` | [`DebugSplineActor`](#debugsplineactor)  |  |
+| `TObjectPtr< AComposableCameraCameraBase >` | [`IntermediateCamera`](#intermediatecamera)  |  |
+| `TObjectPtr< ACameraRig_Rail >` | [`Rail`](#rail-1)  |  |
+| `TObjectPtr< UComposableCameraInertializedTransition >` | [`EnterTransition`](#entertransition-4)  |  |
+| `TObjectPtr< UComposableCameraInertializedTransition >` | [`ExitTransition`](#exittransition-1)  |  |
+| `TObjectPtr< USplineComponent >` | [`InternalSpline`](#internalspline)  |  |
+| `TObjectPtr< AActor >` | [`DebugSplineActor`](#debugsplineactor)  |  |
 
 ---
 
 #### IntermediateCamera { #intermediatecamera }
 
 ```cpp
-AComposableCameraCameraBase * IntermediateCamera { nullptr }
+TObjectPtr< AComposableCameraCameraBase > IntermediateCamera { nullptr }
 ```
 
 ---
@@ -154,7 +165,7 @@ AComposableCameraCameraBase * IntermediateCamera { nullptr }
 #### Rail { #rail-1 }
 
 ```cpp
-ACameraRig_Rail * Rail
+TObjectPtr< ACameraRig_Rail > Rail { nullptr }
 ```
 
 ---
@@ -162,7 +173,7 @@ ACameraRig_Rail * Rail
 #### EnterTransition { #entertransition-4 }
 
 ```cpp
-UComposableCameraInertializedTransition * EnterTransition { nullptr }
+TObjectPtr< UComposableCameraInertializedTransition > EnterTransition { nullptr }
 ```
 
 ---
@@ -170,7 +181,7 @@ UComposableCameraInertializedTransition * EnterTransition { nullptr }
 #### ExitTransition { #exittransition-1 }
 
 ```cpp
-UComposableCameraInertializedTransition * ExitTransition { nullptr }
+TObjectPtr< UComposableCameraInertializedTransition > ExitTransition { nullptr }
 ```
 
 ---
@@ -178,7 +189,7 @@ UComposableCameraInertializedTransition * ExitTransition { nullptr }
 #### InternalSpline { #internalspline }
 
 ```cpp
-USplineComponent * InternalSpline
+TObjectPtr< USplineComponent > InternalSpline { nullptr }
 ```
 
 ---
@@ -186,19 +197,39 @@ USplineComponent * InternalSpline
 #### DebugSplineActor { #debugsplineactor }
 
 ```cpp
-AActor * DebugSplineActor
+TObjectPtr< AActor > DebugSplineActor { nullptr }
 ```
 
 ### Private Methods
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`BuildInternalSpline`](#buildinternalspline)  |  |
+| `bool` | [`ResolveAndValidateRail`](#resolveandvalidaterail)  |  |
+| `void` | [`DestroySpawnedActors`](#destroyspawnedactors)  |  |
+| `bool` | [`BuildInternalSpline`](#buildinternalspline)  | Returns true on success, false if any spawn / duplicate step returned null (caller should DestroySpawnedActors and degrade to a hard cut). |
+
+---
+
+#### ResolveAndValidateRail { #resolveandvalidaterail }
+
+```cpp
+bool ResolveAndValidateRail()
+```
+
+---
+
+#### DestroySpawnedActors { #destroyspawnedactors }
+
+```cpp
+void DestroySpawnedActors()
+```
 
 ---
 
 #### BuildInternalSpline { #buildinternalspline }
 
 ```cpp
-void BuildInternalSpline(const FComposableCameraPose & CurrentTargetPose, float DeltaTime)
+bool BuildInternalSpline(const FComposableCameraPose & CurrentTargetPose, float DeltaTime)
 ```
+
+Returns true on success, false if any spawn / duplicate step returned null (caller should DestroySpawnedActors and degrade to a hard cut).

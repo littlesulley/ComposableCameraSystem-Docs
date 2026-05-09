@@ -24,9 +24,12 @@ Each slot is aligned to the type's natural alignment. The per-instance default s
 | `TMap< FName, int32 >` | [`InternalVariableOffsets`](#internalvariableoffsets)  | Lookup: InternalVariableName → byte offset in Storage. |
 | `TMap< int32, TObjectPtr< AActor > >` | [`ActorReferenceSlots`](#actorreferenceslots)  | Object-reference slots mirrored from raw storage for explicit GC collection. |
 | `TMap< int32, TObjectPtr< UObject > >` | [`ObjectReferenceSlots`](#objectreferenceslots)  | Object-reference slots mirrored from raw storage for explicit GC collection. |
+| `TMap< int32, FSlotShape >` | [`SlotShapes`](#slotshapes)  |  |
 | `TMap< FComposableCameraPinKey, int32 >` | [`InputPinSourceOffsets`](#inputpinsourceoffsets)  | Connection table: for each input pin, the offset of its source data. Key = (TargetNodeIndex, TargetPinName), Value = offset in Storage where the source output pin wrote its data. |
 | `TMap< FComposableCameraPinKey, int32 >` | [`ExposedInputPinOffsets`](#exposedinputpinoffsets)  | Exposure table: for each exposed input pin, the offset of the parameter slot. Key = (TargetNodeIndex, TargetPinName), Value = offset of the exposed parameter in Storage. |
 | `TMap< FComposableCameraPinKey, int32 >` | [`DefaultValueOffsets`](#defaultvalueoffsets)  | Per-instance default-value table: for each input pin that has an authored [FComposableCameraPinOverride::DefaultValueOverride](FComposableCameraPinOverride.md#defaultvalueoverride) (see [Nodes/ComposableCameraNodePinTypes.h](#composablecameranodepintypesh)), the offset of the slot holding the pre-parsed typed bytes. Key = (TargetNodeIndex, PinName), Value = offset in Storage. |
+| `TSet< int32 >` | [`InvalidSetVariableExecEntries`](#invalidsetvariableexecentries)  | Indices into the type asset's `FullExecChain` whose `SetVariable` entries failed type validation at activation time and must be skipped by the runtime SetVariable handler. |
+| `TSet< int32 >` | [`InvalidSetVariableComputeExecEntries`](#invalidsetvariablecomputeexecentries)  | Same as `InvalidSetVariableExecEntries`, but for the type asset's `ComputeFullExecChain` — the parallel exec chain that runs at `ExecuteBeginPlay` time over compute nodes. |
 | `int32` | [`TotalSize`](#totalsize)  | Total allocated size. |
 
 ---
@@ -105,6 +108,14 @@ Object-reference slots mirrored from raw storage for explicit GC collection.
 
 ---
 
+#### SlotShapes { #slotshapes }
+
+```cpp
+TMap< int32, FSlotShape > SlotShapes
+```
+
+---
+
 #### InputPinSourceOffsets { #inputpinsourceoffsets }
 
 ```cpp
@@ -139,6 +150,30 @@ Pins without an authored override are simply absent from this map; their default
 
 ---
 
+#### InvalidSetVariableExecEntries { #invalidsetvariableexecentries }
+
+```cpp
+TSet< int32 > InvalidSetVariableExecEntries
+```
+
+Indices into the type asset's `FullExecChain` whose `SetVariable` entries failed type validation at activation time and must be skipped by the runtime SetVariable handler.
+
+Without this gate, a stale exec entry whose source pin's type no longer matches its target variable (variable retyped after the Set node was wired, asset saved before validation existed, etc.) would reach `CopySlot(SourceOffset, VarOffset, VariableSlotSize)` — and the POD memcpy branch reads `VariableSlotSize` bytes from `SourceOffset` regardless of how many bytes actually live in the source slot. For a Float source (4B) → Actor variable (8B), the memcpy reads 4 bytes past the float slot, then `RefreshReferenceSlot` reinterprets those 8 bytes as `AActor*` and registers the resulting garbage pointer with the GC mirror. GC can crash on the next sweep.
+
+Entries land in this set during `BuildRuntimeDataLayout` Phase 2's validation pass; the runtime check is one `TSet::Contains(EntryIdx)` per SetVariable entry per tick, with the typical empty set folding to a hashed-empty-bucket fast path.
+
+---
+
+#### InvalidSetVariableComputeExecEntries { #invalidsetvariablecomputeexecentries }
+
+```cpp
+TSet< int32 > InvalidSetVariableComputeExecEntries
+```
+
+Same as `InvalidSetVariableExecEntries`, but for the type asset's `ComputeFullExecChain` — the parallel exec chain that runs at `ExecuteBeginPlay` time over compute nodes.
+
+---
+
 #### TotalSize { #totalsize }
 
 ```cpp
@@ -157,21 +192,24 @@ Total allocated size.
 | `T` | [`ReadValue`](#readvalue) `const` `inline` | Read a typed value from the storage at the given byte offset. POD path: memcpy out of Storage. Non-POD struct path (T is a USTRUCT and Offset >= StructSlotsOffsetBase): CopyScriptStruct out of the typed slot in StructSlots. |
 | `void` | [`WriteValue`](#writevalue) `inline` | Write a typed value to the storage at the given byte offset. POD path: memcpy into Storage. Non-POD struct path: CopyScriptStruct into the existing struct slot's owned memory &ndash; no allocation unless an embedded FString grows beyond its existing capacity (see TechDoc.md §7.2 alloc characteristic). |
 | `T` | [`ReadOutputPin`](#readoutputpin) `const` `inline` | Read a value for a specific output pin. |
-| `void` | [`WriteOutputPin`](#writeoutputpin) `inline` | Write a value for a specific output pin. |
+| `void` | [`WriteOutputPin`](#writeoutputpin) `inline` | Write a value for a specific output pin. See `ReadOutputPin`. |
 | `bool` | [`TryResolveInputPin`](#tryresolveinputpin) `const` `inline` | Resolve an input pin's value. Checks in order: |
 | `bool` | [`ResolveInputPinOffset`](#resolveinputpinoffset) `const` `inline` | Resolve an input pin to its source slot offset using the same three-tier priority as TryResolveInputPin (wired -> exposed -> per-instance default), but without copying the value out &ndash; useful for non-templated paths (auto-resolve Struct case, struct subobject pin dispatch) that need to decide between byte storage and FInstancedStruct slot at runtime. Returns true and writes OutOffset when a slot is found. |
 | `T` | [`ReadInternalVariable`](#readinternalvariable) `const` `inline` | Read an internal variable by name. |
-| `void` | [`WriteInternalVariable`](#writeinternalvariable) `inline` | Write an internal variable by name. |
+| `void` | [`WriteInternalVariable`](#writeinternalvariable) `inline` | Write an internal variable by name. See `ReadInternalVariable`. |
 | `bool` | [`HasInternalVariable`](#hasinternalvariable) `const` `inline` | Check if a specific internal variable exists. |
-| `void` | [`CopySlot`](#copyslot) `inline` | Copy raw bytes from one slot to another within the same storage. Used by the exec-chain SetVariable dispatch to transfer a source node's output pin value into an internal variable slot without knowing the concrete C++ type at compile time. |
-| `const FInstancedStruct &` | [`GetStructSlotChecked`](#getstructslotchecked) `const` `inline` | Direct access to the FInstancedStruct backing a non-POD struct slot. Used by auto-resolve / subobject-pin code paths whose dispatch happens on a runtime EComposableCameraPinType value (not a compile-time T) &ndash; the templated ReadValue<T> path is preferred when T is known. Asserts the offset is in fact a struct slot. |
+| `bool` | [`TryCopySlot`](#trycopyslot) `inline` | Copy raw bytes from one slot to another within the same storage. Used by the exec-chain SetVariable dispatch to transfer a source node's output pin value into an internal variable slot without knowing the concrete C++ type at compile time. |
+| `void` | [`CopySlot`](#copyslot) `inline` | Backwards-compatible wrapper that discards the success bool. New callers should prefer `TryCopySlot` and react to a `false` result rather than rely on `check()` to abort under Debug only. |
+| `const FInstancedStruct *` | [`TryGetStructSlot`](#trygetstructslot) `const` `inline` | Direct access to the FInstancedStruct backing a non-POD struct slot. Used by auto-resolve / subobject-pin code paths whose dispatch happens on a runtime EComposableCameraPinType value (not a compile-time T) &ndash; the templated ReadValue<T> path is preferred when T is known. |
+| `FInstancedStruct *` | [`TryGetStructSlotMutable`](#trygetstructslotmutable) `inline` |  |
+| `const FInstancedStruct &` | [`GetStructSlotChecked`](#getstructslotchecked) `const` `inline` |  |
 | `FInstancedStruct &` | [`GetStructSlotMutableChecked`](#getstructslotmutablechecked) `inline` |  |
 | `void` | [`RegisterReferenceSlot`](#registerreferenceslot)  |  |
 | `void` | [`RefreshReferenceSlot`](#refreshreferenceslot)  |  |
 | `void` | [`RefreshAllReferenceSlots`](#refreshallreferenceslots)  |  |
-| `void` | [`AddReferencedObjects`](#addreferencedobjects-4)  |  |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-6)  |  |
 | `bool` | [`IsValid`](#isvalid) `const` `inline` | Check if storage has been allocated. |
-| `void` | [`ZeroInitialize`](#zeroinitialize) `inline` | Zero-initialize all storage. Called at allocation time. |
+| `void` | [`ZeroInitialize`](#zeroinitialize) `inline` | Re-initialize all storage to its post-allocation default state. Both pools are reset: |
 
 ---
 
@@ -221,6 +259,8 @@ template<typename T> inline T ReadValue(int32 Offset) const
 
 Read a typed value from the storage at the given byte offset. POD path: memcpy out of Storage. Non-POD struct path (T is a USTRUCT and Offset >= StructSlotsOffsetBase): CopyScriptStruct out of the typed slot in StructSlots.
 
+UObject-derived pointer T (e.g. `UCurveFloat*`, `AActor*`, `UComposableCameraTypeAsset*`): after the byte-storage memcpy, the resolved pointer is checked against `T::StaticClass()` via `IsA`. Mismatch → returns nullptr. The data block stores object/actor pointers class-erased (every Object/Actor pin collapses to a single `[EComposableCameraPinType::Object](#ComposableCameraNodePinTypes_8h_1a9b45f7e372745dd11093f3fd125790b4a497031794414a552435f90151ac3b54b)` or `Actor`), so a stale asset, a hand-edited connection, or a Blueprint-wildcard mismatch could deliver a wrong-class instance into the slot. The `AssignObjectPropertyChecked` helper in `ResolveAllInputPins` guards the auto-resolve UPROPERTY-write path; this branch symmetrically guards the explicit-template-read path used by node authors calling `GetInputPinValue<UCurveFloat*>` directly — without it, the wrong-class pointer flows back as a typed `T` and the next member access reads a vtable / fields of a different layout and crashes. Returning nullptr surfaces the error as a clean nullcheck failure on the caller side.
+
 ---
 
 #### WriteValue { #writevalue }
@@ -245,6 +285,8 @@ template<typename T> inline T ReadOutputPin(int32 NodeIndex, FName PinName) cons
 
 Read a value for a specific output pin.
 
+Real `if`-with-return on the lookup miss — `check()` strips in Shipping, so a typo in a custom C++ node's pin name or a stale output pin (asset edited to remove the pin but the C++ node hasn't been rebuilt) would null-deref the missing offset. The low-level `ReadValue<T>` is now hard-guarded too, but this wrapper is the one node authors call, so the failure must be caught at the wrapper boundary. Returning `T{}` matches the ReadValue degradation pattern.
+
 ---
 
 #### WriteOutputPin { #writeoutputpin }
@@ -255,7 +297,7 @@ Read a value for a specific output pin.
 template<typename T> inline void WriteOutputPin(int32 NodeIndex, FName PinName, const T & Value)
 ```
 
-Write a value for a specific output pin.
+Write a value for a specific output pin. See `ReadOutputPin`.
 
 ---
 
@@ -311,7 +353,7 @@ Read an internal variable by name.
 template<typename T> inline void WriteInternalVariable(FName VariableName, const T & Value)
 ```
 
-Write an internal variable by name.
+Write an internal variable by name. See `ReadInternalVariable`.
 
 ---
 
@@ -327,6 +369,20 @@ Check if a specific internal variable exists.
 
 ---
 
+#### TryCopySlot { #trycopyslot }
+
+`inline`
+
+```cpp
+inline bool TryCopySlot(int32 SourceOffset, int32 TargetOffset, int32 NumBytes)
+```
+
+Copy raw bytes from one slot to another within the same storage. Used by the exec-chain SetVariable dispatch to transfer a source node's output pin value into an internal variable slot without knowing the concrete C++ type at compile time.
+
+Returns true on success, false on any shape / index / bounds mismatch. The previous void overload guarded mismatches with `check()` only — Shipping strips those, leaving a stale offset table from a legacy asset (variable retyped after wiring, exec entry that escaped the Phase 2 invalid-set, asset round-trip race) free to drive `CopyScriptStruct` into a wrong-type struct slot or `memcpy` past a POD slot's end. The shape-table look-up here is one TMap::Find per endpoint per copy and turns the failure into a deterministic skip with a runtime warning, in every build.
+
+---
+
 #### CopySlot { #copyslot }
 
 `inline`
@@ -335,9 +391,33 @@ Check if a specific internal variable exists.
 inline void CopySlot(int32 SourceOffset, int32 TargetOffset, int32 NumBytes)
 ```
 
-Copy raw bytes from one slot to another within the same storage. Used by the exec-chain SetVariable dispatch to transfer a source node's output pin value into an internal variable slot without knowing the concrete C++ type at compile time.
+Backwards-compatible wrapper that discards the success bool. New callers should prefer `TryCopySlot` and react to a `false` result rather than rely on `check()` to abort under Debug only.
 
-Three cases: both POD (memcpy), both non-POD struct (CopyScriptStruct through the slot's owned memory, the struct types must match), or mismatched &ndash; the layout builder must never emit a connection between pins of different storage classes, so a mismatch is a bug.
+---
+
+#### TryGetStructSlot { #trygetstructslot }
+
+`const` `inline`
+
+```cpp
+inline const FInstancedStruct * TryGetStructSlot(int32 Offset, const UScriptStruct * ExpectedStruct) const
+```
+
+Direct access to the FInstancedStruct backing a non-POD struct slot. Used by auto-resolve / subobject-pin code paths whose dispatch happens on a runtime EComposableCameraPinType value (not a compile-time T) &ndash; the templated ReadValue<T> path is preferred when T is known.
+
+PREFERRED: `TryGetStructSlot(Offset, ExpectedStruct)` — failure-aware, returns nullptr on bad offset / bad index / shape mismatch. Use this from anywhere a wrong / stale offset is even remotely possible (every call site that doesn't carry a layout invariant proving the offset is correct).
+
+The `*Checked` variants below now also harden against bad offsets in every build (they used to rely on `check()` only, which Shipping strips, leaving an out-of-bounds `StructSlots[Index]` read free to walk into adjacent heap then `CopyScriptStruct` on garbage). They `LowLevelFatalError` when something violates the documented precondition — caller still gets the early-detection semantic in Debug, but Shipping no longer silently corrupts. New call sites should still prefer the Try* form unless the precondition is provably enforced upstream.
+
+---
+
+#### TryGetStructSlotMutable { #trygetstructslotmutable }
+
+`inline`
+
+```cpp
+inline FInstancedStruct * TryGetStructSlotMutable(int32 Offset, const UScriptStruct * ExpectedStruct)
+```
 
 ---
 
@@ -348,8 +428,6 @@ Three cases: both POD (memcpy), both non-POD struct (CopyScriptStruct through th
 ```cpp
 inline const FInstancedStruct & GetStructSlotChecked(int32 Offset) const
 ```
-
-Direct access to the FInstancedStruct backing a non-POD struct slot. Used by auto-resolve / subobject-pin code paths whose dispatch happens on a runtime EComposableCameraPinType value (not a compile-time T) &ndash; the templated ReadValue<T> path is preferred when T is known. Asserts the offset is in fact a struct slot.
 
 ---
 
@@ -387,7 +465,7 @@ void RefreshAllReferenceSlots()
 
 ---
 
-#### AddReferencedObjects { #addreferencedobjects-4 }
+#### AddReferencedObjects { #addreferencedobjects-6 }
 
 ```cpp
 void AddReferencedObjects(FReferenceCollector & Collector)
@@ -405,6 +483,8 @@ inline bool IsValid() const
 
 Check if storage has been allocated.
 
+An asset can legitimately have ONLY non-POD struct slots (every exposed parameter / variable / output pin is a USTRUCT containing FString / TArray / object refs). In that case `Storage` stays empty and `TotalSize` stays 0, but the data block is still meaningfully populated via `StructSlots`. The byte-pool-only check would mark such an asset invalid and cause debug introspection / FullExecChain dispatch to silently fall back to legacy paths. Either pool counts.
+
 ---
 
 #### ZeroInitialize { #zeroinitialize }
@@ -415,7 +495,15 @@ Check if storage has been allocated.
 inline void ZeroInitialize()
 ```
 
-Zero-initialize all storage. Called at allocation time.
+Re-initialize all storage to its post-allocation default state. Both pools are reset:
+
+* `Storage` is memzeroed (POD slots back to all-zero bytes).
+
+* Each `StructSlots[i]` is re-initialized via `InitializeAs(SameType)`, which destroys + default-constructs in place. The slot's struct type identity is preserved so existing offset tables stay valid; only the values reset (FString empty, TArray empty, UObject* null, etc.).
+
+Currently called only at allocation time, where `Storage.SetNumZeroed`
+
+* the `RegisterStructSlot` loop already produce this state. The function exists for future re-init callers (data-block reuse across reactivations, pooled allocators); without the StructSlots reset such callers would observe stale heap-owned state from the previous use.
 
 ### Public Static Attributes
 

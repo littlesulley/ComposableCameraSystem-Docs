@@ -124,12 +124,21 @@ Default implementation does nothing. Compiled out in shipping builds.
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `USkeletalMeshComponent *` | [`SkeletalMeshComponentForPivotActor`](#skeletalmeshcomponentforpivotactor-1)  |  |
+| `TWeakObjectPtr< USkeletalMeshComponent >` | [`SkeletalMeshComponentForPivotActor`](#skeletalmeshcomponentforpivotactor-1)  |  |
+| `TWeakObjectPtr< AActor >` | [`LastResolvedPivotActor`](#lastresolvedpivotactor-1)  |  |
 
 ---
 
 #### SkeletalMeshComponentForPivotActor { #skeletalmeshcomponentforpivotactor-1 }
 
 ```cpp
-USkeletalMeshComponent * SkeletalMeshComponentForPivotActor { nullptr }
+TWeakObjectPtr< USkeletalMeshComponent > SkeletalMeshComponentForPivotActor
+```
+
+---
+
+#### LastResolvedPivotActor { #lastresolvedpivotactor-1 }
+
+```cpp
+TWeakObjectPtr< AActor > LastResolvedPivotActor
 ```

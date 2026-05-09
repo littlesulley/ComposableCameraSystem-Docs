@@ -1,93 +1,22 @@
 # Changelog
 
-## 2026-05-07 — plugin `51debc2..c3e14fd`
+Reverse-chronological log of documentation updates.
 
-**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/51debc253d8cd15dc7a3b707fda0fec91bb6d7d0...c3e14fd1773b484e142f79b86602dd029cecb2c5))
+## 2026-05-09 — plugin `0021823..2785600`
 
-- `c3e14fd` Add typed struct storage, typed K2 setter dispatch, and full enum picker.
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/00218233c9d80a262ae25b0c27f0236039f482db...2785600721920a81b2a6914f7bea071c98988922))
 
-**C++ API pages regenerated:** 180 pages (modified: `FComposableCameraParameterBlock`, `FComposableCameraRuntimeDataBlock`, `ComposableCameraNodePinTypes`, `ComposableCameraBlueprintLibrary`)
+- `2785600` Fix plugin packaging for shipping builds
+- `9cbb343` Harden public-API nullptr guards across PCM, Director, and EvaluationTree
+- `c3e14fd` Add typed struct storage, typed K2 setter dispatch, and full enum picker
+- `51debc2` Port three-layer K2 reconstruction safety to AddCameraPatch + FromDataTable
+- `791cd96` Add GC-safe Actor/Object mirrors and widen struct pins to POD-friendly auto-detection
+- `7330930` Fix intermittent orphan pin on K2Node_ActivateComposableCamera cold restart
+- `68ed0cd` Fix LS Shot CineCam-at-origin on PIE cut into Shot-driven LSActor
+- `61534f9` Add V2.2 Shot Solver: framing zones + five-axis damping + decoupled AnchorAtScreen + LS overlay + cut hardening
+- `07208d8` Add Shot-Based Keyframing system: Shot data model, Composition Solver, CompositionFramingNode runtime, LS Shot Section/Track/TrackInstance, full Shot Editor
 
-**Prose drafts added:** none (no new public node/transition/modifier headers)
-
-**Flagged for review:**
-
-- `EditorDesignDoc.md` last updated 2026-04-30, commit date 2026-05-06 — K2 ExpandNode dispatch was refactored (typed-setter dispatch, enum picker); verify the K2 node authoring section reflects this.
-- `ExecutionFlowExamples.md` last updated 2026-04-30, commit date 2026-05-06 — may need a new flow example for typed-struct parameter propagation through `SetParameterBlockValue` → typed setter fallback.
-- New typed setters (`SetParameterBlockBool`, `SetParameterBlockVector`, etc.) added to `UComposableCameraBlueprintLibrary` — consider adding a usage note to the Blueprint parameter-passing section of the user guide.
-
----
-
-## 2026-05-06 — plugin `7330930..51debc2`
-
-**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/7330930e46c1fcde23bcaf1237b863551506159c...51debc253d8cd15dc7a3b707fda0fec91bb6d7d0))
-
-- `51debc2` Port three-layer K2 reconstruction safety to AddCameraPatch + FromDataTable.
-- `791cd96` Add GC-safe Actor/Object mirrors and widen struct pins to POD-friendly auto-detection.
-
-**C++ API pages regenerated:** 179 classes (8 public headers modified; no new/removed public classes)
-
-**Prose drafts added:** none (no new public node/transition/modifier headers)
-
-**Flagged for review:**
-
-- `EditorDesignDoc.md` last updated 2026-04-30, behind latest commit date 2026-05-05 — check editor-side docs for K2 node changes (AddCameraPatch, FromDataTable K2 reconstruction safety).
-- `ExecutionFlowExamples.md` last updated 2026-04-30, behind latest commit date 2026-05-05 — review execution flow examples for GC-safe Actor/Object mirror paths.
-
----
-
-## 2026-05-05 — plugin `61534f9..7330930`
-
-**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/61534f9685b5897989f5c20b38092321a036e716...7330930e46c1fcde23bcaf1237b863551506159c))
-
-- `7330930` Fix intermittent orphan pin on K2Node_ActivateComposableCamera cold restart.
-- `68ed0cd` Fix LS Shot CineCam-at-origin on PIE cut into Shot-driven LSActor.
-
-**C++ API pages regenerated:** 179 classes across 18 categories (modified: `UComposableCameraCameraBase`, `UComposableCameraCompositionFramingNode`)
-
-**Prose drafts added:** none (no new node / transition / modifier headers)
-
-**Flagged for review:**
-
-- `DesignDoc.md` last updated 2026-04-30 — predates commit date 2026-05-04; check whether framing-node solver-failure guard and `bLastTickFramingFailed` field are reflected in the relevant Concepts pages.
-- `EditorDesignDoc.md` last updated 2026-04-30 — predates commit date; verify no editor-side assumptions changed.
-- `ExecutionFlowExamples.md` last updated 2026-04-30 — predates commit date; verify LS-integration flow examples still accurate.
-- `TechDoc.md` confirmed in sync (last updated 2026-05-04 ≥ commit date).
-- `InvalidateTickCache()` added to `UComposableCameraCameraBase` — new public API, non-DAG-only. Ensure it is documented or call-site rules are noted wherever the public reference page lives.
-
----
-
-
-
-## 2026-05-04 — plugin `07208d8..61534f9`
-
-**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/07208d8e459a1e4f7efbacb0afd2bffca5c43168...61534f9685b5897989f5c20b38092321a036e716))
-
-- `61534f9` Add V2.2 Shot Solver: framing zones + five-axis damping + decoupled AnchorAtScreen + LS overlay + cut hardening.
-
-**C++ API pages regenerated:** 179 classes (4 added, 9 modified)
-
-**Prose drafts added:**
-
-- `docs/reference/debugging/debug-panel.md` — new section "Shot Zone Overlay (`FComposableCameraShotZoneOverlay`)" (please review)
-- `docs/reference/debugging/showdebug.md` — added `CCS.Debug.Viewport.ShotZones` to quick-start CVar list
-
-**Flagged for review:**
-
-- `DesignDoc.md` Last updated 2026-04-30 < commit date 2026-05-03 — check `docs/user-guide/concepts/` pages for V2.2 Shot Solver architectural changes (AnchorAtScreen decoupled pipeline, framing zones, five-axis damping).
-- `EditorDesignDoc.md` Last updated 2026-04-30 — check `docs/user-guide/` for Shot Editor viewport client changes (§D.4.1 framing-zone preview gizmos updated).
-- `ExecutionFlowExamples.md` Last updated 2026-04-30 — review if LS/PCM cut-hardening flow examples need updating.
-- New structs `FShotScreenZonePadding`, `FShotScreenZones`, `FShotPriorPose` auto-generated into API reference — verify descriptions are accurate.
-
----
-
-## 2026-05-03 — plugin `0021823..07208d8`
-
-**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/00218233c9d80a262ae25b0c27f0236039f482db...07208d8e459a1e4f7efbacb0afd2bffca5c43168))
-
-- `07208d8` Add Shot-Based Keyframing system: Shot data model, Composition Solver (closed-form + Picard joint solve), CompositionFramingNode runtime, LS Shot Section/Track/TrackInstance with two-Shot transition blend, full Shot Editor (viewport client, customizations, factories, asset definition), Cinemachine-style authoring surface for designer-driven cinematography.
-
-**C++ API pages regenerated:** 175 classes (9 added, 8 modified)
+**C++ API pages regenerated:** 182 pages (26 pages added: Shot data model classes, ShotSolver, CompositionFramingNode, ShotZoneOverlay, LevelSequenceShotActor, MovieSceneShot Section/Track, and related structs)
 
 **Prose drafts added:**
 
@@ -95,10 +24,11 @@
 
 **Flagged for review:**
 
-- All internal design docs (DesignDoc.md, EditorDesignDoc.md, TechDoc.md, ExecutionFlowExamples.md) last updated 2026-04-30, which predates this commit (2026-05-02). Check the User Guide → Concepts pages and Reference catalog for accuracy against the Shot-Based Keyframing additions.
-- New public types in `DataAssets/`, `MovieScene/`, `LevelSequence/`, and `Math/` (Shot data model, ShotSolver, MovieScene track/section, ShotActor) are documented only in the auto-generated API reference. Consider adding a dedicated User Guide page for the Shot-Based Keyframing workflow.
+- Design docs (DesignDoc.md, EditorDesignDoc.md, TechDoc.md, ExecutionFlowExamples.md) last updated before commit date 2026-05-07 — check `docs/user-guide/concepts/*.md` and `docs/reference/` pages against the Shot-Based Keyframing system additions (Shot data model, Composition Solver pipeline, LS Shot integration, Shot Editor).
+- New Shot-Based Keyframing feature is large (9 commits, ~26 new public headers) — `docs/user-guide/` may need a dedicated tutorial/guide page.
 
 ---
+
 
 ## 2026-04-26 — plugin `1f6fc9d..0021823`
 
@@ -341,4 +271,4 @@ Entries are written automatically; feel free to edit them if you want to reword 
 
 ## 2026-04-15 — initial baseline at plugin `775fc66`
 
-Documentation site and auto-update pipeline established. The C++ API reference under `reference/api/` reflects plugin `dev-v1` at commit `775fc66` ("Refactor everything with AI."). Subsequent changes will appear above this entry.
+Documentation site and auto-update pipeline established. The C++ API reference under `reference/api/` reflects plugin `dev-v1` at commit `775fc66` ("Refactor everything with AI."). Subsequent changes will appear above this entry.

@@ -238,7 +238,10 @@ Default implementation does nothing. Compiled out in shipping builds.
 |--------|------|-------------|
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`PushInterpolator_T`](#pushinterpolator_t)  |  |
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > >` | [`PullInterpolator_T`](#pullinterpolator_t)  |  |
-| `USkeletalMeshComponent *` | [`SkeletalMeshComponentForPivotActor`](#skeletalmeshcomponentforpivotactor)  |  |
+| `TWeakObjectPtr< USkeletalMeshComponent >` | [`SkeletalMeshComponentForPivotActor`](#skeletalmeshcomponentforpivotactor)  |  |
+| `TWeakObjectPtr< AActor >` | [`LastResolvedPivotActor`](#lastresolvedpivotactor)  |  |
+| `TArray< TWeakObjectPtr< AActor > >` | [`ActorsToIgnoreWeak`](#actorstoignoreweak)  |  |
+| `TArray< AActor * >` | [`ResolvedActorsToIgnore`](#resolvedactorstoignore)  |  |
 | `double` | [`ElapsedExemptionTime`](#elapsedexemptiontime)  |  |
 | `double` | [`CurrentDistanceFromCamera`](#currentdistancefromcamera)  |  |
 | `FVector` | [`OriginalCameraPosition`](#originalcameraposition)  |  |
@@ -269,7 +272,31 @@ TUniquePtr< TCameraInterpolator< TValueTypeWrapper< double > > > PullInterpolato
 #### SkeletalMeshComponentForPivotActor { #skeletalmeshcomponentforpivotactor }
 
 ```cpp
-USkeletalMeshComponent * SkeletalMeshComponentForPivotActor { nullptr }
+TWeakObjectPtr< USkeletalMeshComponent > SkeletalMeshComponentForPivotActor
+```
+
+---
+
+#### LastResolvedPivotActor { #lastresolvedpivotactor }
+
+```cpp
+TWeakObjectPtr< AActor > LastResolvedPivotActor
+```
+
+---
+
+#### ActorsToIgnoreWeak { #actorstoignoreweak }
+
+```cpp
+TArray< TWeakObjectPtr< AActor > > ActorsToIgnoreWeak
+```
+
+---
+
+#### ResolvedActorsToIgnore { #resolvedactorstoignore }
+
+```cpp
+TArray< AActor * > ResolvedActorsToIgnore
 ```
 
 ---

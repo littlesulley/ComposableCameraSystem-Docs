@@ -124,5 +124,5 @@ float ElapsedTime { 0.f }
 #### bShouldTick { #bshouldtick }
 
 ```cpp
-bool bShouldTick { true }
+bool bShouldTick { false }
 ```

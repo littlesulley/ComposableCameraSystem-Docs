@@ -153,6 +153,7 @@ Template helpers and typed interpolator wrappers.
 - [`TSimpleSpringInterpolatorTraits`](templates/TSimpleSpringInterpolatorTraits.md)
 - [`TSpringDamperInterpolator`](templates/TSpringDamperInterpolator.md)
 - [`TSpringDamperInterpolatorTraits`](templates/TSpringDamperInterpolatorTraits.md)
+- [`TStructOpsTypeTraits< FComposableCameraParameterBlock >`](templates/TStructOpsTypeTraits.md)
 - [`TValueTypeWrapper`](templates/TValueTypeWrapper.md)
 
 ## Structs
@@ -231,6 +232,7 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FShotScreenZones`](structs/FShotScreenZones.md)
 - [`FShotSolveContext`](structs/FShotSolveContext.md)
 - [`FShotSolveResult`](structs/FShotSolveResult.md)
+- [`FSlotShape`](structs/FSlotShape.md)
 - [`FTransitionDebugSnapshot`](structs/FTransitionDebugSnapshot.md)
 
 ## Other UObjects

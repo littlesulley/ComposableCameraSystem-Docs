@@ -85,3 +85,26 @@ int32 VariableSlotSize = 0
 ```
 
 Byte size of the variable's data slot. Pre-computed from the variable's EComposableCameraPinType at sync time so the runtime can do a raw memcpy from the source output pin offset to the variable offset without a type-dispatch. Used when EntryType == SetVariable.
+
+Sentinel value `StructSlotSentinel` (`TNumericLimits<int32>::Max()`) means "the variable is a non-POD struct — its slot lives in the
+RuntimeDataBlock's <tt>StructSlots</tt> pool, not the byte <tt>Storage</tt> pool, so
+the byte-size value does not apply". The runtime SetVariable handler passes this verbatim into `RuntimeDataBlock::CopySlot`, which dispatches on the source/target offsets' storage class (struct slot vs Storage) and ignores the size argument when the struct branch fires. The non-zero sentinel is required so the existing `<= 0` early-out in the runtime handler (which guards against editor failures setting size=0 for POD variables) does not silently swallow non-POD struct writes.
+
+### Public Static Attributes
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `constexpr int32` | [`StructSlotSentinel`](#structslotsentinel) `static` | Sentinel for `VariableSlotSize` indicating "this variable lives in |
+
+---
+
+#### StructSlotSentinel { #structslotsentinel }
+
+`static`
+
+```cpp
+constexpr int32 StructSlotSentinel = TNumericLimits<int32>::Max()
+```
+
+Sentinel for `VariableSlotSize` indicating "this variable lives in
+RuntimeDataBlock::StructSlots" — see field doc above.

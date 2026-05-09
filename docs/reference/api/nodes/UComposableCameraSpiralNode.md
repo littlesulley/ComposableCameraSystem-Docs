@@ -9,7 +9,9 @@
 
 Positions the camera on a helical path around a pivot point.
 
-Position-only node — rotation is left untouched, to be authored by a downstream LookAtNode (or similar). The position formula, evaluated each tick, is: P(t) = EffectivePivot
+Position-only node — rotation is left untouched, to be authored by a downstream LookAtNode (or similar). The position formula, evaluated each tick, is: 
+```
+P(t) = EffectivePivot
      + Axis        * HeightCurve(NormalizedTime)
      + PerpDir(θ)  * RadiusCurve(NormalizedTime)
 
@@ -20,6 +22,7 @@ EffectivePivot = ResolvedPivot
 
 PerpDir(θ) = Forward * cos(θ) + Right * sin(θ)
 θ          = InitialAngleDegrees + AngleCurve(NormalizedTime)
+```
  Where the Spiral-Space basis (Up, Forward, Right) is resolved from RotationAxis and ReferenceDirection each tick — Forward is the ReferenceDirection vector projected onto the plane perpendicular to Axis and renormalized, and Right = Cross(Axis, Forward).
 
 Curve authoring convention (Progress pattern, matching SplineNode's AutomaticMoveCurve): all three curves use X ∈ [0, 1] as normalized time within Duration; Y in absolute world units — Radius / Height in cm, AngleCurve in degrees. Direct curve evaluation means position at any arbitrary t is O(1) computable — no integration history, no accumulated state. A Loop-mode orbit typically authors AngleCurve as Y(0)=0, Y(1)=360·N for a seamless N-turn cycle; non-360 multiples produce an intentional retrace at the cycle seam.

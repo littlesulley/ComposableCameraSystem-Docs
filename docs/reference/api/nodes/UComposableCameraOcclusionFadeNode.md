@@ -301,6 +301,8 @@ Default implementation does nothing. Compiled out in shipping builds.
 | `FTraceHandle` | [`PendingSweepHandle`](#pendingsweephandle)  | Async trace handle for the sweep submitted last frame and consumed this frame. Invalidated after each successful read. |
 | `FVector` | [`LastResolvedTargetPoint`](#lastresolvedtargetpoint)  | Cached target point resolved this tick — used both by the sweep submit and by debug draw. |
 | `FVector` | [`LastCameraPosition`](#lastcameraposition)  | Cached camera position resolved this tick — same reason. |
+| `TSet< UPrimitiveComponent * >` | [`DesiredFadedScratch`](#desiredfadedscratch)  |  |
+| `TArray< FOverlapResult >` | [`ProximityOverlapsScratch`](#proximityoverlapsscratch)  |  |
 | `FVector` | [`DebugSweepStart`](#debugsweepstart)  | Frame-snapshot of the sweep endpoints and proximity sphere, written by OnTickNode and read by DrawNodeDebug. |
 | `FVector` | [`DebugSweepEnd`](#debugsweepend)  |  |
 | `bool` | [`bDebugSweepSubmittedThisTick`](#bdebugsweepsubmittedthistick)  |  |
@@ -347,6 +349,22 @@ Cached camera position resolved this tick — same reason.
 
 ---
 
+#### DesiredFadedScratch { #desiredfadedscratch }
+
+```cpp
+TSet< UPrimitiveComponent * > DesiredFadedScratch
+```
+
+---
+
+#### ProximityOverlapsScratch { #proximityoverlapsscratch }
+
+```cpp
+TArray< FOverlapResult > ProximityOverlapsScratch
+```
+
+---
+
 #### DebugSweepStart { #debugsweepstart }
 
 ```cpp
@@ -378,7 +396,7 @@ bool bDebugSweepSubmittedThisTick { false }
 | `bool` | [`ResolveTargetPoint`](#resolvetargetpoint-2) `const` | Resolve the target world location from PivotActor + BoneName / PivotZOffset. Returns false when PivotActor is null. |
 | `void` | [`ConsumePendingSweep`](#consumependingsweep)  | Consume the result of a sweep submitted on a previous frame (if any) and insert its hits into OutFadableComponents after filtering. |
 | `void` | [`SubmitOcclusionSweep`](#submitocclusionsweep)  | Submit a fresh async sphere sweep from camera to target. Handle stored in PendingSweepHandle for next frame's consume. |
-| `void` | [`RunProximityQuery`](#runproximityquery) `const` | Run the synchronous proximity overlap at the camera position, collect all fadable components on matching actors into OutFadableComponents. |
+| `void` | [`RunProximityQuery`](#runproximityquery)  | Run the synchronous proximity overlap at the camera position, collect all fadable components on matching actors into OutFadableComponents. Non-const because it writes to ProximityOverlapsScratch, the per-tick member-scoped scratch buffer (see hot-path allocation note in §7.1). |
 | `bool` | [`PassesFadeFilters`](#passesfadefilters) `const` | Whether this primitive passes the mesh-type + component-tag filters. OccluderContext toggles the component-tag check (proximity fade does not use it; only the sweep path does). |
 | `void` | [`CollectFadableComponentsOnActor`](#collectfadablecomponentsonactor) `const` | Gather every UPrimitiveComponent on Actor that passes the mesh-type filter into Out. The component-tag filter is deliberately skipped — it's sweep-only. |
 | `void` | [`ApplyOcclusionMaterial`](#applyocclusionmaterial)  | Apply the occlusion material to every slot on Component, recording originals in AppliedMaterialOverrides. No-op if Component is already recorded. |
@@ -421,13 +439,11 @@ Submit a fresh async sphere sweep from camera to target. Handle stored in Pendin
 
 #### RunProximityQuery { #runproximityquery }
 
-`const`
-
 ```cpp
-void RunProximityQuery(UWorld * World, const FVector & CameraPos, TSet< UPrimitiveComponent * > & OutFadableComponents) const
+void RunProximityQuery(UWorld * World, const FVector & CameraPos, TSet< UPrimitiveComponent * > & OutFadableComponents)
 ```
 
-Run the synchronous proximity overlap at the camera position, collect all fadable components on matching actors into OutFadableComponents.
+Run the synchronous proximity overlap at the camera position, collect all fadable components on matching actors into OutFadableComponents. Non-const because it writes to ProximityOverlapsScratch, the per-tick member-scoped scratch buffer (see hot-path allocation note in §7.1).
 
 ---
 

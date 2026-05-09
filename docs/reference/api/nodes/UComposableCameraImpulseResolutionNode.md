@@ -39,10 +39,10 @@ UComposableCameraInterpolatorBase * Interpolator
 |  | [`UComposableCameraImpulseResolutionNode`](#ucomposablecameraimpulseresolutionnode-1) `inline` |  |
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-16) `virtual` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-24) `virtual` |  |
-| `void` | [`BeginDestroy`](#begindestroy-2) `virtual` |  |
+| `void` | [`BeginDestroy`](#begindestroy-3) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-22) `virtual` `const` |  |
-| `void` | [`AddImpulseShape`](#addimpulseshape) `inline` |  |
-| `void` | [`RemoveImpulseShape`](#removeimpulseshape) `inline` |  |
+| `void` | [`AddImpulseShape`](#addimpulseshape)  |  |
+| `void` | [`RemoveImpulseShape`](#removeimpulseshape)  |  |
 
 ---
 
@@ -76,7 +76,7 @@ virtual void OnTickNode_Implementation(float DeltaTime, const FComposableCameraP
 
 ---
 
-#### BeginDestroy { #begindestroy-2 }
+#### BeginDestroy { #begindestroy-3 }
 
 `virtual`
 
@@ -98,20 +98,16 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 
 #### AddImpulseShape { #addimpulseshape }
 
-`inline`
-
 ```cpp
-inline void AddImpulseShape(AActor * Shape)
+void AddImpulseShape(AActor * Shape)
 ```
 
 ---
 
 #### RemoveImpulseShape { #removeimpulseshape }
 
-`inline`
-
 ```cpp
-inline void RemoveImpulseShape(AActor * Shape)
+void RemoveImpulseShape(AActor * Shape)
 ```
 
 ### Private Attributes
@@ -119,7 +115,7 @@ inline void RemoveImpulseShape(AActor * Shape)
 | Return | Name | Description |
 |--------|------|-------------|
 | `TObjectPtr< USphereComponent >` | [`Sphere`](#sphere)  |  |
-| `TArray< TScriptInterface< IComposableCameraImpulseShapeInterface > >` | [`ImpulseShapes`](#impulseshapes)  |  |
+| `TArray< TWeakObjectPtr< AActor > >` | [`ImpulseShapeActors`](#impulseshapeactors)  |  |
 | `FVector` | [`OldVelocity`](#oldvelocity)  |  |
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FVector > > >` | [`Interpolator_T`](#interpolator_t-3)  |  |
 
@@ -133,10 +129,10 @@ TObjectPtr< USphereComponent > Sphere
 
 ---
 
-#### ImpulseShapes { #impulseshapes }
+#### ImpulseShapeActors { #impulseshapeactors }
 
 ```cpp
-TArray< TScriptInterface< IComposableCameraImpulseShapeInterface > > ImpulseShapes
+TArray< TWeakObjectPtr< AActor > > ImpulseShapeActors
 ```
 
 ---

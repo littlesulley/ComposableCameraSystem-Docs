@@ -16,6 +16,8 @@
 | `AComposableCameraCameraBase *` | [`RunningCamera`](#runningcamera-2)  |  |
 | `FComposableCameraPose` | [`CurrentCameraPose`](#currentcamerapose)  |  |
 | `TSet< UComposableCameraActionBase * >` | [`CameraActions`](#cameraactions)  |  |
+| `TArray< UComposableCameraActionBase * >` | [`CameraActionsRemovalScratch`](#cameraactionsremovalscratch)  | Per-frame scratch buffer for `UpdateActions`: collects pointers of expired/null actions during the iteration so the actual `Remove`s happen in a second pass (safe — TSet mutation during iteration is not). Member-scoped so the TArray's heap allocation amortizes across frames; `Reset()` keeps capacity. Earlier code constructed a fresh `TSet<UObject*>` every tick — TSet allocates a node per insert and may rehash, so even an empty set paid one heap alloc per frame and a populated set paid more. Move to a `TArray` of raw pointers since (a) we never look up by key, (b) actions can't appear twice in the source set so dedup-via-set buys nothing. |
+| `TArray< TObjectPtr< UComposableCameraActionBase > >` | [`CameraActionsPendingAddScratch`](#cameraactionspendingaddscratch)  | Re-entrancy companion to `CameraActionsRemovalScratch`. When `bIsUpdatingActions` is set, `AddCameraAction` queues newly- constructed actions here instead of mutating `CameraActions` immediately; the post-loop sweep (after the removals sweep) drains this list, adding to `CameraActions` AND binding to RunningCamera in one shot. Net effect: an Action's `OnCanExecute` callback is allowed to call `PCM->AddCameraAction(...)` without invalidating the range- for iterator over `CameraActions`. The newly-added Action takes effect on the NEXT frame's UpdateActions tick (it does not retroactively join the iteration that spawned it). |
 | `FOnCameraFinishConstructed` | [`CurrentOnPreBeginplayEvent`](#currentonprebeginplayevent)  |  |
 
 ---
@@ -60,6 +62,30 @@ TSet< UComposableCameraActionBase * > CameraActions
 
 ---
 
+#### CameraActionsRemovalScratch { #cameraactionsremovalscratch }
+
+```cpp
+TArray< UComposableCameraActionBase * > CameraActionsRemovalScratch
+```
+
+Per-frame scratch buffer for `UpdateActions`: collects pointers of expired/null actions during the iteration so the actual `Remove`s happen in a second pass (safe — TSet mutation during iteration is not). Member-scoped so the TArray's heap allocation amortizes across frames; `Reset()` keeps capacity. Earlier code constructed a fresh `TSet<UObject*>` every tick — TSet allocates a node per insert and may rehash, so even an empty set paid one heap alloc per frame and a populated set paid more. Move to a `TArray` of raw pointers since (a) we never look up by key, (b) actions can't appear twice in the source set so dedup-via-set buys nothing.
+
+**Lifetime contract**: this scratch is intentionally NOT UPROPERTY and NOT TWeakObjectPtr. It must therefore be EMPTY whenever control is outside `UpdateActions` — `Reset()` runs both at the start AND at the end of the function so a GC sweep between frames cannot encounter stale raw `UObject*` entries here. Do not add any code path that leaves entries live across the function boundary; if a future use case requires that, switch the storage to `TArray<TWeakObjectPtr<[UComposableCameraActionBase](../actions/UComposableCameraActionBase.md#ucomposablecameraactionbase)>>`.
+
+---
+
+#### CameraActionsPendingAddScratch { #cameraactionspendingaddscratch }
+
+```cpp
+TArray< TObjectPtr< UComposableCameraActionBase > > CameraActionsPendingAddScratch
+```
+
+Re-entrancy companion to `CameraActionsRemovalScratch`. When `bIsUpdatingActions` is set, `AddCameraAction` queues newly- constructed actions here instead of mutating `CameraActions` immediately; the post-loop sweep (after the removals sweep) drains this list, adding to `CameraActions` AND binding to RunningCamera in one shot. Net effect: an Action's `OnCanExecute` callback is allowed to call `PCM->AddCameraAction(...)` without invalidating the range- for iterator over `CameraActions`. The newly-added Action takes effect on the NEXT frame's UpdateActions tick (it does not retroactively join the iteration that spawned it).
+
+This list IS `UPROPERTY(Transient)` because — unlike `CameraActionsRemovalScratch` whose entries are still members of the GC-visible `CameraActions` TSet for the duration of the function — pending-add entries are freshly `NewObject`ed and have NOT been registered into any reflected container yet. A GC pass triggered re-entrantly from inside an Action's `OnCanExecute` (sync `LoadObject`, BP exception during eval, slow Blueprint that yields, etc.) would reclaim the half-constructed Action and the post-loop drain would then read a dangling pointer. The TObjectPtr inside a UPROPERTY array makes the Action root- reachable for the whole gap, closing that window without introducing any per-frame allocation cost (the array's storage amortises across activations the same way the raw form did).
+
+---
+
 #### CurrentOnPreBeginplayEvent { #currentonprebeginplayevent }
 
 ```cpp
@@ -89,7 +115,7 @@ FOnCameraFinishConstructed CurrentOnPreBeginplayEvent
 | `void` | [`OnModifierChanged`](#onmodifierchanged)  |  |
 | `UComposableCameraActionBase *` | [`AddCameraAction`](#addcameraaction)  |  |
 | `UComposableCameraActionBase *` | [`FindCameraAction`](#findcameraaction)  |  |
-| `void` | [`RemoveCameraAction`](#removecameraaction)  |  |
+| `void` | [`RemoveCameraAction`](#removecameraaction)  | Public API: fully remove an action — unbind from RunningCamera AND drop it from the `CameraActions` TSet so neither `FindCameraAction` returns it nor `BindCameraActionsForNewCamera` re-binds it onto the next camera. Previously this only unbound from RunningCamera, leaving the action strongly referenced by the PCM's TSet — external callers that expected "remove" semantics ended up with the action zombie-bound to every subsequent camera switch. |
 | `void` | [`ExpireCameraAction`](#expirecameraaction)  |  |
 | `void` | [`BindCameraActionsForNewCamera`](#bindcameraactionsfornewcamera)  |  |
 | `void` | [`PopCameraContext`](#popcameracontext-1)  | Pop a specific camera context by name. If this is the active context, the previous context resumes with an optional transition. Cannot pop the base context if it is the last one remaining. |
@@ -296,6 +322,8 @@ UComposableCameraActionBase * FindCameraAction(TSubclassOf< UComposableCameraAct
 void RemoveCameraAction(UComposableCameraActionBase * Action)
 ```
 
+Public API: fully remove an action — unbind from RunningCamera AND drop it from the `CameraActions` TSet so neither `FindCameraAction` returns it nor `BindCameraActionsForNewCamera` re-binds it onto the next camera. Previously this only unbound from RunningCamera, leaving the action strongly referenced by the PCM's TSet — external callers that expected "remove" semantics ended up with the action zombie-bound to every subsequent camera switch.
+
 ---
 
 #### ExpireCameraAction { #expirecameraaction }
@@ -500,12 +528,12 @@ Fixed ring-buffer capacity. 120 frames ≈ 2 seconds at 60 fps, which is enough 
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`AddReferencedObjects`](#addreferencedobjects-5) `static` |  |
-| `bool` | [`IsPoseHistoryFrozen`](#isposehistoryfrozen) `static` | Whether the pose-history ring buffer is currently frozen (driven by `CCS.Debug.Panel.PoseHistory.Freeze`). Read-only accessor for the debug panel so it can render a `[FROZEN]` indicator in the title bar without having to duplicate the CVar declaration. Debug-only; not declared outside `!UE_BUILD_SHIPPING`. |
+| `void` | [`AddReferencedObjects`](#addreferencedobjects-7) `static` |  |
+| `bool` | [`IsPoseHistoryFrozen`](#isposehistoryfrozen) `static` | Whether the pose-history ring buffer is currently frozen (driven by `CCS.Debug.Panel.PoseHistory.Freeze`). Read-only accessor for the debug panel so it can render a `[FROZEN]` indicator in the title bar without having to duplicate the CVar declaration. Shipping builds return false because the debug CVar is compiled out. |
 
 ---
 
-#### AddReferencedObjects { #addreferencedobjects-5 }
+#### AddReferencedObjects { #addreferencedobjects-7 }
 
 `static`
 
@@ -523,7 +551,7 @@ static void AddReferencedObjects(UObject * InThis, FReferenceCollector & Collect
 static bool IsPoseHistoryFrozen()
 ```
 
-Whether the pose-history ring buffer is currently frozen (driven by `CCS.Debug.Panel.PoseHistory.Freeze`). Read-only accessor for the debug panel so it can render a `[FROZEN]` indicator in the title bar without having to duplicate the CVar declaration. Debug-only; not declared outside `!UE_BUILD_SHIPPING`.
+Whether the pose-history ring buffer is currently frozen (driven by `CCS.Debug.Panel.PoseHistory.Freeze`). Read-only accessor for the debug panel so it can render a `[FROZEN]` indicator in the title bar without having to duplicate the CVar declaration. Shipping builds return false because the debug CVar is compiled out.
 
 ### Protected Methods
 
@@ -562,6 +590,7 @@ virtual void DoUpdateCamera(float DeltaTime)
 | `TObjectPtr< UComposableCameraModifierManager >` | [`ModifierManager`](#modifiermanager)  |  |
 | `FMinimalViewInfo` | [`LastDesiredView`](#lastdesiredview)  |  |
 | `bool` | [`bIsImplicitlyActivating`](#bisimplicitlyactivating)  | Guard against re-entrant SetViewTarget calls during implicit activation. When the PCM calls ActivateNewCamera internally, the Director may call Super::SetViewTarget as part of its bookkeeping — the guard prevents that from recursing back into implicit activation. |
+| `bool` | [`bIsUpdatingActions`](#bisupdatingactions)  | True only inside `UpdateActions`'s range-for over `CameraActions`. The public `RemoveCameraAction` checks this — when set, it performs the unbind half + queues the action into `CameraActionsRemovalScratch` instead of mutating the TSet directly. UpdateActions then does a single post-loop sweep that drains the scratch with `Remove`. Without this gate, an `Action->OnCanExecute` callback that calls `PCM->RemoveCameraAction(this)` would mutate the very TSet the caller is iterating, invalidating the range-for's hash buckets and crashing on the next advance. Outside UpdateActions, RemoveCameraAction is the regular "unbind + drop from TSet" public API. |
 | `TArray< FComposableCameraPoseHistoryEntry >` | [`PoseHistoryRing`](#posehistoryring)  |  |
 | `int32` | [`PoseHistoryHead`](#posehistoryhead)  |  |
 | `int32` | [`PoseHistoryCountUsed`](#posehistorycountused)  |  |
@@ -620,6 +649,16 @@ Guard against re-entrant SetViewTarget calls during implicit activation. When th
 
 ---
 
+#### bIsUpdatingActions { #bisupdatingactions }
+
+```cpp
+bool bIsUpdatingActions { false }
+```
+
+True only inside `UpdateActions`'s range-for over `CameraActions`. The public `RemoveCameraAction` checks this — when set, it performs the unbind half + queues the action into `CameraActionsRemovalScratch` instead of mutating the TSet directly. UpdateActions then does a single post-loop sweep that drains the scratch with `Remove`. Without this gate, an `Action->OnCanExecute` callback that calls `PCM->RemoveCameraAction(this)` would mutate the very TSet the caller is iterating, invalidating the range-for's hash buckets and crashing on the next advance. Outside UpdateActions, RemoveCameraAction is the regular "unbind + drop from TSet" public API.
+
+---
+
 #### PoseHistoryRing { #posehistoryring }
 
 ```cpp
@@ -646,10 +685,60 @@ int32 PoseHistoryCountUsed = 0
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `UComposableCameraDirector *` | [`GetActiveDirectorSafe`](#getactivedirectorsafe) `const` | Safe accessor for the current active director. Returns nullptr if `ContextStack` itself is null (subobject creation failed, post-teardown reentry, etc.) so callers can branch on the result without paying for a manual `ContextStack ? ... : nullptr` expression at every site. Public-edge call sites that need a guaranteed non-null director should use `ResolveActiveDirectorOrFallback` instead. |
+| `UComposableCameraDirector *` | [`ResolveActiveDirectorOrFallback`](#resolveactivedirectororfallback)  | Resolve a non-null director by: |
+| `void` | [`UnbindCameraActionFromCamera`](#unbindcameraactionfromcamera)  | Unbind an action's delegates / node hooks from the running camera, but do NOT touch the `CameraActions` TSet — used by `UpdateActions`'s iterate-then-remove pattern (mutating the TSet during iteration is unsafe; the scratch + post-loop `Remove` handles the membership side). External callers wanting "remove and forget" should call the public `RemoveCameraAction`, which composes this helper with the TSet drop. |
+| `void` | [`BindCameraActionToRunningCamera`](#bindcameraactiontorunningcamera)  | Mirror of `UnbindCameraActionFromCamera` — the bind side of the per-Action delegate / node-hook setup. Pulled out of the public `AddCameraAction` body so the post-loop sweep in `UpdateActions` can finish the deferred-add path without duplicating the dispatch switch. No-op if Action or RunningCamera is null. |
 | `void` | [`UpdateActions`](#updateactions)  |  |
 | `void` | [`BuildModifierDebugString`](#buildmodifierdebugstring)  |  |
 | `void` | [`OnTypeAssetCameraConstructed`](#ontypeassetcameraconstructed)  | Called by the dynamic delegate during type-asset-based camera activation. |
 | `void` | [`CaptureCurrentFrameToPoseHistory`](#capturecurrentframetoposehistory)  | Capture one frame into the ring. Called from `DoUpdateCamera` after `CurrentCameraPose` is finalized. |
+
+---
+
+#### GetActiveDirectorSafe { #getactivedirectorsafe }
+
+`const`
+
+```cpp
+UComposableCameraDirector * GetActiveDirectorSafe() const
+```
+
+Safe accessor for the current active director. Returns nullptr if `ContextStack` itself is null (subobject creation failed, post-teardown reentry, etc.) so callers can branch on the result without paying for a manual `ContextStack ? ... : nullptr` expression at every site. Public-edge call sites that need a guaranteed non-null director should use `ResolveActiveDirectorOrFallback` instead.
+
+---
+
+#### ResolveActiveDirectorOrFallback { #resolveactivedirectororfallback }
+
+```cpp
+UComposableCameraDirector * ResolveActiveDirectorOrFallback(const TCHAR * Caller)
+```
+
+Resolve a non-null director by:
+
+1. Trying the current active director (via `GetActiveDirectorSafe`)
+
+1. Falling back to ensuring the project-settings base context Returns nullptr only if both paths fail (no stack, no configured context names). The single shared implementation prevents the "n public APIs, n−1 of them remembered to fall back" drift pattern that recurs whenever a new public entry-point is added. `Caller` is used purely to attribute the failure log — pass a literal string.
+
+---
+
+#### UnbindCameraActionFromCamera { #unbindcameraactionfromcamera }
+
+```cpp
+void UnbindCameraActionFromCamera(UComposableCameraActionBase * Action)
+```
+
+Unbind an action's delegates / node hooks from the running camera, but do NOT touch the `CameraActions` TSet — used by `UpdateActions`'s iterate-then-remove pattern (mutating the TSet during iteration is unsafe; the scratch + post-loop `Remove` handles the membership side). External callers wanting "remove and forget" should call the public `RemoveCameraAction`, which composes this helper with the TSet drop.
+
+---
+
+#### BindCameraActionToRunningCamera { #bindcameraactiontorunningcamera }
+
+```cpp
+void BindCameraActionToRunningCamera(UComposableCameraActionBase * Action)
+```
+
+Mirror of `UnbindCameraActionFromCamera` — the bind side of the per-Action delegate / node-hook setup. Pulled out of the public `AddCameraAction` body so the post-loop sweep in `UpdateActions` can finish the deferred-add path without duplicating the dispatch switch. No-op if Action or RunningCamera is null.
 
 ---
 

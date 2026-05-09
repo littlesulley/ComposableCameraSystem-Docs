@@ -120,7 +120,7 @@ Leave unset (NAME_None GUID) to disable editor preview entirely — the patch wi
 | Return | Name | Description |
 |--------|------|-------------|
 |  | [`UMovieSceneComposableCameraPatchSection`](#umoviescenecomposablecamerapatchsection-1)  |  |
-| `void` | [`PostLoad`](#postload) `virtual` |  |
+| `void` | [`PostLoad`](#postload-1) `virtual` |  |
 | `void` | [`ImportEntityImpl`](#importentityimpl-1) `virtual` |  |
 | `bool` | [`PopulateEvaluationFieldImpl`](#populateevaluationfieldimpl) `virtual` `inline` | Override the parameter-section base's PopulateEvaluationFieldImpl — which returns `true` (i.e. "I handle entity-field setup, skip the |
 | `void` | [`RebuildBagsFromPatchAsset`](#rebuildbagsfrompatchasset)  | Sync Parameters / Variables bag layouts to the current PatchAsset's exposed surface. Preserves values for entries whose name + type survive via FInstancedPropertyBag::MigrateToNewBagStruct. Resets both bags empty when PatchAsset is null. |
@@ -136,7 +136,7 @@ UMovieSceneComposableCameraPatchSection(const FObjectInitializer & ObjectInitial
 
 ---
 
-#### PostLoad { #postload }
+#### PostLoad { #postload-1 }
 
 `virtual`
 

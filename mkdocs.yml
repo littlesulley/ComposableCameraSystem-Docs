@@ -228,6 +228,7 @@ nav:
                 - 'TSimpleSpringInterpolatorTraits': reference/api/templates/TSimpleSpringInterpolatorTraits.md
                 - 'TSpringDamperInterpolator': reference/api/templates/TSpringDamperInterpolator.md
                 - 'TSpringDamperInterpolatorTraits': reference/api/templates/TSpringDamperInterpolatorTraits.md
+                - 'TStructOpsTypeTraits': reference/api/templates/TStructOpsTypeTraits.md
                 - 'TValueTypeWrapper': reference/api/templates/TValueTypeWrapper.md
               - 'Structs':
                 - 'FComposableCameraActivateParams': reference/api/structs/FComposableCameraActivateParams.md
@@ -302,6 +303,7 @@ nav:
                 - 'FShotScreenZones': reference/api/structs/FShotScreenZones.md
                 - 'FShotSolveContext': reference/api/structs/FShotSolveContext.md
                 - 'FShotSolveResult': reference/api/structs/FShotSolveResult.md
+                - 'FSlotShape': reference/api/structs/FSlotShape.md
                 - 'FTransitionDebugSnapshot': reference/api/structs/FTransitionDebugSnapshot.md
               - 'Other UObjects':
                 - 'UAsyncPlayCutsceneSequence': reference/api/uobjects-other/UAsyncPlayCutsceneSequence.md

@@ -136,17 +136,21 @@ Used by:
 
 * UComposableCameraTypeAsset::Build (authoring-time validation)
 
-Decision logic:
+Decision logic — strict whitelist, no reflection-layout heuristics:
 
-1. STRUCT_IsPlainOldData flag set -> safe (UHT / TStructOpsTypeTraits opted in).
+1. Engine math fast-path (FVector / FRotator / FTransform / etc.) → safe.
 
-1. Walk every UPROPERTY of the struct. Reject on FStr / FText / containers / object refs / interfaces / delegates &ndash; all carry heap-owned storage or GC-tracked references that cannot survive a raw byte copy.
+1. `STRUCT_IsPlainOldData` flag set → safe (caller opted in via `template<> struct TStructOpsTypeTraits<MyStruct> : TStructOpsTypeTraitsBase2<MyStruct> { enum { WithIsPlainOldData = true }; };`).
 
-1. Recurse into nested FStructProperty.
+1. Anything else → unsafe. Caller must route through `FInstancedStruct` / the typed slot pool.
 
-1. Everything else (Bool, numeric, Byte/Enum, Name, FieldPath) -> safe.
+Why this is strict by design: a UPROPERTY-walk-and-validate approach (the previous implementation) cannot see non-UPROPERTY members. UE allows native C++ members in a USTRUCT body — `FString`, `TArray`, `UObject*`, custom dtors — that the reflection iterator skips entirely. Such members appearing as hidden leading / interior members shift visible-member offsets so the compiler-generated layout looks "consistent" through reflection eyes; even a trailing-padding sanity check fails to catch them when the hidden member's size is exactly absorbed by alignment slack. Concrete bite:
 
-Bounded by reflection nesting depth (UE structs cannot be circularly self-containing); no cycle guard required.
+USTRUCT() struct FBad { GENERATED_BODY(); UPROPERTY() float A; FString Hidden; // NOT UPROPERTY };
+
+The previous walk reported `A` at offset 0 (size 4); trailing-padding sanity check passes if the struct's natural alignment (8 from FString) absorbs the FString into the padded end. Function returned true. Downstream memcpy'd FString bytes — shallow copy + dtor leak + GC blindness.
+
+The strict whitelist removes the entire failure surface: any user-defined USTRUCT that wants bytewise transport must explicitly opt into `STRUCT_IsPlainOldData` (a one-line trait template), confirming under the author's responsibility that the struct is genuinely POD. Everything else routes through `FInstancedStruct`, which uses `CopyScriptStruct` (per- property `operator=` via FProperty graph) and is correct for any USTRUCT regardless of hidden members. The cost is one extra heap allocation per non-POD slot at activation + slightly slower per-frame copy — both negligible for typical camera pin counts and dwarfed by the cost of silently-corrupt memcpy crashes the strict path prevents.
 
 #### TryMapPropertyToPinType { #trymappropertytopintype }
 
@@ -169,6 +173,20 @@ inline int32 GetPinTypeSize(EComposableCameraPinType PinType, UScriptStruct * St
 ```
 
 Returns the size in bytes of a given pin type. For Struct types, returns 0 — caller must query StructType->GetStructureSize().
+
+#### GetVariableSlotSize { #getvariableslotsize }
+
+```cpp
+inline int32 GetVariableSlotSize(EComposableCameraPinType PinType, UScriptStruct * StructType)
+```
+
+Resolve the value to store in `[FComposableCameraExecEntry::VariableSlotSize](../structs/FComposableCameraExecEntry.md#variableslotsize)` for a SetVariable exec entry whose target variable has the given (PinType, StructType).
+
+For POD pin types (including bytewise-safe USTRUCTs like FVector / FRotator / FTransform / user POD structs), returns the byte size to copy at runtime.
+
+For non-POD struct pin types, returns `[FComposableCameraExecEntry::StructSlotSentinel](../structs/FComposableCameraExecEntry.md#structslotsentinel)`. Returning 0 here would cause the runtime SetVariable handler's `<= 0` early out to silently skip every Set on a non-POD struct variable. The sentinel passes that gate; the runtime then routes to `RuntimeDataBlock::CopySlot` which dispatches on storage class via `IsStructSlotOffset` and ignores the byte-size argument when the struct branch fires.
+
+Used by editor-side exec-chain construction (`UComposableCameraNodeGraph:: BuildVariableLookup`) so the same dispatch rule lands on every SetVariable entry regardless of which graph phase recorded it.
 
 #### GetPinTypeAlignment { #getpintypealignment }
 
@@ -550,24 +568,45 @@ Closed-form solver for (Pitch X, Yaw Y) rotation (Roll = 0) such that the world-
 
 ──** Derivation**
 
-Camera basis under (Pitch X, Yaw Y, Roll 0), expressed in world frame: F = ( cos X cos Y,  cos X sin Y,  sin X)        // forward (cam +X)
+Camera basis under (Pitch X, Yaw Y, Roll 0), expressed in world frame: 
+```
+F = ( cos X cos Y,  cos X sin Y,  sin X)        // forward (cam +X)
 R = (-sin Y,        cos Y,        0    )        // right   (cam +Y)
 U = (-sin X cos Y, -sin X sin Y,  cos X)        // up      (cam +Z)
+```
  Direction in camera space is Px = F·D, Py = R·D, Pz = U·D, with D = (A, B, C) = Direction.
 
-Screen mapping is Py / (2·m·Px) and Pz / (2·n·Px) where m = TanHalfHOR and n = TanHalfHOR / AspectRatio. Letting u = 2·ScreenX·m, v = 2·ScreenY·n, the constraint is Py = u·Px,    Pz = v·Px                                   (★)
- (★) ⇔ (Px, Py, Pz) ∝ (1, u, v). Geometrically: the pivot must lie on the ray from camera origin through the screen-plane point (1, u, v). The unit direction in camera space is therefore d_cam = (1, u, v) / s,    s = √(1 + u² + v²)
- The same physical ray in world frame is d_world = D / L, with L = ‖D‖. With R the camera-to-world rotation matrix (whose columns are F, R, U), R · (1, u, v)ᵀ = K · (A, B, C)ᵀ        where K ≡ s / L
- Component-wise: cos X cos Y - u sin Y - v sin X cos Y = K·A           (I)
+Screen mapping is Py / (2·m·Px) and Pz / (2·n·Px) where m = TanHalfHOR and n = TanHalfHOR / AspectRatio. Letting u = 2·ScreenX·m, v = 2·ScreenY·n, the constraint is 
+```
+Py = u·Px,    Pz = v·Px                                   (★)
+```
+ (★) ⇔ (Px, Py, Pz) ∝ (1, u, v). Geometrically: the pivot must lie on the ray from camera origin through the screen-plane point (1, u, v). The unit direction in camera space is therefore 
+```
+d_cam = (1, u, v) / s,    s = √(1 + u² + v²)
+```
+ The same physical ray in world frame is d_world = D / L, with L = ‖D‖. With R the camera-to-world rotation matrix (whose columns are F, R, U), 
+```
+R · (1, u, v)ᵀ = K · (A, B, C)ᵀ        where K ≡ s / L
+```
+ Component-wise: 
+```
+cos X cos Y - u sin Y - v sin X cos Y = K·A           (I)
 cos X sin Y + u cos Y - v sin X sin Y = K·B           (II)
 sin X            + v cos X            = K·C           (III)
+```
  (III) contains only X — that is why the system decouples.
 
 Solve X. By the harmonic identity sin X + v cos X = √(1+v²) · sin(X + arctan v), (III) becomes X = arcsin(K·C / √(1+v²)) - arctan v ─── (X) The other branch X = π - arcsin(...) - arctan v corresponds to a back-facing camera and is discarded.
 
-Solve Y. With X known, let α = cos X - v sin X. (I)+(II) become a 2×2 linear system in (cos Y, sin Y): [α  -u] [cos Y]     [A]
+Solve Y. With X known, let α = cos X - v sin X. (I)+(II) become a 2×2 linear system in (cos Y, sin Y): 
+```
+[α  -u] [cos Y]     [A]
 [u   α] [sin Y] = K [B]
- Determinant α² + u² > 0 generically, Cramer gives a Y where K cancels: Y = atan2(α·B - u·A,  α·A + u·B)                   ─── (Y)
+```
+ Determinant α² + u² > 0 generically, Cramer gives a Y where K cancels: 
+```
+Y = atan2(α·B - u·A,  α·A + u·B)                   ─── (Y)
+```
  Y is independent of ‖D‖ — depends only on the direction of D.
 
 Consistency. (X)+(III) automatically imply α² + u² = K²(A² + B²), i.e. (cos Y, sin Y) lies on the unit circle — no extra check required in the regular regime.

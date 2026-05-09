@@ -101,7 +101,7 @@ Transition asset that drives the inter-Shot blend when the playhead enters this 
 
 * On the *first* Section's left edge (no previous overlapping Section) `EnterTransition` is ignored — there is nothing to blend from (handoff §F decision Q2).
 
-Soft-ref so the section doesn't force-load the transition asset at level streaming time; resolution happens lazily inside the TrackInstance per-frame.
+Soft-ref so the section doesn't force-load the transition asset at level streaming time. Eval-path resolution goes through `[ResolveCachedEnterTransition()](#resolvecachedentertransition)` (non-blocking, returns null when not yet loaded — TrackInstance degrades to "no blend" rather than stalling on `LoadSynchronous`). The blocking load happens off the hot path in `RefreshCachedAssets()` at PostLoad / PostEdit.
 
 ### Public Methods
 
@@ -113,6 +113,9 @@ Soft-ref so the section doesn't force-load the transition asset at level streami
 | `FComposableCameraShot *` | [`ResolveActiveShot`](#resolveactiveshot-1)  |  |
 | `UObject *` | [`ResolveShotEditorHost`](#resolveshoteditorhost) `const` | Resolves the host UObject for the Shot Editor when this Section is selected. Inline → the Section itself; AssetReference → the resolved ShotAsset (or null if unresolved — Shot Editor falls through to its "no shot loaded" placeholder). |
 | `bool` | [`BuildEffectiveShot`](#buildeffectiveshot) `const` | Build the effective Shot for this section + the running sequence instance. Starts from `[ResolveActiveShot()](#resolveactiveshot-1)` (Inline / AssetReference), value-copies it into `OutShot`, then walks `TargetActorOverrides` and substitutes each indexed `Targets[i].Target.Actor` with the override binding's resolved actor. |
+| `UComposableCameraShotAsset *` | [`ResolveCachedShotAsset`](#resolvecachedshotasset) `const` | Resolve the cached `ShotAssetRef` to a hard pointer without blocking the eval-path thread. Reads `CachedShotAsset` first; if null, consults the already-loaded `.Get()` form of the soft pointer (no load triggered). The blocking refresh path is in `RefreshCachedAssets`, which fires at `PostLoad` / `PostEditChangeProperty` (off the hot path). Returns nullptr when the soft pointer is null OR not yet loaded — eval-path callers no-op in that case rather than stalling the game thread on `LoadSynchronous`. |
+| `UComposableCameraTransitionDataAsset *` | [`ResolveCachedEnterTransition`](#resolvecachedentertransition) `const` | Same policy as `ResolveCachedShotAsset` but for the `EnterTransition` soft pointer. The Phase F blender treats null as a hard cut, so an unloaded asset on the eval path degrades gracefully to "no blend" rather than blocking on a synchronous load. |
+| `void` | [`PostLoad`](#postload) `virtual` |  |
 
 ---
 
@@ -144,9 +147,9 @@ const FComposableCameraShot * ResolveActiveShot() const
 
 Resolves the active Shot for this section.
 
-Inline → returns &InlineShot. AssetReference → loads `ShotAssetRef` (synchronous; soft-pointer `LoadSynchronous`) and returns &Asset->Shot. Returns null if the asset is null or fails to load.
+Inline → returns &InlineShot. AssetReference → returns &CachedShotAsset->Shot via the non-blocking `[ResolveCachedShotAsset()](#resolvecachedshotasset)` path. Returns null if the soft ref is null OR not yet loaded — the eval-path no-ops in that case rather than stalling the game thread on `LoadSynchronous`. The blocking refresh happens in `RefreshCachedAssets()`, fired at `PostLoad` / `PostEditChangeProperty` only.
 
-Caller must NOT cache the returned pointer across frames — the AssetReference path may reload the asset, and the soft-ref target may be GC'd between calls. Treat as a per-frame snapshot.
+Caller must NOT cache the returned pointer across frames — the cache may be refreshed (asset edit, hot reload) and the previously-returned pointer would dangle. Treat as a per-frame snapshot.
 
 Const overload returns a const pointer for read-only callers (the Shot Editor's Sequencer-selection-sync uses this); non-const overload allows authoring tools that mutate Shot fields directly (the Shot Editor opened in AssetReference mode hosts the mutation on the *asset*, not the Section, so the Section doesn't need to write through).
 
@@ -187,3 +190,78 @@ Build the effective Shot for this section + the running sequence instance. Start
 Returns false (OutShot left unchanged) when the source Shot is unresolvable (AssetReference asset null / unloaded). Returns true with a populated OutShot otherwise — overrides whose binding doesn't resolve OR whose TargetIndex is out of range are silently dropped, so a section with stale overrides still produces a valid Shot.
 
 The underlying ShotAsset / InlineShot data is never mutated. The returned working copy is what the TrackInstance pushes into the LS Component's per-frame override map.
+
+---
+
+#### ResolveCachedShotAsset { #resolvecachedshotasset }
+
+`const`
+
+```cpp
+UComposableCameraShotAsset * ResolveCachedShotAsset() const
+```
+
+Resolve the cached `ShotAssetRef` to a hard pointer without blocking the eval-path thread. Reads `CachedShotAsset` first; if null, consults the already-loaded `.Get()` form of the soft pointer (no load triggered). The blocking refresh path is in `RefreshCachedAssets`, which fires at `PostLoad` / `PostEditChangeProperty` (off the hot path). Returns nullptr when the soft pointer is null OR not yet loaded — eval-path callers no-op in that case rather than stalling the game thread on `LoadSynchronous`.
+
+---
+
+#### ResolveCachedEnterTransition { #resolvecachedentertransition }
+
+`const`
+
+```cpp
+UComposableCameraTransitionDataAsset * ResolveCachedEnterTransition() const
+```
+
+Same policy as `ResolveCachedShotAsset` but for the `EnterTransition` soft pointer. The Phase F blender treats null as a hard cut, so an unloaded asset on the eval path degrades gracefully to "no blend" rather than blocking on a synchronous load.
+
+---
+
+#### PostLoad { #postload }
+
+`virtual`
+
+```cpp
+virtual void PostLoad()
+```
+
+### Private Attributes
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `TObjectPtr< UComposableCameraShotAsset >` | [`CachedShotAsset`](#cachedshotasset)  | Cached resolved shot asset. Mutable + Transient: the eval-path `ResolveCachedShotAsset` can opportunistically populate this from `ShotAssetRef.Get()` (free if already loaded) under a const context; Transient because the soft path is the source of truth on disk and the cache is rebuilt on PostLoad. |
+| `TObjectPtr< UComposableCameraTransitionDataAsset >` | [`CachedEnterTransition`](#cachedentertransition)  |  |
+
+---
+
+#### CachedShotAsset { #cachedshotasset }
+
+```cpp
+TObjectPtr< UComposableCameraShotAsset > CachedShotAsset
+```
+
+Cached resolved shot asset. Mutable + Transient: the eval-path `ResolveCachedShotAsset` can opportunistically populate this from `ShotAssetRef.Get()` (free if already loaded) under a const context; Transient because the soft path is the source of truth on disk and the cache is rebuilt on PostLoad.
+
+---
+
+#### CachedEnterTransition { #cachedentertransition }
+
+```cpp
+TObjectPtr< UComposableCameraTransitionDataAsset > CachedEnterTransition
+```
+
+### Private Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `void` | [`RefreshCachedAssets`](#refreshcachedassets)  | Off-hot-path refresh for the two cached resolution slots. May call `LoadSynchronous` if the soft pointer hasn't been loaded yet — that blocking call is acceptable here because PostLoad / PostEdit fire outside of evaluation. Eval-path callers go through `ResolveCachedShotAsset` / `ResolveCachedEnterTransition`, which never load. |
+
+---
+
+#### RefreshCachedAssets { #refreshcachedassets }
+
+```cpp
+void RefreshCachedAssets()
+```
+
+Off-hot-path refresh for the two cached resolution slots. May call `LoadSynchronous` if the soft pointer hasn't been loaded yet — that blocking call is acceptable here because PostLoad / PostEdit fire outside of evaluation. Eval-path callers go through `ResolveCachedShotAsset` / `ResolveCachedEnterTransition`, which never load.

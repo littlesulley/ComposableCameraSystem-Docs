@@ -9,7 +9,9 @@
 
 Specialized `[AComposableCameraLevelSequenceActor](AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor)` whose `LevelSequenceComponent` comes pre-wired with a system-managed default `[UComposableCameraTypeAsset](../data-assets/UComposableCameraTypeAsset.md#ucomposablecameratypeasset)` — a one-node TypeAsset whose only camera node is a `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)`.
 
-Phase E of Shot-Based Keyframing — handoff §"Phase E Final Architecture": 1. Designer drops an AComposableCameraLevelSequenceShotActor into the LS
+Phase E of Shot-Based Keyframing — handoff §"Phase E Final Architecture": 
+```
+1. Designer drops an AComposableCameraLevelSequenceShotActor into the LS
    as Spawnable or Possessable.
 2. The Shot Actor's TypeAssetReference auto-populates with a built-in
    DefaultShotTypeAsset; designer never sees TypeAsset / graph editor /
@@ -17,6 +19,7 @@ Phase E of Shot-Based Keyframing — handoff §"Phase E Final Architecture": 1. 
 3. Designer adds a Composable Camera Shot Track under the actor's
    binding row. Shot Sections push framing data into the
    CompositionFramingNode each frame.
+```
  The default TypeAsset is created **in-memory per actor instance** (not as an on-disk asset). This avoids:
 
 * bootstrap timing races against AssetRegistry availability,

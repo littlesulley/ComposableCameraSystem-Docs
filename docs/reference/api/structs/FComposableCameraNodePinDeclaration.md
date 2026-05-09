@@ -16,8 +16,8 @@ Nodes declare their pins by overriding GetPinDeclarations(). The editor reads th
 | `FName` | [`PinName`](#pinname-4)  | Programmatic name of the pin (used in Get/SetPinValue calls and serialized connections). |
 | `FText` | [`DisplayName`](#displayname-1)  | Display name shown in the editor graph. |
 | `EComposableCameraPinDirection` | [`Direction`](#direction-1)  | Whether this is an input or output pin. |
-| `EComposableCameraPinType` | [`PinType`](#pintype-3)  | Data type carried by this pin. |
-| `TObjectPtr< UScriptStruct >` | [`StructType`](#structtype-3)  | For PinType == Struct: the specific USTRUCT type. Ignored for other pin types. |
+| `EComposableCameraPinType` | [`PinType`](#pintype-4)  | Data type carried by this pin. |
+| `TObjectPtr< UScriptStruct >` | [`StructType`](#structtype-4)  | For PinType == Struct: the specific USTRUCT type. Ignored for other pin types. |
 | `TObjectPtr< UEnum >` | [`EnumType`](#enumtype-3)  | For PinType == Enum: the specific UEnum the pin represents. Ignored for other pin types. The data block always stores this pin's value as a normalized int64; this metadata is used at write time to narrow-cast into the actual backing property (uint8 / int32 / int64) and by the editor to render the enum's display names. |
 | `TObjectPtr< UFunction >` | [`SignatureFunction`](#signaturefunction-1)  | For PinType == Delegate: the UFunction defining the delegate signature (parameter types and return type). Extracted from the FDelegateProperty's SignatureFunction at declaration time. The editor uses this to emit a PC_Delegate pin with the correct MemberReference, and the K2 compiler validates that wired Custom Events match the signature. Ignored for other pin types. |
 | `bool` | [`bRequired`](#brequired-1)  | Whether this input is required. If true, the editor shows an error when the pin is neither wired nor exposed and has no default value. Ignored for output pins. |
@@ -57,7 +57,7 @@ Whether this is an input or output pin.
 
 ---
 
-#### PinType { #pintype-3 }
+#### PinType { #pintype-4 }
 
 ```cpp
 EComposableCameraPinType PinType = 
@@ -67,7 +67,7 @@ Data type carried by this pin.
 
 ---
 
-#### StructType { #structtype-3 }
+#### StructType { #structtype-4 }
 
 ```cpp
 TObjectPtr< UScriptStruct > StructType = nullptr

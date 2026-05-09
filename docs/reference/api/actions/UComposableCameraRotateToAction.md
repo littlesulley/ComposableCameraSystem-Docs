@@ -90,16 +90,29 @@ virtual void OnExecute_Implementation(float DeltaTime, const FComposableCameraPo
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `class UEnhancedInputLocalPlayerSubsystem *` | [`Subsystem`](#subsystem)  |  |
+| `TWeakObjectPtr< class UEnhancedInputLocalPlayerSubsystem >` | [`CachedSubsystem`](#cachedsubsystem)  | Weak subsystem cache — see ResetPitchAction. |
+| `TWeakObjectPtr< class ULocalPlayer >` | [`CachedLocalPlayer`](#cachedlocalplayer)  | LocalPlayer identity guard — see ResetPitchAction. |
 | `TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FRotator > > >` | [`Interp_T`](#interp_t)  |  |
 
 ---
 
-#### Subsystem { #subsystem }
+#### CachedSubsystem { #cachedsubsystem }
 
 ```cpp
-class UEnhancedInputLocalPlayerSubsystem * Subsystem { nullptr }
+TWeakObjectPtr< class UEnhancedInputLocalPlayerSubsystem > CachedSubsystem
 ```
+
+Weak subsystem cache — see ResetPitchAction.
+
+---
+
+#### CachedLocalPlayer { #cachedlocalplayer }
+
+```cpp
+TWeakObjectPtr< class ULocalPlayer > CachedLocalPlayer
+```
+
+LocalPlayer identity guard — see ResetPitchAction.
 
 ---
 
@@ -108,3 +121,19 @@ class UEnhancedInputLocalPlayerSubsystem * Subsystem { nullptr }
 ```cpp
 TUniquePtr< TCameraInterpolator< TValueTypeWrapper< FRotator > > > Interp_T
 ```
+
+### Private Methods
+
+| Return | Name | Description |
+|--------|------|-------------|
+| `class UEnhancedInputLocalPlayerSubsystem *` | [`ResolveInputSubsystem`](#resolveinputsubsystem)  | Resolve (or re-resolve) the cached subsystem. Same shape as `UComposableCameraResetPitchAction::ResolveInputSubsystem` — see that header for the LocalPlayer-teardown / chain-null / controller-swap-without-destruction rationale. |
+
+---
+
+#### ResolveInputSubsystem { #resolveinputsubsystem }
+
+```cpp
+class UEnhancedInputLocalPlayerSubsystem * ResolveInputSubsystem()
+```
+
+Resolve (or re-resolve) the cached subsystem. Same shape as `UComposableCameraResetPitchAction::ResolveInputSubsystem` — see that header for the LocalPlayer-teardown / chain-null / controller-swap-without-destruction rationale.

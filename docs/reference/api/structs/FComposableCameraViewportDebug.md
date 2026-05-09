@@ -79,11 +79,14 @@ static bool ShouldShowAllNodeGizmos()
 
 True when `CCS.Debug.Viewport.Nodes.All` is non-zero — every per-node gizmo (both 3D `DrawNodeDebug` and 2D `DrawNodeDebug2D` paths) should show regardless of its own per-node CVar. The two paths share this switch intentionally: each node's 2D / 3D pieces already share one per-node CVar, so batching them into one "All" toggle keeps the mental model consistent.
 
-Callsite idiom: if (CVarShowMyNodeGizmo.GetValueOnGameThread() == 0 &&
+Callsite idiom: 
+```
+if (CVarShowMyNodeGizmo.GetValueOnGameThread() == 0 &&
     !FComposableCameraViewportDebug::ShouldShowAllNodeGizmos())
 {
     return;
 }
+```
  OR semantics: if either the per-node CVar OR the All CVar is on, the gizmo draws. No "except" subtraction; users wanting granularity should leave All off and enable per-node CVars individually.
 
 ---
