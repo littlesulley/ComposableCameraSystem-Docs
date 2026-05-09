@@ -31,6 +31,8 @@ Output
 Drop nodes in roughly the order above and drag the exec pin from Start → first node → next → … → Output. The exec wire is the per-frame execution chain; each node reads the pose produced by its predecessor and writes a modified pose forward.
 ![[assets/images/Pasted image 20260419205845.png]]
 
+For pawn-centric gameplay cameras, actor inputs on nodes such as `ReceivePivotActor`, `ControlRotate`, `PivotOffset`, and `CollisionPush` can be sourced directly from the controller-controlled pawn. Use explicit actor pins or exposed variables when the camera should follow a non-possessed actor, run in Sequencer, or be reused outside a player-controller context. See [Actor Input Sources](../reference/actor-input-sources.md).
+
 !!! tip "Exec order matters"
     Nodes run in strict exec-wire order. For example, a `LookAtNode` that runs before `CollisionPushNode` makes the camera face the target *before* being pushed by a wall; reversing the order makes the camera face the target *after* being pushed. Neither is wrong — they give different feels. If a node's behavior surprises you, the first thing to check is where it sits on the exec chain.
 

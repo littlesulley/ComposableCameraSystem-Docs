@@ -25,6 +25,8 @@ You'll see an empty graph canvas with a single output node on the right labeled 
 
 A follow camera needs to know **who** to follow. ComposableCameraSystem exposes this via **Exposed Variables** on the type asset — these become pins on the Blueprint activation node.
 
+For the simplest player-only camera you can skip this variable and set actor source fields such as `PivotActorSource` and `RotationInputActorSource` to **Controller Controlled Pawn**. This tutorial keeps the explicit `ExposedPivotActor` path because it also works for AI, cutscenes, and non-possessed actors.
+
 1. In the **Exposed Variables** panel (usually on the right), click **+ Add**.
 2. Set its **Name** to `ExposedPivotActor`.
 3. Set its **Type** to `Actor`.
@@ -86,6 +88,7 @@ Press **Play**. Your camera should snap to the configured offset behind the targ
 
 - **"No camera is active" in the debug overlay** — the Activate node never ran. Common causes: `BeginPlay` fires before your follow target spawns (wire the node to a later event), or the PlayerController class in the GameMode doesn't use `AComposableCameraPlayerCameraManager` (revisit [Enabling the Plugin](enabling-plugin.md)).
 - **Camera is at world origin, not behind the target** — the `ReceivePivotActor` node's **Actor** pin isn't wired, or the actor you're passing in is `None`. Print-string the target before the activation call.
+- **Controller Controlled Pawn resolves no actor** — the camera is not owned by a `AComposableCameraPlayerCameraManager`, the owning controller has no pawn yet, or the asset is being evaluated from Sequencer/editor preview. Use the explicit actor path in those cases.
 - **Camera pops to the new position with no blend** — that's expected for a first activation. Blending is driven by **transitions**, which are covered in [Transitions & Blending](../user-guide/transitions-and-blending.md) in the User Guide.
 
 ## Where next

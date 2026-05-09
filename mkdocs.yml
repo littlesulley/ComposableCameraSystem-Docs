@@ -123,6 +123,7 @@ nav:
   - Reference:
       - reference/index.md
       - Node Catalog: reference/nodes.md
+      - Actor Input Sources: reference/actor-input-sources.md
       - Transition Catalog: reference/transitions.md
       - Modifier Catalog: reference/modifiers.md
       - Camera Patch Catalog: reference/patches.md

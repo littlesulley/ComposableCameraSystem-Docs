@@ -2,6 +2,18 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-09 — plugin `2785600..332f3e9`
+
+**Plugin commits processed:** `332f3e9` (`Add controller pawn actor source option`) on the local `dev-v1` branch. Repository synchronization was attempted first, but the plugin fetch was blocked by `.git/FETCH_HEAD` permission denial and the Documentation fetch was blocked by unavailable GitHub network access in this environment.
+
+**New-feature documentation:** added `docs/reference/actor-input-sources.md` and linked it from the Reference nav. The page documents `EComposableCameraActorInputSource`, `ExplicitActor` vs `ControllerControlledPawn`, affected nodes, Sequencer caveats, and migration guidance.
+
+**Prose updates:** expanded `docs/reference/nodes.md`, `docs/getting-started/your-first-camera.md`, `docs/tutorials/follow-camera.md`, and `docs/user-guide/authoring-camera-types.md` so gameplay camera workflows mention the controller-controlled-pawn shortcut while preserving the explicit actor workflow for reusable, AI, cutscene, and Sequencer-driven cameras.
+
+**C++ API pages:** public headers changed, but formal Doxygen/moxygen regeneration could not run because neither `doxygen` nor `moxygen` is installed in this sandbox. The generated API reference was left unchanged to avoid unsafe manual regeneration drift. Manual follow-up: rerun `Documentation/Doxyfile`, `tools/split_api.py`, and `tools/build_api_nav.py` in an environment with those tools, then advance `.last-documented-sha`.
+
+---
+
 ## 2026-05-09 — MkDocs Windows URL warning fix
 
 **Build fix:** normalized mkdocs-shadcn raw Markdown URLs to POSIX-style paths on Windows and guarded custom sidebar index links against backslash URLs. This removes the MkDocs 1.6 warning `Path ... uses OS-specific separator '\'` during local builds.
