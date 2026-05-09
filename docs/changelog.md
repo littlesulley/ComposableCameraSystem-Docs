@@ -2,6 +2,14 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-09 — MkDocs Windows URL warning fix
+
+**Build fix:** normalized mkdocs-shadcn raw Markdown URLs to POSIX-style paths on Windows and guarded custom sidebar index links against backslash URLs. This removes the MkDocs 1.6 warning `Path ... uses OS-specific separator '\'` during local builds.
+
+**Validation:** `python -m mkdocs build --strict` passes when the Mermaid CDN URL check is allowed to access the network.
+
+---
+
 ## 2026-05-09 — plugin `2785600` docs follow-up
 
 **Plugin commits processed:** no new local plugin commits since `.last-documented-sha` (`2785600721920a81b2a6914f7bea071c98988922`). Repository fetch/pull for both the plugin and Documentation repos was attempted first but blocked by `Permission denied` when Git tried to update `.git/FETCH_HEAD`; the working trees were clean and this pass used the existing local HEADs.

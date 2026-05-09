@@ -14,7 +14,7 @@
     <div
         class="peer/menu-button group/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md text-left ring-sidebar-ring outline-hidden transition-[width,height,padding] group-has-data-[sidebar=menu-action]/menu-item:pr-8 focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-open:hover:bg-sidebar-accent data-open:hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-[0.8rem] font-medium"
         data-state="{% if sidebar_item.children|map(attribute='active')|select|first is defined %}open{% else %}closed{% endif %}">
-        <a href="{{ ns.index_child.abs_url }}" class="flex-1 truncate p-2 pr-0">
+        <a href="{{ ns.index_child.abs_url|replace('\\', '/') }}" class="flex-1 truncate p-2 pr-0">
             {% if sidebar_item.meta and sidebar_item.meta.sidebar_title %}
             {{ sidebar_item.meta.sidebar_title }}
             {% else %}

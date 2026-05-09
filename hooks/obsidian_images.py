@@ -11,6 +11,7 @@ Also handles optional alt-text / resize syntax:
 
 import re
 from pathlib import PurePosixPath
+from urllib.parse import urljoin
 
 _OBSIDIAN_IMG = re.compile(
     r'!\[\['           # opening ![[
@@ -45,3 +46,17 @@ def _replace(m: re.Match) -> str:
 
 def on_page_markdown(markdown: str, **kwargs) -> str:
     return _OBSIDIAN_IMG.sub(_replace, markdown)
+
+
+def on_page_context(context, page, config, nav, **kwargs):
+    # mkdocs-shadcn 0.10.6 derives this from page.file.src_path, which is
+    # OS-specific and emits MkDocs 1.6 URL warnings on Windows. src_uri is the
+    # URL-safe form of the same path.
+    try:
+        from shadcn.plugins.mixins.order import NUMBER_PREFIX
+    except Exception:
+        return context
+
+    src_uri = NUMBER_PREFIX.sub(lambda m: m.group(1), page.file.src_uri)
+    context["raw_markdown_url"] = urljoin(config.site_url or "/", src_uri)
+    return context
