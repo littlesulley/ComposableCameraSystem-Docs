@@ -25,9 +25,9 @@ Per-frame the `UMovieSceneComposableCameraShotTrackInstance::OnAnimate`:
 
 1. Pushes (Section, Shot, RowIndex) to the LS Component via `SetSequencerShotOverride`.
 
-The LS Component's `TickComponent` then picks the top-row override (`MinByRowIndex`) and writes its Shot into the first found `[UComposableCameraCompositionFramingNode::Shot](../nodes/UComposableCameraCompositionFramingNode.md#shot-2)` UPROPERTY on the internal camera before `TickCamera` runs — so the framing solver evaluates with the new data on the same frame.
+The LS Component's `TickComponent` collects active section overrides and writes them into the first found `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)` on the internal camera before `TickCamera` runs. A single active section drives the primary Shot; an overlapping incoming section can also provide a secondary Shot and transition alpha for blending.
 
-Phase F (inter-Shot transitions) will replace the top-row picker with a blender; the multi-entry override map already supports this.
+When sections overlap, the incoming section's `EnterTransition` selects the transition asset. Without an `EnterTransition`, the overlap resolves as a hard cut.
 
 No `UMovieSceneParameterSection` inheritance (unlike the Patch section) — Shot fields are not designed for per-frame channel keying. Designers who want a moving target should instead drive the underlying `Targets[i].Actor` via Sequencer's standard transform tracks; the framing solver re-evaluates each frame.
 

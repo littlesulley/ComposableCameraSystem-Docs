@@ -177,7 +177,7 @@ Mechanically the distinction is the same as in the runtime activation path: para
 
 ## Common pitfalls
 
-- **Actor doesn't appear in the class picker.** Search for "Composable Camera Level Sequence Actor" — the display name. It's marked `NotPlaceable`, so the Place Actors panel hides it, but the Sequencer class picker shows all Actor classes.
+- **Actor doesn't appear in the class picker.** Search for "Composable Camera Level Sequence Actor" — the display name. The actor is placeable and can also be used as a Sequencer Spawnable or Possessable; if it is missing, confirm the plugin's editor module is loaded and the sequence is not filtering the class picker.
 - **No parameter tracks show up under the component.** The TypeAsset isn't set yet, or the TypeAsset has no Exposed Parameters. Open the TypeAsset and verify that the parameters are listed in the Exposed Parameters panel and compiled.
 - **Camera Cut Track doesn't see the actor.** Make sure the CameraCut section references the Spawnable binding (not a level-placed actor). Right-click the CameraCut section → **Set Camera** and confirm the binding name matches.
 - **Parameter keyframes have no effect at runtime.** The per-frame parameter application is done in `TickComponent` via `ApplyParameterBlock`. The component ticks by default as long as the Spawnable is alive. If you are using the ECS gate instantiator (`UMovieSceneComposableCameraGateInstantiator`), it *closes* the gate for entities that are not the active CameraCut target — so if your Spawnable section doesn't overlap a CameraCut section targeting that actor, the component will be gated off. Confirm the CameraCut section overlaps the keyframed range.
@@ -188,7 +188,8 @@ Mechanically the distinction is the same as in the runtime activation path: para
 ## Where next
 
 - [Level Sequence Integration](level-sequence-camera.md) — the complementary tutorial: playing a standard LS with `CineCameraActors` through the CCS cutscene system.
+- [Shot-Based Keyframing in Sequencer](shot-based-keyframing.md) — author Shot Sections that solve framing from targets instead of keyframing camera parameters directly.
 - [Node Catalog → PostProcessNode](../reference/nodes.md#postprocessnode) — add a `PostProcessNode` to the TypeAsset to keyframe bloom, depth-of-field, or color grading through the same parameter track mechanism.
 - [Concepts → Context Stack](../user-guide/concepts/context-stack.md) — the full model for how the cutscene context and inter-context transitions work.
 - [C++ API → AComposableCameraLevelSequenceActor](../reference/api/actors/AComposableCameraLevelSequenceActor.md) — class reference for the Spawnable actor.
-- [C++ API → UComposableCameraLevelSequenceComponent](../reference/api/uobjects-other/UComposableCameraLevelSequenceComponent.md) — component reference, including `SetEvaluationEnabled` 
+- [C++ API → UComposableCameraLevelSequenceComponent](../reference/api/uobjects-other/UComposableCameraLevelSequenceComponent.md) — component reference, including `SetEvaluationEnabled`

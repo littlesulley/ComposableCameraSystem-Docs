@@ -2,6 +2,28 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-09 — plugin `2785600` docs follow-up
+
+**Plugin commits processed:** no new local plugin commits since `.last-documented-sha` (`2785600721920a81b2a6914f7bea071c98988922`). Repository fetch/pull for both the plugin and Documentation repos was attempted first but blocked by `Permission denied` when Git tried to update `.git/FETCH_HEAD`; the working trees were clean and this pass used the existing local HEADs.
+
+**C++ API pages regenerated:** not regenerated; no public-header delta was detected between `.last-documented-sha` and local plugin HEAD.
+
+**Prose updates:**
+
+- Added `docs/tutorials/shot-based-keyframing.md`, a new Sequencer workflow tutorial for `AComposableCameraLevelSequenceShotActor`, Composable Camera Shot Track, Shot Editor modes, Placement/Aim/Lens/Focus layers, target binding overrides, inter-Shot overlap transitions, and Shot Zone debugging.
+- Added the new tutorial to `mkdocs.yml` and `docs/tutorials/index.md`.
+- Expanded `docs/reference/nodes.md` for `CompositionFramingNode` and removed the auto-draft review note.
+- Removed the auto-draft review note from `docs/reference/debugging/debug-panel.md`'s Shot Zone Overlay section.
+
+**Stale-doc fixes:**
+
+- Updated `docs/tutorials/level-sequence-authoring.md` to stop saying `AComposableCameraLevelSequenceActor` is `NotPlaceable`; it is now placeable and still supports Spawnable/Possessable Sequencer use.
+- Updated Shot Track / Shot Section API reference overview prose so it describes current overlap + `EnterTransition` blending instead of treating Phase F as future work.
+
+**Manual follow-up:** plugin header comments for `UMovieSceneComposableCameraShotTrack` still contain older Phase-F-future wording; the Documentation API overview was corrected manually, but a future plugin-source cleanup plus normal API regeneration would make that fix durable.
+
+---
+
 ## 2026-05-09 — plugin `0021823..2785600`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/00218233c9d80a262ae25b0c27f0236039f482db...2785600721920a81b2a6914f7bea071c98988922))
@@ -271,4 +293,4 @@ Entries are written automatically; feel free to edit them if you want to reword 
 
 ## 2026-04-15 — initial baseline at plugin `775fc66`
 
-Documentation site and auto-update pipeline established. The C++ API reference under `reference/api/` reflects plugin `dev-v1` at commit `775fc66` ("Refactor everything with AI."). Subsequent changes will appear above this entry.
+Documentation site and auto-update pipeline established. The C++ API reference under `reference/api/` reflects plugin `dev-v1` at commit `775fc66` ("Refactor everything with AI."). Subsequent changes will appear above this entry.

@@ -8,7 +8,7 @@ End-to-end walkthroughs that take a realistic goal and build it from an empty pr
 
 ## Prerequisites
 
-All five tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
+All six tutorials assume you've finished [Getting Started](../getting-started/index.md) — that is:
 
 - The plugin is installed and compiled into a C++ project.
 - `AComposableCameraPlayerCameraManager` is your `GameMode`'s PCM class (or your `PlayerController`'s override).
@@ -16,7 +16,7 @@ All five tutorials assume you've finished [Getting Started](../getting-started/i
 
 You do not need to have read the full User Guide. Each tutorial links back to the concepts it leans on so you can drill down as needed.
 
-## The five walkthroughs
+## The six walkthroughs
 
 ### [Follow Camera](follow-camera.md)
 
@@ -59,6 +59,16 @@ Author a CCS camera *inside* Sequencer rather than bridging an existing LS into 
 *Prerequisites:* [Follow Camera](follow-camera.md) and [Level Sequence Integration](level-sequence-camera.md) completed.
 
 *Time to complete:* 20–30 minutes.
+
+### [Shot-Based Keyframing in Sequencer](shot-based-keyframing.md)
+
+Author cinematic framing as Shot data rather than direct camera transforms. Add a `AComposableCameraLevelSequenceShotActor`, drive it with a Composable Camera Shot Track, edit inline or asset-backed Shots, bind targets to Sequencer Spawnables, and blend overlapping Shot Sections with CCS transition assets.
+
+*Concepts covered:* `AComposableCameraLevelSequenceShotActor`, `UMovieSceneComposableCameraShotTrack`, `FComposableCameraShot`, Placement/Aim/Lens/Focus layers, target binding overrides, inter-Shot overlap transitions, shot-zone debugging.
+
+*Prerequisites:* [Level Sequence Integration](level-sequence-camera.md) and [CCS Camera in Sequencer](level-sequence-authoring.md) completed.
+
+*Time to complete:* 25–35 minutes.
 
 ---
 
