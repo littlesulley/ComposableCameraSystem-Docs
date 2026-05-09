@@ -52,6 +52,13 @@ PublicDependencyModuleNames.AddRange(new[]
 
 You'll need a custom one for this setup. The quickest path is to create a small Blueprint subclass of `PlayerController`, set its **Player Camera Manager Class** as above, and then in **Project Settings → Maps & Modes**, set **Default Modes → Selected GameMode → Player Controller Class** (or your game mode's Player Controller Class) to your new Blueprint.
 
+### Setups for the Composable Camera Player Camera Manager
+
+The recommended way is to create a new PCM class from `AComposableCameraPlayerCameraManager` so that you can tweak some of its parameters inside. Currently the only parameter of a `AComposableCameraPlayerCameraManager` class you can tune is `bSyncToControlRotation`:
+
+![[assets/images/Pasted image 20260509135001.png]]
+
+The default value is `true`. If you want to turn it off, the only way is to create your own PCM class inheriting `AComposableCameraPlayerCameraManager` and toggle it in blueprint.
 ## 3. Verify in PIE
 
 1. Open any level in your project.
