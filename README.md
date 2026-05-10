@@ -1,6 +1,6 @@
 # ComposableCameraSystem — Documentation
 
-Source for the public documentation site at **https://composable-camera-system.readthedocs.io**.
+Source for the public documentation site at **https://sulley.cc/ComposableCameraSystem-Docs/**.
 
 This repository is the authoring source: Markdown files under `docs/`, MkDocs config in `mkdocs.yml`, Read the Docs build config in `.readthedocs.yaml`. Read the Docs pulls from `main` on every push and rebuilds the site automatically.
 
