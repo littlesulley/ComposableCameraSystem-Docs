@@ -1,4 +1,3 @@
-
 # UMovieSceneComposableCameraShotSection { #umoviescenecomposablecamerashotsection }
 
 ```cpp
@@ -7,49 +6,33 @@
 
 > **Inherits:** `UMovieSceneSection`, `IMovieSceneEntityProvider`
 
-One section on a `[UMovieSceneComposableCameraShotTrack](UMovieSceneComposableCameraShotTrack.md#umoviescenecomposablecamerashottrack)` — represents a single Shot activation window in the timeline.
+One section on a [`UMovieSceneComposableCameraShotTrack`](UMovieSceneComposableCameraShotTrack.md#umoviescenecomposablecamerashottrack). It defines when a Shot is active, which bound `AComposableCameraLevelSequenceActor` receives it, and which Shot data is pushed into the Level Sequence component.
 
-The section IS the addressing artifact:
+Per frame, the Shot track instance resolves the parent binding to the Level Sequence actor, calls [`BuildEffectiveShot()`](#buildeffectiveshot), and pushes `(Section, Shot, RowIndex)` to `UComposableCameraLevelSequenceComponent::SetSequencerShotOverride`.
 
-* WHEN the shot is active → the section's TrueRange.
-
-* WHO it applies to → the bound `[AComposableCameraLevelSequenceActor](../actors/AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor)` resolved through the parent binding row (no per-section `TargetActorBinding` — unlike the Patch section which is root-level).
-
-* WHAT shot data it carries → Inline `[FComposableCameraShot](../structs/FComposableCameraShot.md#fcomposablecamerashot)` value OR soft-ref to a `[UComposableCameraShotAsset](UComposableCameraShotAsset.md#ucomposablecamerashotasset)`.
-
-Per-frame the `UMovieSceneComposableCameraShotTrackInstance::OnAnimate`:
-
-1. Resolves the parent binding → bound LS Actor → its `[UComposableCameraLevelSequenceComponent](UComposableCameraLevelSequenceComponent.md#ucomposablecameralevelsequencecomponent)`.
-
-1. Calls `[ResolveActiveShot()](#resolveactiveshot-1)` to get the active Shot data (Inline or AssetReference deref).
-
-1. Pushes (Section, Shot, RowIndex) to the LS Component via `SetSequencerShotOverride`.
-
-The LS Component's `TickComponent` collects active section overrides and writes them into the first found `[UComposableCameraCompositionFramingNode](../nodes/UComposableCameraCompositionFramingNode.md#ucomposablecameracompositionframingnode)` on the internal camera before `TickCamera` runs. A single active section drives the primary Shot; an overlapping incoming section can also provide a secondary Shot and transition alpha for blending.
-
-When sections overlap, the incoming section's `EnterTransition` selects the transition asset. Without an `EnterTransition`, the overlap resolves as a hard cut.
-
-No `UMovieSceneParameterSection` inheritance (unlike the Patch section) — Shot fields are not designed for per-frame channel keying. Designers who want a moving target should instead drive the underlying `Targets[i].Actor` via Sequencer's standard transform tracks; the framing solver re-evaluates each frame.
+Inline sections store their editable Shot in [`InlineShot`](#inlineshot). Asset-backed sections store a soft reference in [`ShotAssetRef`](#shotassetref), but the editable runtime data is the section-local [`ShotOverrides`](#shotoverrides) snapshot seeded from that asset. Later Sequencer edits mutate only the section copy; the shared Shot Asset remains the template for new sections.
 
 ### Public Attributes
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `EComposableCameraShotSource` | [`Source`](#source-2)  | Source mode picker — Inline (data in Section) vs. AssetReference (data in a ShotAsset). Default Inline because the common authoring flow is one-off shots, and elevating an Inline shot to a reusable asset is trivial later (Right-click → "Save as Shot Asset"; deferred to a later polish step). |
-| `FComposableCameraShot` | [`InlineShot`](#inlineshot)  | Used iff `Source == Inline`. Edited via the Shot Editor (single-click on the Section auto-swaps the editor's context — Phase E.5) or inline in the Details panel. |
-| `TSoftObjectPtr< UComposableCameraShotAsset >` | [`ShotAssetRef`](#shotassetref)  | Used iff `Source == AssetReference`. Soft-ref so the section doesn't force-load the asset at section construction time / level streaming — resolution happens lazily inside `ResolveActiveShot`. |
-| `TArray< FComposableCameraShotTargetActorOverride >` | [`TargetActorOverrides`](#targetactoroverrides)  | Per-target Actor binding overrides. Each entry binds a TargetIndex in the resolved Shot's Targets array to a Sequencer binding picker; the TrackInstance resolves the binding to an Actor at evaluation time and substitutes it into the working Shot copy. |
-| `TSoftObjectPtr< UComposableCameraTransitionDataAsset >` | [`EnterTransition`](#entertransition-5)  | Transition asset that drives the inter-Shot blend when the playhead enters this Section from a previous overlapping Section on the same Shot Track (Phase F). |
+| `EComposableCameraShotSource` | [`Source`](#source-2) | Source mode picker: `Inline` or `AssetReference`. |
+| `FComposableCameraShot` | [`InlineShot`](#inlineshot) | Used iff `Source == Inline`; edited by the Shot Editor or Details panel. |
+| `TSoftObjectPtr< UComposableCameraShotAsset >` | [`ShotAssetRef`](#shotassetref) | Used iff `Source == AssetReference`; picking/changing the asset seeds `ShotOverrides`. |
+| `TArray< FComposableCameraShotTargetActorOverride >` | [`TargetActorOverrides`](#targetactoroverrides) | Per-target Sequencer actor binding overrides. |
+| `FComposableCameraShot` | [`ShotOverrides`](#shotoverrides) | AssetReference-only editable section copy seeded from `ShotAssetRef`. |
+| `bool` | [`bShotOverridesInitialized`](#bshotoverridesinitialized) | Migration guard so saved section-local edits are not re-copied from the asset every load. |
+| `TSoftObjectPtr< UComposableCameraTransitionDataAsset >` | [`EnterTransition`](#entertransition-5) | Transition asset used when the playhead enters this section from an overlapping previous Shot section. |
 
 ---
 
 #### Source { #source-2 }
 
 ```cpp
-EComposableCameraShotSource Source = 
+EComposableCameraShotSource Source = EComposableCameraShotSource::Inline
 ```
 
-Source mode picker — Inline (data in Section) vs. AssetReference (data in a ShotAsset). Default Inline because the common authoring flow is one-off shots, and elevating an Inline shot to a reusable asset is trivial later (Right-click → "Save as Shot Asset"; deferred to a later polish step).
+Source mode picker. `Inline` stores Shot data directly in the section. `AssetReference` stores a Shot Asset reference plus a section-local editable snapshot.
 
 ---
 
@@ -59,7 +42,7 @@ Source mode picker — Inline (data in Section) vs. AssetReference (data in a Sh
 FComposableCameraShot InlineShot
 ```
 
-Used iff `Source == Inline`. Edited via the Shot Editor (single-click on the Section auto-swaps the editor's context — Phase E.5) or inline in the Details panel.
+Used iff `Source == Inline`. The Shot Editor edits this value when an inline section is selected.
 
 ---
 
@@ -69,7 +52,7 @@ Used iff `Source == Inline`. Edited via the Shot Editor (single-click on the Sec
 TSoftObjectPtr< UComposableCameraShotAsset > ShotAssetRef
 ```
 
-Used iff `Source == AssetReference`. Soft-ref so the section doesn't force-load the asset at section construction time / level streaming — resolution happens lazily inside `ResolveActiveShot`.
+Used iff `Source == AssetReference`. Changing this reference calls [`RefreshShotOverridesFromSource()`](#refreshshotoverridesfromsource), copying the asset's `Shot` into [`ShotOverrides`](#shotoverrides).
 
 ---
 
@@ -79,9 +62,27 @@ Used iff `Source == AssetReference`. Soft-ref so the section doesn't force-load 
 TArray< FComposableCameraShotTargetActorOverride > TargetActorOverrides
 ```
 
-Per-target Actor binding overrides. Each entry binds a TargetIndex in the resolved Shot's Targets array to a Sequencer binding picker; the TrackInstance resolves the binding to an Actor at evaluation time and substitutes it into the working Shot copy.
+Each entry maps a target index in the effective Shot to a Sequencer binding. At evaluation time the binding resolves to an Actor and replaces `Targets[TargetIndex].Target.Actor` in the working Shot copy. This supports Spawnables, reusable Shot Assets, and sequences that reuse one framing preset with different actors.
 
-Primary use case: an AssetReference Section whose ShotAsset's Targets reference a generic / placeholder Actor (or a Spawnable that doesn't survive level boundaries) — the override pins the actor resolution to a binding inside this sequence. Also useful for Inline Sections when the Inline Shot's Targets reference Spawnables.
+---
+
+#### ShotOverrides { #shotoverrides }
+
+```cpp
+FComposableCameraShot ShotOverrides
+```
+
+AssetReference-only editable copy shown by the Shot Editor. Runtime consumes this section-local value directly and never writes back to the shared Shot Asset.
+
+---
+
+#### bShotOverridesInitialized { #bshotoverridesinitialized }
+
+```cpp
+bool bShotOverridesInitialized = false
+```
+
+Migration/init guard for AssetReference snapshots. Existing sections created before `ShotOverrides` existed initialize once from the Shot Asset on `PostLoad`; saved section-local edits are not re-copied every load.
 
 ---
 
@@ -91,38 +92,31 @@ Primary use case: an AssetReference Section whose ShotAsset's Targets reference 
 TSoftObjectPtr< UComposableCameraTransitionDataAsset > EnterTransition
 ```
 
-Transition asset that drives the inter-Shot blend when the playhead enters this Section from a previous overlapping Section on the same Shot Track (Phase F).
-
-* When two Sections overlap in time, the lower-row Section is the *outgoing* shot and the higher-row Section is the *incoming* shot (top-row by RowIndex). The incoming Section's `EnterTransition` selects how the two solver outputs blend together.
-
-* The overlap window itself defines the blend duration. The Transition asset's `TransitionTime` is ignored — designers control duration via section overlap on the timeline; the transition asset contributes its ease curve / blend math only (handoff §F decision Q4).
-
-* Null = hard cut. The incoming Section snaps in at the boundary; no blend is performed. Equivalent V1 top-row-winner behavior with no overlap region treated as a transition.
-
-* On the *first* Section's left edge (no previous overlapping Section) `EnterTransition` is ignored — there is nothing to blend from (handoff §F decision Q2).
-
-Soft-ref so the section doesn't force-load the transition asset at level streaming time. Eval-path resolution goes through `[ResolveCachedEnterTransition()](#resolvecachedentertransition)` (non-blocking, returns null when not yet loaded — TrackInstance degrades to "no blend" rather than stalling on `LoadSynchronous`). The blocking load happens off the hot path in `RefreshCachedAssets()` at PostLoad / PostEdit.
+Transition asset used when the playhead enters this section from a previous overlapping section on the same Shot Track. The overlap window controls duration; the transition asset contributes blend behavior. Null means a hard cut.
 
 ### Public Methods
 
 | Return | Name | Description |
 |--------|------|-------------|
-|  | [`UMovieSceneComposableCameraShotSection`](#umoviescenecomposablecamerashotsection-1)  |  |
-| `void` | [`ImportEntityImpl`](#importentityimpl) `virtual` |  |
-| `const FComposableCameraShot *` | [`ResolveActiveShot`](#resolveactiveshot) `const` | Resolves the active Shot for this section. |
-| `FComposableCameraShot *` | [`ResolveActiveShot`](#resolveactiveshot-1)  |  |
-| `UObject *` | [`ResolveShotEditorHost`](#resolveshoteditorhost) `const` | Resolves the host UObject for the Shot Editor when this Section is selected. Inline → the Section itself; AssetReference → the resolved ShotAsset (or null if unresolved — Shot Editor falls through to its "no shot loaded" placeholder). |
-| `bool` | [`BuildEffectiveShot`](#buildeffectiveshot) `const` | Build the effective Shot for this section + the running sequence instance. Starts from `[ResolveActiveShot()](#resolveactiveshot-1)` (Inline / AssetReference), value-copies it into `OutShot`, then walks `TargetActorOverrides` and substitutes each indexed `Targets[i].Target.Actor` with the override binding's resolved actor. |
-| `UComposableCameraShotAsset *` | [`ResolveCachedShotAsset`](#resolvecachedshotasset) `const` | Resolve the cached `ShotAssetRef` to a hard pointer without blocking the eval-path thread. Reads `CachedShotAsset` first; if null, consults the already-loaded `.Get()` form of the soft pointer (no load triggered). The blocking refresh path is in `RefreshCachedAssets`, which fires at `PostLoad` / `PostEditChangeProperty` (off the hot path). Returns nullptr when the soft pointer is null OR not yet loaded — eval-path callers no-op in that case rather than stalling the game thread on `LoadSynchronous`. |
-| `UComposableCameraTransitionDataAsset *` | [`ResolveCachedEnterTransition`](#resolvecachedentertransition) `const` | Same policy as `ResolveCachedShotAsset` but for the `EnterTransition` soft pointer. The Phase F blender treats null as a hard cut, so an unloaded asset on the eval path degrades gracefully to "no blend" rather than blocking on a synchronous load. |
-| `void` | [`PostLoad`](#postload) `virtual` |  |
+|  | [`UMovieSceneComposableCameraShotSection`](#umoviescenecomposablecamerashotsection-1) | Constructor. |
+| `void` | [`ImportEntityImpl`](#importentityimpl) `virtual` | Emits a per-section track instance dispatch. |
+| `const FComposableCameraShot *` | [`ResolveActiveShot`](#resolveactiveshot) `const` | Resolves the active section Shot pointer. |
+| `FComposableCameraShot *` | [`ResolveActiveShot`](#resolveactiveshot-1) | Mutable overload. |
+| `FComposableCameraShot *` | [`ResolveShotEditorShot`](#resolveshoteditorshot) | Shot data the Shot Editor should edit for this section. |
+| `UObject *` | [`ResolveShotEditorHost`](#resolveshoteditorhost) `const` | Host UObject for Shot Editor transactions. |
+| `bool` | [`BuildEffectiveShotWithoutBindings`](#buildeffectiveshotwithoutbindings) `const` | Builds the base effective Shot before target binding overrides. |
+| `void` | [`RefreshShotOverridesFromSource`](#refreshshotoverridesfromsource) | Copies Shot Asset defaults into `ShotOverrides`. |
+| `bool` | [`BuildEffectiveShot`](#buildeffectiveshot) `const` | Builds the final effective Shot for evaluation. |
+| `UComposableCameraShotAsset *` | [`ResolveCachedShotAsset`](#resolvecachedshotasset) `const` | Resolves the cached Shot Asset pointer without blocking the eval path. |
+| `UComposableCameraTransitionDataAsset *` | [`ResolveCachedEnterTransition`](#resolvecachedentertransition) `const` | Resolves the cached transition pointer without blocking the eval path. |
+| `void` | [`PostLoad`](#postload) `virtual` | Refreshes caches and initializes legacy AssetReference snapshots. |
 
 ---
 
 #### UMovieSceneComposableCameraShotSection { #umoviescenecomposablecamerashotsection-1 }
 
 ```cpp
-UMovieSceneComposableCameraShotSection(const FObjectInitializer & ObjectInitializer)
+UMovieSceneComposableCameraShotSection(const FObjectInitializer& ObjectInitializer)
 ```
 
 ---
@@ -132,7 +126,7 @@ UMovieSceneComposableCameraShotSection(const FObjectInitializer & ObjectInitiali
 `virtual`
 
 ```cpp
-virtual void ImportEntityImpl(UMovieSceneEntitySystemLinker * EntityLinker, const UE::MovieScene::FEntityImportParams & ImportParams, UE::MovieScene::FImportedEntity * OutImportedEntity)
+virtual void ImportEntityImpl(UMovieSceneEntitySystemLinker* EntityLinker, const UE::MovieScene::FEntityImportParams& ImportParams, UE::MovieScene::FImportedEntity* OutImportedEntity)
 ```
 
 ---
@@ -142,26 +136,30 @@ virtual void ImportEntityImpl(UMovieSceneEntitySystemLinker * EntityLinker, cons
 `const`
 
 ```cpp
-const FComposableCameraShot * ResolveActiveShot() const
+const FComposableCameraShot* ResolveActiveShot() const
 ```
 
-Resolves the active Shot for this section.
-
-Inline → returns &InlineShot. AssetReference → returns &CachedShotAsset->Shot via the non-blocking `[ResolveCachedShotAsset()](#resolvecachedshotasset)` path. Returns null if the soft ref is null OR not yet loaded — the eval-path no-ops in that case rather than stalling the game thread on `LoadSynchronous`. The blocking refresh happens in `RefreshCachedAssets()`, fired at `PostLoad` / `PostEditChangeProperty` only.
-
-Caller must NOT cache the returned pointer across frames — the cache may be refreshed (asset edit, hot reload) and the previously-returned pointer would dangle. Treat as a per-frame snapshot.
-
-Const overload returns a const pointer for read-only callers (the Shot Editor's Sequencer-selection-sync uses this); non-const overload allows authoring tools that mutate Shot fields directly (the Shot Editor opened in AssetReference mode hosts the mutation on the *asset*, not the Section, so the Section doesn't need to write through).
-
-COMPOSABLECAMERASYSTEM_API: needed because UCLASS(MinimalAPI) only exports the class type info, not member functions, and the editor module's Shot Editor + track editor link against these.
+Returns `&InlineShot` for inline sections. Returns `&ShotOverrides` for AssetReference sections when `ShotAssetRef` is assigned; returns null when no asset is assigned. Callers should not cache the pointer beyond the section lifetime.
 
 ---
 
 #### ResolveActiveShot { #resolveactiveshot-1 }
 
 ```cpp
-FComposableCameraShot * ResolveActiveShot()
+FComposableCameraShot* ResolveActiveShot()
 ```
+
+Mutable overload of [`ResolveActiveShot()`](#resolveactiveshot). AssetReference authoring should prefer [`ResolveShotEditorShot()`](#resolveshoteditorshot) so edits explicitly land on the section-local override copy.
+
+---
+
+#### ResolveShotEditorShot { #resolveshoteditorshot }
+
+```cpp
+FComposableCameraShot* ResolveShotEditorShot()
+```
+
+Returns the Shot data the Shot Editor should mutate: `InlineShot` for inline sections, `ShotOverrides` for AssetReference sections, or null when an AssetReference section has no asset assigned.
 
 ---
 
@@ -170,10 +168,32 @@ FComposableCameraShot * ResolveActiveShot()
 `const`
 
 ```cpp
-UObject * ResolveShotEditorHost() const
+UObject* ResolveShotEditorHost() const
 ```
 
-Resolves the host UObject for the Shot Editor when this Section is selected. Inline → the Section itself; AssetReference → the resolved ShotAsset (or null if unresolved — Shot Editor falls through to its "no shot loaded" placeholder).
+Returns the section itself in both source modes so Shot Editor transactions and dirtying apply to the Level Sequence section, not the shared Shot Asset.
+
+---
+
+#### BuildEffectiveShotWithoutBindings { #buildeffectiveshotwithoutbindings }
+
+`const`
+
+```cpp
+bool BuildEffectiveShotWithoutBindings(FComposableCameraShot& OutShot) const
+```
+
+Copies `InlineShot` or `ShotOverrides` into `OutShot` before Sequencer actor-binding overrides are applied. Returns false when an AssetReference section has no assigned `ShotAssetRef`.
+
+---
+
+#### RefreshShotOverridesFromSource { #refreshshotoverridesfromsource }
+
+```cpp
+void RefreshShotOverridesFromSource()
+```
+
+Copies the current Shot Asset defaults into `ShotOverrides`. Called when the user changes `Source` or `ShotAssetRef`, and once during legacy section migration; normal evaluation and editor refresh do not re-copy the asset.
 
 ---
 
@@ -182,14 +202,10 @@ Resolves the host UObject for the Shot Editor when this Section is selected. Inl
 `const`
 
 ```cpp
-bool BuildEffectiveShot(const UE::MovieScene::FSequenceInstance & Instance, FComposableCameraShot & OutShot) const
+bool BuildEffectiveShot(const UE::MovieScene::FSequenceInstance& Instance, FComposableCameraShot& OutShot) const
 ```
 
-Build the effective Shot for this section + the running sequence instance. Starts from `[ResolveActiveShot()](#resolveactiveshot-1)` (Inline / AssetReference), value-copies it into `OutShot`, then walks `TargetActorOverrides` and substitutes each indexed `Targets[i].Target.Actor` with the override binding's resolved actor.
-
-Returns false (OutShot left unchanged) when the source Shot is unresolvable (AssetReference asset null / unloaded). Returns true with a populated OutShot otherwise — overrides whose binding doesn't resolve OR whose TargetIndex is out of range are silently dropped, so a section with stale overrides still produces a valid Shot.
-
-The underlying ShotAsset / InlineShot data is never mutated. The returned working copy is what the TrackInstance pushes into the LS Component's per-frame override map.
+Starts from [`BuildEffectiveShotWithoutBindings()`](#buildeffectiveshotwithoutbindings), then walks `TargetActorOverrides` and substitutes each indexed `Targets[i].Target.Actor` with the actor resolved from the running Sequencer binding. Stale target indices or unresolved bindings are skipped without mutating source data.
 
 ---
 
@@ -198,10 +214,10 @@ The underlying ShotAsset / InlineShot data is never mutated. The returned workin
 `const`
 
 ```cpp
-UComposableCameraShotAsset * ResolveCachedShotAsset() const
+UComposableCameraShotAsset* ResolveCachedShotAsset() const
 ```
 
-Resolve the cached `ShotAssetRef` to a hard pointer without blocking the eval-path thread. Reads `CachedShotAsset` first; if null, consults the already-loaded `.Get()` form of the soft pointer (no load triggered). The blocking refresh path is in `RefreshCachedAssets`, which fires at `PostLoad` / `PostEditChangeProperty` (off the hot path). Returns nullptr when the soft pointer is null OR not yet loaded — eval-path callers no-op in that case rather than stalling the game thread on `LoadSynchronous`.
+Resolves the cached `ShotAssetRef` pointer. The cache is refreshed off the evaluation path; AssetReference evaluation reads `ShotOverrides`, not the asset's `Shot` field.
 
 ---
 
@@ -210,10 +226,10 @@ Resolve the cached `ShotAssetRef` to a hard pointer without blocking the eval-pa
 `const`
 
 ```cpp
-UComposableCameraTransitionDataAsset * ResolveCachedEnterTransition() const
+UComposableCameraTransitionDataAsset* ResolveCachedEnterTransition() const
 ```
 
-Same policy as `ResolveCachedShotAsset` but for the `EnterTransition` soft pointer. The Phase F blender treats null as a hard cut, so an unloaded asset on the eval path degrades gracefully to "no blend" rather than blocking on a synchronous load.
+Resolves the cached `EnterTransition` pointer. An unloaded transition degrades to a hard cut instead of blocking evaluation.
 
 ---
 
@@ -225,12 +241,14 @@ Same policy as `ResolveCachedShotAsset` but for the `EnterTransition` soft point
 virtual void PostLoad()
 ```
 
+Refreshes cached assets and initializes `ShotOverrides` once for legacy AssetReference sections that do not yet have a saved snapshot.
+
 ### Private Attributes
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `TObjectPtr< UComposableCameraShotAsset >` | [`CachedShotAsset`](#cachedshotasset)  | Cached resolved shot asset. Mutable + Transient: the eval-path `ResolveCachedShotAsset` can opportunistically populate this from `ShotAssetRef.Get()` (free if already loaded) under a const context; Transient because the soft path is the source of truth on disk and the cache is rebuilt on PostLoad. |
-| `TObjectPtr< UComposableCameraTransitionDataAsset >` | [`CachedEnterTransition`](#cachedentertransition)  |  |
+| `TObjectPtr< UComposableCameraShotAsset >` | [`CachedShotAsset`](#cachedshotasset) | Cached resolved shot asset used for off-path snapshot refresh. |
+| `TObjectPtr< UComposableCameraTransitionDataAsset >` | [`CachedEnterTransition`](#cachedentertransition) | Cached resolved transition asset. |
 
 ---
 
@@ -240,7 +258,7 @@ virtual void PostLoad()
 TObjectPtr< UComposableCameraShotAsset > CachedShotAsset
 ```
 
-Cached resolved shot asset. Mutable + Transient: the eval-path `ResolveCachedShotAsset` can opportunistically populate this from `ShotAssetRef.Get()` (free if already loaded) under a const context; Transient because the soft path is the source of truth on disk and the cache is rebuilt on PostLoad.
+Cached resolved shot asset used when seeding `ShotOverrides`.
 
 ---
 
@@ -254,7 +272,7 @@ TObjectPtr< UComposableCameraTransitionDataAsset > CachedEnterTransition
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `void` | [`RefreshCachedAssets`](#refreshcachedassets)  | Off-hot-path refresh for the two cached resolution slots. May call `LoadSynchronous` if the soft pointer hasn't been loaded yet — that blocking call is acceptable here because PostLoad / PostEdit fire outside of evaluation. Eval-path callers go through `ResolveCachedShotAsset` / `ResolveCachedEnterTransition`, which never load. |
+| `void` | [`RefreshCachedAssets`](#refreshcachedassets) | Off-hot-path refresh for cached Shot Asset and transition pointers. |
 
 ---
 
@@ -264,4 +282,4 @@ TObjectPtr< UComposableCameraTransitionDataAsset > CachedEnterTransition
 void RefreshCachedAssets()
 ```
 
-Off-hot-path refresh for the two cached resolution slots. May call `LoadSynchronous` if the soft pointer hasn't been loaded yet — that blocking call is acceptable here because PostLoad / PostEdit fire outside of evaluation. Eval-path callers go through `ResolveCachedShotAsset` / `ResolveCachedEnterTransition`, which never load.
+Refreshes cached soft-reference targets outside the evaluation path.

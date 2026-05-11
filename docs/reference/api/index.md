@@ -36,6 +36,7 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraCompositionFramingNode`](nodes/UComposableCameraCompositionFramingNode.md)
 - [`UComposableCameraComputeDistanceToActorNode`](nodes/UComposableCameraComputeDistanceToActorNode.md)
 - [`UComposableCameraControlRotateNode`](nodes/UComposableCameraControlRotateNode.md)
+- [`UComposableCameraDirectionalMoveNode`](nodes/UComposableCameraDirectionalMoveNode.md)
 - [`UComposableCameraFieldOfViewNode`](nodes/UComposableCameraFieldOfViewNode.md)
 - [`UComposableCameraFilmbackNode`](nodes/UComposableCameraFilmbackNode.md)
 - [`UComposableCameraFocusPullNode`](nodes/UComposableCameraFocusPullNode.md)
@@ -55,6 +56,7 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraScreenSpaceConstraintsNode`](nodes/UComposableCameraScreenSpaceConstraintsNode.md)
 - [`UComposableCameraScreenSpacePivotNode`](nodes/UComposableCameraScreenSpacePivotNode.md)
 - [`UComposableCameraSpiralNode`](nodes/UComposableCameraSpiralNode.md)
+- [`UComposableCameraTwoPointMoveNode`](nodes/UComposableCameraTwoPointMoveNode.md)
 - [`UComposableCameraViewTargetProxyNode`](nodes/UComposableCameraViewTargetProxyNode.md)
 - [`UComposableCameraVolumeConstraintNode`](nodes/UComposableCameraVolumeConstraintNode.md)
 

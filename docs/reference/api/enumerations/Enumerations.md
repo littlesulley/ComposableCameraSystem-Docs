@@ -692,7 +692,7 @@ enum EComposableCameraShotSource
 | Value | Description |
 |-------|-------------|
 | `Inline` | `InlineShot` carries the Shot data directly inside the Section. One-off framing for a specific moment. Good for shots that aren't reused elsewhere and don't justify a separate asset. |
-| `AssetReference` | `ShotAssetRef` soft-refs a `[UComposableCameraShotAsset](../uobjects-other/UComposableCameraShotAsset.md#ucomposablecamerashotasset)`. Editing the asset propagates to every Section referencing it. Good for reusable framing presets ("close-up A", "two-shot wide"). |
+| `AssetReference` | `ShotAssetRef` soft-refs a `[UComposableCameraShotAsset](../uobjects-other/UComposableCameraShotAsset.md#ucomposablecamerashotasset)`. Picking an asset snapshots its Shot into section-local `ShotOverrides`; later Level Sequence edits mutate only that section copy. |
 
 Source-of-truth for a Shot Section's framing data — Inline value-typed struct or AssetReference soft-pointer. See `[UComposableCameraShotAsset](../uobjects-other/UComposableCameraShotAsset.md#ucomposablecamerashotasset)` and spec §3.4.1.
 

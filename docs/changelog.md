@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-11 - plugin `332f3e9..55ea759`
+
+**Plugin commits processed:** `55ea759` (`Improve shot authoring workflow and presets`) on the local `dev-v1` branch. Repository synchronization was attempted first for both the plugin and Documentation repositories, but both fetches were blocked by `cannot open .git/FETCH_HEAD: Permission denied`; this run used the existing local HEADs and preserved existing Documentation working-tree edits.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed in this sandbox, so the affected API pages were updated manually: added `UComposableCameraDirectionalMoveNode` and `UComposableCameraTwoPointMoveNode`, linked them from the API nav/index, refreshed `FComposableCameraTargetInfo` for editor preview mesh/transform fields, refreshed `UMovieSceneComposableCameraShotSection` for `ShotOverrides` and section-local authoring, updated `EComposableCameraShotSource` and `UComposableCameraShotAsset` wording, and corrected ShotSolver / `FShotPlacement` docs for the first-frame `AnchorAtScreen + LookAtAnchor` joint seed path.
+
+**Prose updates:** expanded the Shot-Based Keyframing tutorial to document AssetReference copy-on-pick behavior, section-local `ShotOverrides`, editor-only target preview meshes/transforms, and target binding override behavior. Expanded the node catalog for `DirectionalMoveNode` and `TwoPointMoveNode`.
+
+**New-feature documentation decision:** the two new move nodes are designer-facing Position nodes and now have node catalog entries plus API pages. Shot Asset authoring changes are documented in the Sequencer tutorial and Shot Section API page rather than a new standalone page because they refine the existing Shot-Based Keyframing workflow. The solver seed change was treated as stale-reference/API cleanup because it changes activation behavior, not the authoring surface.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `python -m mkdocs build` passed. Commit and push were blocked because Git cannot write `Documentation/.git/index.lock` in this sandbox; earlier fetch/pull attempts were also blocked by `.git/FETCH_HEAD` permission errors.
+
+---
+
 ## 2026-05-10 - C++ API actor source reference follow-up
 
 **Plugin commits processed:** `2785600..332f3e9`, covering `Add controller pawn actor source option`.

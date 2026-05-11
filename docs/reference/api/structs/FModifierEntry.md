@@ -118,7 +118,7 @@ Design notes:
 
 * Chicken-and-egg with FOV: the rotation-solve projection uses the previous frame's FOV (passed in via `[FShotSolveContext](FShotSolveContext.md#fshotsolvecontext)`). When `FOVMode == Manual`, the manual value is used instead. When SolvedFromBoundsFit is active, the solver converges in 1-2 frames after a Shot transition.
 
-* Coupling between Placement.ScreenPosition (lateral camera shift) and Aim.ScreenPosition (rotation) is intentionally one-way: Placement determines Position with a TENTATIVE look-at-PlacementAnchor rotation; Aim then OVERRIDES rotation. So when AimAnchor != PlacementAnchor, the placement anchor's *final* projected screen position drifts from `Placement.ScreenPosition`. Document this and let designers set both equal in the typical AimAnchor==PlacementAnchor case.
+* `AnchorAtScreen + LookAtAnchor` has a strict first-frame seed path: when no prior pose is supplied, a bounded joint iteration seeds a pose that satisfies both `Placement.ScreenPosition` and `Aim.ScreenPosition` before zone damping begins. Once a prior pose exists, the hot path uses the cheaper decoupled Position-then-Aim solve and lets zones/damping provide the steady-state behavior.
 
 ### Classes
 
@@ -139,6 +139,7 @@ Design notes:
 | `FVector2D` | [`ApplyScreenZones`](#applyscreenzones) `inline` | Compute the effective screen-space target an anchor should be solved toward this frame, given: |
 | `FVector2D` | [`ResolveEffectiveScreenTarget`](#resolveeffectivescreentarget) `inline` | Resolve the effective screen-space target for a single anchor given a prior camera pose. Convenience wrapper that handles the "anchor unresolvable" failure path (returns the authored screen position so the V1 hard-constraint solver still has something sensible to chew on — caller will likely fail on anchor resolve downstream anyway). |
 | `bool` | [`SolveAnchorAtScreenPos`](#solveanchoratscreenpos) `inline` | Closed-form Position pass for `[EShotPlacementMode::AnchorAtScreen](#ComposableCameraShot_8h_1ad8bb9ef9d1aefe5e2b42410fc9908537a8da460d070406aab8e2caa882f9cbf2c)`. |
+| `bool` | [`SolveAnchorAtScreenLookAtJointSeed`](#solveanchoratscreenlookatjointseed) `inline` | First-frame joint seed for `AnchorAtScreen + LookAtAnchor`; iterates position and rotation so placement and aim screen constraints start from a coherent pose before damping begins. |
 | `bool` | [`SolvePlacement`](#solveplacement) `inline` | Computes camera Position based on the Shot's Placement layer. Returns false (CamPos unchanged) when an essential anchor can't resolve — caller handles the no-pose fallback. |
 | `FRotator` | [`SolveLookAtAnchorRotation`](#solvelookatanchorrotation) `inline` | Solves camera Rotation for LookAtAnchor mode: closed-form rotation that lands AimAnchor at Aim.ScreenPosition. Uses `SolveCameraRotationForScreenTarget` from `[ComposableCameraMath.h](#composablecameramathh)`. Roll is pre-compensated so the screen constraint holds after the caller composes Roll onto the result. |
 | `bool` | [`SolveAim`](#solveaim) `inline` | Computes camera Rotation based on the Shot's Aim layer + Roll. Returns false (OutRot unchanged) when AimAnchor can't resolve. |
@@ -310,6 +311,20 @@ CamPos     = PlacementAnchor - AssumedRot · cam_anchor
 `ScreenPos` is consumed as-is (no `-Roll` pre-rotation): when `AssumedRot` already includes Shot.Roll, the cam-frame right/up axes are themselves rolled, so `(sx · 2·TanH · D, sy · 2·TanV · D)` lands the anchor at the authored ScreenPosition under the rolled view. Contrast with `SolveLookAtAnchorRotation` which DOES pre-rotate — it solves for the rotation, so it cannot pre-roll it.
 
 Returns false (OutCamPos unchanged) iff `Distance < 1cm`. Authored `ScreenPos` outside `[-0.49, +0.49]²` is silently clamped to keep the cam-frame target inside the frustum-safe envelope.
+
+---
+
+#### SolveAnchorAtScreenLookAtJointSeed { #solveanchoratscreenlookatjointseed }
+
+`inline`
+
+```cpp
+inline bool SolveAnchorAtScreenLookAtJointSeed(const FVector& PlacementAnchorPos, const FVector& AimAnchorPos, FVector2D PlacementScreenPos, const FVector2D& AimScreenPos, float Distance, float EffectiveRollDeg, float TanHalfHOR, float AspectRatio, const FRotator& InitialAssumedRot, FVector& OutCamPos, FRotator& OutCamRot)
+```
+
+First-frame joint seed for `AnchorAtScreen + LookAtAnchor`. It alternates the `AnchorAtScreen` position solve with `LookAtAnchor` rotation, relaxes the assumed rotation, and returns the best candidate so initial activation starts from a coherent pose before zone damping begins.
+
+Returns false when the placement and aim anchors are the same, when the distance is invalid, or when no candidate can be produced.
 
 ---
 

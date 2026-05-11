@@ -153,6 +153,7 @@ nav:
             - 'UComposableCameraCompositionFramingNode': reference/api/nodes/UComposableCameraCompositionFramingNode.md
             - 'UComposableCameraComputeDistanceToActorNode': reference/api/nodes/UComposableCameraComputeDistanceToActorNode.md
             - 'UComposableCameraControlRotateNode': reference/api/nodes/UComposableCameraControlRotateNode.md
+            - 'UComposableCameraDirectionalMoveNode': reference/api/nodes/UComposableCameraDirectionalMoveNode.md
             - 'UComposableCameraFieldOfViewNode': reference/api/nodes/UComposableCameraFieldOfViewNode.md
             - 'UComposableCameraFilmbackNode': reference/api/nodes/UComposableCameraFilmbackNode.md
             - 'UComposableCameraFocusPullNode': reference/api/nodes/UComposableCameraFocusPullNode.md
@@ -172,6 +173,7 @@ nav:
             - 'UComposableCameraScreenSpaceConstraintsNode': reference/api/nodes/UComposableCameraScreenSpaceConstraintsNode.md
             - 'UComposableCameraScreenSpacePivotNode': reference/api/nodes/UComposableCameraScreenSpacePivotNode.md
             - 'UComposableCameraSpiralNode': reference/api/nodes/UComposableCameraSpiralNode.md
+            - 'UComposableCameraTwoPointMoveNode': reference/api/nodes/UComposableCameraTwoPointMoveNode.md
             - 'UComposableCameraViewTargetProxyNode': reference/api/nodes/UComposableCameraViewTargetProxyNode.md
             - 'UComposableCameraVolumeConstraintNode': reference/api/nodes/UComposableCameraVolumeConstraintNode.md
           - 'Transitions':

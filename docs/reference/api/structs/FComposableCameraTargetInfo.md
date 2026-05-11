@@ -26,6 +26,8 @@ Properties are BlueprintReadOnly per Docs/ShotBasedKeyframing.md §1.4 — Shot 
 | Return | Name | Description |
 |--------|------|-------------|
 | `TSoftObjectPtr< AActor >` | [`Actor`](#actor)  | The actor whose pivot this struct describes. Soft-referenced so the Details-panel actor picker can span LEVEL actors from any world — the containing UAsset (Camera Type Asset, future Shot Asset) is not bound to a specific Level, so a hard `TObjectPtr<AActor>` would only allow picking persistent / package-scoped actors and silently fail for level-instance actors. `TSoftObjectPtr` matches the workflow used by BlackEyeCameras' `FBlackEyeSimpleTarget::Actor` for the same reason. |
+| `TSoftObjectPtr< USkeletalMesh >` | [`EditorPreviewMesh`](#editorpreviewmesh)  | Editor-only skeletal mesh used to preview reusable Shot Assets before a Level Sequence binding or authored Actor resolves. Ignored by runtime evaluation and Sequencer playback. |
+| `FTransform` | [`EditorPreviewTransform`](#editorpreviewtransform)  | Editor-only transform for the Shot Editor preview proxy used by asset-only Shot authoring. Ignored by runtime evaluation and Sequencer playback. |
 | `bool` | [`bUseBoneAsPivot`](#buseboneaspivot)  | When true, BoneName resolves on Actor's skeletal mesh and that bone / socket location is used as the pivot base. When false, Actor's location is used. Offset is added on top of either. |
 | `FName` | [`BoneName`](#bonename)  | Bone or socket on Actor's skeletal mesh. Used iff bUseBoneAsPivot. |
 | `FVector` | [`Offset`](#offset-1)  | Vector offset added to whichever pivot base is resolved. Default zero reproduces "no offset"; (0, 0, Z) reproduces the legacy "world-Z offset" pattern that existing pivot-using nodes pass through. |
@@ -43,6 +45,28 @@ TSoftObjectPtr< AActor > Actor
 The actor whose pivot this struct describes. Soft-referenced so the Details-panel actor picker can span LEVEL actors from any world — the containing UAsset (Camera Type Asset, future Shot Asset) is not bound to a specific Level, so a hard `TObjectPtr<AActor>` would only allow picking persistent / package-scoped actors and silently fail for level-instance actors. `TSoftObjectPtr` matches the workflow used by BlackEyeCameras' `FBlackEyeSimpleTarget::Actor` for the same reason.
 
 Resolution to a live `AActor*` happens lazily via `Actor.Get()` inside `ResolveWorldPoint` — returns the loaded actor if currently in memory, nullptr otherwise (no force-load on the hot path).
+
+---
+
+#### EditorPreviewMesh { #editorpreviewmesh }
+
+```cpp
+TSoftObjectPtr< USkeletalMesh > EditorPreviewMesh
+```
+
+Editor-only skeletal mesh used to preview a reusable Shot Asset before it has a Level Sequence binding. This is an asset reference, not a level Actor reference. The Shot Editor viewport and target bone/socket picker use it only when no Sequencer binding override or authored Actor resolves.
+
+Runtime evaluation and Sequencer playback ignore this field; those paths still resolve actor identity from `Actor` or the Shot Section's target binding overrides.
+
+---
+
+#### EditorPreviewTransform { #editorpreviewtransform }
+
+```cpp
+FTransform EditorPreviewTransform = FTransform::Identity
+```
+
+Editor-only transform for the preview mesh proxy used while authoring reusable Shot Assets without live sequence bindings. Runtime evaluation and Sequencer playback ignore this field.
 
 ---
 

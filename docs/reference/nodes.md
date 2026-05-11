@@ -251,6 +251,39 @@ Resolves impulse forces applied via volumes — the "camera got pushed by an exp
 
 These nodes place the camera on a pre-authored path or procedural trajectory. They produce position only — pair with a downstream `LookAtNode` to orient the camera along the path.
 
+### `DirectionalMoveNode`
+
+Moves the camera from an authored `InitialTransform` along a camera-local direction at a fixed speed. The node resets its elapsed time when the camera initializes, normalizes `Direction`, converts it through `InitialTransform`'s rotation, then writes position and rotation each tick.
+
+Use it for simple continuous pushes, pull-backs, dolly moves, and reveal shots where the path is a straight local-space vector rather than an authored spline. Pair it with a downstream `LookAtNode` when the camera should keep tracking a subject during the move.
+
+| Field | Purpose |
+|---|---|
+| `Direction` | Camera-local direction. X is forward, Y is right, Z is up. |
+| `InitialTransform` | Starting location and rotation. The rotation defines the local direction frame. |
+| `Speed` | Movement speed in centimeters per second. |
+
+This node is not patch-compatible.
+
+**C++ reference:** [`UComposableCameraDirectionalMoveNode`](api/nodes/UComposableCameraDirectionalMoveNode.md)
+
+### `TwoPointMoveNode`
+
+Moves the camera from `SourceTransform` to `TargetTransform` over `Duration`, lerping position and slerping rotation. If `Curve` is set, the node samples it with normalized time in `[0, 1]` and clamps the returned value to `[0, 1]`; otherwise normalized time is used directly. After `Duration`, the target transform is held. A zero duration snaps to the target immediately.
+
+Use it for authored one-shot moves where the start and end transforms matter more than a path shape: quick cinematic reframes, short cutaway moves, or scripted camera beats inside a camera type asset.
+
+| Field | Purpose |
+|---|---|
+| `SourceTransform` | Transform at normalized time 0. |
+| `TargetTransform` | Transform at normalized time 1 and the held final pose. |
+| `Curve` | Optional float curve mapping normalized time to interpolation alpha. |
+| `Duration` | Seconds spent moving from source to target. |
+
+This node is not patch-compatible.
+
+**C++ reference:** [`UComposableCameraTwoPointMoveNode`](api/nodes/UComposableCameraTwoPointMoveNode.md)
+
 ### `SplineNode`
 
 Places the camera on a spline, with multiple spline math backends: BuiltInSpline (wraps `USplineComponent`), BezierSpline, CubicHermiteSpline, BasicSpline (B-spline), NURBSpline. Useful for rail-style fixed-path cameras — boss intro flyovers, zone-entry establishing shots — where the path is authored, not derived.

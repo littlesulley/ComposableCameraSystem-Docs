@@ -76,7 +76,9 @@ The Shot Editor edits the active Shot source:
 | Section source | Edited object |
 | --- | --- |
 | `Inline` | the section's embedded `InlineShot` value |
-| `AssetReference` | the referenced `UComposableCameraShotAsset` |
+| `AssetReference` | the section's local `ShotOverrides` copy, seeded from the referenced `UComposableCameraShotAsset` |
+
+Asset-backed sections are intentionally copy-on-pick. Choosing a Shot Asset copies the asset's Shot into the section, and later edits in Sequencer affect only that section. The shared Shot Asset remains the template used for new sections.
 
 The editor viewport has three modes:
 
@@ -103,6 +105,13 @@ For skeletal subjects, enable bone pivoting and pick a bone or socket from
 the searchable combo. For bounds-fit lens solving, use component bounds or
 explicit bounds that match the visible subject rather than attached cameras,
 debug helpers, or other non-subject components.
+
+For reusable Shot Assets that are not bound to live Sequencer actors yet, set
+`Editor Preview Mesh` and `Editor Preview Transform` on each target. These
+editor-only fields drive the Shot Editor preview proxy and bone/socket picker
+when no Level Sequence binding or authored Actor resolves. Runtime evaluation
+and Sequencer playback ignore them; use Section target binding overrides for
+real playback actor identity.
 
 ## 5. Set Placement
 
@@ -165,9 +174,10 @@ Section's right-click menu:
 
 **Bind Target Actors -> Target N -> Sequencer binding**
 
-This writes a per-section override. At evaluation time, the section value-
-copies the Shot and substitutes the target actor from the running Sequencer
-binding. The underlying Inline Shot or Shot Asset is not mutated.
+This writes a per-section override. At evaluation time, the section starts
+from the inline Shot or the asset-seeded `ShotOverrides` copy, then
+substitutes the target actor from the running Sequencer binding. The
+underlying Shot Asset is not mutated.
 
 Use binding overrides for Spawnables, reusable Shot Assets, or sequences that
 reuse the same framing preset with different actors.
@@ -210,8 +220,10 @@ viewport debug master switch.
   track is not a root-level track.
 - **The viewport stays at the default pose.** Make sure a Camera Cut section
   targets the Shot Actor and overlaps the Shot Section.
-- **An AssetReference section shows no Shot.** The referenced Shot Asset must
-  be assigned and loaded. Inline sections are simpler for first-pass blocking.
+- **AssetReference edits do not update the source Shot Asset.** This is
+  expected. Asset-backed sections snapshot the asset into `ShotOverrides` so
+  Sequencer edits stay local to the section. Change the Shot Asset directly
+  when you want future sections to inherit new defaults.
 - **Spawnable targets resolve to null.** Bind them through **Bind Target
   Actors** on the Shot Section.
 - **Overlap does not blend.** Set `EnterTransition` on the incoming section.
