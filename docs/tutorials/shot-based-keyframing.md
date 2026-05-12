@@ -282,7 +282,7 @@ Right click the second shot and select a transition for it.
 
 Now, play and enjoy your work!
 
-![[assets/images/shotsection.gif]]
+![[assets/images/shotsection 1.gif]]
 ## Common pitfalls
 
 - **The Shot Track menu is missing.** Select the Shot Actor binding row. The
