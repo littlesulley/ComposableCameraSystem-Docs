@@ -294,6 +294,7 @@ nav:
             - 'FComposableCameraVariablePinConnection': reference/api/structs/FComposableCameraVariablePinConnection.md
             - 'FComposableCameraViewportDebug': reference/api/structs/FComposableCameraViewportDebug.md
             - 'FGetActiveEditorViewport': reference/api/structs/FGetActiveEditorViewport.md
+            - 'FGetEditorSequencerPlaybackDeltaTime': reference/api/structs/FGetEditorSequencerPlaybackDeltaTime.md
             - 'FIsSimulatingInEditor': reference/api/structs/FIsSimulatingInEditor.md
             - 'FModifierEntry': reference/api/structs/FModifierEntry.md
             - 'FOpenShotEditor': reference/api/structs/FOpenShotEditor.md

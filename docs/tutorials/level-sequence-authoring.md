@@ -96,6 +96,18 @@ Before adding parameter tracks, wire the CameraCut:
 
 The CameraCut track is what tells the engine — and CCS — which camera is active at each frame. When playback reaches the section start, Sequencer fires `SetViewTarget` on the PCM using the bound actor. Because `AComposableCameraLevelSequenceActor` has a `UCineCameraComponent` as its root, the PCM's `SetViewTarget` recognizes it on the same fast path as a standard `ACineCameraActor`, creates a transient proxy camera, and activates it in the CCS context.
 
+### Key Spawn Tracks from Camera Cuts
+
+For Spawnable CCS actors, use **Tools -> Composable Camera System -> Key Spawn Tracks From Camera Cuts** after the Camera Cut track is laid out. The tool reads the focused Level Sequence's Camera Cut sections, finds spawnable `AComposableCameraLevelSequenceActor` bindings, and rebuilds each actor's Spawn Track so the actor exists only across the cut ranges that target it.
+
+The same action is available as the editor console command:
+
+```text
+CCS.Editor.KeySpawnTracksFromCameraCuts
+```
+
+This is now the preferred lifetime model for CCS Sequencer cameras. While the actor exists, its Level Sequence component evaluates; when the Spawn Track disables it, the component and its transient internal camera are torn down with the spawned actor.
+
 ## 5. Add and keyframe parameter tracks
 
 Now add keyframeable tracks for `DollyDistance` and `FovOverride`:
@@ -164,6 +176,17 @@ During authoring you can preview directly in Sequencer without wiring Blueprint:
 
 This is the fastest iteration loop for tuning the keyframe values.
 
+### Keying from the active viewport
+
+Two Level Editor shortcuts help block out CCS Sequencer camera transforms:
+
+| Shortcut | Menu command | Result |
+| --- | --- | --- |
+| `Ctrl+Alt+C` | **Tools -> Composable Camera System -> Copy Viewport Camera Transform** | Copies the active Level Editor viewport camera as pasteable `FTransform` text. |
+| `Ctrl+Alt+K` | **Tools -> Composable Camera System -> Key Viewport Camera Transform** | Keys the active viewport camera transform onto selected CCS Level Sequence Transform tracks at the current Sequencer frame. |
+
+For keying, select the CCS actor binding, its Transform track, a transform section, or a transform key area in Sequencer. The command only writes to transform tracks that belong to a `AComposableCameraLevelSequenceActor`, its component binding, or descendants.
+
 ## 7. Variables vs Parameters
 
 The TypeAsset can expose both *Parameters* and *Variables*. In the Sequencer path they show up as separate track groups:
@@ -180,7 +203,7 @@ Mechanically the distinction is the same as in the runtime activation path: para
 - **Actor doesn't appear in the class picker.** Search for "Composable Camera Level Sequence Actor" — the display name. The actor is placeable and can also be used as a Sequencer Spawnable or Possessable; if it is missing, confirm the plugin's editor module is loaded and the sequence is not filtering the class picker.
 - **No parameter tracks show up under the component.** The TypeAsset isn't set yet, or the TypeAsset has no Exposed Parameters. Open the TypeAsset and verify that the parameters are listed in the Exposed Parameters panel and compiled.
 - **Camera Cut Track doesn't see the actor.** Make sure the CameraCut section references the Spawnable binding (not a level-placed actor). Right-click the CameraCut section → **Set Camera** and confirm the binding name matches.
-- **Parameter keyframes have no effect at runtime.** The per-frame parameter application is done in `TickComponent` via `ApplyParameterBlock`. The component ticks by default as long as the Spawnable is alive. If you are using the ECS gate instantiator (`UMovieSceneComposableCameraGateInstantiator`), it *closes* the gate for entities that are not the active CameraCut target — so if your Spawnable section doesn't overlap a CameraCut section targeting that actor, the component will be gated off. Confirm the CameraCut section overlaps the keyframed range.
+- **Parameter keyframes have no effect at runtime.** The per-frame parameter application is done in `TickComponent` via `ApplyParameterBlock`. The component evaluates while its owning Spawnable exists. Confirm the Spawn Track keeps the actor spawned across the keyframed range, or run **Key Spawn Tracks From Camera Cuts** after changing Camera Cut timing.
 - **Camera snaps at CameraCut boundary instead of blending.** Supply an `Enter Transition` to **Play Cutscene Sequence**, or set a default Enter Transition on the `CT_SequencerDolly` TypeAsset. The CCS proxy-camera activation goes through the same transition resolution chain as any other camera activation.
 - **`FollowTarget` resolves to null at runtime.** The actor reference set in the Details panel binds to a level actor. If the sequence is played in a level that doesn't contain that actor (e.g. a streaming sub-level that hasn't loaded), the reference will be null and `ReceivePivotActorNode` will output the unmodified input pose. Use Sequencer's **Object Reference Binding** system or set the parameter from Blueprint with a live actor reference instead.
 - **Physical optics (focal length, aperture) aren't affected by the TypeAsset.** The component writes position and rotation only — physical optics stay on the CineCamera and are controlled by Sequencer's standard camera component property tracks (`Camera Component → Current Focal Length`, etc.). Wire those tracks alongside your CCS parameter tracks.

@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-12 - plugin `55ea759..3be0fa0`
+
+**Plugin commits processed:** `ff75cbc` (`Restore camera preset assets`) and `3be0fa0` (`Add Sequencer camera authoring tools`) on the local `dev-v1` branch. Repository synchronization was attempted first for both the plugin and Documentation repositories, but both fetch/pull operations were blocked by `cannot open .git/FETCH_HEAD: Permission denied`; this run used the existing clean local HEADs.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed in this sandbox, so affected API pages were updated manually: `UComposableCameraDirectionalMoveNode` now includes `Duration`, `UComposableCameraLevelSequenceComponent` reflects Spawn Track lifetime semantics, Sequencer-aware delta-time helpers, and removal of the no-op parameter/variable setter hooks, `UMovieSceneComposableCameraPatchSection` no longer references the removed ECS gate model, `AComposableCameraCameraBase` no longer describes gate warm-up edge cases, and new `FGetEditorSequencerPlaybackDeltaTime` API navigation was added.
+
+**Prose updates:** expanded the CCS Camera in Sequencer and Shot-Based Keyframing tutorials with the new **Key Spawn Tracks From Camera Cuts** command, `CCS.Editor.KeySpawnTracksFromCameraCuts`, and viewport transform utilities (`Ctrl+Alt+C` copy, `Ctrl+Alt+K` key selected CCS transform tracks). Updated the node catalog for `DirectionalMoveNode.Duration`.
+
+**New-feature documentation decision:** the new Sequencer tools were documented inside the existing Sequencer authoring tutorials rather than a new page because they are workflow accelerators for the existing Level Sequence and Shot Actor paths. The Spawn Track lifetime change was treated as stale-doc cleanup across tutorials and API prose.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `python -m mkdocs build` passed. Commit and push were blocked because Git cannot create `Documentation/.git/index.lock` in this sandbox; earlier fetch/pull attempts were also blocked by `.git/FETCH_HEAD` permission errors. Manual follow-up remains to rerun the Doxygen/moxygen API workflow in an environment with those tools installed.
+
+---
+
 ## 2026-05-11 - plugin `332f3e9..55ea759`
 
 **Plugin commits processed:** `55ea759` (`Improve shot authoring workflow and presets`) on the local `dev-v1` branch. Repository synchronization was attempted first for both the plugin and Documentation repositories, but both fetches were blocked by `cannot open .git/FETCH_HEAD: Permission denied`; this run used the existing local HEADs and preserved existing Documentation working-tree edits.

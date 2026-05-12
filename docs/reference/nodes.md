@@ -255,13 +255,14 @@ These nodes place the camera on a pre-authored path or procedural trajectory. Th
 
 Moves the camera from an authored `InitialTransform` along a camera-local direction at a fixed speed. The node resets its elapsed time when the camera initializes, normalizes `Direction`, converts it through `InitialTransform`'s rotation, then writes position and rotation each tick.
 
-Use it for simple continuous pushes, pull-backs, dolly moves, and reveal shots where the path is a straight local-space vector rather than an authored spline. Pair it with a downstream `LookAtNode` when the camera should keep tracking a subject during the move.
+Use it for simple pushes, pull-backs, dolly moves, and reveal shots where the path is a straight local-space vector rather than an authored spline. Pair it with a downstream `LookAtNode` when the camera should keep tracking a subject during the move.
 
 | Field | Purpose |
 |---|---|
 | `Direction` | Camera-local direction. X is forward, Y is right, Z is up. |
 | `InitialTransform` | Starting location and rotation. The rotation defines the local direction frame. |
 | `Speed` | Movement speed in centimeters per second. |
+| `Duration` | Seconds spent moving. Negative values move forever; `0` holds `InitialTransform`; positive values clamp at the final offset. |
 
 This node is not patch-compatible.
 

@@ -221,6 +221,7 @@ USTRUCTs — init params, pose records, parameter blocks, etc.
 - [`FComposableCameraVariablePinConnection`](structs/FComposableCameraVariablePinConnection.md)
 - [`FComposableCameraViewportDebug`](structs/FComposableCameraViewportDebug.md)
 - [`FGetActiveEditorViewport`](structs/FGetActiveEditorViewport.md)
+- [`FGetEditorSequencerPlaybackDeltaTime`](structs/FGetEditorSequencerPlaybackDeltaTime.md)
 - [`FIsSimulatingInEditor`](structs/FIsSimulatingInEditor.md)
 - [`FModifierEntry`](structs/FModifierEntry.md)
 - [`FOpenShotEditor`](structs/FOpenShotEditor.md)

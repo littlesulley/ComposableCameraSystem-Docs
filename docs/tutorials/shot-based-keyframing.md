@@ -55,6 +55,12 @@ Add or verify a Camera Cut section that targets the Shot Actor. The Shot Track
 drives framing data, but the Camera Cut track is still what makes the actor's
 CineCamera the active viewport camera.
 
+For Spawnable Shot Actors, run **Tools -> Composable Camera System -> Key
+Spawn Tracks From Camera Cuts** after editing Camera Cut timing. The command
+keys the actor's Spawn Track from the Camera Cut ranges, so the Shot Actor is
+alive only when the sequence cuts to it and its Level Sequence component is
+evaluating.
+
 ## 2. Add a Shot Track
 
 In Sequencer, right-click the Shot Actor binding and choose **Composable
@@ -90,6 +96,13 @@ The editor viewport has three modes:
 
 When leaving Free mode, choose the save option to reverse-solve the current
 view back into the Shot fields that the active modes read.
+
+The Level Editor also exposes CCS camera transform utilities under
+**Tools -> Composable Camera System**. `Ctrl+Alt+C` copies the active viewport
+camera transform as pasteable `FTransform` text, and `Ctrl+Alt+K` keys that
+viewport transform onto selected CCS Level Sequence Transform tracks. These
+are useful when blocking a Shot Actor's initial placement or matching a
+hand-piloted viewport composition before refining the Shot fields.
 
 ## 4. Author targets
 

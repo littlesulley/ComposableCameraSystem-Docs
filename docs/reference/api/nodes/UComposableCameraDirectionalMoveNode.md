@@ -6,9 +6,9 @@
 
 > **Inherits:** `UComposableCameraCameraNodeBase`
 
-Moves the camera continuously from `InitialTransform` along a camera-space direction at a fixed speed.
+Moves the camera from `InitialTransform` along a camera-space direction at a fixed speed. Negative `Duration` moves forever.
 
-The node resets its internal elapsed time on initialization. Each tick it normalizes `Direction`, transforms it by `InitialTransform`'s rotation, writes `InitialTransform.Location + WorldDirection * Speed * ElapsedTime` to the pose, and writes `InitialTransform`'s rotation to the pose.
+The node resets its internal elapsed time on initialization. Each tick it normalizes `Direction`, transforms it by `InitialTransform`'s rotation, clamps elapsed time by `Duration` when `Duration >= 0`, writes `InitialTransform.Location + WorldDirection * Speed * MoveTime` to the pose, and writes `InitialTransform`'s rotation to the pose.
 
 ### Public Attributes
 
@@ -17,6 +17,7 @@ The node resets its internal elapsed time on initialization. Each tick it normal
 | `FVector` | [`Direction`](#direction) | Direction in camera-local space. X is forward, Y is right, Z is up. The value is normalized at runtime. |
 | `FTransform` | [`InitialTransform`](#initialtransform) | Starting transform. Its rotation converts `Direction` from camera space to world space. |
 | `float` | [`Speed`](#speed) | Movement speed in centimeters per second. |
+| `float` | [`Duration`](#duration) | Seconds spent moving. Negative values move forever; zero holds `InitialTransform`. |
 
 ---
 
@@ -48,6 +49,16 @@ float Speed { 100.f }
 
 Movement speed in centimeters per second.
 
+---
+
+#### Duration { #duration }
+
+```cpp
+float Duration { -1.f }
+```
+
+Seconds spent moving. Negative values move forever; zero holds `InitialTransform`.
+
 ### Public Methods
 
 | Return | Name | Description |
@@ -55,7 +66,7 @@ Movement speed in centimeters per second.
 |  | [`UComposableCameraDirectionalMoveNode`](#ucomposablecameradirectionalmovenode-1) | Sets the palette category to `Position`. |
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation) `virtual` | Resets elapsed time. |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation) `virtual` | Applies the continuous move to the camera pose. |
-| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation) `virtual` | Declares input pins for Direction, Initial Transform, and Speed. |
+| `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation) `virtual` | Declares input pins for Direction, Initial Transform, Speed, and Duration. |
 | `EComposableCameraNodePatchCompatibility` | [`GetPatchCompatibility_Implementation`](#getpatchcompatibility_implementation) `virtual` | Returns `Incompatible`. |
 
 ---
@@ -105,4 +116,3 @@ void GetPinDeclarations_Implementation(TArray<FComposableCameraNodePinDeclaratio
 ```cpp
 EComposableCameraNodePatchCompatibility GetPatchCompatibility_Implementation() const
 ```
-
