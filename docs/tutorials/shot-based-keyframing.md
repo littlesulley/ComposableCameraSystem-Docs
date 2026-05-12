@@ -10,6 +10,8 @@ where the camera should be placed, where it should aim, how the lens should
 solve, and how focus should follow. Sequencer decides *when* each Shot is
 active; the CCS Composition Solver decides the camera pose every frame.
 
+![[assets/images/Pasted image 20260512143333.png]]
+
 Use this workflow when the subject can move, spawn, or be rebound per
 sequence, but the composition should stay stable: over-the-shoulder shots,
 close-ups, two-shots, dialogue coverage, boss reveals, and shots that need
@@ -46,6 +48,8 @@ Under the hood:
 Open the Level Sequence and add **Composable Camera Level Sequence Shot
 Actor** as either a Spawnable or a Possessable.
 
+![[assets/images/Pasted image 20260512143709.png]]
+
 Prefer the Shot Actor for this workflow. It is a subclass of
 `AComposableCameraLevelSequenceActor` that auto-creates the default internal
 TypeAsset containing a `CompositionFramingNode`, so you do not need to build a
@@ -55,23 +59,33 @@ Add or verify a Camera Cut section that targets the Shot Actor. The Shot Track
 drives framing data, but the Camera Cut track is still what makes the actor's
 CineCamera the active viewport camera.
 
+![[assets/images/Pasted image 20260512143820.png]]
+
 For Spawnable Shot Actors, run **Tools -> Composable Camera System -> Key
 Spawn Tracks From Camera Cuts** after editing Camera Cut timing. The command
 keys the actor's Spawn Track from the Camera Cut ranges, so the Shot Actor is
 alive only when the sequence cuts to it and its Level Sequence component is
 evaluating.
 
+![[assets/images/Pasted image 20260512143812.png]]
+
+It should look like this if you finish:
+
+![[assets/images/Pasted image 20260512143845.png]]
 ## 2. Add a Shot Track
 
-In Sequencer, right-click the Shot Actor binding and choose **Composable
-Camera Shot Track**. The track is binding-scoped, not root-level, so it only
+In Sequencer, clike the **+ button** on the track to create a **Composable Camera Shot Track**. The track is binding-scoped, not root-level, so it only
 appears under `AComposableCameraLevelSequenceActor` and subclasses.
+
+![[assets/images/Pasted image 20260512144009.png]]
 
 Click the track's **+ Section** button to create an inline Shot Section at the
 playhead. Inline sections are best for one-off framing. If you want reusable
 framing presets, create a `UComposableCameraShotAsset` and drag it onto the
 Shot Actor binding; the new section uses `AssetReference` mode and points at
 that asset.
+
+![[assets/images/Pasted image 20260512144038.png]]
 
 ## 3. Open the Shot Editor
 
@@ -84,6 +98,8 @@ The Shot Editor edits the active Shot source:
 | `Inline` | the section's embedded `InlineShot` value |
 | `AssetReference` | the section's local `ShotOverrides` copy, seeded from the referenced `UComposableCameraShotAsset` |
 
+![[assets/images/Pasted image 20260512144114.png]]
+
 Asset-backed sections are intentionally copy-on-pick. Choosing a Shot Asset copies the asset's Shot into the section, and later edits in Sequencer affect only that section. The shared Shot Asset remains the template used for new sections.
 
 The editor viewport has three modes:
@@ -94,20 +110,17 @@ The editor viewport has three modes:
 | Free | fly the preview camera manually |
 | Lock | inspect the solved camera without accidental edits |
 
+![[assets/images/Pasted image 20260512144146.png]]
+
 When leaving Free mode, choose the save option to reverse-solve the current
 view back into the Shot fields that the active modes read.
-
-The Level Editor also exposes CCS camera transform utilities under
-**Tools -> Composable Camera System**. `Ctrl+Alt+C` copies the active viewport
-camera transform as pasteable `FTransform` text, and `Ctrl+Alt+K` keys that
-viewport transform onto selected CCS Level Sequence Transform tracks. These
-are useful when blocking a Shot Actor's initial placement or matching a
-hand-piloted viewport composition before refining the Shot fields.
 
 ## 4. Author targets
 
 Add one or more targets in the Shot's **Targets** array. Each target contains
 an Actor reference plus optional bone, offset, and bounds data.
+
+![[assets/images/Pasted image 20260512144305.png]]
 
 Targets are pure world-space identity. They do not carry screen positions.
 Placement, Aim, and Focus each reference target indices through their anchor
@@ -126,6 +139,8 @@ when no Level Sequence binding or authored Actor resolves. Runtime evaluation
 and Sequencer playback ignore them; use Section target binding overrides for
 real playback actor identity.
 
+![[assets/images/Pasted image 20260512144342.png]]
+
 ## 5. Set Placement
 
 Placement controls where the camera is.
@@ -135,6 +150,8 @@ Placement controls where the camera is.
 | `AnchorOrbit` | camera orbits around a placement anchor at a distance |
 | `AnchorAtScreen` | keeps the placement anchor at an authored screen position |
 | `FixedWorldPosition` | locks the camera to an explicit world location |
+
+![[assets/images/Pasted image 20260512144512.png]]
 
 `AnchorOrbit` is the usual starting point. Set the Placement Anchor to the
 main target, tune `Distance`, then adjust `LocalCameraDirection`. Use
@@ -155,6 +172,8 @@ Aim controls camera rotation.
 | `LookAtAnchor` | rotate so the Aim Anchor lands at `Aim.ScreenPosition` |
 | `NoOp` | leave rotation as identity plus Shot roll |
 
+![[assets/images/Pasted image 20260512144545.png]]
+
 Most cinematic shots use `LookAtAnchor`. Pick the target to look at, then
 drag the cyan Aim handle to compose the subject on screen. Aim zones work like
 Placement zones but affect rotation rather than camera translation.
@@ -162,6 +181,8 @@ Placement zones but affect rotation rather than camera translation.
 Use Shot `Roll` for dutch angles or rolled compositions. The solver preserves
 authored screen positions under roll, and the Shot Editor can round-trip roll
 from Free mode.
+
+![[assets/images/Pasted image 20260512144556.png]]
 
 ## 7. Set Lens and Focus
 
@@ -176,9 +197,13 @@ Bounds-fit mode is useful for close-ups and two-shots where the target size
 should stay readable as actors move. Keep the target bounds tight enough to
 describe the visible subject.
 
+![[assets/images/Pasted image 20260512144621.png]]
+
 Focus can be manual, follow the Placement Anchor, follow the Aim Anchor, or
 follow a custom anchor. Focus distance is camera-space depth, matching what
 the CineCamera depth-of-field pipeline expects.
+
+![[assets/images/Pasted image 20260512144629.png]]
 
 ## 8. Bind targets for Sequencer
 
@@ -186,6 +211,8 @@ If the Shot references actors that are not stable level actors, use the Shot
 Section's right-click menu:
 
 **Bind Target Actors -> Target N -> Sequencer binding**
+
+![[assets/images/Pasted image 20260512144652.png]]
 
 This writes a per-section override. At evaluation time, the section starts
 from the inline Shot or the asset-seeded `ShotOverrides` copy, then
@@ -200,8 +227,12 @@ reuse the same framing preset with different actors.
 Create a second Shot Section on another row and make the two sections overlap
 in time. The overlap band is the transition window.
 
+![[assets/images/Pasted image 20260512144730.png]]
+
 On the incoming section, right-click and choose **Set Enter Transition**. Pick
 a `UComposableCameraTransitionDataAsset`.
+
+![[assets/images/Pasted image 20260512144742.png]]
 
 The overlap duration controls the transition duration. The transition asset's
 own `TransitionTime` is ignored in this path; the asset contributes the blend
@@ -227,6 +258,31 @@ showdebug camera
 in PIE, Game, and Sequencer-scrub viewports. It is independent from the 3D
 viewport debug master switch.
 
+![[assets/images/Pasted image 20260512145241.png]]
+
+## 11. Use Preset Shots
+
+The plugin's content folder `/Content/ComposableCameraSystem/CameraPresets/Preset_Shots` contains several two-peson dialogue shots such as `CameraShot_OTS_Close_R` and `CameraShot_OTS_MediumClose_L`. Each type of shot has two versions, viewing from the left and right shoulder indicated by the postfix `_L` or `_R`. 
+
+First, create two shot section and make them overlap.
+
+![[assets/images/Pasted image 20260512145628.png]]
+
+Then, right click each, select **Source = Asset Reference** and **Shot Asset Ref = CameraShot_OTS_Close_R/CameraShot_OTS_Medium_L**. You can optionally override the parameters inside the asset.
+
+![[assets/images/Pasted image 20260512145704.png]]
+
+Next, right click each shot secion, assign target actors to each binding.
+
+![[assets/images/Pasted image 20260512145859.png]]
+
+Right click the second shot and select a transition for it.
+
+![[assets/images/Pasted image 20260512145944.png]]
+
+Now, play and enjoy your work!
+
+![[assets/images/shotsection.gif]]
 ## Common pitfalls
 
 - **The Shot Track menu is missing.** Select the Shot Actor binding row. The
