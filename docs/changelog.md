@@ -2,6 +2,26 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-13 — plugin `3be0fa0..b9f1885`
+
+**Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/3be0fa0bf58f3c7dbc8aab48bdb9a05b5938cd04...b9f1885df2fd209106b85bc91bc5d36a9e740c11))
+
+- `b9f1885` Fix shot zone overlay and blend cache handoff
+
+**C++ API pages updated:** 2 pages revised (no new classes added)
+
+- `docs/reference/api/nodes/UComposableCameraCompositionFramingNode.md` — `SetActiveShotsFromSequencer` signature gains `bPrimaryWasPreviousSecondary` and `bSecondaryChanged` parameters; parameter descriptions updated to reflect blend cache promotion vs. hard-cut reseed semantics.
+- `docs/reference/api/uobjects-other/UComposableCameraLevelSequenceComponent.md` — new `LastActiveSecondarySection` private field documented; `LastActivePrimarySection` description updated.
+
+**Prose drafts added:** none (no new node/transition/modifier classes)
+
+**Flagged for review:**
+
+- `DesignDoc.md` last updated 2026-05-06 — predates this commit (2026-05-12). Check §Blend-cache handoff / overlap-exit behaviour sections against current code.
+- `EditorDesignDoc.md` last updated 2026-05-11 — also predates commit. Likely unaffected (change is runtime-only), but confirm.
+
+---
+
 ## 2026-05-12 - plugin `55ea759..3be0fa0`
 
 **Plugin commits processed:** `ff75cbc` (`Restore camera preset assets`) and `3be0fa0` (`Add Sequencer camera authoring tools`) on the local `dev-v1` branch. Repository synchronization was attempted first for both the plugin and Documentation repositories, but both fetch/pull operations were blocked by `cannot open .git/FETCH_HEAD: Permission denied`; this run used the existing clean local HEADs.

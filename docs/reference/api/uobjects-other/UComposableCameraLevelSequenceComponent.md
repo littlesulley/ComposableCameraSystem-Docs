@@ -261,7 +261,8 @@ Walk UObject references inside the non-UPROPERTY-reflected `SequencerPatchOverla
 | `TMap< TWeakObjectPtr< UMovieSceneComposableCameraPatchSection >, FComposableCameraSequencerPatchOverlay >` | [`SequencerPatchOverlays`](#sequencerpatchoverlays)  | Active overlays keyed by section. Key is `TWeakObjectPtr` (NOT `TObjectPtr`) so a stale section that's been GC'd can actually go stale — a strong-ref key would keep every Sequencer-side patch section alive forever, defeating the prune-on-tick path in `ApplySequencerPatchOverlays` that exists precisely to clean up overlays whose source section has been destroyed (Sequencer rebuild, asset reimport, undo across the section creation, etc.). TMap with TWeakObjectPtr keys cannot be UPROPERTY-reflected, so the inner `Evaluator` / `LatestParameters` UObject references are walked manually in `AddReferencedObjects` below — without that override, the inner Evaluator actor would be GC-blind. The section pointer itself stays alive via Sequencer's own TrackInstance / SectionInterface ownership while it's a live edit target. |
 | `TMap< TWeakObjectPtr< UMovieSceneComposableCameraShotSection >, FComposableCameraSequencerShotEntry >` | [`SequencerShotOverrides`](#sequencershotoverrides)  | Active Shot overrides keyed by Section. Held by `TWeakObjectPtr` to tolerate GC of the section between frames (a common case during Sequencer hot-reload / asset reimport). |
 | `TWeakObjectPtr< UMovieSceneSequencePlayer >` | [`CachedOwningSequencePlayer`](#cachedowningsequenceplayer)  | Runtime player cache used for Sequencer-aware DeltaTime scaling. |
-| `TWeakObjectPtr< UMovieSceneComposableCameraShotSection >` | [`LastActivePrimarySection`](#lastactiveprimarysection)  | Last frame's resolved *primary* Section (lowest RowIndex among the active overrides). `ApplyActiveSequencerShotOverride` compares this to the current frame's primary; mismatch = section transition with no overlap (cut), which the framing node must treat as a hard reseed of its V2.2 damping state to avoid bleeding the previous shot's Distance / FOV / Roll into the new one. Phase F blend exits already trigger the same reseed independently inside `SetActiveShotsFromSequencer`; this tracker is for the non-overlap cut path that the blend logic doesn't cover. |
+| `TWeakObjectPtr< UMovieSceneComposableCameraShotSection >` | [`LastActivePrimarySection`](#lastactiveprimarysection)  | Last frame's resolved *primary* Section (lowest RowIndex among the active overrides). `ApplyActiveSequencerShotOverride` compares this to the current frame's primary; mismatch = section transition. The framing node either reseeds its primary prior state for a true hard cut, or promotes the previous secondary prior when the incoming Section becomes the new primary after an authored overlap. |
+| `TWeakObjectPtr< UMovieSceneComposableCameraShotSection >` | [`LastActiveSecondarySection`](#lastactivesecondarysection)  | Last frame's resolved *secondary* Section (next-lowest RowIndex). Used to recognize the normal overlap exit A+B → B, where B should inherit the secondary prior cache instead of hard-seeding as a fresh primary. Also detects secondary swaps like A+B → A+C so C starts from its own authored pose. |
 
 ---
 
@@ -323,7 +324,17 @@ Active Shot overrides keyed by Section. Held by `TWeakObjectPtr` to tolerate GC 
 TWeakObjectPtr< UMovieSceneComposableCameraShotSection > LastActivePrimarySection
 ```
 
-Last frame's resolved *primary* Section (lowest RowIndex among the active overrides). `ApplyActiveSequencerShotOverride` compares this to the current frame's primary; mismatch = section transition with no overlap (cut), which the framing node must treat as a hard reseed of its V2.2 damping state to avoid bleeding the previous shot's Distance / FOV / Roll into the new one. Phase F blend exits already trigger the same reseed independently inside `SetActiveShotsFromSequencer`; this tracker is for the non-overlap cut path that the blend logic doesn't cover.
+Last frame's resolved *primary* Section (lowest RowIndex among the active overrides). `ApplyActiveSequencerShotOverride` compares this to the current frame's primary; mismatch = section transition. The framing node either reseeds its primary prior state for a true hard cut, or promotes the previous secondary prior when the incoming Section becomes the new primary after an authored overlap (A+B → B).
+
+---
+
+#### LastActiveSecondarySection { #lastactivesecondarysection }
+
+```cpp
+TWeakObjectPtr< UMovieSceneComposableCameraShotSection > LastActiveSecondarySection
+```
+
+Last frame's resolved *secondary* Section (next-lowest RowIndex among the active overrides). Used to recognize the normal overlap exit A+B → B, where B should inherit the secondary prior cache instead of hard-seeding as a fresh primary on the first post-blend frame. Also detects secondary swaps like A+B → A+C so C starts from its own authored pose rather than B's cached state.
 
 ---
 
