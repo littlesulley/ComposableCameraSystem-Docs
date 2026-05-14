@@ -135,7 +135,7 @@ You don't handle this in your node — `GetInputPinValue<T>` always returns the 
 
 ## Compute nodes — the other flavor
 
-If your work only needs to happen **once** at camera activation (a random offset seed, a measured distance), derive from `UComposableCameraComputeNodeBase` instead of `UComposableCameraCameraNodeBase`. Compute nodes run on the BeginPlay chain, override `OnComputeNodeInitialize_Implementation`, read inputs, write outputs, and their outputs are cached for the camera's lifetime.
+If your work only needs to happen **once** at camera activation (a measured distance, an initial pose seed, setup data that should not run every frame), derive from `UComposableCameraComputeNodeBase` instead of `UComposableCameraCameraNodeBase`. Compute nodes run on the BeginPlay chain, override `ExecuteBeginPlay`, read inputs, write outputs, and their outputs are cached for the camera's lifetime.
 
 ```cpp
 UCLASS()
@@ -143,8 +143,8 @@ class MYPROJECT_API UMyComputeNode : public UComposableCameraComputeNodeBase
 {
     GENERATED_BODY()
 
-protected:
-    virtual void OnComputeNodeInitialize_Implementation() override;
+public:
+    virtual void ExecuteBeginPlay() override;
 };
 ```
 

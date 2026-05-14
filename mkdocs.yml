@@ -148,6 +148,7 @@ nav:
             - 'AComposableCameraPlayerCameraManager': reference/api/actors/AComposableCameraPlayerCameraManager.md
           - 'Camera Nodes':
             - 'UComposableCameraAutoRotateNode': reference/api/nodes/UComposableCameraAutoRotateNode.md
+            - 'UComposableCameraBeginPlaySetRotationNode': reference/api/nodes/UComposableCameraBeginPlaySetRotationNode.md
             - 'UComposableCameraBlueprintCameraNode': reference/api/nodes/UComposableCameraBlueprintCameraNode.md
             - 'UComposableCameraCameraOffsetNode': reference/api/nodes/UComposableCameraCameraOffsetNode.md
             - 'UComposableCameraCollisionPushNode': reference/api/nodes/UComposableCameraCollisionPushNode.md
@@ -174,6 +175,7 @@ nav:
             - 'UComposableCameraRelativeFixedPoseNode': reference/api/nodes/UComposableCameraRelativeFixedPoseNode.md
             - 'UComposableCameraScreenSpaceConstraintsNode': reference/api/nodes/UComposableCameraScreenSpaceConstraintsNode.md
             - 'UComposableCameraScreenSpacePivotNode': reference/api/nodes/UComposableCameraScreenSpacePivotNode.md
+            - 'UComposableCameraSetRotationNode': reference/api/nodes/UComposableCameraSetRotationNode.md
             - 'UComposableCameraSpiralNode': reference/api/nodes/UComposableCameraSpiralNode.md
             - 'UComposableCameraTwoPointMoveNode': reference/api/nodes/UComposableCameraTwoPointMoveNode.md
             - 'UComposableCameraViewTargetProxyNode': reference/api/nodes/UComposableCameraViewTargetProxyNode.md

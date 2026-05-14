@@ -30,6 +30,7 @@ Context stack, evaluation tree, director, modifier manager.
 Every `UComposableCamera*Node` — the building blocks of composed cameras.
 
 - [`UComposableCameraAutoRotateNode`](nodes/UComposableCameraAutoRotateNode.md)
+- [`UComposableCameraBeginPlaySetRotationNode`](nodes/UComposableCameraBeginPlaySetRotationNode.md)
 - [`UComposableCameraBlueprintCameraNode`](nodes/UComposableCameraBlueprintCameraNode.md)
 - [`UComposableCameraCameraOffsetNode`](nodes/UComposableCameraCameraOffsetNode.md)
 - [`UComposableCameraCollisionPushNode`](nodes/UComposableCameraCollisionPushNode.md)
@@ -56,6 +57,7 @@ Every `UComposableCamera*Node` — the building blocks of composed cameras.
 - [`UComposableCameraRelativeFixedPoseNode`](nodes/UComposableCameraRelativeFixedPoseNode.md)
 - [`UComposableCameraScreenSpaceConstraintsNode`](nodes/UComposableCameraScreenSpaceConstraintsNode.md)
 - [`UComposableCameraScreenSpacePivotNode`](nodes/UComposableCameraScreenSpacePivotNode.md)
+- [`UComposableCameraSetRotationNode`](nodes/UComposableCameraSetRotationNode.md)
 - [`UComposableCameraSpiralNode`](nodes/UComposableCameraSpiralNode.md)
 - [`UComposableCameraTwoPointMoveNode`](nodes/UComposableCameraTwoPointMoveNode.md)
 - [`UComposableCameraViewTargetProxyNode`](nodes/UComposableCameraViewTargetProxyNode.md)

@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-14 - plugin `8907715..3376bb6`
+
+**Plugin commits processed:** `3376bb6` (`Fix composable camera graph rotation and compute routing`) on the local `dev-v1` branch. Fetch/pull was attempted first for both the plugin and Documentation repositories, but both were blocked by `cannot open '.git/FETCH_HEAD': Permission denied`; the run used the existing clean local checkouts.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed locally, so affected API pages were updated manually. Added `UComposableCameraSetRotationNode` and `UComposableCameraBeginPlaySetRotationNode`, linked them from the API index/nav, added `EComposableCameraSetRotationSource`, refreshed compute-node base prose, and updated changed API fields for rotation constraints, pivot offset actor references, build-message chain targeting, and variable-node connection chain ownership.
+
+**Prose updates:** expanded the node catalog for `SetRotationNode` and `BeginPlaySetRotationNode`, removed the stale `ComputeRandomOffsetNode` catalog entry, corrected the compute-node base method name to `ExecuteBeginPlay`, updated the custom-node extension guide, updated the Graph Editor palette wording, and added the new rotation actor-source row to the Actor Input Sources reference.
+
+**New-feature documentation decision:** the new rotation-setting camera/compute nodes fit the existing Node Catalog and API reference rather than requiring a standalone guide. The compute routing fixes were treated as stale-doc cleanup in the graph/editor and API pages because they refine existing variable and BeginPlay-chain behavior.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `python -m mkdocs build` passed. Commit and push were blocked because Git could not create `Documentation/.git/index.lock` (`Permission denied`).
+
+---
+
 ## 2026-05-14 - plugin `b9f1885..8907715`
 
 **Plugin commits processed:** `8907715` (`Fix SpinBox drag on node-template detail rows and sync dev-v1`). Fetch/pull for both repositories was attempted first and succeeded after sandbox escalation; both were already up to date. The plugin working tree has two already-staged camera preset assets, which were preserved untouched.

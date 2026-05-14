@@ -21,7 +21,7 @@ This node runs every tick.
 | `FVector` | [`PivotPosition`](#pivotposition-1)  |  |
 | `ECameraPivotOffset` | [`PivotOffsetType`](#pivotoffsettype)  |  |
 | `EComposableCameraActorInputSource` | [`ActorForLocalSpaceSource`](#actorforlocalspacesource)  |  |
-| `TSoftObjectPtr< AActor >` | [`ActorForLocalSpace`](#actorforlocalspace)  |  |
+| `TObjectPtr< AActor >` | [`ActorForLocalSpace`](#actorforlocalspace)  |  |
 | `FVector` | [`PivotOffset`](#pivotoffset-1)  |  |
 
 ---
@@ -55,7 +55,7 @@ Selects whether actor-local pivot offsets use an explicit actor or the controlle
 #### ActorForLocalSpace { #actorforlocalspace }
 
 ```cpp
-TSoftObjectPtr< AActor > ActorForLocalSpace = nullptr
+TObjectPtr< AActor > ActorForLocalSpace { nullptr }
 ```
 
 ---

@@ -89,7 +89,21 @@ Rotates the camera back toward a reference forward direction when it drifts outs
 
 ### `RotationConstraints`
 
-Constrains yaw and/or pitch within defined ranges. Typically placed after `ControlRotateNode` to stop the player from looking straight up or spinning 360°. Ranges are authored in degrees. Actor-space yaw and pitch constraints can resolve their reference actor from either explicit actor fields or the controller-controlled pawn.
+Constrains yaw and/or pitch within defined ranges. Typically placed after `ControlRotateNode` to stop the player from looking straight up or spinning 360°. Ranges are authored in degrees in the selected reference frame.
+
+Actor-space yaw and pitch constraints can resolve their reference actor from either explicit actor fields or the controller-controlled pawn. The reference frame is built from the actor's forward vector, matching the same forward-vector convention used by the rotation-setting nodes.
+
+### `SetRotationNode`
+
+Replaces the current camera rotation from one of three sources:
+
+- `FromActor` reads a reference actor's forward vector, using either the explicit `RotationActor` field or the controller-controlled pawn.
+- `FromVector` turns `RotationVector` into a rotator with Unreal's forward-vector convention.
+- `FromRotator` writes the literal `Rotation` value.
+
+Use it when a camera chain needs a hard rotation handoff before downstream nodes apply offsets, look-at, constraints, or post-rotation effects. If the actor cannot be resolved, or the vector source is zero, the node preserves the upstream rotation instead of snapping to identity.
+
+**C++ reference:** [`UComposableCameraSetRotationNode`](api/nodes/UComposableCameraSetRotationNode.md)
 
 
 ### `PivotRotateNode`
@@ -379,14 +393,7 @@ Internal-only node — not intended for placement in camera type assets by desig
 
 ## Compute nodes
 
-Compute nodes run once at camera activation on the BeginPlay chain. They publish output values that camera nodes downstream read once and cache — not reread each frame.
-
-### `ComputeRandomOffsetNode`
-
-Generates a random offset vector within min/max bounds. Use for spawn-time jitter (to avoid two cameras of the same type starting at identical positions), shake seeds, or randomized starting positions that remain stable across the camera's lifetime.
-
-**Inputs:** `MinOffset`, `MaxOffset` (Vector3D).
-**Output:** `RandomOffset` (Vector3D).
+Compute nodes run once at camera activation on the BeginPlay chain. Most publish output values that camera nodes downstream read once and cache — not reread each frame. A compute node may also perform explicit initial-pose setup before the first camera tick.
 
 ### `ComputeDistanceToActorNode`
 
@@ -394,6 +401,14 @@ Measures the distance and direction between two actors at activation time. Use t
 
 **Inputs:** `ActorA`, `ActorB` (Actor).
 **Outputs:** `Distance` (Float), `Direction` (Vector3D).
+
+### `BeginPlaySetRotationNode`
+
+Initializes the camera's starting rotation on the BeginPlay chain using the same `RotationSource`, `RotationActorSource`, `RotationActor`, `RotationVector`, and `Rotation` fields as `SetRotationNode`.
+
+Because it writes both `CameraPose.Rotation` and `LastFrameCameraPose.Rotation`, it is useful before first-tick constraints or damping nodes that depend on a sensible previous rotation. It is compute-only and does not run during Level Sequence scrubbing.
+
+**C++ reference:** [`UComposableCameraBeginPlaySetRotationNode`](api/nodes/UComposableCameraBeginPlaySetRotationNode.md)
 
 ---
 
@@ -413,7 +428,7 @@ See [Extending → Custom Nodes](../extending/custom-nodes.md) for the authoring
 
 Abstract. The base every compute node derives from. Overrides one method:
 
-- `OnComputeNodeInitialize_Implementation()`. Called once on the BeginPlay chain. Read inputs, compute, write outputs.
+- `ExecuteBeginPlay()`. Called once on the BeginPlay chain after node initialization. Read inputs, compute, write outputs, or perform explicit initial-pose setup.
 
 ---
 

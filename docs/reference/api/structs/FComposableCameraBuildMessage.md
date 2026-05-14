@@ -14,6 +14,7 @@ A single message from the build/validation pipeline.
 | `uint8` | [`Severity`](#severity)  |  |
 | `FText` | [`Message`](#message-1)  |  |
 | `int32` | [`NodeIndex`](#nodeindex-1)  | Which node the message relates to (-1 for asset-level). |
+| `bool` | [`bIsComputeChain`](#biscomputechain)  | True when NodeIndex refers to ComputeNodeTemplates; false for NodeTemplates. |
 | `FName` | [`PinName`](#pinname-2)  | Which pin the message relates to (None for node-level). |
 
 ---
@@ -41,6 +42,16 @@ int32 NodeIndex = INDEX_NONE
 ```
 
 Which node the message relates to (-1 for asset-level).
+
+---
+
+#### bIsComputeChain { #biscomputechain }
+
+```cpp
+bool bIsComputeChain = false
+```
+
+True when NodeIndex refers to ComputeNodeTemplates; false for NodeTemplates.
 
 ---
 

@@ -26,13 +26,13 @@ Node for constraining rotation's yaw or pitch. <br/>
 | `bool` | [`bConstrainYaw`](#bconstrainyaw)  |  |
 | `EComposableCameraRotationConstrainType` | [`ConstrainYawType`](#constrainyawtype)  |  |
 | `EComposableCameraActorInputSource` | [`ActorForYawConstrainSource`](#actorforyawconstrainsource)  |  |
-| `TSoftObjectPtr< AActor >` | [`ActorForYawConstrain`](#actorforyawconstrain)  |  |
+| `TObjectPtr< AActor >` | [`ActorForYawConstrain`](#actorforyawconstrain)  |  |
 | `FVector` | [`VectorForYawConstrain`](#vectorforyawconstrain)  |  |
 | `FVector2D` | [`YawRange`](#yawrange-1)  |  |
 | `bool` | [`bConstrainPitch`](#bconstrainpitch)  |  |
 | `EComposableCameraRotationConstrainType` | [`ConstrainPitchType`](#constrainpitchtype)  |  |
 | `EComposableCameraActorInputSource` | [`ActorForPitchConstrainSource`](#actorforpitchconstrainsource)  |  |
-| `TSoftObjectPtr< AActor >` | [`ActorForPitchConstrain`](#actorforpitchconstrain)  |  |
+| `TObjectPtr< AActor >` | [`ActorForPitchConstrain`](#actorforpitchconstrain)  |  |
 | `FVector` | [`VectorForPitchConstrain`](#vectorforpitchconstrain)  |  |
 | `FVector2D` | [`PitchRange`](#pitchrange-1)  |  |
 
@@ -67,7 +67,7 @@ Selects whether yaw actor-space constraints use an explicit actor or the control
 #### ActorForYawConstrain { #actorforyawconstrain }
 
 ```cpp
-TSoftObjectPtr< AActor > ActorForYawConstrain { nullptr }
+TObjectPtr< AActor > ActorForYawConstrain { nullptr }
 ```
 
 ---
@@ -117,7 +117,7 @@ Selects whether pitch actor-space constraints use an explicit actor or the contr
 #### ActorForPitchConstrain { #actorforpitchconstrain }
 
 ```cpp
-TSoftObjectPtr< AActor > ActorForPitchConstrain { nullptr }
+TObjectPtr< AActor > ActorForPitchConstrain { nullptr }
 ```
 
 ---
@@ -186,7 +186,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 #### FindTargetYawInRange { #findtargetyawinrange }
 
 ```cpp
-double FindTargetYawInRange(const double WorldCurrentYaw, const FVector2D & Vector2)
+double FindTargetYawInRange(double WorldCurrentYaw, double WorldPivotYaw, const FVector2D & PivotSpaceYawRange)
 ```
 
 ---

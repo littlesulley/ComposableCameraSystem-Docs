@@ -26,6 +26,7 @@ When a source field is set to `ControllerControlledPawn`, the matching explicit 
 | `PivotRotateNode` | `PivotActorSource` | `PivotActor` |
 | `RelativeFixedPoseNode` | `RelativeActorSource` | `RelativeActor` |
 | `RotationConstraints` | `ActorForYawConstrainSource`, `ActorForPitchConstrainSource` | `ActorForYawConstrain`, `ActorForPitchConstrain` |
+| `SetRotationNode` / `BeginPlaySetRotationNode` | `RotationActorSource` | `RotationActor` |
 | `ScreenSpaceConstraintsNode` | `PivotActorSource` | `PivotActor` |
 | `ScreenSpacePivotNode` | `PivotActorSource` | `PivotActor` |
 | `SpiralNode` | `PivotActorSource` | `PivotActor` |

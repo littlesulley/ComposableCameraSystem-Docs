@@ -622,6 +622,18 @@ enum EComposableCameraRotationConstrainType
 | `ActorSpace` |  |
 | `VectorSpace` |  |
 
+#### EComposableCameraSetRotationSource { #ecomposablecamerasetrotationsource }
+
+```cpp
+enum EComposableCameraSetRotationSource
+```
+
+| Value | Description |
+|-------|-------------|
+| `FromActor` | Use a resolved actor's forward vector. |
+| `FromVector` | Use an explicit forward vector. |
+| `FromRotator` | Use the literal rotator value. |
+
 #### EComposableCameraScreenSpaceMethod { #ecomposablecamerascreenspacemethod }
 
 ```cpp
