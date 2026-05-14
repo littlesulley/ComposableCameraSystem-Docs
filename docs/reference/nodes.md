@@ -146,7 +146,17 @@ Optional "dynamic FOV" driven by an actor's scale (e.g. zoom out when the charac
 
 Authors physical-lens parameters on the pose: `FocalLength`, `Aperture`, `FocusDistance`, `DiaphragmBladeCount`, `PhysicalCameraBlendWeight`. When `bOverrideFieldOfViewFromFocalLength` is true, also clears `FieldOfView` so the pose resolves FOV from `FocalLength + SensorWidth`.
 
-`PhysicalCameraBlendWeight` gates depth-of-field and auto-exposure post-process contribution — dial to 0 for "game FOV" feel, 1 for "cinematic lens" feel.
+`PhysicalCameraBlendWeight` gates physical post-process contribution. Lens authoring controls focal length, aperture, focus distance, and diaphragm blades; ISO and shutter speed now belong to `ExposureNode`.
+
+Unreal's manual physical exposure path still reads aperture from `DepthOfFieldFstop`. If the level's post-process stack has Metering Mode set to Manual and Apply Physical Camera Exposure enabled, changing `LensNode.Aperture` can affect brightness by engine design. Use `ExposureNode` when the camera should explicitly author ISO/shutter, and keep Apply Physical Camera Exposure disabled when aperture should only drive DoF.
+
+### `ExposureNode`
+
+Authors physical exposure parameters on the pose: `ISO`, `ShutterSpeed`, and `ExposureBlendWeight`. This separates exposure control from `LensNode` so a lens can own DoF/aperture without implicitly choosing ISO/shutter.
+
+The renderer consumes these values only when the resolved post-process stack uses Manual metering and Apply Physical Camera Exposure is enabled. Configure that on a Post Process Volume, Post Process Component, or the camera component's post-process settings; the node writes pose values but does not force the level-wide exposure policy.
+
+**C++ reference:** [`UComposableCameraExposureNode`](api/nodes/UComposableCameraExposureNode.md)
 
 ### `FocusPullNode`
 

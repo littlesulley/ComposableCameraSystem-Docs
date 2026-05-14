@@ -117,6 +117,12 @@ The Details panel has two modes, toggled by graph selection:
 
 Every mutation (node add/delete, wire add/break, detail-panel edit) is wrapped in an `FScopedTransaction`, so `Ctrl+Z` and `Ctrl+Shift+Z` cover the full editing surface.
 
+### Canvas order and unwired graphs
+
+Exec wires are the authoritative order when the camera chain is wired from `Start` to `Output`. In that mode, the graph follows the wire path, and any camera node left outside the chain is reported as a build warning.
+
+When a camera type or patch has no camera-chain exec wires, the runtime falls back to ticking camera nodes in their serialized `NodeTemplates` order. The editor now derives that order from canvas position: top-to-bottom first, then left-to-right, with creation index only as a tie-breaker. For small patch graphs, this means dragging a node above another node changes the fallback tick order without having to delete and recreate nodes.
+
 ## Build pane
 
 Saving the asset (`Ctrl+S`) runs the Build pass. Results appear in the **Build Messages** tab at the bottom. Errors block nothing (the asset still saves), but they indicate configuration that will fail at runtime:
@@ -125,7 +131,7 @@ Saving the asset (`Ctrl+S`) runs the Build pass. Results appear in the **Build M
 - Internal / exposed variables with no `InitialValueString` that will default-construct.
 - Data pins whose wire has been invalidated (e.g. a node was deleted after the wire was drawn).
 - Compute nodes with no incoming exec wire (will never run at BeginPlay).
-- Nodes with no exec wire at all (will be silently skipped at runtime — usually a mistake).
+- Camera nodes outside a non-empty camera exec chain. Fully unwired camera chains are allowed and use the canvas-order fallback described above.
 
 Clicking a message jumps selection to the offending node, so the "find and fix" loop is Alt+Tab between Build Messages and Node Graph.
 

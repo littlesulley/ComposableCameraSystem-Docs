@@ -155,6 +155,7 @@ nav:
             - 'UComposableCameraComputeDistanceToActorNode': reference/api/nodes/UComposableCameraComputeDistanceToActorNode.md
             - 'UComposableCameraControlRotateNode': reference/api/nodes/UComposableCameraControlRotateNode.md
             - 'UComposableCameraDirectionalMoveNode': reference/api/nodes/UComposableCameraDirectionalMoveNode.md
+            - 'UComposableCameraExposureNode': reference/api/nodes/UComposableCameraExposureNode.md
             - 'UComposableCameraFieldOfViewNode': reference/api/nodes/UComposableCameraFieldOfViewNode.md
             - 'UComposableCameraFilmbackNode': reference/api/nodes/UComposableCameraFilmbackNode.md
             - 'UComposableCameraFocusPullNode': reference/api/nodes/UComposableCameraFocusPullNode.md

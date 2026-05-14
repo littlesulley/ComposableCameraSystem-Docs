@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-14 - plugin `b9f1885..8907715`
+
+**Plugin commits processed:** `8907715` (`Fix SpinBox drag on node-template detail rows and sync dev-v1`). Fetch/pull for both repositories was attempted first and succeeded after sandbox escalation; both were already up to date. The plugin working tree has two already-staged camera preset assets, which were preserved untouched.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed in this sandbox, so the affected new API page was added manually: `UComposableCameraExposureNode` documents ISO, shutter speed, and exposure blend weight pins/properties, and the API nav/index now link it.
+
+**Prose updates:** expanded the node catalog with `ExposureNode`, clarified that `LensNode` owns lens/DoF while exposure owns ISO/shutter, and documented the Manual + Apply Physical Camera Exposure level setup requirement. Updated the Graph Editor page to describe canvas-position ordering for fully unwired camera graphs and the warning behavior for orphaned nodes in non-empty exec chains.
+
+**New-feature documentation decision:** `ExposureNode` is a user-facing Optics node and belongs in the existing Node Catalog rather than a standalone page. The SpinBox drag fix is an editor usability bug fix; no public workflow page was needed beyond avoiding stale wording around detail-row editing. The node-template canvas ordering change is documented in the Graph Editor page because it changes authoring behavior for patches and unwired camera graphs.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `python -m mkdocs build` passed. Commit and push succeeded so GitHub Pages can deploy from the Documentation remote.
+
+---
+
 ## 2026-05-13 — plugin `3be0fa0..b9f1885`
 
 **Plugin commits** ([compare](https://github.com/littlesulley/ComposableCameraSystem/compare/3be0fa0bf58f3c7dbc8aab48bdb9a05b5938cd04...b9f1885df2fd209106b85bc91bc5d36a9e740c11))
