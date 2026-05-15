@@ -74,6 +74,7 @@ Per-node gizmos are controlled individually:
 | `CCS.Debug.Viewport.CollisionPush 1` | `CollisionPushNode` | Trace rays and the pushed camera position |
 | `CCS.Debug.Viewport.Spline 1` | `SplineNode` | The resolved spline path drawn in world space |
 | `CCS.Debug.Viewport.PivotDamping 1` | `PivotDampingNode` | Raw (undamped) and damped pivot positions side by side |
+| `CCS.Debug.Viewport.PivotLookAhead 1` | `PivotLookAheadNode` | Predicted pivot after velocity look-ahead |
 
 Each per-node CVar defaults to 0 so a camera with multiple active nodes doesn't turn into an unreadable tangle. Enable them one at a time to isolate the node you're investigating. `CCS.Debug.Viewport.Nodes.All 1` enables all node gizmos at once — a good first overview.
 

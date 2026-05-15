@@ -9,7 +9,7 @@ This is controlled by `EComposableCameraActorInputSource`:
 | `ExplicitActor` | Use the node's explicit actor field, such as `PivotActor`, `RotationInputActor`, `LookAtActor`, or `PrimaryActor`. This preserves the older workflow and is the right choice for Sequencer, cutscenes, AI cameras, shared camera assets, or any camera that should target a specific actor passed by a parameter. |
 | `ControllerControlledPawn` | Ask the owning `AComposableCameraPlayerCameraManager` for its `PlayerController`, then use `PlayerController->GetPawn()`. This is convenient for player-centric gameplay cameras where the target is always the possessed pawn. |
 
-When a source field is set to `ControllerControlledPawn`, the matching explicit actor picker is hidden in Details by the node's edit condition. At runtime, if there is no owning player controller or no controlled pawn, the node resolves no actor and follows its normal missing-actor fallback.
+When a source field is set to `ControllerControlledPawn`, the matching explicit actor picker is hidden in Details by the node's edit condition. At runtime, nodes first ask their owning player camera manager for its player controller. Nodes that pass a world context can also fall back to the world's first player controller when no camera manager is available. If no controller or pawn resolves, the node resolves no actor and follows its normal missing-actor fallback.
 
 ## Where It Applies
 
@@ -23,6 +23,7 @@ When a source field is set to `ControllerControlledPawn`, the matching explicit 
 | `LookAtNode` | `LookAtActorSource` | `LookAtActor` |
 | `OcclusionFadeNode` | `PivotActorSource` | `PivotActor` |
 | `PivotOffsetNode` | `ActorForLocalSpaceSource` | `ActorForLocalSpace` |
+| `PivotLookAheadNode` | `VelocityActorSource` | `VelocityActor` |
 | `PivotRotateNode` | `PivotActorSource` | `PivotActor` |
 | `RelativeFixedPoseNode` | `RelativeActorSource` | `RelativeActor` |
 | `RotationConstraints` | `ActorForYawConstrainSource`, `ActorForPitchConstrainSource` | `ActorForYawConstrain`, `ActorForPitchConstrain` |

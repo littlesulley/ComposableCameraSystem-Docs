@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-15 - plugin `3376bb6` + local workspace changes
+
+**Plugin changes processed:** `.last-documented-sha` already matched local plugin HEAD `3376bb6`, but the working tree contains an uncommitted public-header/source addition for `UComposableCameraPivotLookAheadNode` plus local internal-doc edits and a camera preset asset. Fetch/pull was attempted first for both repositories; the plugin fetch was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and Documentation fetch was blocked by unavailable GitHub network access in this sandbox.
+
+**C++ API reference:** public headers changed in the workspace. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed locally, so the affected API page was added manually: `UComposableCameraPivotLookAheadNode` now documents its velocity actor source, explicit velocity actor, look-ahead timing, velocity damping, output pivot, and debug draw hook. The API index/nav now link the page, and `ResolveActorInput` was refreshed for its optional world-context fallback parameter.
+
+**Prose updates:** expanded the Node Catalog with `PivotLookAheadNode`, updated Actor Input Sources for `VelocityActorSource`, and added `CCS.Debug.Viewport.PivotLookAhead` to both the user-facing debugging guide and the debug reference CVar table.
+
+**New-feature documentation decision:** Pivot look-ahead is a designer-facing Pivot node and fits the existing Node Catalog, Actor Input Sources reference, Debugging guide, and generated-style API reference. It does not need a standalone tutorial until the feature lands in a committed preset or broader camera recipe.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `python -m mkdocs build` passed. A local Documentation commit was created after elevated Git access allowed staging; push requires explicit approval for the configured `origin` remote.
+
+---
+
 ## 2026-05-14 - plugin `8907715..3376bb6`
 
 **Plugin commits processed:** `3376bb6` (`Fix composable camera graph rotation and compute routing`) on the local `dev-v1` branch. Fetch/pull was attempted first for both the plugin and Documentation repositories, but both were blocked by `cannot open '.git/FETCH_HEAD': Permission denied`; the run used the existing clean local checkouts.

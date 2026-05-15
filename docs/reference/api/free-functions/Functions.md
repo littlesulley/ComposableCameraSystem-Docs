@@ -426,10 +426,10 @@ inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & Da
 #### ResolveActorInput { #resolveactorinput }
 
 ```cpp
-AActor * ResolveActorInput(EComposableCameraActorInputSource Source, AActor * ExplicitActor, const AComposableCameraPlayerCameraManager * PlayerCameraManager)
+AActor * ResolveActorInput(EComposableCameraActorInputSource Source, AActor * ExplicitActor, const AComposableCameraPlayerCameraManager * PlayerCameraManager, const UObject * WorldContextObject = nullptr)
 ```
 
-Resolves an actor input selector to the effective actor used by camera nodes. `ExplicitActor` returns the supplied actor; `ControllerControlledPawn` reads the pawn controlled by the camera manager's owning player controller.
+Resolves an actor input selector to the effective actor used by camera nodes. `ExplicitActor` returns the supplied actor; `ControllerControlledPawn` reads the pawn controlled by the camera manager's owning player controller, or uses `WorldContextObject` to find a world and first player controller when no player camera manager is available.
 
 ---
 

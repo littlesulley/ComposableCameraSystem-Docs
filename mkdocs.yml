@@ -168,6 +168,7 @@ nav:
             - 'UComposableCameraOcclusionFadeNode': reference/api/nodes/UComposableCameraOcclusionFadeNode.md
             - 'UComposableCameraOrthographicNode': reference/api/nodes/UComposableCameraOrthographicNode.md
             - 'UComposableCameraPivotDampingNode': reference/api/nodes/UComposableCameraPivotDampingNode.md
+            - 'UComposableCameraPivotLookAheadNode': reference/api/nodes/UComposableCameraPivotLookAheadNode.md
             - 'UComposableCameraPivotOffsetNode': reference/api/nodes/UComposableCameraPivotOffsetNode.md
             - 'UComposableCameraPivotRotateNode': reference/api/nodes/UComposableCameraPivotRotateNode.md
             - 'UComposableCameraPostProcessNode': reference/api/nodes/UComposableCameraPostProcessNode.md

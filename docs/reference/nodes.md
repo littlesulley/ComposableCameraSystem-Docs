@@ -43,6 +43,16 @@ Offsets the pivot position. Supports world-space, actor-space, or camera-space o
 
 When `PivotOffsetType` is `ActorLocalSpace`, `ActorForLocalSpaceSource` can use either an explicit actor or the controller-controlled pawn as the local-space frame.
 
+### `PivotLookAheadNode`
+
+Projects an incoming `PivotPosition` forward by velocity so the camera can lead a moving subject instead of sitting directly on its current location. Place it after `ReceivePivotActorNode` and before pivot offset, screen-space pivot, look-at, or camera offset nodes.
+
+`VelocityActorSource` can read velocity from either an explicit `VelocityActor` or the controller-controlled pawn. If no velocity actor resolves, the node falls back to frame-to-frame `PivotPosition` delta, so it still works when the upstream pivot is produced by another node rather than a real actor. `LookAheadTime` controls how far forward the pivot is projected, and `VelocityDampingTime` smooths sudden velocity changes.
+
+Enable `CCS.Debug.Viewport.PivotLookAhead 1` to draw the predicted pivot as an orange in-world sphere.
+
+**C++ reference:** [`UComposableCameraPivotLookAheadNode`](api/nodes/UComposableCameraPivotLookAheadNode.md)
+
 ### `PivotDampingNode`
 
 Dampens pivot position changes using an Instanced interpolator (IIR, simple spring, or spring-damper). Smooths out jittery or teleport-style pivot updates — for example, when the pivot is bound to a character whose root bone snaps during a montage.
