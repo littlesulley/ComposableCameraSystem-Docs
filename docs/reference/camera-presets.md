@@ -15,7 +15,14 @@ These assets live in `CameraPresets/Preset_Cameras` and are regular `UComposable
 | Preset | Use it for | Notes |
 | --- | --- | --- |
 | `Camera_BasicThirdPerson` | A baseline third-person gameplay follow camera. | Good first asset to inspect when learning the graph shape for pivot, offset, rotation, and collision-style gameplay cameras. |
+| `Camera_BasicLockOn` | A player-follow camera with a stabilized lock-on aim target. | Demonstrates the two-`ScreenSpacePivotNode` lock-on chain with `LockOnAimPointNode` feeding the target framing pass. Exposes `AimActor` for the lock target while the follow point can resolve from the controlled pawn. |
+| `Camera_BasicSoftLookAt` | A third-person follow camera with soft target pull. | Shows `LookAtNode` in soft mode, useful when the camera should bias toward a subject without fully taking rotation control away from the player. |
 | `Camera_CloseOTS` | Close over-the-shoulder gameplay or cinematic framing. | Useful for tighter shoulder framing, dialogue coverage, or aim-adjacent camera setups that still need a composable graph. |
+| `Camera_BasicFixed` | A simple fixed or relative pose camera. | Useful as a minimal reference for authored transforms, fixed viewpoints, and testing transition behavior without follow-camera logic. |
+| `Camera_BasicIsometric` | Isometric or top-down-style camera framing. | Demonstrates orthographic/isometric-style composition for strategy, tactics, or inspection cameras. |
+| `Camera_BasicSpline` | Camera movement along a spline path. | Demonstrates `SplineNode` path following for authored rails and fixed-path cinematic moves. |
+| `Camera_BasicSpiral` | A procedural orbit/spiral camera move. | Demonstrates `SpiralNode` with the bundled radius, height, and angle curve assets under `Preset_Cameras/Curves`. |
+| `Camera_BasicVehicleExhibition` | Vehicle, mount, or object showcase framing. | Useful for inspecting pivot rotation and vehicle-style follow behavior where the camera should respect an actor's orientation. |
 | `Camera_DirectionalMove` | A simple straight camera move. | Demonstrates `DirectionalMoveNode`: move from an initial transform along a local-space direction, optionally clamped by duration. |
 | `Camera_TwoPointMove` | A one-shot move between two authored transforms. | Demonstrates `TwoPointMoveNode`: interpolate from source to target over a duration, with an optional curve. |
 
