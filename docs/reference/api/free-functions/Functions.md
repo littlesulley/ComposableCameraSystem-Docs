@@ -398,6 +398,7 @@ inline FString FormatOutputPinValue(const FComposableCameraRuntimeDataBlock & Da
 | Return | Name | Description |
 |--------|------|-------------|
 | `AActor *` | [`ResolveActorInput`](#resolveactorinput)  | Resolve an actor input selector to the effective actor used by camera nodes. |
+| `FVector` | [`ComputeLockOnAimPoint`](#computelockonaimpoint)  | Compute the stable virtual aim point used by `UComposableCameraLockOnAimPointNode`. |
 | `float` | [`SmoothStep`](#smoothstep) `inline` |  |
 | `float` | [`SmootherStep`](#smootherstep) `inline` |  |
 | `double` | [`SimpleExpDamp`](#simpleexpdamp) `inline` |  |
@@ -430,6 +431,16 @@ AActor * ResolveActorInput(EComposableCameraActorInputSource Source, AActor * Ex
 ```
 
 Resolves an actor input selector to the effective actor used by camera nodes. `ExplicitActor` returns the supplied actor; `ControllerControlledPawn` reads the pawn controlled by the camera manager's owning player controller, or uses `WorldContextObject` to find a world and first player controller when no player camera manager is available.
+
+---
+
+#### ComputeLockOnAimPoint { #computelockonaimpoint }
+
+```cpp
+FVector ComputeLockOnAimPoint(const FVector & FollowPosition, const FVector & AimPosition, const FVector & CameraPosition, const FVector & CameraForward, float Radius, const FVector & Weights, const FVector2D & PitchRange, FComposableCameraLockOnAimPointState & State, float DeltaTime = 0.f, float BlendOutTime = 0.f)
+```
+
+Computes a stable virtual aim point for lock-on composition. When the follow and aim points are closer than `Radius` in horizontal projection, the helper adds a weighted blend of pitch-preserving, camera-to-aim, and camera-forward offsets to the raw aim point. When the pair leaves the radius, the previous correction offset blends back to zero over `BlendOutTime`.
 
 ---
 

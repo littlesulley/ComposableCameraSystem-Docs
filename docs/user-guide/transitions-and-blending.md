@@ -19,6 +19,10 @@ The plugin ships a set of built-in transition classes. Rough guidance:
 
 See the [Reference → Transitions](../reference/transitions.md) catalog for the full list including per-parameter defaults.
 
+### Rotation path stability
+
+Built-in transitions keep the source-to-target rotation path chosen on the first evaluation frame. The source and target cameras are still evaluated live every frame, so input and target movement continue to affect the blend, but those later endpoint rotations are treated as offsets on top of the original path. This avoids a visible flip when a moving endpoint would otherwise make a transition pick a new shortest rotation path halfway through the blend.
+
 ### Choosing duration
 
 A few rules of thumb:

@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-16 - plugin `3376bb6..6a7fe1d`
+
+**Plugin commits processed:** `b277032` (`feat: add pivot look-ahead node`), `803213e` (`docs: design lock-on aim point node`), `ddc176b` (`Add lock-on aim point node`), `0ded747` (`Fix fixed-step IIR interpolation`), and `6a7fe1d` (`Lock transition rotation blend paths`). Fetch/pull was attempted first for both repositories; the plugin fetch/pull remains blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and Documentation fetch remains blocked by unavailable GitHub network access in this sandbox.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed locally, so affected pages were updated manually. Added generated-style API pages for `UComposableCameraLockOnAimPointNode` and `FComposableCameraLockOnAimPointState`, linked them from the API index/nav, added `EComposableCameraLockOnAimPointSource`, documented `ComposableCameraSystem::ComputeLockOnAimPoint`, refreshed `UComposableCameraTransitionBase` for locked rotation-path helpers/state, and clarified `UComposableCameraIIRInterpolator::bUseFixedStep`.
+
+**Prose updates:** expanded the Node Catalog with `LockOnAimPointNode`, updated Actor Input Sources for the node's follow/aim actor selectors, added `CCS.Debug.Viewport.LockOnAimPoint` to debugging references, and documented built-in transition rotation path locking in the transition concept, user guide, catalog, and custom-transition extension recipe.
+
+**New-feature documentation decision:** `LockOnAimPointNode` is a designer-facing Pivot node and fits the existing Node Catalog, Actor Input Sources reference, Debugging guide, and API reference rather than a standalone tutorial. Transition rotation-path locking and the fixed-step IIR correction are behavior refinements to existing systems, so they were documented in transition/interpolator references instead of new pages.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `python -m mkdocs build` passed. Push/remote freshness follow-up remains required because the sandbox cannot reach GitHub and the plugin repo cannot update `FETCH_HEAD`.
+
+---
+
 ## 2026-05-15 - plugin `3376bb6` + local workspace changes
 
 **Plugin changes processed:** `.last-documented-sha` already matched local plugin HEAD `3376bb6`, but the working tree contains an uncommitted public-header/source addition for `UComposableCameraPivotLookAheadNode` plus local internal-doc edits and a camera preset asset. Fetch/pull was attempted first for both repositories; the plugin fetch was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and Documentation fetch was blocked by unavailable GitHub network access in this sandbox.

@@ -14,7 +14,7 @@ IIR interpolator.
 | Return | Name | Description |
 |--------|------|-------------|
 | `float` | [`Speed`](#speed-1)  |  |
-| `bool` | [`bUseFixedStep`](#busefixedstep-1)  |  |
+| `bool` | [`bUseFixedStep`](#busefixedstep-1)  | Substep the interpolation at 120 Hz and linearly advance the target across the frame. |
 
 ---
 
@@ -31,3 +31,5 @@ float Speed = 1.f
 ```cpp
 bool bUseFixedStep = true
 ```
+
+When true, `TIIRInterpolator` substeps the frame at 120 Hz and linearly advances from the previous target value to the current target value across those substeps. This keeps fixed-step smoothing stable while still following a moving target instead of repeatedly chasing only the final target for the whole frame.

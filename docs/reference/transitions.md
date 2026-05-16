@@ -9,6 +9,8 @@ Every transition inherits from `UComposableCameraTransitionBase`, which provides
 
 The `OnEvaluate` contract is the same across every subclass: receive live source and target poses plus a normalized `Percentage` in `[0, 1]`, return the blended pose.
 
+Built-in transitions now lock the rotation path chosen on their first evaluation frame. Source and target poses still update live every frame, but later endpoint rotation changes are accumulated as source/target offsets and faded by the current blend weight. This prevents a moving source or target from making the blend recalculate a different shortest rotation path mid-transition. `CylindricalTransition` uses the same locked path unless `bLockToPivot` is enabled, in which case it explicitly looks at the derived pivot.
+
 ## `LinearTransition`
 
 Straight linear interpolation of position and rotation. `Lerp(source, target, Percentage)`.

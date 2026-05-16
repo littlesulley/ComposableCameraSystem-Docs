@@ -164,6 +164,7 @@ nav:
             - 'UComposableCameraImpulseResolutionNode': reference/api/nodes/UComposableCameraImpulseResolutionNode.md
             - 'UComposableCameraLensNode': reference/api/nodes/UComposableCameraLensNode.md
             - 'UComposableCameraLookAtNode': reference/api/nodes/UComposableCameraLookAtNode.md
+            - 'UComposableCameraLockOnAimPointNode': reference/api/nodes/UComposableCameraLockOnAimPointNode.md
             - 'UComposableCameraMixingCameraNode': reference/api/nodes/UComposableCameraMixingCameraNode.md
             - 'UComposableCameraOcclusionFadeNode': reference/api/nodes/UComposableCameraOcclusionFadeNode.md
             - 'UComposableCameraOrthographicNode': reference/api/nodes/UComposableCameraOrthographicNode.md
@@ -259,6 +260,7 @@ nav:
             - 'FComposableCameraInternalVariable': reference/api/structs/FComposableCameraInternalVariable.md
             - 'FComposableCameraLogCapture': reference/api/structs/FComposableCameraLogCapture.md
             - 'FComposableCameraLogEntry': reference/api/structs/FComposableCameraLogEntry.md
+            - 'FComposableCameraLockOnAimPointState': reference/api/structs/FComposableCameraLockOnAimPointState.md
             - 'FComposableCameraMixingCameraNodeCameraDefinition': reference/api/structs/FComposableCameraMixingCameraNodeCameraDefinition.md
             - 'FComposableCameraModifierData': reference/api/structs/FComposableCameraModifierData.md
             - 'FComposableCameraNearestPointsOnRaysResult': reference/api/structs/FComposableCameraNearestPointsOnRaysResult.md

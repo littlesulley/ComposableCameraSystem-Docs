@@ -32,6 +32,12 @@ Velocity-aware transitions — inertialization, path-guided, any custom physical
 
 Transitions that don't care about velocity (linear, cubic, smooth) can ignore InitParams entirely.
 
+## Locked rotation paths
+
+Built-in transitions lock the first-frame source-to-target rotation delta before they call their concrete blend logic. They still receive live source and target poses every frame, but rotation changes after the transition starts are accumulated as endpoint offsets and faded by the current source/target blend weights. This keeps a moving source or target from forcing the transition to recalculate a new shortest rotation path midway through the blend.
+
+Custom transitions that use the base helper `BlendPosesByLockedRotationPath(Source, Target, Alpha)` get the same behavior while preserving the normal `FComposableCameraPose::BlendBy` rules for FOV, projection, physical camera fields, and post-process blending.
+
 ## The five-tier resolution chain
 
 When the PCM is asked to switch from camera A (built from `SourceTypeAsset`) to camera B (built from `TargetTypeAsset`), it needs to pick **which transition to run**. `AComposableCameraPlayerCameraManager::ResolveTransition` walks a five-tier priority chain; the first tier that produces a non-null transition wins.

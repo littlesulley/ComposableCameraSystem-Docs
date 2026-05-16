@@ -24,6 +24,7 @@ When a source field is set to `ControllerControlledPawn`, the matching explicit 
 | `OcclusionFadeNode` | `PivotActorSource` | `PivotActor` |
 | `PivotOffsetNode` | `ActorForLocalSpaceSource` | `ActorForLocalSpace` |
 | `PivotLookAheadNode` | `VelocityActorSource` | `VelocityActor` |
+| `LockOnAimPointNode` | `FollowActorSource`, `AimActorSource` | `FollowActor`, `AimActor` |
 | `PivotRotateNode` | `PivotActorSource` | `PivotActor` |
 | `RelativeFixedPoseNode` | `RelativeActorSource` | `RelativeActor` |
 | `RotationConstraints` | `ActorForYawConstrainSource`, `ActorForPitchConstrainSource` | `ActorForYawConstrain`, `ActorForPitchConstrain` |

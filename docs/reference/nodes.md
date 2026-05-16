@@ -53,6 +53,25 @@ Enable `CCS.Debug.Viewport.PivotLookAhead 1` to draw the predicted pivot as an o
 
 **C++ reference:** [`UComposableCameraPivotLookAheadNode`](api/nodes/UComposableCameraPivotLookAheadNode.md)
 
+### `LockOnAimPointNode`
+
+Builds a stable virtual aim point for lock-on camera composition. Use it in a two-pivot lock-on setup where one `ScreenSpacePivotNode` frames the player/follow pivot and a second `ScreenSpacePivotNode` frames the lock target.
+
+The node reads a follow point and a raw aim point, then outputs a corrected `PivotPosition` for the second screen-space pivot. When the follow point and aim point become too close in horizontal projection, the node pushes the aim point outward with a blend of three terms: pitch-preserving, camera-to-aim, and camera-forward. This avoids the near-degenerate framing case where enforcing the lock target's screen position can cause very fast camera rotation.
+
+Both the follow and aim points can come from either world-space vectors or actors. In actor mode, `FollowActorSource` and `AimActorSource` can resolve explicit actors or the controller-controlled pawn, and the world-up offset fields lift each point from the actor origin to chest/head height. `Radius` controls when correction activates, `PitchRange` clamps the pitch-preserving term, `Weights` controls the three correction terms directly, and `BlendOutTime` fades the previous correction back to the raw aim point after the pair leaves the radius.
+
+Recommended chain:
+
+```text
+ReceivePivotActor(Player) -> PivotOffset(Player) -> ScreenSpacePivot #1
+ReceivePivotActor(Target) -> PivotOffset(Target) -> LockOnAimPoint -> ScreenSpacePivot #2
+```
+
+Enable `CCS.Debug.Viewport.LockOnAimPoint 1` to draw the corrected aim point as a blue in-world sphere. During correction and F8 eject, the gizmo also draws the raw-to-corrected aim line.
+
+**C++ reference:** [`UComposableCameraLockOnAimPointNode`](api/nodes/UComposableCameraLockOnAimPointNode.md)
+
 ### `PivotDampingNode`
 
 Dampens pivot position changes using an Instanced interpolator (IIR, simple spring, or spring-damper). Smooths out jittery or teleport-style pivot updates — for example, when the pivot is bound to a character whose root bone snaps during a montage.

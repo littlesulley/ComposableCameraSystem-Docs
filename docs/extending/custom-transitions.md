@@ -56,7 +56,7 @@ FComposableCameraPose UMyEaseTransition::OnEvaluate_Implementation(
     const FComposableCameraPose& CurrentTargetPose)
 {
     const float T = FMath::Pow(GetPercentage(), Exponent);
-    return FComposableCameraPose::BlendBy(CurrentSourcePose, CurrentTargetPose, T);
+    return BlendPosesByLockedRotationPath(CurrentSourcePose, CurrentTargetPose, T);
 }
 ```
 
@@ -106,9 +106,9 @@ A frequent source of confusion: `CurrentSourcePose` and `CurrentTargetPose` pass
 
 ## The pose-blend helper
 
-`FComposableCameraPose::BlendBy(Source, Target, t)` handles location, rotation (quaternion slerp), FOV, focal length, aperture, and all the other lens fields in one call. Prefer it over manual field-by-field interpolation — it encodes the projection-mode snapping rule (ortho ↔ perspective snaps at `t=0.5`) and other contract details you don't want to reimplement.
+`BlendPosesByLockedRotationPath(Source, Target, t)` is the preferred base-class helper for ordinary pose blends. It delegates non-rotation fields to `FComposableCameraPose::BlendBy`, so FOV, projection-mode snapping, lens fields, and post-process blending stay consistent with the built-in transitions. It then writes rotation using the first-frame source-to-target path plus live endpoint offsets, preventing a moving endpoint from making the blend pick a different shortest path mid-transition.
 
-For full control (e.g. inertialization uses the result of a polynomial as the blend weight, not linear time), compute your `t` and hand it to `BlendBy`.
+For full control (e.g. inertialization uses the result of a polynomial as the blend weight, not linear time), compute your `t` and hand it to `BlendPosesByLockedRotationPath`. Use `FComposableCameraPose::BlendBy` directly only when your transition intentionally wants rotation to re-solve from the current source and target every frame.
 
 ## Wrapping another transition (the `DrivingTransition` pattern)
 
@@ -137,7 +137,7 @@ protected:
     {
         FComposableCameraPose Base = DrivingTransition
             ? DrivingTransition->Evaluate(Dt, S, T)
-            : FComposableCameraPose::BlendBy(S, T, GetPercentage());
+            : BlendPosesByLockedRotationPath(S, T, GetPercentage());
         return ApplyMyPostProcess(Base);
     }
 };
@@ -206,7 +206,7 @@ shape(t) = base(t) + bounce(t)
 
 At `t=0`, both terms are 0. At `t=1`, `base=1` and `bounce=0`, so shape reaches exactly 1. In the middle, the sine term pushes `shape` above 1 briefly — the overshoot.
 
-This is a scalar blend weight. Pass it to `FComposableCameraPose::BlendBy` and the per-field blending (position, rotation, FOV, lens) is handled for us.
+This is a scalar blend weight. Pass it to `BlendPosesByLockedRotationPath` and the per-field blending (position, rotation, FOV, lens) is handled for us while preserving the base class's locked rotation-path behavior.
 
 ### The class
 
@@ -258,7 +258,7 @@ FComposableCameraPose UComposableCameraBounceTransition::OnEvaluate_Implementati
         * FMath::Sin(PI * t * BounceFrequency);
 
     const float Shape = Base + Bounce;
-    return FComposableCameraPose::BlendBy(
+    return BlendPosesByLockedRotationPath(
         CurrentSourcePose, CurrentTargetPose, Shape);
 }
 ```

@@ -207,6 +207,14 @@ Compiled out in shipping builds.
 | `bool` | [`bFirstFrame`](#bfirstframe)  |  |
 | `FComposableCameraTransitionInitParams` | [`InitParams`](#initparams)  |  |
 | `float` | [`Percentage`](#percentage)  |  |
+| `FRotator` | [`InitialSourceRotation`](#initialsourcerotation) | Rotation captured from the source pose on the first evaluation frame. |
+| `FRotator` | [`InitialTargetRotation`](#initialtargetrotation) | Rotation captured from the target pose on the first evaluation frame. |
+| `FRotator` | [`InitialRotationDelta`](#initialrotationdelta) | Normalized first-frame source-to-target rotation delta. |
+| `FRotator` | [`PreviousSourceRotation`](#previoussourcerotation) | Source rotation seen on the previous evaluation frame. |
+| `FRotator` | [`PreviousTargetRotation`](#previoustargetrotation) | Target rotation seen on the previous evaluation frame. |
+| `FRotator` | [`AccumulatedSourceRotationOffset`](#accumulatedsourcerotationoffset) | Live source endpoint rotation offset accumulated after transition start. |
+| `FRotator` | [`AccumulatedTargetRotationOffset`](#accumulatedtargetrotationoffset) | Live target endpoint rotation offset accumulated after transition start. |
+| `bool` | [`bHasLockedRotationPathState`](#bhaslockedrotationpathstate) | True once the locked rotation path state has been initialized. |
 | `FString` | [`TransitionClassTraceName`](#transitionclasstracename)  | Cached `GetClass()->GetName()` populated lazily at first Evaluate and reused by per-evaluate `TRACE_CPUPROFILER_EVENT_SCOPE_STR` so the dynamic Insights label doesn't allocate an FString per evaluation. The class is per-instance immutable after construction, so the lazy populate runs once over the transition's lifetime. Non-UPROPERTY because it's transient diagnostic state, not data. |
 
 ---
@@ -259,6 +267,86 @@ float Percentage { 0.f }
 
 ---
 
+#### InitialSourceRotation { #initialsourcerotation }
+
+```cpp
+FRotator InitialSourceRotation { FRotator::ZeroRotator }
+```
+
+Rotation captured from the source pose on the first evaluation frame.
+
+---
+
+#### InitialTargetRotation { #initialtargetrotation }
+
+```cpp
+FRotator InitialTargetRotation { FRotator::ZeroRotator }
+```
+
+Rotation captured from the target pose on the first evaluation frame.
+
+---
+
+#### InitialRotationDelta { #initialrotationdelta }
+
+```cpp
+FRotator InitialRotationDelta { FRotator::ZeroRotator }
+```
+
+Normalized first-frame source-to-target rotation delta.
+
+---
+
+#### PreviousSourceRotation { #previoussourcerotation }
+
+```cpp
+FRotator PreviousSourceRotation { FRotator::ZeroRotator }
+```
+
+Source rotation seen on the previous evaluation frame.
+
+---
+
+#### PreviousTargetRotation { #previoustargetrotation }
+
+```cpp
+FRotator PreviousTargetRotation { FRotator::ZeroRotator }
+```
+
+Target rotation seen on the previous evaluation frame.
+
+---
+
+#### AccumulatedSourceRotationOffset { #accumulatedsourcerotationoffset }
+
+```cpp
+FRotator AccumulatedSourceRotationOffset { FRotator::ZeroRotator }
+```
+
+Live source endpoint rotation offset accumulated after transition start.
+
+---
+
+#### AccumulatedTargetRotationOffset { #accumulatedtargetrotationoffset }
+
+```cpp
+FRotator AccumulatedTargetRotationOffset { FRotator::ZeroRotator }
+```
+
+Live target endpoint rotation offset accumulated after transition start.
+
+---
+
+#### bHasLockedRotationPathState { #bhaslockedrotationpathstate }
+
+```cpp
+bool bHasLockedRotationPathState { false }
+```
+
+True once the locked rotation path state has been initialized.
+
+---
+
 #### TransitionClassTraceName { #transitionclasstracename }
 
 ```cpp
@@ -271,12 +359,64 @@ Cached `GetClass()->GetName()` populated lazily at first Evaluate and reused by 
 
 | Return | Name | Description |
 |--------|------|-------------|
+| `FComposableCameraPose` | [`BlendPosesByLockedRotationPath`](#blendposesbylockedrotationpath) `const` | Blend two poses while keeping the rotation path chosen when this transition started. |
+| `FRotator` | [`BlendRotationByLockedPath`](#blendrotationbylockedpath) `const` | Evaluate only the locked rotation path plus live endpoint offsets. |
+| `FRotator` | [`ApplyLiveRotationOffsetsToBaseRotation`](#applyliverotationoffsetstobaserotation) `const` | Apply live endpoint rotation offsets to a transition-specific base rotation. |
+| `const FRotator &` | [`GetInitialTargetRotation`](#getinitialtargetrotation) `const` `inline` | Return the first-frame target rotation captured for the locked path. |
 | `void` | [`OnBeginPlay`](#onbeginplay)  | Begin Play event. Called on the first frame of the transition, before the first OnEvaluate. <br/> |
 | `void` | [`OnBeginPlay_Implementation`](#onbeginplay_implementation) `virtual` `inline` |  |
 | `FComposableCameraPose` | [`OnEvaluate`](#onevaluate)  | Event to customize the evaluation function for each tick. When calling this function, RemainingTime has already been decremented, and assured to not go below 0. <br/> |
 | `FComposableCameraPose` | [`OnEvaluate_Implementation`](#onevaluate_implementation-1) `virtual` `inline` |  |
 | `void` | [`OnFinished`](#onfinished-1)  | Event when the transition finishes. The base class simply sets bFinished to true. |
 | `void` | [`DrawStandardTransitionDebug`](#drawstandardtransitiondebug) `const` | Shared helper that paints the canonical source / target / progress endpoint markers. Each concrete transition's override still needs to draw its OWN path polyline (straight line, arc, polynomial, spline, rail, etc.) on top of these markers — the helper is deliberately silent about path shape because that's per-transition-type. |
+
+---
+
+#### BlendPosesByLockedRotationPath { #blendposesbylockedrotationpath }
+
+`const`
+
+```cpp
+FComposableCameraPose BlendPosesByLockedRotationPath(const FComposableCameraPose & CurrentSourcePose, const FComposableCameraPose & CurrentTargetPose, float TargetWeight) const
+```
+
+Blend two poses while keeping the rotation path chosen when this transition started. Source and target poses are still evaluated live every frame. Any rotation movement that happens after the transition starts is accumulated as an endpoint offset and faded out/in by the same blend weight.
+
+---
+
+#### BlendRotationByLockedPath { #blendrotationbylockedpath }
+
+`const`
+
+```cpp
+FRotator BlendRotationByLockedPath(float TargetWeight) const
+```
+
+Evaluate only the locked rotation path plus live endpoint offsets.
+
+---
+
+#### ApplyLiveRotationOffsetsToBaseRotation { #applyliverotationoffsetstobaserotation }
+
+`const`
+
+```cpp
+FRotator ApplyLiveRotationOffsetsToBaseRotation(const FRotator & BaseRotation, float TargetWeight) const
+```
+
+Apply live endpoint rotation offsets to a transition-specific base rotation.
+
+---
+
+#### GetInitialTargetRotation { #getinitialtargetrotation }
+
+`const` `inline`
+
+```cpp
+inline const FRotator & GetInitialTargetRotation() const
+```
+
+Return the first-frame target rotation captured for the locked path.
 
 ---
 

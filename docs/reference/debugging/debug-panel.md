@@ -134,6 +134,7 @@ Per-node gizmos (all default 0):
 | `CCS.Debug.Viewport.Spline` | `SplineNode` |
 | `CCS.Debug.Viewport.PivotDamping` | `PivotDampingNode` |
 | `CCS.Debug.Viewport.PivotLookAhead` | `PivotLookAheadNode` |
+| `CCS.Debug.Viewport.LockOnAimPoint` | `LockOnAimPointNode` |
 
 ### Rendering pathway
 

@@ -112,6 +112,17 @@ enum EComposableCameraActorInputSource
 
 Shared selector used by camera nodes that can either target an explicit actor or automatically follow the controller-controlled pawn.
 
+#### EComposableCameraLockOnAimPointSource { #ecomposablecameralockonaimpointsource }
+
+```cpp
+enum EComposableCameraLockOnAimPointSource
+```
+
+| Value | Description |
+|-------|-------------|
+| `WorldPosition` | Point is a world-space FVector authored on the node or wired from upstream. |
+| `ActorPosition` | Point is derived from an actor's world location plus a world-up offset. |
+
 #### EComposableCameraBuildStatus { #ecomposablecamerabuildstatus }
 
 ```cpp
