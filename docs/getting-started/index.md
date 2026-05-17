@@ -24,3 +24,13 @@ ComposableCameraSystem is a **source plugin** — you compile it as part of your
 ## What you'll have at the end
 
 A project whose active camera is driven by a data asset you authored in the graph editor, and a Blueprint node you can call to activate it. From there the rest of the docs — the **User Guide**, **Tutorials**, and **Extending** sections — build on this foundation.
+
+## Open-Source and Demo
+
+This project is open-sourced at [github](https://github.com/littlesulley/ComposableCameraSystem). Feel free to download, fork and use it. PRs, issues and questions are welcome! 
+
+A simple demo project is available and can be downloaded at [google drive](https://drive.google.com/file/d/15tfMGTo7HvptKyLwlOwtDqn4Gr-tLGg0/view?usp=sharing). The demo version aligns with the lastest development branch at the github page.
+
+
+
+
