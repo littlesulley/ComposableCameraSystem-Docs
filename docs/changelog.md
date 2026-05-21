@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-21 - plugin `6a7fe1d..8b7fd10`
+
+**Plugin commits processed:** `689a379` (`Add GNU General Public License v3`), `59e698c` (`Update README`), `3e8df0f` (`Update`), `a85aa01` (`Add Fab copyright headers`), `ee812b6` (`Fix Fab unity build private symbol collisions`), `1d3fc90` (`Remove deprecated StructUtils dependency`), `8e7d96c` (`Remove null bytes from camera director header`), `2e5f525` (`Fix Fab review build issues`), `72d0da2` (`Remove concepts dependency from inertializer checks`), `478b473` (`Fix Fab compile compatibility with UE 5.7`), and `8b7fd10` (`Add Fab Page link to README`). Fetch/pull was attempted first for both repositories, but both were blocked by `cannot open '.git/FETCH_HEAD': Permission denied`; Documentation also had a pre-existing local newline-only edit in `docs/getting-started/enabling-plugin.md`, which was preserved.
+
+**C++ API reference:** public headers changed, mostly for copyright normalization, removing a stray `ComposableCameraDirector.h~`, replacing the inertializer helper's C++20 `requires` usage with type-trait static assertions, and renaming anonymous-namespace helpers to avoid Fab unity-build collisions. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed locally. No new public classes, functions, Blueprint/K2 nodes, camera nodes, transitions, modifiers, editor tools, or asset workflows were added in this range, so no generated-style API page content required a manual semantic update.
+
+**Prose updates:** added the Fab listing to the installation/getting-started path, updated engine support wording from UE 5.6-only to UE 5.6-or-newer with UE 5.7/Fab compatibility, refreshed the demo link wording from the README, and added FAQ troubleshooting for generated `Module.*.cpp` unity-build diagnostics and anonymous-namespace helper collisions.
+
+**New-feature documentation decision:** this range is release/distribution and build-compatibility maintenance rather than a new designer-facing feature. The new internal `Docs/FabUnityBuildTroubleshooting.md` content fits the existing FAQ/troubleshooting page instead of a standalone public guide; deleted content-browser icon files were moved under `Resources/Content`, so existing asset-icon wording remains valid.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the existing Mermaid CDN network warning in this sandbox; plain `python -m mkdocs build` passed. Commit/push status is tracked by the automation run summary.
+
+---
+
 ## 2026-05-16 - plugin `3376bb6..6a7fe1d`
 
 **Plugin commits processed:** `b277032` (`feat: add pivot look-ahead node`), `803213e` (`docs: design lock-on aim point node`), `ddc176b` (`Add lock-on aim point node`), `0ded747` (`Fix fixed-step IIR interpolation`), and `6a7fe1d` (`Lock transition rotation blend paths`). Fetch/pull was attempted first for both repositories; the plugin fetch/pull remains blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and Documentation fetch remains blocked by unavailable GitHub network access in this sandbox.

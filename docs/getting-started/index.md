@@ -29,8 +29,9 @@ A project whose active camera is driven by a data asset you authored in the grap
 
 This project is open-sourced at [github](https://github.com/littlesulley/ComposableCameraSystem). Feel free to download, fork and use it. PRs, issues and questions are welcome! 
 
-A simple demo project is available and can be downloaded at [google drive](https://drive.google.com/file/d/15tfMGTo7HvptKyLwlOwtDqn4Gr-tLGg0/view?usp=sharing). The demo version aligns with the lastest development branch at the github page.
+The Fab listing is available at [ComposableCameraSystem on Fab](https://www.fab.com/listings/7a7e0805-247c-4630-b961-791811c8ebbd).
 
+A simple demo project is available and can be downloaded at [Google Drive](https://drive.google.com/file/d/15tfMGTo7HvptKyLwlOwtDqn4Gr-tLGg0/view?usp=drive_link). The demo version aligns with the latest development branch on GitHub.
 
 
 

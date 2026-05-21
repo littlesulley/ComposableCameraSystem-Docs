@@ -25,9 +25,17 @@ Each of these is shipped with the engine, so you do not need to install anything
 
 ## Installing the plugin
 
-Choose **one** of the two options below.
+Choose **one** of the options below.
 
-### Option A — download and drop in
+### Option A - install from Fab
+
+The plugin is available on Fab:
+
+[ComposableCameraSystem on Fab](https://www.fab.com/listings/7a7e0805-247c-4630-b961-791811c8ebbd)
+
+Use this path if you want the marketplace-managed package and updates through Epic's launcher/Fab workflow. After installation, enable the plugin in your project and continue with [Regenerating project files](#regenerating-project-files) if your project needs IDE files refreshed.
+
+### Option B — download and drop in
 
 1. Download the plugin source from the [GitHub repository](https://github.com/littlesulley/ComposableCameraSystem) (either a release zip or a `git clone`).
 2. Extract it so that you have a folder named `ComposableCameraSystem` containing `ComposableCameraSystem.uplugin`.
@@ -44,7 +52,7 @@ Choose **one** of the two options below.
           └─ ...
     ```
 
-### Option B — Git submodule
+### Option C — Git submodule
 
 If your project is a Git repository and you want to stay up-to-date with the plugin's `dev-v1` branch:
 
@@ -76,7 +84,7 @@ Build the **Development Editor** configuration for the `Win64` (or your platform
 
 If the build fails, the most common causes are:
 
-- **Engine version mismatch** — the plugin targets UE 5.6. Check that your project's `EngineAssociation` in the `.uproject` is `5.6`.
+- **Engine version mismatch** — the plugin targets UE 5.6 or newer. Check that your project's `EngineAssociation` in the `.uproject` is `5.6` or later.
 - **Compiler mismatch** — Windows builds need the UE-blessed VS 2022 workload installed (see Epic's [Setting Up Visual Studio](https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-visual-studio-development-environment-for-cplusplus-projects-in-unreal-engine) guide).
 - **Missing transitive dependencies** — if you've customized your project to disable `EngineCameras`, `EnhancedInput`, or `ActorSequence`, re-enable them.
 
