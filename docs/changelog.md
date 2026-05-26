@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-05-25 - plugin `8b7fd10..21214d7`
+
+**Plugin commits processed:** `21214d7` (`Update README.md`). Fetch/pull was attempted first for both repositories, but both were blocked by `cannot open '.git/FETCH_HEAD': Permission denied`. The plugin working tree has a pre-existing local binary asset edit in `Content/CameraPresets/Preset_Cameras/Camera_BasicThirdPerson.uasset`, which was preserved.
+
+**C++ API reference:** no public headers changed in this range, so Doxygen/moxygen regeneration was not required and no generated API pages were touched.
+
+**Prose updates:** added the README's YouTube tutorial link to the Getting Started resource section. The docs home page already contained the tutorial link, so it did not need a new section.
+
+**New-feature documentation decision:** this range only adds an external tutorial resource link. It does not introduce a new code feature, node, transition, modifier, Blueprint/K2 node, editor tool, setting, console command, or asset workflow, so no new feature page was needed.
+
+**Validation / deployment:** `python -m mkdocs build --strict` reached content generation but was blocked by the sandbox's Mermaid CDN network warning; plain `python -m mkdocs build` passed. Commit and push status is tracked by the automation run summary.
+
+---
+
 ## 2026-05-21 - plugin `6a7fe1d..8b7fd10`
 
 **Plugin commits processed:** `689a379` (`Add GNU General Public License v3`), `59e698c` (`Update README`), `3e8df0f` (`Update`), `a85aa01` (`Add Fab copyright headers`), `ee812b6` (`Fix Fab unity build private symbol collisions`), `1d3fc90` (`Remove deprecated StructUtils dependency`), `8e7d96c` (`Remove null bytes from camera director header`), `2e5f525` (`Fix Fab review build issues`), `72d0da2` (`Remove concepts dependency from inertializer checks`), `478b473` (`Fix Fab compile compatibility with UE 5.7`), and `8b7fd10` (`Add Fab Page link to README`). Fetch/pull was attempted first for both repositories, but both were blocked by `cannot open '.git/FETCH_HEAD': Permission denied`; Documentation also had a pre-existing local newline-only edit in `docs/getting-started/enabling-plugin.md`, which was preserved.
