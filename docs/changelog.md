@@ -2,6 +2,20 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-06-01 - plugin `21214d7` audit
+
+**Plugin commits processed:** `.last-documented-sha` already matched local plugin HEAD `21214d7` (`Update README.md`), so there was no new local commit range to process. Fetch/pull was attempted first for both repositories; the plugin repo was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and the Documentation repo was blocked by unavailable GitHub HTTPS access from the sandbox. The plugin working tree still has the pre-existing local binary asset edit in `Content/CameraPresets/Preset_Cameras/Camera_BasicThirdPerson.uasset`, which was preserved.
+
+**C++ API reference:** no public headers changed since the last documented SHA, so Doxygen/moxygen regeneration was not required. Existing generated-style API prose was audited for stale Shot Editor / Shot Section wording.
+
+**Prose updates:** refreshed stale API text that still described LS Shot Section integration as a future Phase E workflow, clarified that the Shot Editor hook now serves runtime buttons and LS Shot Section context menus, and fixed a typo in the Shot-Based Keyframing tutorial.
+
+**New-feature documentation decision:** no new user-facing feature, node, transition, modifier, Blueprint/K2 node, editor tool, setting, console command, or asset workflow was found in this run. The changes are stale-doc cleanup only, so no new page was needed.
+
+**Validation / deployment:** validation and commit/push status are tracked by the automation run summary.
+
+---
+
 ## 2026-05-25 - plugin `8b7fd10..21214d7`
 
 **Plugin commits processed:** `21214d7` (`Update README.md`). Fetch/pull was attempted first for both repositories, but both were blocked by `cannot open '.git/FETCH_HEAD': Permission denied`. The plugin working tree has a pre-existing local binary asset edit in `Content/CameraPresets/Preset_Cameras/Camera_BasicThirdPerson.uasset`, which was preserved.

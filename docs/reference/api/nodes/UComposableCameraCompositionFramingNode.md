@@ -13,7 +13,7 @@ This is the consumer that connects the Phase B Shot data model to the camera eva
 
 ──** Authoring model (V1)**
 
-The Shot is authored fully in this node's Details panel inside the camera type asset. The struct contains a `TArray<FShotTarget>` which violates the pin data block's POD constraint (TechDoc §3.2), so it is NOT pin-exposable. Phase E's LS Shot Section integration will push Shot data via a separate runtime API (not pin wiring). `GetPinDeclarations` accordingly returns no pins — the node has no inputs to wire and no outputs to pipe; it OWNS the camera pose.
+The Shot is authored fully in this node's Details panel inside the camera type asset. The struct contains a `TArray<FShotTarget>` which violates the pin data block's POD constraint (TechDoc §3.2), so it is NOT pin-exposable. LS Shot Section integration pushes Shot data via a separate runtime API (not pin wiring). `GetPinDeclarations` accordingly returns no pins — the node has no inputs to wire and no outputs to pipe; it OWNS the camera pose.
 
 ──** Behavior**
 

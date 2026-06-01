@@ -74,7 +74,7 @@ It should look like this if you finish:
 ![[assets/images/Pasted image 20260512143845.png]]
 ## 2. Add a Shot Track
 
-In Sequencer, clike the **+ button** on the track to create a **Composable Camera Shot Track**. The track is binding-scoped, not root-level, so it only
+In Sequencer, click the **+ button** on the track to create a **Composable Camera Shot Track**. The track is binding-scoped, not root-level, so it only
 appears under `AComposableCameraLevelSequenceActor` and subclasses.
 
 ![[assets/images/Pasted image 20260512144009.png]]
