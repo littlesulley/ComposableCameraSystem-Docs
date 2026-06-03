@@ -42,7 +42,7 @@ Key entry points (also exposed via Blueprint through `UK2Node_AddCameraPatch` / 
 |---|---|
 | `AddPatch(Asset, Params, ParameterBlock)` | Activate a patch. Returns a `UComposableCameraPatchHandle`. Rejects null asset and invalid Duration. Sorted-inserts by `(LayerIndex asc, PushSequence asc)`. |
 | `ExpirePatch(Handle, ExitDurationOverride)` | Manually retire a patch (Manual expiration channel). |
-| `Apply(DeltaTime, InputPose)` | Per-frame application pass. Returns the blended output pose. *(Stage 1: no-op. Stage 2 wires this into `Director::Evaluate`.)* |
+| `Apply(DeltaTime, InputPose)` | Per-frame application pass. Advances patch envelopes, checks expiration, ticks evaluator cameras with the upstream pose, and returns the blended output pose. |
 | `DestroyAll()` | Synchronous teardown — no exit blend. Called on context pop and director destroy. |
 | `ExpireAll(ExitDurationOverride)` | Soft expire all active patches via the normal envelope ramp. |
 | `ApplyParameterBlockToActivePatch(Handle, Block)` | Per-frame parameter re-sync (used by Sequencer track instance). |

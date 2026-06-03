@@ -1,6 +1,6 @@
 # Debugging
 
-CCS ships four distinct debug surfaces that complement each other rather than duplicate. Understanding what each one covers helps you reach for the right tool instead of hunting through them all.
+CCS ships five distinct debug surfaces that complement each other rather than duplicate. Understanding what each one covers helps you reach for the right tool instead of hunting through them all.
 
 | Tool                                                      | How to activate                                 | Best for                                                                             |
 | --------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ |
@@ -8,12 +8,21 @@ CCS ships four distinct debug surfaces that complement each other rather than du
 | [Debug Panel](#debug-panel-ccsdebugpanel)                 | Console: `CCS.Debug.Panel 1`                    | Always-on live readout — sparklines, tree glyph rendering, inline warnings           |
 | [Viewport Debug](#viewport-debug-ccsdebugviewport)        | Console: `CCS.Debug.Viewport 1`                 | 3D in-world gizmos — frustum, per-node overlays visible during F8 eject              |
 | [Dump Commands](#dump-commands-ccsdump)                   | Console: `CCS.Dump.Stack` / `.Tree` / `.Camera` | One-shot text snapshots to Output Log + clipboard; ideal for bug reports and diffing |
+| [Runtime Previewer](#runtime-previewer)                   | Camera Type Asset Editor: **Window -> Runtime Previewer** | Live PIE pawn/camera relationship in a docked editor viewport |
 
 ![[assets/images/Pasted image 20260423100456.png]]
 
-All four surfaces read from the same runtime state — snapshots produced by `BuildDebugSnapshot` on the context stack, director, and evaluation tree. They stay in lockstep automatically.
+All runtime debug surfaces read from the same runtime state — snapshots produced by `BuildDebugSnapshot` on the context stack, director, and evaluation tree. They stay in lockstep automatically.
 
-None of this costs anything in Shipping builds. The Debug Panel, Viewport Debug, and Dump Commands are all gated `#if !UE_BUILD_SHIPPING`. `showdebug camera` routes through `DisplayDebug`, which Unreal strips in Shipping by default.
+None of this costs anything in Shipping builds. The Debug Panel, Viewport Debug, Dump Commands, and editor-only Runtime Previewer are all gated away from Shipping builds. `showdebug camera` routes through `DisplayDebug`, which Unreal strips in Shipping by default.
+
+## Runtime Previewer
+
+The Runtime Previewer is a dock tab inside the Camera Type Asset editor. Open it from **Window -> Runtime Previewer** while editing a camera type asset, start PIE, then use the editor toolbar's **Debug** picker to bind a matching runtime camera instance.
+
+The previewer keeps the controlled pawn fixed around the preview origin and draws the live game camera as a pawn-relative marker with a frustum, movement arrow, FOV, context name, and status text. It is meant for debugging camera-to-character spatial relationships: whether the boom is drifting, whether a lock-on camera sits where you expect relative to the pawn, and whether the runtime view matches the graph debug data.
+
+Mouse input inside the Runtime Previewer controls only the tab's observer viewport. It never moves the PIE pawn, never drives the runtime camera, and does not change the camera evaluation result. When a skeletal pawn is available, the preview scene mirrors the live skeletal pose into an editor-only proxy; otherwise it falls back to a simple pawn marker and still draws camera relation data when possible.
 
 ## Debug Panel (`CCS.Debug.Panel`)
 

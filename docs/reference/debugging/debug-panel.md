@@ -4,6 +4,27 @@ Technical reference for the CCS debug tools introduced alongside `showdebug came
 
 ---
 
+## Runtime Previewer
+
+The Runtime Previewer is an editor-only `SEditorViewport` dock tab registered by the Camera Type Asset editor. Open it from **Window -> Runtime Previewer**. It is created lazily, so projects that never open the tab pay no Slate or preview-scene cost.
+
+The tab consumes the same runtime camera binding as the editor toolbar **Debug** picker. During PIE, the toolkit polls the bound camera's `SnapshotDebugState()`, resolves the owning player camera manager and controlled pawn, then sends a compact preview payload to the viewport. The preview payload contains final camera pose, FOV, context name, active-camera flag, subject transform, and pawn velocity.
+
+The viewport owns an `FAdvancedPreviewScene` and an editor-only observer camera. It draws the controlled pawn near the preview origin, mirrors skeletal pose into a transient preview proxy when a compatible skeletal mesh exists, falls back to static/fallback mesh proxies otherwise, and draws the runtime camera marker, frustum, and movement direction in subject-relative space. Mouse input only manipulates the observer view; it never writes back to the PIE pawn or runtime camera.
+
+Empty states are explicit:
+
+| Status | Meaning |
+|---|---|
+| `NoPIE` | PIE/SIE is not running. |
+| `NoCamera` | No matching camera is selected or the selected camera has no valid snapshot yet. |
+| `NoPawn` | The bound runtime camera cannot resolve a controlled pawn. |
+| `Live` | Pawn proxy and camera relation are updating from the bound runtime camera. |
+
+The widget releases preview actors before its preview scene is destroyed. Runtime Previewer code lives in the editor module and is not present in cooked builds.
+
+---
+
 ## Debug Panel (`FComposableCameraDebugPanel`)
 
 ### Activation

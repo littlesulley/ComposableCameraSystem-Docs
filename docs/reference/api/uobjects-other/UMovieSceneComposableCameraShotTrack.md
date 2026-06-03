@@ -7,13 +7,13 @@
 
 > **Inherits:** `UMovieSceneNameableTrack`
 
-Sequencer track that drives Composable Camera Shots — Phase E of Shot-Based Keyframing.
+Sequencer track that drives Composable Camera Shots.
 
 Each section on the track represents one Shot activation window in the timeline. The active Shot's data (`[FComposableCameraShot](../structs/FComposableCameraShot.md#fcomposablecamerashot)`) is pushed every frame into the bound `[AComposableCameraLevelSequenceActor](../actors/AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor)`'s internal `[UComposableCameraCompositionFramingNode::Shot](../nodes/UComposableCameraCompositionFramingNode.md#shot-2)` UPROPERTY by the `UMovieSceneComposableCameraShotTrackInstance` — so the runtime CCS pipeline runs unchanged (TickCamera evaluates the framing node, the solver builds a pose, the LS Component projects it to the CineCamera).
 
 **Track binding model**
 
-Bound under an `[AComposableCameraLevelSequenceActor](../actors/AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor)` (or subclass — notably the Phase E `[AComposableCameraLevelSequenceShotActor](../actors/AComposableCameraLevelSequenceShotActor.md#acomposablecameralevelsequenceshotactor)`) binding row, NOT root-level. The track has no `TargetActorBinding` field — its parent in the outliner is the binding it drives. The track editor (Phase E.4) surfaces the menu entry only when the binding's class matches.
+Bound under an `[AComposableCameraLevelSequenceActor](../actors/AComposableCameraLevelSequenceActor.md#acomposablecameralevelsequenceactor)` or subclass such as `[AComposableCameraLevelSequenceShotActor](../actors/AComposableCameraLevelSequenceShotActor.md#acomposablecameralevelsequenceshotactor)`, not at the root level. The track has no `TargetActorBinding` field; its parent in the outliner is the binding it drives. The track editor surfaces the menu entry only when the binding's class matches.
 
 **Multi-row + overlap semantics**
 

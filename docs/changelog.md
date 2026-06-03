@@ -2,6 +2,22 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-06-03 - plugin `21214d7..3b8d32e`
+
+**Plugin commits processed:** `980a164` (`Refactor CCS documentation`), `0485a37` (`Refine source comments`), `a4fe570` (`Add runtime previewer window design spec`), `8ff0692` (`Add runtime previewer implementation plan`), `cf0c814` (`Add runtime previewer to camera type editor`), and `3b8d32e` (`Fix runtime previewer transform sync`). Fetch/pull was attempted first for both repositories; the plugin repo was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and the Documentation repo was blocked by unavailable GitHub HTTPS access from the sandbox. Documentation still had the previous local commit ahead of `origin/main`, which was preserved.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because `doxygen` and `moxygen` are not installed in this environment, so affected generated-style API pages were refreshed manually for current PatchManager / PatchInstance runtime behavior, Director `GetPatchManager`, Shot track overlap semantics, Sequencer shot-entry blending, and screen-zone solver wording.
+
+**Prose updates:** documented the new Runtime Previewer in the Camera Type Asset authoring guide, the debugging user guide, and the debugging reference. Updated the Camera Patch catalog so `Apply` is described as the live evaluator/envelope pass rather than a staged no-op.
+
+**New-feature documentation decision:** the Runtime Previewer is an editor debugging workflow tied to Camera Type Asset authoring and the existing Debug picker, so it was added to the existing authoring/debugging pages instead of creating a standalone page. No new camera node, transition, modifier, Blueprint/K2 node, project setting, console command, or asset type needed a separate public page in this range.
+
+**Stale-doc fixes / follow-up:** removed stale Stage 1 / Phase E/F / V1 wording from the touched API pages. Manual follow-up remains to regenerate the full C++ API reference when Doxygen/moxygen are available and to verify/push once repository/network blockers are cleared.
+
+**Validation / deployment:** validation and commit/push status are tracked by the automation run summary.
+
+---
+
 ## 2026-06-01 - plugin `21214d7` audit
 
 **Plugin commits processed:** `.last-documented-sha` already matched local plugin HEAD `21214d7` (`Update README.md`), so there was no new local commit range to process. Fetch/pull was attempted first for both repositories; the plugin repo was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and the Documentation repo was blocked by unavailable GitHub HTTPS access from the sandbox. The plugin working tree still has the pre-existing local binary asset edit in `Content/CameraPresets/Preset_Cameras/Camera_BasicThirdPerson.uasset`, which was preserved.

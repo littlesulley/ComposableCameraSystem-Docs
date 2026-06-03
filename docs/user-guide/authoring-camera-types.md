@@ -130,6 +130,12 @@ The aim camera is typically pushed onto a `Aim` context (see [Context Stack](con
 
 Open the type asset, select the empty canvas (so the Details panel shows the type asset itself), and find the **Transition** section. Populate `EnterTransition` with an instanced transition object — `InertializedTransition` is a good default for most gameplay cameras, with `TransitionDuration` around 0.3–0.6 seconds. See [Transitions & Blending](transitions-and-blending.md) for how this interacts with the rest of the resolution chain.
 ![[assets/images/Pasted image 20260416223540.png]]
+## Runtime Previewer
+
+When the asset is running in PIE, open **Window -> Runtime Previewer** from the Camera Type Asset editor to inspect the live pawn/camera relationship in a docked preview viewport. The tab uses the same toolbar **Debug** picker as graph debug overlays, so bind a matching runtime camera instance first.
+
+The previewer keeps the controlled pawn around the preview origin, mirrors skeletal pose when possible, and draws the runtime camera marker, frustum, movement arrow, FOV, context name, and active-camera state relative to that pawn. Dragging in the previewer only moves the editor observer camera; it does not move the PIE pawn or change the runtime camera result.
+
 ## Saving and building
 
 Saves are standard `Ctrl+S`. On save, the editor runs a **Build** pass that validates the graph: checks for missing exec wires, type mismatches on data pins, orphaned exposed-parameter entries, and so on. The **Build Messages** tab at the bottom of the editor shows results. A warning here doesn't block the save, but a red error does — fix the error before relying on the asset at runtime.

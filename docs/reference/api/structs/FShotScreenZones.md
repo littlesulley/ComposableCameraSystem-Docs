@@ -7,7 +7,7 @@
 
 Cinemachine-style screen-space framing zones for an anchor's screen position constraint. The zone is a pair of nested rectangles **centered on `ScreenPosition`** (NOT on the anchor's projected position) — the anchor "floats" inside the zone, its projection drifts relative to ScreenPosition while the camera holds, and the solver pulls it back when it strays.
 
-When `bEnabled == false` the solver runs the V1 hard-constraint path (anchor lands exactly at `ScreenPosition` every frame). When `bEnabled == true` the solver:
+When `bEnabled == false` the solver runs the hard-constraint path, solving the anchor toward `ScreenPosition` every frame. When `bEnabled == true` the solver:
 
 1. projects the anchor through `LastOutputPose` to read its current screen position;
 
@@ -17,7 +17,7 @@ When `bEnabled == false` the solver runs the V1 hard-constraint path (anchor lan
 
 1. clamps the post-damping offset to the soft-zone padding rectangle (hard limit — anchor never leaves soft zone, no damping on the clamp);
 
-1. feeds the resulting effective screen target into the V1 closed- form / Picard solver.
+1. feeds the resulting effective screen target into the closed-form / decoupled placement solver.
 
 One struct, two attachment sites — `[FShotAim::AimZones](FShotAim.md#aimzones)` (always applies when AimMode == LookAtAnchor) and `[FShotPlacement::PlacementZones](FShotPlacement.md#placementzones)` (only consumed in `AnchorAtScreen` placement; ignored by `AnchorOrbit` because that mode does not author a `Placement.ScreenPosition`).
 
@@ -31,7 +31,7 @@ Per-side soft padding must be `>=` matching dead padding (Soft is the outer rect
 
 | Return | Name | Description |
 |--------|------|-------------|
-| `bool` | [`bEnabled`](#benabled)  | Master switch. `false` = V1 hard-constraint path (every frame the anchor is solved to land exactly at `ScreenPosition` — closed-form for `LookAtAnchor`, Picard for `AnchorAtScreen + LookAtAnchor`). `true` = pose-state-aware Cinemachine-style damped framing described above. Default `false` for V1 backward compatibility. |
+| `bool` | [`bEnabled`](#benabled)  | Master switch. `false` = hard-constraint path: closed-form for `LookAtAnchor`, decoupled placement for `AnchorAtScreen + LookAtAnchor`. `true` = pose-state-aware Cinemachine-style damped framing described above. Default `false` for backward compatibility. |
 | `FShotScreenZonePadding` | [`DeadZone`](#deadzone)  | Inner rectangle (per-side padding from ScreenPosition). Anchor inside this rect = camera does not adjust. Default 0.1 each side = 20% × 20% rect when zones are symmetric. |
 | `FShotScreenZonePadding` | [`SoftZone`](#softzone)  | Outer rectangle (per-side padding from ScreenPosition). Anchor is hard-clamped to never leave this rect. Each side must be `>=` matching dead-zone padding (drag handler enforces; solver also defensively clamps). |
 | `float` | [`HorizontalSpeed`](#horizontalspeed)  | Horizontal damping speed (`FMath::FInterpTo` Speed semantics) — higher = snappier, `0` = instant snap to zone boundary. |
@@ -45,7 +45,7 @@ Per-side soft padding must be `>=` matching dead padding (Soft is the outer rect
 bool bEnabled = false
 ```
 
-Master switch. `false` = V1 hard-constraint path (every frame the anchor is solved to land exactly at `ScreenPosition` — closed-form for `LookAtAnchor`, Picard for `AnchorAtScreen + LookAtAnchor`). `true` = pose-state-aware Cinemachine-style damped framing described above. Default `false` for V1 backward compatibility.
+Master switch. `false` = hard-constraint path: closed-form for `LookAtAnchor`, decoupled placement for `AnchorAtScreen + LookAtAnchor`. `true` = pose-state-aware Cinemachine-style damped framing described above. Default `false` for backward compatibility.
 
 ---
 

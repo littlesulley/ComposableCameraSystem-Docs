@@ -9,9 +9,7 @@
 
 Runtime per-Patch state, owned by [UComposableCameraPatchManager](UComposableCameraPatchManager.md#ucomposablecamerapatchmanager).
 
-Holds the source asset reference, the Patch evaluator camera actor (Stage 2+), resolved layer / push-sequence for ordering, schedule fields, envelope state, cached parameter block for evaluator (re)construction, and a back-link to the user-facing handle.
-
-Stage 1 note: Evaluator stays nullptr; PatchManager::Apply does not tick anything yet. The envelope state is populated to "Entering, alpha 0" at construction but is not advanced — Stage 3 adds AdvanceEnvelope. All bookkeeping fields are valid as soon as AddPatch returns so debug HUD / introspection work end-to-end.
+Holds the source asset reference, evaluator camera actor, layer / push-sequence ordering, schedule fields, envelope state, cached parameter block, and back-link to the user-facing handle.
 
 ### Public Attributes
 
@@ -19,7 +17,7 @@ Stage 1 note: Evaluator stays nullptr; PatchManager::Apply does not tick anythin
 |--------|------|-------------|
 | `TObjectPtr< UComposableCameraPatchTypeAsset >` | [`SourcePatchAsset`](#sourcepatchasset)  | Source patch asset. |
 | `FString` | [`PatchAssetTraceName`](#patchassettracename)  | Cached `Asset->GetName()` populated at AddPatch time. Reused by the per-Apply `TRACE_CPUPROFILER_EVENT_SCOPE_STR` so the dynamic Insights label doesn't allocate an FString per patch per frame. The asset identity is immutable for the lifetime of the instance, so we compute it once when the instance is constructed. |
-| `TObjectPtr< AComposableCameraCameraBase >` | [`Evaluator`](#evaluator)  | The Patch's own camera-actor evaluator. Stage 2+: spawned by AddPatch via [UE::ComposableCameras::ConstructCameraFromTypeAsset](../free-functions/Functions.md#constructcamerafromtypeasset). Stage 1: always nullptr. |
+| `TObjectPtr< AComposableCameraCameraBase >` | [`Evaluator`](#evaluator)  | Patch evaluator camera spawned by AddPatch and built from the patch asset. |
 | `int32` | [`LayerIndex`](#layerindex)  | Effective composition order. Resolved from the asset default and the per-AddPatch override (Params.bOverrideLayerIndex true → use Params.LayerIndex). |
 | `int32` | [`PushSequence`](#pushsequence)  | Monotonic insertion sequence — tiebreaker for equal LayerIndex. Older first. |
 | `uint8` | [`ExpirationType`](#expirationtype-1)  | Bitmask of EComposableCameraPatchExpirationType channels that may fire. |
@@ -33,7 +31,7 @@ Stage 1 note: Evaluator stays nullptr; PatchManager::Apply does not tick anythin
 | `float` | [`ElapsedTimeActive`](#elapsedtimeactive)  | Cumulative time spent in the Active phase (used by the Duration channel). |
 | `float` | [`CurrentAlpha`](#currentalpha)  |  |
 | `float` | [`ExitStartAlpha`](#exitstartalpha)  | The CurrentAlpha at the moment Phase flipped to Exiting. The exit ramp scales the eased curve by this value so a Patch retired mid-Entering fades out from wherever it had reached, instead of popping to 1 first. Stays at 1 by default for the common case (Active → Exiting transition). |
-| `FComposableCameraParameterBlock` | [`CachedParameters`](#cachedparameters)  | Cached parameter block from AddPatch. Used by Stage 2's ConstructCameraFromTypeAsset call and any future re-construction (e.g. in response to modifier changes). |
+| `FComposableCameraParameterBlock` | [`CachedParameters`](#cachedparameters)  | Latest parameter block applied to the evaluator. |
 | `TWeakObjectPtr< AComposableCameraCameraBase >` | [`RunningCameraAtAdd`](#runningcameraatadd)  | RunningCamera observed on the owning Director at AddPatch time. When bExpireOnCameraChange is true, the schedule check compares this against the Director's current RunningCamera each frame and flips the Patch to Exiting if they differ (per-patch tracking — a Patch born during camera A never treats its own birth as a "change"). |
 | `TWeakObjectPtr< UComposableCameraPatchHandle >` | [`Handle`](#handle)  | Back-link to the user-facing handle. Weak — the handle can be released by the caller while the instance is still alive (the instance keeps running until expiration; the caller has just opted out of further handle queries). |
 
@@ -68,7 +66,7 @@ Cached `Asset->GetName()` populated at AddPatch time. Reused by the per-Apply `T
 TObjectPtr< AComposableCameraCameraBase > Evaluator
 ```
 
-The Patch's own camera-actor evaluator. Stage 2+: spawned by AddPatch via [UE::ComposableCameras::ConstructCameraFromTypeAsset](../free-functions/Functions.md#constructcamerafromtypeasset). Stage 1: always nullptr.
+Patch evaluator camera spawned by AddPatch and built from the patch asset.
 
 ---
 
@@ -194,7 +192,7 @@ The CurrentAlpha at the moment Phase flipped to Exiting. The exit ramp scales th
 FComposableCameraParameterBlock CachedParameters
 ```
 
-Cached parameter block from AddPatch. Used by Stage 2's ConstructCameraFromTypeAsset call and any future re-construction (e.g. in response to modifier changes).
+Latest parameter block applied to the evaluator.
 
 ---
 
