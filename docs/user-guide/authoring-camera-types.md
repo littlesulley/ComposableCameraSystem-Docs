@@ -136,6 +136,8 @@ When the asset is running in PIE, open **Window -> Runtime Previewer** from the 
 
 The previewer keeps the controlled pawn around the preview origin, mirrors skeletal pose when possible, and draws the runtime camera marker, frustum, movement arrow, FOV, context name, and active-camera state relative to that pawn. Dragging in the previewer only moves the editor observer camera; it does not move the PIE pawn or change the runtime camera result.
 
+![[assets/images/Pasted image 20260603154513.png]]
+
 ## Saving and building
 
 Saves are standard `Ctrl+S`. On save, the editor runs a **Build** pass that validates the graph: checks for missing exec wires, type mismatches on data pins, orphaned exposed-parameter entries, and so on. The **Build Messages** tab at the bottom of the editor shows results. A warning here doesn't block the save, but a red error does — fix the error before relying on the asset at runtime.

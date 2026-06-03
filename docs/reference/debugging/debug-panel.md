@@ -10,6 +10,8 @@ The Runtime Previewer is an editor-only `SEditorViewport` dock tab registered by
 
 The tab consumes the same runtime camera binding as the editor toolbar **Debug** picker. During PIE, the toolkit polls the bound camera's `SnapshotDebugState()`, resolves the owning player camera manager and controlled pawn, then sends a compact preview payload to the viewport. The preview payload contains final camera pose, FOV, context name, active-camera flag, subject transform, and pawn velocity.
 
+![[assets/images/Pasted image 20260603154605.png]]
+
 The viewport owns an `FAdvancedPreviewScene` and an editor-only observer camera. It draws the controlled pawn near the preview origin, mirrors skeletal pose into a transient preview proxy when a compatible skeletal mesh exists, falls back to static/fallback mesh proxies otherwise, and draws the runtime camera marker, frustum, and movement direction in subject-relative space. Mouse input only manipulates the observer view; it never writes back to the PIE pawn or runtime camera.
 
 Empty states are explicit:
