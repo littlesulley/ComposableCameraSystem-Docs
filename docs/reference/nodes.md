@@ -88,6 +88,8 @@ Once the pivot is set, these nodes position and orient the camera relative to th
 
 Applies an offset in camera-local space — "behind and to the right of the pivot, at some distance". The camera-local frame follows the camera's rotation, so the offset stays coherent as the player orbits.
 
+Use `CameraOffset.X` for forward/back distance, `Y` for right/left, and `Z` for up/down. `ForwardOffsetDeltaByPitchCurve` can add to the forward distance every frame based on the current camera pitch in degrees, which is useful for pitch-sensitive boom tuning such as pulling the camera farther back when looking down or easing it forward when looking up.
+
 ### `ControlRotateNode`
 
 The input handler for third-person and free-look cameras. Reads an Enhanced Input `InputAction` from either a nominated `RotationInputActor` or the controller-controlled pawn and applies yaw/pitch.

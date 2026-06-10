@@ -2,6 +2,22 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-06-10 - plugin `3b8d32e..708d3f7`
+
+**Plugin commits processed:** `708d3f7` (`Add pitch curve forward camera offset`). Fetch/pull was attempted first for both repositories; the plugin repo was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and the Documentation repo was blocked by unavailable GitHub HTTPS access from the sandbox.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because the required executables are not installed in this environment, so `UComposableCameraCameraOffsetNode` was refreshed manually in generated style to include `ForwardOffsetDeltaByPitchCurve` and its pitch-to-forward-offset behavior.
+
+**Prose updates:** expanded the Node Catalog's `CameraOffsetNode` entry to explain camera-local axes and the new pitch-sensitive forward offset curve.
+
+**New-feature documentation decision:** pitch-based forward offset is an added field on an existing camera node, not a new node, asset workflow, editor panel, Blueprint/K2 node, setting, console command, transition, or modifier. It fits the existing Node Catalog and API page rather than a standalone guide.
+
+**Stale-doc fixes / follow-up:** existing tutorials that describe `CameraOffset` as a fixed offset remain accurate for the default/unkeyed case, so they were left unchanged. Manual follow-up remains to regenerate the full C++ API reference when Doxygen/moxygen are available and to verify/push once repository/network blockers are cleared.
+
+**Validation / deployment:** validation and commit/push status are tracked by the automation run summary.
+
+---
+
 ## 2026-06-03 - plugin `21214d7..3b8d32e`
 
 **Plugin commits processed:** `980a164` (`Refactor CCS documentation`), `0485a37` (`Refine source comments`), `a4fe570` (`Add runtime previewer window design spec`), `8ff0692` (`Add runtime previewer implementation plan`), `cf0c814` (`Add runtime previewer to camera type editor`), and `3b8d32e` (`Fix runtime previewer transform sync`). Fetch/pull was attempted first for both repositories; the plugin repo was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and the Documentation repo was blocked by unavailable GitHub HTTPS access from the sandbox. Documentation still had the previous local commit ahead of `origin/main`, which was preserved.
