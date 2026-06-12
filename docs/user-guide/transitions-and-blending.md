@@ -15,6 +15,7 @@ The plugin ships a set of built-in transition classes. Rough guidance:
 | An arc around a pivot instead of a straight blend | `CylindricalTransition` | Useful for orbital feels — pivot is derived from ray intersection of the two view frusta. |
 | A cinematic swoop along a rail | `PathGuidedTransition` | Three-phase: inertialized enter onto the rail → follow a `CameraRig_Rail` spline → inertialized exit to the target. Uses an intermediate camera on the rail. |
 | A spline blend with configurable tangents | `SplineTransition` | Camera follows a computed spline (Hermite, Bezier, Catmull-Rom, Arc) with configurable evaluation curves. |
+| To keep a subject framed while another transition drives motion | `CompositionPreservingTransition` | Wraps a driving transition, keeps the subject's source-camera composition through the blend, and converges to the live target pose at completion. |
 | To preserve the target line-of-sight even when something blocks it | `DynamicDeocclusionTransition` | Wraps another transition and scales its blend weight down when the target is occluded, up when it's clear. |
 
 See the [Reference → Transitions](../reference/transitions.md) catalog for the full list including per-parameter defaults.

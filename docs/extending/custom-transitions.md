@@ -76,6 +76,13 @@ Velocity-aware transitions (inertialization, physics-plausible easing) read thes
 
 Transitions that don't care about velocity (linear, cubic, smoothstep) can ignore `InitParams` entirely.
 
+If a custom transition needs the owning player camera manager, use the protected
+`GetOwningPlayerCameraManager()` helper after `TransitionEnabled` has run. This
+is the correct context for owner-aware actor input resolution, such as
+`ControllerControlledPawn`, and avoids falling back to player index 0 in
+split-screen or multi-controller worlds. It can be `nullptr` on no-PCM paths
+such as Level Sequence, so treat it as optional context.
+
 ```cpp
 void UMyInertializedTransition::OnBeginPlay_Implementation(
     float DeltaTime,

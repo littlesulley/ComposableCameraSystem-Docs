@@ -5,6 +5,10 @@
 #include <ComposableCameraSimpleSpringInterpolator.h>
 ```
 
+Type traits used by `TSimpleSpringInterpolator` to damp scalar, vector,
+rotator, and quaternion values. Every specialization returns an absolute next
+value, not a delta to add later.
+
 ## TSimpleSpringInterpolatorTraits< FQuat > { #tsimplespringinterpolatortraitsfquat }
 
 ```cpp
@@ -48,6 +52,8 @@ static inline FQuat Damp(const FQuat & CurrentValue, const FQuat & TargetValue, 
 ```cpp
 static inline double Damp(double CurrentValue, double TargetValue, float DeltaTime, float DampTime)
 ```
+
+Returns `CurrentValue + SimpleExpDamp(DeltaTime, DampTime, TargetValue - CurrentValue)`.
 
 ## TSimpleSpringInterpolatorTraits< FRotator > { #tsimplespringinterpolatortraitsfrotator }
 
@@ -93,6 +99,8 @@ static inline FRotator Damp(const FRotator & CurrentValue, const FRotator & Targ
 static inline FVector2d Damp(const FVector2d & CurrentValue, const FVector2d & TargetValue, float DeltaTime, float DampTime)
 ```
 
+Returns per-component absolute values produced by the scalar trait.
+
 ## TSimpleSpringInterpolatorTraits< FVector3d > { #tsimplespringinterpolatortraitsfvector3d }
 
 ```cpp
@@ -114,3 +122,5 @@ static inline FVector2d Damp(const FVector2d & CurrentValue, const FVector2d & T
 ```cpp
 static inline FVector3d Damp(const FVector3d & CurrentValue, const FVector3d & TargetValue, float DeltaTime, float DampTime)
 ```
+
+Returns per-component absolute values produced by the scalar trait.

@@ -6,11 +6,16 @@
 ```
 
 > **Inherits:** `UObject`
-> **Subclassed by:** [`UComposableCameraCubicTransition`](UComposableCameraCubicTransition.md#ucomposablecameracubictransition), [`UComposableCameraCylindricalTransition`](UComposableCameraCylindricalTransition.md#ucomposablecameracylindricaltransition), [`UComposableCameraDynamicDeocclusionTransition`](UComposableCameraDynamicDeocclusionTransition.md#ucomposablecameradynamicdeocclusiontransition), [`UComposableCameraEaseTransition`](UComposableCameraEaseTransition.md#ucomposablecameraeasetransition), [`UComposableCameraInertializedTransition`](UComposableCameraInertializedTransition.md#ucomposablecamerainertializedtransition), [`UComposableCameraLinearTransition`](UComposableCameraLinearTransition.md#ucomposablecameralineartransition), [`UComposableCameraPathGuidedTransition`](UComposableCameraPathGuidedTransition.md#ucomposablecamerapathguidedtransition), [`UComposableCameraSmoothTransition`](UComposableCameraSmoothTransition.md#ucomposablecamerasmoothtransition), [`UComposableCameraSplineTransition`](UComposableCameraSplineTransition.md#ucomposablecamerasplinetransition), [`UComposableCameraViewTargetTransition`](UComposableCameraViewTargetTransition.md#ucomposablecameraviewtargettransition)
+> **Subclassed by:** [`UComposableCameraCompositionPreservingTransition`](UComposableCameraCompositionPreservingTransition.md#ucomposablecameracompositionpreservingtransition), [`UComposableCameraCubicTransition`](UComposableCameraCubicTransition.md#ucomposablecameracubictransition), [`UComposableCameraCylindricalTransition`](UComposableCameraCylindricalTransition.md#ucomposablecameracylindricaltransition), [`UComposableCameraDynamicDeocclusionTransition`](UComposableCameraDynamicDeocclusionTransition.md#ucomposablecameradynamicdeocclusiontransition), [`UComposableCameraEaseTransition`](UComposableCameraEaseTransition.md#ucomposablecameraeasetransition), [`UComposableCameraInertializedTransition`](UComposableCameraInertializedTransition.md#ucomposablecamerainertializedtransition), [`UComposableCameraLinearTransition`](UComposableCameraLinearTransition.md#ucomposablecameralineartransition), [`UComposableCameraPathGuidedTransition`](UComposableCameraPathGuidedTransition.md#ucomposablecamerapathguidedtransition), [`UComposableCameraSmoothTransition`](UComposableCameraSmoothTransition.md#ucomposablecamerasmoothtransition), [`UComposableCameraSplineTransition`](UComposableCameraSplineTransition.md#ucomposablecamerasplinetransition), [`UComposableCameraViewTargetTransition`](UComposableCameraViewTargetTransition.md#ucomposablecameraviewtargettransition)
 
 Base class for transition evaluation.
 
 Transitions are pose-only operators: they receive source and target poses each tick, maintain their own internal blend state, and output a blended pose. They never reference cameras or Directors directly.
+
+The base caches its typed outer `AComposableCameraPlayerCameraManager` during
+`TransitionEnabled`. Subclasses that need owner-aware context, such as actor
+input resolution or temporary camera initialization, can read it through
+`GetOwningPlayerCameraManager()`. The pointer can be null on non-PCM paths.
 
 ### Public Attributes
 
@@ -215,6 +220,7 @@ Compiled out in shipping builds.
 | `FRotator` | [`AccumulatedSourceRotationOffset`](#accumulatedsourcerotationoffset) | Live source endpoint rotation offset accumulated after transition start. |
 | `FRotator` | [`AccumulatedTargetRotationOffset`](#accumulatedtargetrotationoffset) | Live target endpoint rotation offset accumulated after transition start. |
 | `bool` | [`bHasLockedRotationPathState`](#bhaslockedrotationpathstate) | True once the locked rotation path state has been initialized. |
+| `TWeakObjectPtr< AComposableCameraPlayerCameraManager >` | [`CachedPlayerCameraManager`](#cachedplayercameramanager) | Owning player camera manager cached when the transition is enabled. |
 | `FString` | [`TransitionClassTraceName`](#transitionclasstracename)  | Cached `GetClass()->GetName()` populated lazily at first Evaluate and reused by per-evaluate `TRACE_CPUPROFILER_EVENT_SCOPE_STR` so the dynamic Insights label doesn't allocate an FString per evaluation. The class is per-instance immutable after construction, so the lazy populate runs once over the transition's lifetime. Non-UPROPERTY because it's transient diagnostic state, not data. |
 
 ---
@@ -347,6 +353,16 @@ True once the locked rotation path state has been initialized.
 
 ---
 
+#### CachedPlayerCameraManager { #cachedplayercameramanager }
+
+```cpp
+TWeakObjectPtr< AComposableCameraPlayerCameraManager > CachedPlayerCameraManager
+```
+
+Owning player camera manager cached when the transition is enabled.
+
+---
+
 #### TransitionClassTraceName { #transitionclasstracename }
 
 ```cpp
@@ -363,6 +379,7 @@ Cached `GetClass()->GetName()` populated lazily at first Evaluate and reused by 
 | `FRotator` | [`BlendRotationByLockedPath`](#blendrotationbylockedpath) `const` | Evaluate only the locked rotation path plus live endpoint offsets. |
 | `FRotator` | [`ApplyLiveRotationOffsetsToBaseRotation`](#applyliverotationoffsetstobaserotation) `const` | Apply live endpoint rotation offsets to a transition-specific base rotation. |
 | `const FRotator &` | [`GetInitialTargetRotation`](#getinitialtargetrotation) `const` `inline` | Return the first-frame target rotation captured for the locked path. |
+| `AComposableCameraPlayerCameraManager *` | [`GetOwningPlayerCameraManager`](#getowningplayercameramanager) `const` `inline` | Return the cached owning player camera manager, or null on no-PCM evaluation paths. |
 | `void` | [`OnBeginPlay`](#onbeginplay)  | Begin Play event. Called on the first frame of the transition, before the first OnEvaluate. <br/> |
 | `void` | [`OnBeginPlay_Implementation`](#onbeginplay_implementation) `virtual` `inline` |  |
 | `FComposableCameraPose` | [`OnEvaluate`](#onevaluate)  | Event to customize the evaluation function for each tick. When calling this function, RemainingTime has already been decremented, and assured to not go below 0. <br/> |
@@ -417,6 +434,19 @@ inline const FRotator & GetInitialTargetRotation() const
 ```
 
 Return the first-frame target rotation captured for the locked path.
+
+---
+
+#### GetOwningPlayerCameraManager { #getowningplayercameramanager }
+
+`const` `inline`
+
+```cpp
+inline AComposableCameraPlayerCameraManager * GetOwningPlayerCameraManager() const
+```
+
+Return the cached owning player camera manager, or null on no-PCM evaluation
+paths such as Level Sequence.
 
 ---
 

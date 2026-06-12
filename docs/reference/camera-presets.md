@@ -43,9 +43,25 @@ These assets live in `CameraPresets/Preset_Shots` and are `UComposableCameraShot
 
 Drag a Shot preset onto a `AComposableCameraLevelSequenceShotActor` binding or assign it to a Composable Camera Shot Section in `AssetReference` mode. The section snapshots the Shot into local overrides, so Sequencer edits affect that section without mutating the shared preset asset.
 
+## Transition presets
+
+These assets live in `CameraPresets/Preset_Transitions` and are reusable
+`UComposableCameraTransitionDataAsset` wrappers.
+
+| Preset | Use it for | Notes |
+| --- | --- | --- |
+| `CameraTransaition_Preservation_TwoSeconds` | A two-second subject-preserving transition preset. | Demonstrates `CompositionPreservingTransition` as a reusable data asset. Use it when entering or routing between cameras where the selected subject should stay framed while the nested driving transition controls timing and rotation. |
+
+Assign a Transition preset anywhere a transition data asset is accepted:
+activation overrides, transition-table entries, camera type enter/exit
+transitions, or Sequencer shot overlap transitions.
+
 ## Choosing a preset
 
-Start with a Camera Type preset when you need a runnable camera graph. Start with a Shot preset when Sequencer should solve framing from targets using the Shot Editor and Composition Solver.
+Start with a Camera Type preset when you need a runnable camera graph. Start
+with a Shot preset when Sequencer should solve framing from targets using the
+Shot Editor and Composition Solver. Start with a Transition preset when you want
+to reuse one tuned blend across multiple camera pairs or activation calls.
 
 For gameplay cameras, duplicate a Camera Type preset and wire project-specific actor inputs, Enhanced Input actions, and collision settings. For cinematic framing, duplicate or reference a Shot preset, bind its targets in Sequencer, then tune Placement, Aim, Lens, Focus, and transition overlap in the Shot workflow.
 
@@ -55,3 +71,4 @@ For gameplay cameras, duplicate a Camera Type preset and wire project-specific a
 - [CCS Camera in Sequencer](../tutorials/level-sequence-authoring.md) - using Camera Type assets as Sequencer Spawnables.
 - [Shot-Based Keyframing in Sequencer](../tutorials/shot-based-keyframing.md) - using Shot presets and Shot Sections.
 - [Node Catalog](nodes.md) - behavior of the nodes used inside the Camera Type presets.
+- [Transition Catalog](transitions.md) - behavior of the transitions used inside Transition presets.

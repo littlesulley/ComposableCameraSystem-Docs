@@ -86,6 +86,12 @@ Per-node gizmos are controlled individually:
 | `CCS.Debug.Viewport.PivotLookAhead 1` | `PivotLookAheadNode` | Predicted pivot after velocity look-ahead |
 | `CCS.Debug.Viewport.LockOnAimPoint 1` | `LockOnAimPointNode` | Stable virtual aim point for lock-on target framing |
 
+Per-transition gizmos are controlled separately:
+
+| CVar | Transition | What it draws |
+|---|---|---|
+| `CCS.Debug.Viewport.Transitions.CompositionPreserving 1` | `CompositionPreservingTransition` | Standard source/target/progress markers plus a line from the source endpoint to the tracked subject |
+
 Each per-node CVar defaults to 0 so a camera with multiple active nodes doesn't turn into an unreadable tangle. Enable them one at a time to isolate the node you're investigating. `CCS.Debug.Viewport.Nodes.All 1` enables all node gizmos at once — a good first overview.
 
 All gizmos use `SDPG_Foreground` depth priority and translucent-wireframe spheres, so they render in front of scene geometry and remain readable even when the camera is embedded inside a character mesh.

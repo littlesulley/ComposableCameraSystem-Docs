@@ -9,6 +9,11 @@
 
 Simple exact spring interpolator.
 
+`Run()` returns the new absolute interpolated value. Scalar damping computes the
+progress from current toward target and adds it back to the current value; vector
+specializations return the per-component absolute values directly. This matters
+for nodes that reset interpolators from their last smoothed output every frame.
+
 ### Public Attributes
 
 | Return | Name | Description |
@@ -22,6 +27,9 @@ Simple exact spring interpolator.
 ```cpp
 float DampTime { 1.f }
 ```
+
+Time constant for the exponential damping response. Larger values make the
+spring softer and slower to reach the target.
 
 ### Private Methods
 

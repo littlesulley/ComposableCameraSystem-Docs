@@ -71,6 +71,7 @@ Pose-blending transitions (`UComposableCamera*Transition`).
 
 - [`UComposableCameraCubicTransition`](transitions/UComposableCameraCubicTransition.md)
 - [`UComposableCameraCylindricalTransition`](transitions/UComposableCameraCylindricalTransition.md)
+- [`UComposableCameraCompositionPreservingTransition`](transitions/UComposableCameraCompositionPreservingTransition.md)
 - [`UComposableCameraDynamicDeocclusionTransition`](transitions/UComposableCameraDynamicDeocclusionTransition.md)
 - [`UComposableCameraEaseTransition`](transitions/UComposableCameraEaseTransition.md)
 - [`UComposableCameraInertializedTransition`](transitions/UComposableCameraInertializedTransition.md)

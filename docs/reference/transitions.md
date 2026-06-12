@@ -113,6 +113,24 @@ Three-phase cinematic: enter from source onto a rail, follow the rail, exit to t
 - **Cost:** higher than other transitions — spawns an intermediate camera actor and duplicates the rail's spline component. Use for set pieces, not gameplay.
 - **Typical use:** cinematic swoops, lift-off shots, "camera leaves the player and flies to the vista" moments.
 
+## `CompositionPreservingTransition`
+
+Wrapper transition for subject-centric blends. It lets a nested `DrivingTransition`
+choose the rotation and timing curve, while the wrapper rebuilds camera position
+so a chosen subject keeps the composition it had at the start of the source
+camera.
+
+| Field | Type | Default | Purpose |
+|---|---|---|---|
+| `DrivingTransition` | `UComposableCameraTransitionBase*` (instanced) | - | Transition that drives rotation and blend percentage. If the wrapper duration is unset, the wrapper adopts the driving transition duration. |
+| `SubjectActorSource` | `EComposableCameraActorInputSource` | `ControllerControlledPawn` | Actor selector for the subject whose composition should be preserved. |
+| `SubjectActor` | `AActor*` | `nullptr` | Explicit subject when `SubjectActorSource` is `ExplicitActor`. |
+
+- **Velocity-aware:** depends on the `DrivingTransition`. Use an `InertializedTransition` inside for most gameplay blends.
+- **Debug:** enable `CCS.Debug.Viewport.Transitions.CompositionPreserving 1` with `CCS.Debug.Viewport 1` to draw the standard transition markers plus a line from the source endpoint to the subject.
+- **Fallbacks:** if the subject cannot be captured or later disappears, the transition returns the driving pose. If no driving transition is assigned, it logs a warning and falls back to the target pose.
+- **Typical use:** transitions between gameplay cameras that should not let the controlled pawn or lock-on subject drift across screen space during the blend, such as follow camera -> aim camera or two combat cameras with different framing.
+
 ## `DynamicDeocclusionTransition`
 
 A wrapper around another transition. Each frame it casts one or more "feeler" rays from the wrapped transition's output pose toward the target; if any feeler is blocked, it nudges the output pose along the unblocked feeler direction, preventing the blend from passing through occluders. Clears back to the base pose when occlusion resolves.

@@ -159,6 +159,12 @@ Per-node gizmos (all default 0):
 | `CCS.Debug.Viewport.PivotLookAhead` | `PivotLookAheadNode` |
 | `CCS.Debug.Viewport.LockOnAimPoint` | `LockOnAimPointNode` |
 
+Per-transition gizmos (all default 0):
+
+| CVar | Transition |
+|---|---|
+| `CCS.Debug.Viewport.Transitions.CompositionPreserving` | `CompositionPreservingTransition` |
+
 ### Rendering pathway
 
 Implemented by `FComposableCameraViewportDebug`. Draws via `FTSTicker::GetCoreTicker()` delegate, not `UDebugDrawService`. The ticker fires every frame regardless of which viewport is active; `DrawDebug*` calls go to the world's `LineBatcher`, which is rendered by every viewport drawing that world. This is the reason gizmos appear in the editor viewport during F8 eject — `UDebugDrawService`'s `"Game"` hook does not fire from the editor viewport, which was the blocking issue that motivated the switch to the ticker + line batcher.

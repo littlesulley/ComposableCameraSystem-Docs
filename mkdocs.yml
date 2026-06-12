@@ -185,6 +185,7 @@ nav:
           - 'Transitions':
             - 'UComposableCameraCubicTransition': reference/api/transitions/UComposableCameraCubicTransition.md
             - 'UComposableCameraCylindricalTransition': reference/api/transitions/UComposableCameraCylindricalTransition.md
+            - 'UComposableCameraCompositionPreservingTransition': reference/api/transitions/UComposableCameraCompositionPreservingTransition.md
             - 'UComposableCameraDynamicDeocclusionTransition': reference/api/transitions/UComposableCameraDynamicDeocclusionTransition.md
             - 'UComposableCameraEaseTransition': reference/api/transitions/UComposableCameraEaseTransition.md
             - 'UComposableCameraInertializedTransition': reference/api/transitions/UComposableCameraInertializedTransition.md

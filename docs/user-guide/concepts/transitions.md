@@ -70,6 +70,7 @@ The resolution call is identical for in-context activations (inside one context)
 | `InertializedTransition` | Velocity-aware 5th-order polynomial blends for position and rotation. Optional auto-computed duration from a max-acceleration bound. Optional additive curve for shape control. |
 | `SplineTransition` | Camera follows a computed spline (Hermite, Bezier, Catmull-Rom, or Arc) with configurable evaluation curves. |
 | `PathGuidedTransition` | Three-phase (inertialized enter → follow a rail → inertialized exit), using an intermediate camera on the rail. Good for cinematic swoops. |
+| `CompositionPreservingTransition` | Wrapper that keeps a selected subject's source-camera composition while a nested transition drives rotation and timing. |
 | `DynamicDeocclusionTransition` | Wrapper over another transition; scales blend weight down when the target would be occluded, up when clear. |
 
 See the [Reference → Transitions](../../reference/transitions.md) catalog for details on each.

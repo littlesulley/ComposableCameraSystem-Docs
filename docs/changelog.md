@@ -2,6 +2,22 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-06-12 - plugin `708d3f7..e97a33f`
+
+**Plugin commits processed:** `913f0ae` (`Fix SimpleSpring absolute interpolation`), `99b5eb5` (`Add composition-preserving transition`), and `e97a33f` (`Add a new built-in transition asset`). Fetch/pull was attempted first for both repositories and completed after sandbox escalation; both repositories were already up to date. Documentation started one local commit ahead of `origin/main`, which was preserved.
+
+**C++ API reference:** public headers changed. Formal Doxygen/moxygen regeneration could not run because the required executables are not installed in this environment, so generated-style pages were refreshed manually. Added `UComposableCameraCompositionPreservingTransition`, linked it from the API index and MkDocs nav, updated `UComposableCameraTransitionBase` for the cached owning PCM accessor/state, and documented the SimpleSpring absolute-value behavior on the interpolator and traits pages.
+
+**Prose updates:** added `CompositionPreservingTransition` to the Transition Catalog, transition concept overview, transition selection guide, and viewport debug references. Expanded the Camera Presets catalog for the new `CameraPresets/Preset_Transitions/CameraTransaition_Preservation_TwoSeconds` asset and updated the custom-transition guide with the owner-PCM helper note for actor-input resolution.
+
+**New-feature documentation decision:** `CompositionPreservingTransition` is a new shipped transition and belongs in the existing transition catalog, transition authoring guidance, debug CVar reference, preset catalog, and API reference rather than a standalone tutorial. The new transition preset is a reusable asset example for that transition, so it fits the existing Camera Presets page. The SimpleSpring fix is a behavior correction to an existing interpolator, so it was documented in API/reference wording instead of a new page.
+
+**Stale-doc fixes / follow-up:** refreshed transition lists so they no longer omit the new built-in transition. Manual follow-up remains to regenerate the full C++ API reference when Doxygen/moxygen are available and to run Unreal automation tests from the IDE/editor for the new transition and SimpleSpring regression tests.
+
+**Validation / deployment:** validation and commit/push status are tracked by the automation run summary.
+
+---
+
 ## 2026-06-10 - plugin `3b8d32e..708d3f7`
 
 **Plugin commits processed:** `708d3f7` (`Add pitch curve forward camera offset`). Fetch/pull was attempted first for both repositories; the plugin repo was blocked by `cannot open '.git/FETCH_HEAD': Permission denied`, and the Documentation repo was blocked by unavailable GitHub HTTPS access from the sandbox.

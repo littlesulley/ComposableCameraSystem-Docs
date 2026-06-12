@@ -11,7 +11,7 @@ Structured catalog of everything shipped with the plugin.
 - **[Transition Catalog](transitions.md)** - every `UComposableCamera*Transition` with blend curve, parameters, and use cases.
 - **[Modifier Catalog](modifiers.md)** - PCM-level modifiers applied after evaluation.
 - **[Camera Patch Catalog](patches.md)** - patch assets, overlays, expiration behavior, and Sequencer patch workflows.
-- **[Camera Presets](camera-presets.md)** - built-in Camera Type and Shot preset assets shipped with the plugin.
+- **[Camera Presets](camera-presets.md)** - built-in Camera Type, Shot, and Transition preset assets shipped with the plugin.
 - **[Project Settings](project-settings.md)** - global ComposableCameraSystem project settings and defaults.
 - **[Debugging](debugging/showdebug.md)** - all CCS debug surfaces: `showdebug camera`, Debug Panel (`CCS.Debug.Panel`), Viewport Debug (`CCS.Debug.Viewport`), and Dump Commands (`CCS.Dump.*`).
 - **[C++ API Reference](api/index.md)** - covers every public type in the runtime module.
