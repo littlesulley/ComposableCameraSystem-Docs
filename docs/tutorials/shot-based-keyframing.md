@@ -10,7 +10,7 @@ where the camera should be placed, where it should aim, how the lens should
 solve, and how focus should follow. Sequencer decides *when* each Shot is
 active; the CCS Composition Solver decides the camera pose every frame.
 
-![[assets/images/Pasted image 20260512143333.png]]
+![[assets/images/Pasted image 20260613232702.png]]
 
 Use this workflow when the subject can move, spawn, or be rebound per
 sequence, but the composition should stay stable: over-the-shoulder shots,
@@ -110,7 +110,7 @@ The editor viewport has three modes:
 | Free | fly the preview camera manually |
 | Lock | inspect the solved camera without accidental edits |
 
-![[assets/images/Pasted image 20260512144146.png]]
+![[assets/images/Pasted image 20260613232744.png]]
 
 The top bar contains the asset commands, active Shot breadcrumb, Sequencer
 Shot dropdown, Recent dropdown, and Drag / Free / Lock mode selector. Use the
