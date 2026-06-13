@@ -2,6 +2,22 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-06-13 - plugin `e97a33f..7e4c33e`
+
+**Plugin commits processed:** `7e4c33e` (`Polish Shot Editor layout`). Fetch/pull was attempted first for both repositories and completed after sandbox escalation; both repositories were already up to date and no uncommitted local changes were present before edits.
+
+**C++ API reference:** the configured Doxygen input set (`Source/ComposableCameraSystem/Public`) did not change in this range. The changed public headers are editor-only Shot Editor widget/history headers under `Source/ComposableCameraSystemEditor/Public`, and the existing generated API tree does not include pages for those Slate widgets. No API regeneration was required, and generated API pages were left unchanged.
+
+**Prose updates:** expanded the Shot-Based Keyframing tutorial's Shot Editor section for the new compact top bar, searchable Sequencer Shot dropdown, collapsed Quick strip, mode-sensitive Details rows, viewport Tools control, HUD/Guides toggles, Free-mode Reset action, and status-bar Save / Discard / Stay flow. Added preview/debug guidance for the editor viewport HUD and Guides toggles, and cleaned up stale preset-shot wording in the same tutorial.
+
+**New-feature documentation decision:** the Shot Editor layout polish is a designer-facing authoring workflow change, but it refines the existing Shot-Based Keyframing workflow rather than adding a new asset type, camera node, transition, modifier, Blueprint/K2 node, setting, console command, or standalone tool. It therefore belongs in the existing Sequencer Shot tutorial instead of a new public page. Internal implementation details for Quick controls, status-bar priority, mode-sensitive details visibility, and menu filtering remain in the internal `Docs/TechDoc.md` / `Docs/EditorDesignDoc.md` rather than public API reference.
+
+**Stale-doc fixes / follow-up:** replaced the stale modal-style Free-exit wording with the current status-bar action flow, noted that the persistent left Shot outliner was replaced by the Shot dropdown, and fixed typo-level stale text in the preset-shot walkthrough. Manual follow-up: run the new/updated Unreal editor automation tests from the IDE/editor for Shot Editor status bar state, viewport toolbar action state, and details visibility.
+
+**Validation / deployment:** validation and commit/push status are tracked by the automation run summary.
+
+---
+
 ## 2026-06-12 - plugin `708d3f7..e97a33f`
 
 **Plugin commits processed:** `913f0ae` (`Fix SimpleSpring absolute interpolation`), `99b5eb5` (`Add composition-preserving transition`), and `e97a33f` (`Add a new built-in transition asset`). Fetch/pull was attempted first for both repositories and completed after sandbox escalation; both repositories were already up to date. Documentation started one local commit ahead of `origin/main`, which was preserved.

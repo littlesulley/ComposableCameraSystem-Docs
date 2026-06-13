@@ -112,8 +112,30 @@ The editor viewport has three modes:
 
 ![[assets/images/Pasted image 20260512144146.png]]
 
-When leaving Free mode, choose the save option to reverse-solve the current
-view back into the Shot fields that the active modes read.
+The top bar contains the asset commands, active Shot breadcrumb, Sequencer
+Shot dropdown, Recent dropdown, and Drag / Free / Lock mode selector. Use the
+Shot dropdown to jump between sibling Shot Sections in the same Level Sequence;
+it replaces the older persistent side outliner with a searchable grouped menu.
+
+The right pane combines the full Shot Details panel with a collapsed-by-default
+Quick strip for common fields: distance, manual FOV, roll, placement screen
+position, and aim screen position. Quick writes the same Shot data as Details,
+so use it for fast numeric passes and use Details when you need the complete
+Placement, Aim, Lens, Focus, target, and transition surface. The Details panel
+hides rows ignored by the current mode instead of disabling them; hidden values
+are preserved and reappear when you switch back to a mode that uses them.
+
+The viewport's floating **Tools** control owns Reset, HUD, and Guides. Reset is
+available only in Free mode and snaps the preview camera back to the current
+solved Shot pose without changing Shot data. HUD toggles the viewport diagnostic
+readout, and Guides toggles handles, zones, and bounds wireframes.
+
+When leaving Free mode, the editor queues the requested Drag or Lock mode and
+shows **Save**, **Discard**, and **Stay** in the status bar below the top bar.
+Save reverse-solves the current view back into the Shot fields that the active
+modes read, Discard leaves the Shot unchanged, and Stay keeps the viewport in
+Free mode. If reverse-solve is unavailable, the same status bar explains which
+anchor or Shot context must be fixed first.
 
 ## 4. Author targets
 
@@ -246,6 +268,12 @@ there is no previous Shot to blend from.
 Scrub the sequence with the Camera Cut viewing the Shot Actor. The Shot Editor
 preview and the Sequencer viewport should agree on framing.
 
+Inside the Shot Editor, enable HUD from the viewport **Tools** control when you
+need to inspect the preview camera pose, aspect ratio, or focus readout. Enable
+Guides when you need to compare authoring handles and screen zones against the
+solved image. These toggles affect the editor preview viewport; the runtime /
+Sequencer overlay below is still controlled by console variables.
+
 Useful debug tools:
 
 ```text
@@ -262,9 +290,9 @@ viewport debug master switch.
 
 ## 11. Use Preset Shots
 
-The plugin's content folder `/Content/ComposableCameraSystem/CameraPresets/Preset_Shots` contains several two-peson dialogue shots such as `CameraShot_OTS_Close_R` and `CameraShot_OTS_MediumClose_L`. Each type of shot has two versions, viewing from the left and right shoulder indicated by the postfix `_L` or `_R`. 
+The plugin's content folder `/Content/ComposableCameraSystem/CameraPresets/Preset_Shots` contains several two-person dialogue shots such as `CameraShot_OTS_Close_R` and `CameraShot_OTS_MediumClose_L`. Each type of shot has two versions, viewing from the left and right shoulder indicated by the postfix `_L` or `_R`.
 
-First, create two shot section and make them overlap.
+First, create two Shot Sections and make them overlap.
 
 ![[assets/images/Pasted image 20260512145628.png]]
 
@@ -272,7 +300,7 @@ Then, right click each, select **Source = Asset Reference** and **Shot Asset Ref
 
 ![[assets/images/Pasted image 20260512145704.png]]
 
-Next, right click each shot secion, assign target actors to each binding.
+Next, right click each Shot Section and assign target actors to each binding.
 
 ![[assets/images/Pasted image 20260512145859.png]]
 
