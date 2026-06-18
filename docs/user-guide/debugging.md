@@ -103,6 +103,8 @@ If you are writing a [custom node](../extending/custom-nodes.md) and want to add
 
 In editor builds, CCS integrates with Unreal's Rewind Debugger so recorded PIE sessions can replay camera debug state while you scrub time. Start a Rewind recording, exercise a gameplay or Level Sequence CCS camera, stop recording, then select the controlled character or relevant actor in Rewind Debugger.
 
+![[assets/images/Pasted image 20260618232630.png]]
+
 During recording, the editor extension enables the `ComposableCameraSystemChannel` trace channel. CCS writes an active-camera frame for the rendered camera pose and a CCS evaluation frame for the camera type asset, context name, internal CCS pose, and captured node/transition primitives. Gameplay cameras emit from the player camera manager path; Level Sequence cameras emit from the `UComposableCameraLevelSequenceComponent` path.
 
 During playback, the Rewind extension matches the selected actor's active-camera frame with the nearest compatible CCS evaluation frame. The historical view draws the compact camera frustum plus captured CCS gizmos and short sphere labels, even if the live viewport gizmo CVars were off during recording. Capture intentionally forces all 3D node and transition gizmos through the trace draw sink; live viewport drawing still obeys `CCS.Debug.Viewport.*` CVars.
