@@ -185,7 +185,7 @@ Concrete overrides should be pure math — no reads of `RemainingTime`, `Transit
 `virtual` `const` `inline`
 
 ```cpp
-virtual inline void DrawTransitionDebug(class UWorld * World, bool bViewerIsOutsideCamera) const
+virtual inline void DrawTransitionDebug(FComposableCameraDebugDrawSink & Draw, bool bViewerIsOutsideCamera) const
 ```
 
 Per-transition world-space debug hook.
@@ -526,7 +526,7 @@ Event when the transition finishes. The base class simply sets bFinished to true
 `const`
 
 ```cpp
-void DrawStandardTransitionDebug(class UWorld * World, bool bViewerIsOutsideCamera, const FColor & AccentColor) const
+void DrawStandardTransitionDebug(FComposableCameraDebugDrawSink & Draw, bool bViewerIsOutsideCamera, const FColor & AccentColor) const
 ```
 
 Shared helper that paints the canonical source / target / progress endpoint markers. Each concrete transition's override still needs to draw its OWN path polyline (straight line, arc, polynomial, spline, rail, etc.) on top of these markers — the helper is deliberately silent about path shape because that's per-transition-type.

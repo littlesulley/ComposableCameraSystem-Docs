@@ -139,7 +139,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 `virtual` `const`
 
 ```cpp
-virtual void DrawNodeDebug(UWorld * World, bool bViewerIsOutsideCamera) const
+virtual void DrawNodeDebug(FComposableCameraDebugDrawSink & Draw, bool bViewerIsOutsideCamera) const
 ```
 
 Draws an orange sphere at the predicted pivot when `CCS.Debug.Viewport.PivotLookAhead 1` is enabled, or when `CCS.Debug.Viewport.Nodes.All 1` enables all node gizmos. Compiled out in shipping builds.

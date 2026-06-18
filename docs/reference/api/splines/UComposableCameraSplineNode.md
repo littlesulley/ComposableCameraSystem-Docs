@@ -123,7 +123,7 @@ bool bLockOrientationOnSpline { false }
 | `void` | [`OnInitialize_Implementation`](#oninitialize_implementation-2) `virtual` |  |
 | `void` | [`OnTickNode_Implementation`](#onticknode_implementation-3) `virtual` |  |
 | `void` | [`GetPinDeclarations_Implementation`](#getpindeclarations_implementation-3) `virtual` `const` |  |
-| `void` | [`DrawNodeDebug`](#drawnodedebug-2) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
+| `void` | [`DrawNodeDebug`](#drawnodedebug-2) `virtual` `const` | Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `FComposableCameraDebugDrawSink` that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode. |
 
 ---
 
@@ -172,10 +172,10 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 `virtual` `const`
 
 ```cpp
-virtual void DrawNodeDebug(UWorld * World, bool bViewerIsOutsideCamera) const
+virtual void DrawNodeDebug(FComposableCameraDebugDrawSink & Draw, bool bViewerIsOutsideCamera) const
 ```
 
-Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `DrawDebugHelpers` (DrawDebugSphere, DrawDebugLine, etc.) that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode.
+Called each frame when the `CCS.Debug.Viewport` CVar is enabled, for every node on the currently running camera. Override to draw world-space debug gizmos via `FComposableCameraDebugDrawSink` that visualise this node's runtime state — e.g. a pivot sphere for PivotOffsetNode, a look-at line for LookAtNode, the collision trace for CollisionPushNode, a sampled spline path for SplineNode.
 
 Access the owning camera via `OwningCamera` and current-frame pin values via the usual `GetInputPinValue<T>()` / member-read path — this hook fires AFTER TickNode, so pin-backed UPROPERTYs still hold the resolved values from the most recent evaluation.
 

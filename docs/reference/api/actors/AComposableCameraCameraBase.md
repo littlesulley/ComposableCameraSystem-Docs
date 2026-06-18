@@ -321,7 +321,7 @@ Empty for type-asset cameras activated without any parameter overrides.
 | `FComposableCameraPose` | [`GetCameraPose`](#getcamerapose) `const` `inline` |  |
 | `FComposableCameraPose` | [`GetLastFrameCameraPose`](#getlastframecamerapose) `const` `inline` |  |
 | `bool` | [`IsTransient`](#istransient) `const` `inline` |  |
-| `void` | [`DrawCameraDebug`](#drawcameradebug) `const` | Draw world-space debug primitives for this camera. |
+| `void` | [`DrawCameraDebug`](#drawcameradebug) `const` | Draw world-space debug primitives for this camera through either the live world sink or an explicit debug draw sink. |
 | `void` | [`DrawCameraDebug2D`](#drawcameradebug2d) `const` | 2D counterpart to DrawCameraDebug. Walks `CameraNodes` and invokes each node's `DrawNodeDebug2D` override. Called by the viewport debug service's "Game"-channel hook (HUD pass) — fires during PIE possessed play, not during F8 eject. Each node gates its own output on its per-node CVar, same pattern as the 3D path. |
 | `float` | [`GetLifeTime`](#getlifetime) `const` `inline` |  |
 | `float` | [`GetRemainingLifeTime`](#getremaininglifetime) `const` `inline` |  |
@@ -503,9 +503,10 @@ inline bool IsTransient() const
 
 ```cpp
 void DrawCameraDebug(class UWorld * World, bool bDrawFrustum) const
+void DrawCameraDebug(FComposableCameraDebugDrawSink & Draw, bool bDrawFrustum) const
 ```
 
-Draw world-space debug primitives for this camera.
+Draw world-space debug primitives for this camera through either the live world sink or an explicit debug draw sink.
 
 Invoked from the viewport debug ticker when `CCS.Debug.Viewport` is enabled. Two independently gated pieces:
 

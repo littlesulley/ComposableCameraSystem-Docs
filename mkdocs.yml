@@ -154,6 +154,7 @@ nav:
             - 'UComposableCameraCollisionPushNode': reference/api/nodes/UComposableCameraCollisionPushNode.md
             - 'UComposableCameraCompositionFramingNode': reference/api/nodes/UComposableCameraCompositionFramingNode.md
             - 'UComposableCameraComputeDistanceToActorNode': reference/api/nodes/UComposableCameraComputeDistanceToActorNode.md
+            - 'UComposableCameraComputePositionBetweenActorsNode': reference/api/nodes/UComposableCameraComputePositionBetweenActorsNode.md
             - 'UComposableCameraControlRotateNode': reference/api/nodes/UComposableCameraControlRotateNode.md
             - 'UComposableCameraDirectionalMoveNode': reference/api/nodes/UComposableCameraDirectionalMoveNode.md
             - 'UComposableCameraExposureNode': reference/api/nodes/UComposableCameraExposureNode.md
@@ -249,7 +250,11 @@ nav:
             - 'FComposableCameraContextEntry': reference/api/structs/FComposableCameraContextEntry.md
             - 'FComposableCameraContextSnapshot': reference/api/structs/FComposableCameraContextSnapshot.md
             - 'FComposableCameraContextStackSnapshot': reference/api/structs/FComposableCameraContextStackSnapshot.md
+            - 'FComposableCameraActiveTraceFrame': reference/api/structs/FComposableCameraActiveTraceFrame.md
+            - 'FComposableCameraDebugDrawSink': reference/api/structs/FComposableCameraDebugDrawSink.md
             - 'FComposableCameraDebugPanel': reference/api/structs/FComposableCameraDebugPanel.md
+            - 'FComposableCameraDebugPrimitive': reference/api/structs/FComposableCameraDebugPrimitive.md
+            - 'FComposableCameraEvaluationTraceFrame': reference/api/structs/FComposableCameraEvaluationTraceFrame.md
             - 'FComposableCameraEvaluationTreeInnerNodeWrapper': reference/api/structs/FComposableCameraEvaluationTreeInnerNodeWrapper.md
             - 'FComposableCameraEvaluationTreeLeafNodeWrapper': reference/api/structs/FComposableCameraEvaluationTreeLeafNodeWrapper.md
             - 'FComposableCameraEvaluationTreeNode': reference/api/structs/FComposableCameraEvaluationTreeNode.md
@@ -297,6 +302,7 @@ nav:
             - 'FComposableCameraTransitionInitParams': reference/api/structs/FComposableCameraTransitionInitParams.md
             - 'FComposableCameraTransitionTableEntry': reference/api/structs/FComposableCameraTransitionTableEntry.md
             - 'FComposableCameraTreeNodeSnapshot': reference/api/structs/FComposableCameraTreeNodeSnapshot.md
+            - 'FComposableCameraTracePose': reference/api/structs/FComposableCameraTracePose.md
             - 'FComposableCameraTypeAssetReference': reference/api/structs/FComposableCameraTypeAssetReference.md
             - 'FComposableCameraVariableNodeRecord': reference/api/structs/FComposableCameraVariableNodeRecord.md
             - 'FComposableCameraVariablePinConnection': reference/api/structs/FComposableCameraVariablePinConnection.md

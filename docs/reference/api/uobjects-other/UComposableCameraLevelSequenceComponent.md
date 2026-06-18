@@ -352,7 +352,7 @@ Runtime player cache used for Sequencer-aware DeltaTime scaling. Weak because pl
 |--------|------|-------------|
 | `void` | [`EnsureInternalCamera`](#ensureinternalcamera)  | Spawn InternalCamera if it doesn't exist yet, then call ConstructCameraFromTypeAsset with the current bag values. Safe to call repeatedly; reuses an existing camera when the TypeAsset hasn't changed. |
 | `void` | [`RebuildInternalCamera`](#rebuildinternalcamera)  | Destroy InternalCamera and spawn a fresh one. Called from PostEditChangeProperty when TypeAsset changes. |
-| `void` | [`ProjectPoseToCineCamera`](#projectposetocinecamera)  | Project a pose into OutputCineCameraComponent. Position and rotation are the only fields written; physical optics stay on the CineCamera (designer or Sequencer property tracks drive them). |
+| `EComposableCameraTraceProjectionStatus` | [`ProjectPoseToCineCamera`](#projectposetocinecamera)  | Project a pose into OutputCineCameraComponent and return the trace projection status. Position and rotation are the only fields written; physical optics stay on the CineCamera (designer or Sequencer property tracks drive them). |
 | `void` | [`DestroyInternalCamera`](#destroyinternalcamera)  | Destroy the internal camera actor if one exists. |
 | `void` | [`ApplySequencerPatchOverlays`](#applysequencerpatchoverlays)  | Apply every active editor-preview patch overlay (sorted by the section's resolved LayerIndex) onto `InOutPose`. Called from TickComponent in editor world only, between InternalCamera->TickCamera and ProjectPoseToCineCamera. Lazy-spawns evaluator actors as needed and prunes stale entries (section GC'd) from the overlay map. |
 | `float` | [`ResolveSequencerAwareDeltaTime`](#resolvesequencerawaredeltatime)  | Resolve a DeltaTime that follows the owning Level Sequence playback speed. |
@@ -385,10 +385,10 @@ Destroy InternalCamera and spawn a fresh one. Called from PostEditChangeProperty
 #### ProjectPoseToCineCamera { #projectposetocinecamera }
 
 ```cpp
-void ProjectPoseToCineCamera(const FComposableCameraPose & Pose)
+EComposableCameraTraceProjectionStatus ProjectPoseToCineCamera(const FComposableCameraPose & Pose)
 ```
 
-Project a pose into OutputCineCameraComponent. Position and rotation are the only fields written; physical optics stay on the CineCamera (designer or Sequencer property tracks drive them).
+Project a pose into OutputCineCameraComponent and return the trace projection status. Position and rotation are the only fields written; physical optics stay on the CineCamera (designer or Sequencer property tracks drive them).
 
 ---
 

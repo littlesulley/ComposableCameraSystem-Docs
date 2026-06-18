@@ -2,6 +2,22 @@
 
 Reverse-chronological log of documentation updates.
 
+## 2026-06-18 - plugin `7e4c33e..470c907`
+
+**Plugin commits processed:** `a324019` (`Add activation compute nodes and rotation offsets`), `b3b7e49` (`Camera_BasicTalk`), `dd74f0e` (`Fix BeginPlay exec chain reload`), and the CCS Rewind Debugger trace/playback range through `470c907` (`fix: gate rewind trace to editor builds`). Fetch/pull was attempted first for both repositories and completed after sandbox escalation; both repositories were already up to date and no uncommitted local changes were present before edits.
+
+**C++ API reference:** public runtime headers changed. Formal Doxygen/moxygen regeneration could not run because the required executables are not installed in this environment, so affected generated-style pages were refreshed manually. Added `UComposableCameraComputePositionBetweenActorsNode`, updated `UComposableCameraSetRotationNode` and `UComposableCameraBeginPlaySetRotationNode` for `FromTwoActors`, actor endpoint sources, and `RotationOffset`, refreshed draw-sink signatures across node/transition debug pages, added generated-style pages for the new Rewind trace/debug primitive structs, and updated enum/reference entries for trace source, projection status, primitive kind, and debug draw sink APIs.
+
+**Prose updates:** expanded the Node Catalog, Graph Editor, Actor Input Sources, and Camera Presets pages for the new BeginPlay position-between-actors compute node, two-actor rotation source, rotation offset behavior, and `Camera_BasicTalk` preset. Expanded Debugging and Debug Panel reference pages with the editor-only Rewind Debugger recording/playback workflow, `ComposableCameraSystemChannel` trace behavior, gameplay vs. Level Sequence trace sources, captured gizmo/label playback, and build gating.
+
+**New-feature documentation decision:** Rewind Debugger support is a new editor debugging workflow, so it belongs on the existing debugging guide/reference rather than a standalone tutorial. The new activation compute node and expanded Set Rotation options are node-catalog/API changes, and `Camera_BasicTalk` belongs in the existing Camera Presets catalog. The BeginPlay exec-chain reload fix is an editor persistence fix with no separate user-facing workflow beyond the graph-editor compute-chain wording.
+
+**Stale-doc fixes / follow-up:** replaced stale `DrawNodeDebug(UWorld*, ...)` and transition debug signatures with the `FComposableCameraDebugDrawSink&` contract, updated the custom-gizmo instructions to mention sink emission, and refreshed the Level Sequence projection API return type for trace status. Manual follow-up: run the Unreal editor automation tests for Rewind trace playback, primitive round-trip coverage, compute-node graph reload, and Set Rotation behavior from the IDE/editor.
+
+**Validation / deployment:** validation and commit/push status are tracked by the automation run summary.
+
+---
+
 ## 2026-06-13 - plugin `e97a33f..7e4c33e`
 
 **Plugin commits processed:** `7e4c33e` (`Polish Shot Editor layout`). Fetch/pull was attempted first for both repositories and completed after sandbox escalation; both repositories were already up to date and no uncommitted local changes were present before edits.

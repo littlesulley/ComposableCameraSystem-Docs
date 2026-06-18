@@ -212,16 +212,35 @@ All CCS callsites pass `SDPG_Foreground` so the marker is always visible. The "S
 
 Four steps, ~15 lines total:
 
-1. Override `DrawNodeDebug(UWorld*, bool bViewerIsOutsideCamera)` in the concrete node class, guarded `#if !UE_BUILD_SHIPPING`.
+1. Override `DrawNodeDebug(FComposableCameraDebugDrawSink&, bool bViewerIsOutsideCamera)` in the concrete node class, guarded `#if !UE_BUILD_SHIPPING`.
 2. Declare `static TAutoConsoleVariable<int32> CVarShowMyGizmo(TEXT("CCS.Debug.Viewport.MyNode"), 0, ...)` in the node's `.cpp`.
 3. Early-out at the top of `DrawNodeDebug` using the ShouldShowAll OR idiom above.
-4. Call `DrawDebug*` helpers from `DrawDebugHelpers.h`.
+4. Emit primitives through the draw sink with the node's resolved runtime state.
 
 The `bViewerIsOutsideCamera` parameter is true during F8 eject / Simulate, false during possessed play. Use it to gate gizmos that sit at the camera's own position — drawing a self-collision sphere at the camera origin is only meaningful when the viewer is outside the camera.
 
 ### Build gating
 
 All viewport debug cost is `#if !UE_BUILD_SHIPPING`. The `FTSTicker` delegate body compiles to nothing in Shipping builds. `Initialize()` / `Shutdown()` and all helper functions are no-ops.
+
+---
+
+## Rewind Debugger Trace Playback
+
+CCS editor builds register a Rewind Debugger extension and a trace analyzer/provider pair. When a Rewind recording starts, the extension toggles the `ComposableCameraSystemChannel` trace channel on; when recording stops, it toggles the channel off. Non-editor, Test, and Shipping targets compile the CCS Rewind trace writer path out.
+
+Two trace streams are written:
+
+| Stream | Source | Contents |
+|---|---|---|
+| Active camera | Player camera manager | Rendered camera pose, view target, camera component, player controller, pawn, and source kind. This is the authoritative historical camera pose. |
+| CCS evaluation | Gameplay PCM or `UComposableCameraLevelSequenceComponent` | CCS pose, camera type asset, context name, projection status, source object identity, and serialized debug primitives. This is the authoritative source for CCS node and transition gizmos. |
+
+During playback, the extension queries the selected Rewind target, finds the active-camera frame for the current trace time, then attaches a compatible CCS evaluation frame. Gameplay playback matches the same PCM/player identity; Level Sequence playback matches the LS source object/view-target path. Native non-CCS camera frames can still show the active camera pose but have no CCS gizmos.
+
+Recorded primitives are emitted through `FComposableCameraDebugDrawSink` during evaluation. The capture sink forces all 3D node and transition gizmos, so Rewind playback can show useful history even when live `CCS.Debug.Viewport.<Node>` CVars were disabled while recording. The live sink keeps normal CVar behavior.
+
+Primitive playback uses the same color constants and legend metadata as live viewport debug. Sphere labels are recorded as short `FName` values and drawn through the Rewind Canvas pass, not as persistent HUD debug strings, so scrubbing does not leave stale labels behind.
 
 ---
 

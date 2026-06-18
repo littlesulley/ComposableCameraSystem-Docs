@@ -131,7 +131,7 @@ driving transition is assigned. Otherwise returns the clamped normalized time.
 `virtual` `const`
 
 ```cpp
-virtual void DrawTransitionDebug(UWorld * World, bool bViewerIsOutsideCamera) const
+virtual void DrawTransitionDebug(FComposableCameraDebugDrawSink & Draw, bool bViewerIsOutsideCamera) const
 ```
 
 Compiled out in shipping builds. Enabled by

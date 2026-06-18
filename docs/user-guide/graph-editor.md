@@ -71,7 +71,7 @@ Float and Double are interchangeable — you can wire a Float output into a Doub
 Right-click on the canvas to open the context menu. Entries are grouped:
 
 - **Camera Nodes** — every non-abstract `UComposableCameraCameraNodeBase` subclass. Includes built-in nodes and any Blueprint-authored nodes in the project.
-- **Compute Nodes** — the BeginPlay chain counterparts. Built-ins include `ComputeDistanceToActorNode` and `BeginPlaySetRotationNode`.
+- **Compute Nodes** — the BeginPlay chain counterparts. Built-ins include `ComputeDistanceToActorNode`, `ComputePositionBetweenActorsNode`, and `BeginPlaySetRotationNode`.
 - **Variables → Get → Internal / Exposed → {var}** — one entry per declared variable.
 - **Variables → Set → Internal / Exposed → {var}** — one entry per declared variable, with the additional exec pins Set nodes carry.
 ![[assets/images/Pasted image 20260416222309.png]]

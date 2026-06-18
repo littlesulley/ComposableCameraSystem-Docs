@@ -124,7 +124,7 @@ virtual void BeginDestroy()
 `virtual` `const`
 
 ```cpp
-virtual void DrawTransitionDebug(UWorld * World, bool bViewerIsOutsideCamera) const
+virtual void DrawTransitionDebug(FComposableCameraDebugDrawSink & Draw, bool bViewerIsOutsideCamera) const
 ```
 
 Per-transition world-space debug hook.

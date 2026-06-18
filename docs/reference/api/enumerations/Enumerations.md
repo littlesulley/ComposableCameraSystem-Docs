@@ -642,8 +642,52 @@ enum EComposableCameraSetRotationSource
 | Value | Description |
 |-------|-------------|
 | `FromActor` | Use a resolved actor's forward vector. |
+| `FromTwoActors` | Use the direction from a resolved first actor to a resolved second actor. |
 | `FromVector` | Use an explicit forward vector. |
 | `FromRotator` | Use the literal rotator value. |
+
+#### EComposableCameraTraceSourceKind { #ecomposablecameratracesourcekind }
+
+```cpp
+enum EComposableCameraTraceSourceKind
+```
+
+| Value | Description |
+|-------|-------------|
+| `CCS_PCM` | Trace frame came from the gameplay player camera manager path. |
+| `CCS_LevelSequence` | Trace frame came from a `UComposableCameraLevelSequenceComponent`. |
+| `Native_Camera` | Active camera frame came from a native non-CCS camera. |
+| `Unknown` | Source could not be classified. |
+
+#### EComposableCameraTraceProjectionStatus { #ecomposablecameratraceprojectionstatus }
+
+```cpp
+enum EComposableCameraTraceProjectionStatus
+```
+
+| Value | Description |
+|-------|-------------|
+| `None` | No projection status was recorded. |
+| `ProjectedToPCMCache` | CCS pose was projected to the player camera manager cache. |
+| `ProjectedToCineCamera` | CCS pose was projected to the Level Sequence CineCamera output. |
+| `SkippedFramingFailed` | Projection was skipped because framing failed. |
+| `SkippedMissingOutputComponent` | Projection was skipped because the output component was missing. |
+
+#### EComposableCameraDebugPrimitiveKind { #ecomposablecameradebugprimitivekind }
+
+```cpp
+enum EComposableCameraDebugPrimitiveKind
+```
+
+| Value | Description |
+|-------|-------------|
+| `Line` | Line primitive. |
+| `Point` | Point primitive. |
+| `Sphere` | Wire sphere primitive. |
+| `SolidSphere` | Translucent wire-sphere primitive using the solid-sphere helper contract. |
+| `Box` | Box primitive. |
+| `CameraFrustum` | Camera-frustum primitive. |
+| `Plane` | Plane primitive. |
 
 #### EComposableCameraScreenSpaceMethod { #ecomposablecamerascreenspacemethod }
 

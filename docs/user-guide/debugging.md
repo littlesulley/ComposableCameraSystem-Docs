@@ -1,12 +1,13 @@
 # Debugging
 
-CCS ships five distinct debug surfaces that complement each other rather than duplicate. Understanding what each one covers helps you reach for the right tool instead of hunting through them all.
+CCS ships six distinct debug surfaces that complement each other rather than duplicate. Understanding what each one covers helps you reach for the right tool instead of hunting through them all.
 
 | Tool                                                      | How to activate                                 | Best for                                                                             |
 | --------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ |
 | [`showdebug camera`](../reference/debugging/showdebug.md) | Console: `showdebug camera`                     | Quick pose check; color-coded HUD that fires everywhere `DisplayDebug` runs          |
 | [Debug Panel](#debug-panel-ccsdebugpanel)                 | Console: `CCS.Debug.Panel 1`                    | Always-on live readout — sparklines, tree glyph rendering, inline warnings           |
 | [Viewport Debug](#viewport-debug-ccsdebugviewport)        | Console: `CCS.Debug.Viewport 1`                 | 3D in-world gizmos — frustum, per-node overlays visible during F8 eject              |
+| [Rewind Debugger](#rewind-debugger)                       | Unreal Rewind Debugger recording/playback       | Historical camera pose and CCS gizmo playback while scrubbing a recorded PIE session |
 | [Dump Commands](#dump-commands-ccsdump)                   | Console: `CCS.Dump.Stack` / `.Tree` / `.Camera` | One-shot text snapshots to Output Log + clipboard; ideal for bug reports and diffing |
 | [Runtime Previewer](#runtime-previewer)                   | Camera Type Asset Editor: **Window -> Runtime Previewer** | Live PIE pawn/camera relationship in a docked editor viewport |
 
@@ -14,7 +15,7 @@ CCS ships five distinct debug surfaces that complement each other rather than du
 
 All runtime debug surfaces read from the same runtime state — snapshots produced by `BuildDebugSnapshot` on the context stack, director, and evaluation tree. They stay in lockstep automatically.
 
-None of this costs anything in Shipping builds. The Debug Panel, Viewport Debug, Dump Commands, and editor-only Runtime Previewer are all gated away from Shipping builds. `showdebug camera` routes through `DisplayDebug`, which Unreal strips in Shipping by default.
+None of this costs anything in Shipping builds. The Debug Panel, Viewport Debug, Rewind trace writers, Dump Commands, and editor-only Runtime Previewer are all gated away from Shipping builds. `showdebug camera` routes through `DisplayDebug`, which Unreal strips in Shipping by default.
 
 ## Runtime Previewer
 
@@ -96,7 +97,17 @@ Each per-node CVar defaults to 0 so a camera with multiple active nodes doesn't 
 
 All gizmos use `SDPG_Foreground` depth priority and translucent-wireframe spheres, so they render in front of scene geometry and remain readable even when the camera is embedded inside a character mesh.
 
-If you are writing a [custom node](../extending/custom-nodes.md) and want to add your own gizmo, the implementation is about 15 lines: override `DrawNodeDebug(UWorld*, bool)` on your node class (guarded `#if !UE_BUILD_SHIPPING`), declare a static `TAutoConsoleVariable<int32>` under `CCS.Debug.Viewport.<YourNodeName>`, early-out on it, and call `DrawDebug*` helpers directly. See the Viewport Debug header for the full recipe.
+If you are writing a [custom node](../extending/custom-nodes.md) and want to add your own gizmo, override `DrawNodeDebug(FComposableCameraDebugDrawSink&, bool)` on your node class (guarded `#if !UE_BUILD_SHIPPING`), declare a static `TAutoConsoleVariable<int32>` under `CCS.Debug.Viewport.<YourNodeName>`, early-out on it, and emit primitives through the draw sink. See the Viewport Debug header for the full recipe.
+
+## Rewind Debugger
+
+In editor builds, CCS integrates with Unreal's Rewind Debugger so recorded PIE sessions can replay camera debug state while you scrub time. Start a Rewind recording, exercise a gameplay or Level Sequence CCS camera, stop recording, then select the controlled character or relevant actor in Rewind Debugger.
+
+During recording, the editor extension enables the `ComposableCameraSystemChannel` trace channel. CCS writes an active-camera frame for the rendered camera pose and a CCS evaluation frame for the camera type asset, context name, internal CCS pose, and captured node/transition primitives. Gameplay cameras emit from the player camera manager path; Level Sequence cameras emit from the `UComposableCameraLevelSequenceComponent` path.
+
+During playback, the Rewind extension matches the selected actor's active-camera frame with the nearest compatible CCS evaluation frame. The historical view draws the compact camera frustum plus captured CCS gizmos and short sphere labels, even if the live viewport gizmo CVars were off during recording. Capture intentionally forces all 3D node and transition gizmos through the trace draw sink; live viewport drawing still obeys `CCS.Debug.Viewport.*` CVars.
+
+Use Rewind Debugger when a camera pop, bad transition marker, or Sequencer projection problem only appears for a few frames and is hard to inspect live. Use Viewport Debug when you only need the current frame and want direct CVar control.
 
 ## Dump Commands (`CCS.Dump`)
 

@@ -126,13 +126,16 @@ Actor-space yaw and pitch constraints can resolve their reference actor from eit
 
 ### `SetRotationNode`
 
-Replaces the current camera rotation from one of three sources:
+Replaces the current camera rotation from one of four sources:
 
 - `FromActor` reads a reference actor's forward vector, using either the explicit `RotationActor` field or the controller-controlled pawn.
+- `FromTwoActors` builds a forward vector from `FirstActor` to `SecondActor`. Each endpoint can resolve from an explicit actor or the controller-controlled pawn.
 - `FromVector` turns `RotationVector` into a rotator with Unreal's forward-vector convention.
 - `FromRotator` writes the literal `Rotation` value.
 
 Use it when a camera chain needs a hard rotation handoff before downstream nodes apply offsets, look-at, constraints, or post-rotation effects. If the actor cannot be resolved, or the vector source is zero, the node preserves the upstream rotation instead of snapping to identity.
+
+`RotationOffset` is applied after the base rotation resolves. Yaw is composed in world space, while pitch and roll are composed in the resolved rotation's local space. Use it for over-the-shoulder or dialogue offsets where the base direction should still come from an actor, vector, or actor pair.
 
 **C++ reference:** [`UComposableCameraSetRotationNode`](api/nodes/UComposableCameraSetRotationNode.md)
 
@@ -433,9 +436,26 @@ Measures the distance and direction between two actors at activation time. Use t
 **Inputs:** `ActorA`, `ActorB` (Actor).
 **Outputs:** `Distance` (Float), `Direction` (Vector3D).
 
+### `ComputePositionBetweenActorsNode`
+
+Computes one world position between two resolved actors at activation time:
+
+```text
+Position = Lerp(FirstActor.Location, SecondActor.Location, Alpha) + WorldZ(HeightOffset)
+```
+
+Use it to seed a camera's initial pivot, rail start, or two-character midpoint before the camera chain starts ticking. `Alpha = 0` selects the first actor, `Alpha = 1` selects the second actor, and values between them produce an interpolated point. `HeightOffset` is applied along world Z after interpolation.
+
+Both endpoints can resolve from explicit actors or the controller-controlled pawn. If either endpoint cannot resolve, the node logs a warning and outputs zero rather than using stale actor data.
+
+**Inputs:** `FirstActorSource`, `FirstActor`, `SecondActorSource`, `SecondActor`, `Alpha`, `HeightOffset`.
+**Outputs:** `Position` (Vector3D).
+
+**C++ reference:** [`UComposableCameraComputePositionBetweenActorsNode`](api/nodes/UComposableCameraComputePositionBetweenActorsNode.md)
+
 ### `BeginPlaySetRotationNode`
 
-Initializes the camera's starting rotation on the BeginPlay chain using the same `RotationSource`, `RotationActorSource`, `RotationActor`, `RotationVector`, and `Rotation` fields as `SetRotationNode`.
+Initializes the camera's starting rotation on the BeginPlay chain using the same rotation source, actor source, two-actor direction, vector, rotator, and `RotationOffset` fields as `SetRotationNode`.
 
 Because it writes both `CameraPose.Rotation` and `LastFrameCameraPose.Rotation`, it is useful before first-tick constraints or damping nodes that depend on a sensible previous rotation. It is compute-only and does not run during Level Sequence scrubbing.
 

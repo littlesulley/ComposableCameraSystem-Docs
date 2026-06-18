@@ -227,7 +227,7 @@ virtual void GetPinDeclarations_Implementation(TArray< FComposableCameraNodePinD
 `virtual` `const`
 
 ```cpp
-virtual void DrawNodeDebug(UWorld * World, bool bViewerIsOutsideCamera) const
+virtual void DrawNodeDebug(FComposableCameraDebugDrawSink & Draw, bool bViewerIsOutsideCamera) const
 ```
 
 Draws a blue sphere at the stable virtual aim point when `CCS.Debug.Viewport.LockOnAimPoint 1` is enabled, or when `CCS.Debug.Viewport.Nodes.All 1` enables all node gizmos. During correction and F8 eject, draws a line from the raw aim point to the corrected aim point. Compiled out in shipping builds.
